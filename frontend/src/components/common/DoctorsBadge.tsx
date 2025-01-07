@@ -9,7 +9,7 @@ function DoctorsBadge() {
             <div className="relative w-[50%] h-full flex justify-center items-center">
                 <img className="rounded-full w-[40px] absolute left-0" src={dummyDoctor1} alt="" />
                 <img className="rounded-full w-[40px] absolute left-[80px]" src={dummyDoctor3} alt="" />
-                <img className="rounded-full w-[40px] scale-125 absolute left-[40px]" src={dummyDoctor2} alt="" />
+                <img className="mid-img rounded-full w-[40px] absolute left-[40px]" src={dummyDoctor2} alt="" />
             </div>
             <p className="text-center p-2 text-[#0c0b3eb5] mr-4" style={{ lineHeight: '1' }}>
                 <span className="font-semibold">870+</span> <br />

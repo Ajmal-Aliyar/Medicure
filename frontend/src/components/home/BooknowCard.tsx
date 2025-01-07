@@ -2,6 +2,7 @@
 
 function BooknowCard() {
     return (
+        <div className="h-[20vh] px-6 lg:px-28 p-3">
         <div className="book-bar h-full bg-gray-50 rounded-lg shadow-xl flex justify-center items-center px-10">
             <div className=" w-full flex">
                 <div className="w-[25%] flex items-center gap-2">
@@ -37,6 +38,7 @@ function BooknowCard() {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     )
 }
