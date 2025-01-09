@@ -11,8 +11,9 @@ const data = [
     { name: 'Dr. John Doe', img: doctor2 },
     { name: 'Dr. William Mehta', img: doctor3 },                    
     { name: 'Dr. Jane Smith', img: doctor1 },
-    { name: 'Dr. John Doe', img: doctor2 },
-    { name: 'Dr. William Mehta', img: doctor3 },
+    { name: 'Dr. William Mehta', img: doctor3 },                    
+
+    
 ];
 function DoctorSlider() {
     const [settings, setSettings] = useState({
@@ -70,7 +71,7 @@ function DoctorSlider() {
           }, []);
         
     return (
-        <div className="py-16 md:pt-36">
+        <div className="py-16 md:pt-36 mb-[4rem] md:mb-[8rem]">
             <p className="text-center text-[#51aff6ce] font-semibold text-xl">meet our</p>
             <p className="font-semibold text-center text-4xl text-[#0c0b3eb5] mb-10">
                 Top Expert Doctors

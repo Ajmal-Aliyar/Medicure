@@ -40,7 +40,7 @@ function WhyChooseUs() {
         })
     })
     return (
-        <div className="w-full px-6 lg:px-28 py-5 lg:py-14 flex flex-col items-center">
+        <div className="w-full px-6 lg:px-28 py-5 lg:py-14 flex flex-col items-center overflow-hidden">
             <p className="choose-text font-semibold text-center text-4xl text-[#0c0b3eb5] py-10 w-auto">
                 Why Choose Us
             </p>

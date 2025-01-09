@@ -65,3 +65,24 @@ html, body {
   padding: 0;
   height: 40rem !important;
 }
+
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background color of the scrollbar track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #96c6ecb3; /* Color of the scrollbar thumb */
+  border-radius: 10px;
+  border: 2px solid #f1f1f1; /* Border around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #96c5ecf5; /* Color when the scrollbar thumb is hovered */
+}

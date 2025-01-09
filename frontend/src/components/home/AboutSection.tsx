@@ -25,7 +25,7 @@ function AboutSection() {
     }, []);
 
     return (
-        <div className="w-[100%] px-6 lg:px-28 py-5 lg:py-14  flex flex-col md:flex-row about">
+        <div className="w-[100%] px-6 lg:px-28 py-5 lg:py-14  flex flex-col md:flex-row about overflow-hidden">
             <div className="w-[100%] md:w-[50%]  space-y-3 about-left">
                 <p className="text-[#51aff6ce] font-semibold text-xl">About</p>
                 <p className="font-bold text-2xl text-[#0c0b3eb5]">

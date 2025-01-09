@@ -1,6 +1,6 @@
-import dummyDoctor1 from "../../assets/doctors/doctordp1.jpg"
-import dummyDoctor2 from "../../assets/doctors/doctordp2.jpg"
-import dummyDoctor3 from "../../assets/doctors/doctordp3.jpg"
+import dummyDoctor1 from "../../assets/patients/patient1.jpg"
+import dummyDoctor2 from "../../assets/patients/patient2.jpg"
+import dummyDoctor3 from "../../assets/patients/patient1.jpg"
 
 function PatientsBadge() {
     return (

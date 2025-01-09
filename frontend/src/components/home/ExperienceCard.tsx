@@ -8,12 +8,14 @@ function ExperienceCard() {
             y:50,
             opacity:0,
             stagger:0.2,
+            duration:0.7,
             scrollTrigger : {
-                trigger:'.exp-card',
+                trigger:'.exp-card p',
                 scroller:'body',
-                start:'top 80%',
-                end : 'top 60%',
-                scrub:true
+                start:'top 70%',
+                // end : 'top 60%',
+                // scrub:true
+                toggleActions : 'play reverse play reverse'
             }
         })
     })
