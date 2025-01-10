@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import ErrorMessage from "../common/ErrorMessage";
 import LoaderDots from "../common/LoaderDots";
+import SuccessModal from "../common/SuccessModal";
 
 type Prop = {
   handleAuth: (value: boolean) => void;
@@ -15,6 +16,7 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
   const [loading, setLoading] = useState(false)
   const [timer, setTimer] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const [message,setMessage] = useState('')
   const user = useSelector((state: RootState) => state?.auth?.user);
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>, index: number): void => {
     const value = event.target.value;
@@ -39,31 +41,31 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
     let interval: NodeJS.Timeout;
 
     if (isResendDisabled && timer > 0) {
-        interval = setInterval(() => {
-            setTimer((prev) => prev - 1);
-        }, 1000);
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
     } else if (timer === 0) {
-        setIsResendDisabled(false);
+      setIsResendDisabled(false);
     }
     return () => clearInterval(interval);
-}, [timer, isResendDisabled]);
+  }, [timer, isResendDisabled]);
 
-const handleResendOTP = () => {
-  setTimer(30);
-  setIsResendDisabled(true);
+  const handleResendOTP = () => {
+    setTimer(30);
+    setIsResendDisabled(true);
 
-  api.post('/api/auth/send-otp', {
-    email: user?.email
-  })
-    .then(response => {
-      console.log('Login successful:', response.data);
+    api.post('/api/auth/send-otp', {
+      email: user?.email
     })
-    .catch(error => {
-      setIsResendDisabled(false)
-      setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-      console.error('Login error:', error.response?.data || error.message);
-    });
-};
+      .then(response => {
+        console.log('Login successful:', response.data);
+      })
+      .catch(error => {
+        setIsResendDisabled(false)
+        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+        console.error('Login error:', error.response?.data || error.message);
+      });
+  };
 
 
   const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>): void => {
@@ -104,7 +106,7 @@ const handleResendOTP = () => {
       .then(response => {
         setLoading(false);
         console.log('Login successful:', response.data);
-        handleAuth(true)
+        setMessage('Thank you for registering! Your account has been created successfully. Please log in to continue.')
       })
       .catch(error => {
         setLoading(false);
@@ -114,7 +116,11 @@ const handleResendOTP = () => {
   }
   const handleErrorServerMessage = () => {
     setServerError('')
-}
+  }
+  const handleModal = () => {
+    setMessage('')
+    handleAuth(true)
+  }
   return (
     <form className="form relative min-w-[290px] p-8 h-[380px] flex flex-col  min-h-[350px] w-[350px] lg:w-[400px] bg-[#e7eaec] shadow-lg rounded-lg items-center"
       style={{ boxShadow: '16px 16px 32px #c8c8c8, -16px -16px 32px #fefefe' }}>
@@ -140,25 +146,28 @@ const handleResendOTP = () => {
         ))}
       </div>
       <div className="flex justify-around w-full mt-10 ">
-      
+
         <button className="relative  border bg-[#dcdfe0] disabled:bg-transparent shadow-inner border-gray-200 disabled:border-gray-300 bg-opacity-70 text-center w-20 rounded-md  m-4 p-2 active:scale-95 font-medium text-[#0c0b3eb5] disabled:text-gray-300"
-        disabled={isResendDisabled}
-        onClick={handleResendOTP}
+          disabled={isResendDisabled}
+          onClick={handleResendOTP}
         >
           <p className={`${isResendDisabled ? `text-xs font-medium ` : ''}`}>
-          {isResendDisabled ? `Wait ${timer}s` : 'resend'}
-                </p>
-          </button>
+            {isResendDisabled ? `Wait ${timer}s` : 'resend'}
+          </p>
+        </button>
         <div className=" bg-[#dcdfe0] border border-gray-200  bg-opacity-70 shadow-inner text-center w-20 rounded-md  m-4 p-2 active:scale-95 font-medium text-[#0c0b3eb5]" onClick={handleSubmit}
         >submit</div>
       </div>
-      
-      <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}   bg-[#333333] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
-                {!loading ?  <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : '' }
-                {serverError === '' || loading ? <LoaderDots /> :''}
-            </div>
 
+      <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}   bg-[#333333] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
+        {!loading ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
+        {serverError === '' || loading ? <LoaderDots /> : ''}
+      </div>
+      <div className={`${message !== ''? "" :"hidden"}`}>
+        <SuccessModal handleModal={handleModal} message={message}/>
+      </div>
     </form>
+
   );
 };
 

@@ -72,15 +72,21 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
                     email,
                     password
                 })
-                    .then(response => {
-                        setLoading(false);
-                        console.log('Login successful:', response.data);
-                    })
-                    .catch(error => {
-                        setLoading(false);
-                        setServerError('error vannu tto');
-                        console.error('Login error:', error.response?.data || error.message);
-                    });
+                .then(response => {
+                    setLoading(false);
+                    console.log('Signup successful:', response.data);
+                    handleAuth(false);
+                    const user = {
+                        email,
+                        role:'user'
+                    }
+                    dipatch(setUserData({user, token: "token"}))
+                })
+                .catch(error => {
+                    setLoading(false);
+                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+                    console.error('Signup error:', error.response?.data || error.message);
+                });
             } else {
                 handleErrorMessage('email', email);
                 handleErrorMessage('password', password);

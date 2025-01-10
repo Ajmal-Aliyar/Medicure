@@ -1,27 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const SuccessModal: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
-
+interface Props {
+    message: string,
+    handleModal : () => void
+}
+const SuccessModal: React.FC<Props> = ({message, handleModal}) => {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <button
-                onClick={openModal}
-                className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300 ease-in-out"
-            >
-                Show Success Modal
-            </button>
-
-            {/* Modal Overlay */}
-            {isOpen && (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 ">
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    {/* Modal Content */}
                     <div
-                        className={`bg-white p-6 rounded-lg shadow-lg transform transition-all duration-500 ${
-                            isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-10'
+                        className={`bg-white min-w-[500px] p-6 rounded-lg shadow-lg transform transition-all duration-500 opacity-100 scale-100 translate-y-0
                         }`}
                     >
                         <div className="flex flex-col items-center">
@@ -40,9 +28,9 @@ const SuccessModal: React.FC = () => {
                                 />
                             </svg>
                             <h2 className="text-2xl font-bold mt-4 text-center">Success!</h2>
-                            <p className="text-gray-600 mt-2 text-center">Your operation was successful.</p>
+                            <p className="text-gray-600 mt-2 text-center">{message}</p>
                             <button
-                                onClick={closeModal}
+                                onClick={handleModal}
                                 className="mt-6 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
                             >
                                 Close
@@ -50,7 +38,6 @@ const SuccessModal: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            )}
         </div>
     );
 };

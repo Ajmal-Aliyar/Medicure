@@ -58,8 +58,6 @@ function Auth() {
             <AuthPage handleAuth={handleAuth}/> :
             <VerificationForm handleAuth={handleAuth} />
             }
-
-          
         </div>
       </div>
     </div>
