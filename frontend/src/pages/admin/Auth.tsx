@@ -1,6 +1,7 @@
 
 
 function Auth() {
+    
     return (
         <div className="w-full h-[100vh] flex justify-center items-center">
         <div className="relative py-3 sm:max-w-xl sm:mx-auto">

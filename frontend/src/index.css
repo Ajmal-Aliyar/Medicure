@@ -24,12 +24,10 @@
 html, body {
   height: 100%;
   width: 100%;
-  background-color: rgb(246, 246, 246);
+  background-color: #f6f6f6;
 }
 
 
-
-/* dummy? */
 
 .slider-container {
   width: 80%;
@@ -67,22 +65,26 @@ html, body {
 }
 
 
-/* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Background color of the scrollbar track */
+  background: #f1f1f1;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #96c6ecb3; /* Color of the scrollbar thumb */
+  background: #96c6ecb3; 
   border-radius: 10px;
-  border: 2px solid #f1f1f1; /* Border around the thumb */
+  border: 2px solid #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #96c5ecf5; /* Color when the scrollbar thumb is hovered */
+  background: #96c5ecf5; 
 }
+input:-webkit-autofill {
+  background-color: #eeeeee !important;
+  box-shadow: 0 0 0px 1000px #eeeeee inset !important;  
+}
+

@@ -1,4 +1,4 @@
-import Menu from "../../components/common/Menu"
+
 import BooknowCard from "../../components/home/BooknowCard"
 import AboutSection from "../../components/home/AboutSection"
 import WhyChooseUs from "../../components/home/WhyChooseUs"

@@ -1,12 +1,15 @@
 import { useGSAP } from "@gsap/react";
 import SideAuthComponent from "../../components/auth/SideAuthComponent";
-import Signin from "../../components/auth/Signin";
-import DoctorsBadge from "../../components/common/DoctorsBadge";
-import PatientsBadge from "../../components/common/PatientsBadge";
 import gsap from "gsap";
-import Signup from "../../components/auth/Signup";
+import AuthPage from "../../components/auth/Auth";
+import { useState } from "react";
+import VerificationForm from "../../components/auth/VerificationOTP";
 
 function Auth() {
+  const [ auth, setAuth] = useState(false)
+  const handleAuth = (value:boolean) => {
+    setAuth(value)
+  }
   useGSAP(()=>{
     const tl = gsap.timeline()
     tl.from('.auth',{
@@ -23,7 +26,6 @@ function Auth() {
     tl.from('.left-badge', {
       scale: 0,
       opacity:0,
-      // x: 100,
       y: -100,
       delay:-0.2,
       duration: 2,
@@ -32,7 +34,6 @@ function Auth() {
       .from('.right-badge', {
         scale: 0,
         opacity:0,
-        // x: -100,
         y: 100,
         duration: 2,
         delay:-0.2,
@@ -51,8 +52,13 @@ function Auth() {
 
         <div className="w-[100%] lg:w-[50%] flex justify-center items-center">
 
-          <Signin />
-          {/* <Signup /> */}
+          
+            {auth ?
+            <AuthPage handleAuth={handleAuth}/> :
+            <VerificationForm handleAuth={handleAuth} email={email}/>
+            }
+          
+          
         </div>
       </div>
     </div>
