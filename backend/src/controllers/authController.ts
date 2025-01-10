@@ -15,8 +15,22 @@ export class AuthController {
         }
     }
 
+    async sendOtp(req: Request, res: Response ) {
+        const { email } = req.body;
+        try {
+            console.log(email,'email')
+            const isSended = await authService.sendOtpToEmail(email);
+            if (isSended) {
+                res.status(200).json({ message: 'OTP sended successfully' });
+            }
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+
     async verifyOtp(req: Request, res: Response) {
         const { email, otp } = req.body;
+        console.log(req.body)
         try {
             const isVerified = await authService.verifyOtp(email, otp);
             if (isVerified) {

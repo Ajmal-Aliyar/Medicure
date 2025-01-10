@@ -14,12 +14,11 @@ export class AuthService {
             if (existingUser) {
                 throw new Error('User already exists');
             }
-            console.log('hello')
 
-            const otp = await this.sendOtpToEmail(email);
-            if (otp) {
-                const userData = { fullname, email, number, password };
-                await setRedisData(`${email}`, userData, 300);
+            const isSended = await this.sendOtpToEmail(email);
+            if (isSended) {
+                const hashedPassword = await this.hashPassword(password)
+                await setRedisData(`${email}`, JSON.stringify({ fullname, email, number, hashedPassword }), 600);
                 return { message: 'Please verify your email to complete registration. OTP has been sent successfully.' };
             } else {
                 throw new Error('OTP not sent');
@@ -47,27 +46,36 @@ export class AuthService {
             subject: 'Your OTP for Signup',
             text: `Your OTP is ${otp}. It will expire in 5 minutes.`,
         };
-        await transporter.sendMail(mailOptions)
-            .then(() => console.log('OTP sent successfully'))
-            .catch((error) => {
-                console.error('Error sending email:', error);
-            });
-        return otp
+        await transporter.sendMail(mailOptions);
+        console.log('OTP sent successfully');
+        await setRedisData(`otp-${email}`, JSON.stringify(otp), 60);
+        const sendedOtp = await getRedisData(`otp-${email}`)
+        console.log(sendedOtp)
+        return true
     }
 
 
-    async verifyOtp(email: string, otp: number): Promise<boolean> {
-        const storedOtp = await getRedisData(`otp:${email}`);
+    async verifyOtp(email: string, otp: string): Promise<boolean> {
+        const userData = JSON.parse(await getRedisData(email))
+        const validOtp = await getRedisData(`otp-${email}`)
+        console.log(userData,validOtp,'user')
 
-        if (storedOtp === null) {
-            throw new Error('OTP expired or invalid');
+        if (validOtp === null) {
+            throw new Error('OTP expired resend OTP');
         }
-
-        if (storedOtp !== otp.toString()) {
+        if (validOtp !== otp) {
             throw new Error('Invalid OTP');
         }
-
         await deleteRedisData(`otp:${email}`);
+        
+        const user = await userRepository.createUser(userData.fullname, userData.email, userData.number, userData.hashedPassword)
+        console.log(user,'is')
         return true;
     }
+
+    async hashPassword (password: string): Promise<string> {
+        const saltRounds = 12; 
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return hashedPassword;
+    };
 }

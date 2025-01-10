@@ -15,13 +15,13 @@ redisClient.on('error', (err) => {
     console.log('Redis Client Error:', err);
 });
 
-export const setRedisData = async (key: string, value: object, ttl?: number) => {
+export const setRedisData = async (key: string, value: string, ttl?: number) => {
     try {
-        const stringValue = value.toString();
+        
         if (ttl) {
-            await redisClient.setEx(key, ttl, stringValue);
+            await redisClient.setEx(key, ttl, value);
         } else {
-            await redisClient.set(key, stringValue);
+            await redisClient.set(key, value);
         }
         console.log(`Data for ${key} saved successfully`);
     } catch (error) {

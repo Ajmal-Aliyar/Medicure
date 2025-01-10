@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { api } from '../../utils/axiosInstance'
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate";
 import ErrorMessage from "../common/ErrorMessage";
 import LoaderDots from "../common/LoaderDots";
-
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../store/slices/authSlice";
 type ErrorType = {
     name: string,
     email: string,
@@ -32,6 +33,7 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
         mobile: '',
         password: ''
     })
+    const dipatch = useDispatch()
     const handleErrorMessage = (field: string, value: string) => {
         if (field === 'name') {
             const nameM = validateName(value)
@@ -63,9 +65,7 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
         }
     }
     const handleSubmit = () => {
-        setLoading(true);  // Set loading state to true
-        console.log('Loading state after setLoading(true):', loading);  // Will log false because state is updated asynchronously
-
+        setLoading(true);  
         if (isLogin) {
             if (!errorMessage.email && !errorMessage.password && email && password) {
                 api.post('/api/auth/signin', {
@@ -84,6 +84,7 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
             } else {
                 handleErrorMessage('email', email);
                 handleErrorMessage('password', password);
+                setLoading(false);
             }
 
         } else {
@@ -96,8 +97,14 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
                 })
                     .then(response => {
                         setLoading(false);
+
                         console.log('Signup successful:', response.data);
                         handleAuth(false);
+                        const user = {
+                            email,
+                            role:'user'
+                        }
+                        dipatch(setUserData({user, token: "token"}))
                     })
                     .catch(error => {
                         setLoading(false);
@@ -109,13 +116,12 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
                 handleErrorMessage('email', email);
                 handleErrorMessage('mobile', mobile);
                 handleErrorMessage('password', password);
+                setLoading(false);
             }
         }
     };
 
-    useEffect(() => {
-        console.log(loading, 'Loading state changed');
-    }, [loading]);
+   
     const handleErrorServerMessage = () => {
         setServerError('')
     }
@@ -266,8 +272,7 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
 
             <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#333333] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
                 {!loading ?  <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : '' }
-               
-                <LoaderDots />
+                {serverError === '' || loading ? <LoaderDots /> :''}
             </div>
 
         </div>

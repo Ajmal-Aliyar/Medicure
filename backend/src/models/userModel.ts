@@ -55,17 +55,9 @@ const userSchema = new Schema({
     isBlocked: {
         type: Boolean,
         default: false
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
     }
 }, {
-    timestamps: { createdAt: 'CreatedAt', updatedAt: 'UpdatedAt' }
+    timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 });
 
 

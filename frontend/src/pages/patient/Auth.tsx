@@ -5,8 +5,9 @@ import AuthPage from "../../components/auth/Auth";
 import { useState } from "react";
 import VerificationForm from "../../components/auth/VerificationOTP";
 
+
 function Auth() {
-  const [ auth, setAuth] = useState(false)
+  const [ auth, setAuth] = useState(true)
   const handleAuth = (value:boolean) => {
     setAuth(value)
   }
@@ -55,9 +56,9 @@ function Auth() {
           
             {auth ?
             <AuthPage handleAuth={handleAuth}/> :
-            <VerificationForm handleAuth={handleAuth} email={email}/>
+            <VerificationForm handleAuth={handleAuth} />
             }
-          
+
           
         </div>
       </div>

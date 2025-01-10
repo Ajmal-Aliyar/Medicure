@@ -22,7 +22,10 @@ const ErrorMessage:React.FC<ErrorMessageProps> = ({message,handleModal}) => {
       {message}
     </p>
   </div>
-  <button className="w-16 cursor-pointer focus:outline-none flex p-3" onClick={handleModal}>
+  <button className="w-16 cursor-pointer focus:outline-none flex p-3" onClick={(e) => {
+    e.preventDefault()
+    handleModal()
+  }}>
     <svg
       className="w-7 h-7"
       fill="none"
