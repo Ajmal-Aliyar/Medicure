@@ -1,8 +1,7 @@
 import { setRedisData, getRedisData, deleteRedisData} from './redisUtil';
-const MAX_ATTEMPTS = 30;
 const LOCK_TIMEOUT = 1800;    
 
-export const checkBruteForce = async (email: string): Promise<void> => {
+export const checkBruteForce = async (email: string,MAX_ATTEMPTS: number): Promise<void> => {
     const isLocked = await getRedisData(`account-locked:${email}`);
     console.log('isLocked:', isLocked);
 

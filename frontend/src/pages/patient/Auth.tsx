@@ -2,11 +2,19 @@ import { useGSAP } from "@gsap/react";
 import SideAuthComponent from "../../components/auth/SideAuthComponent";
 import gsap from "gsap";
 import AuthPage from "../../components/auth/Auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VerificationForm from "../../components/auth/VerificationOTP";
-
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 function Auth() {
+  const token = Cookies.get('accessToken');
+  const navigate = useNavigate()
+  useEffect(()=>{
+      if(token){
+          navigate('/')
+      }
+  },[token,navigate])
   const [ auth, setAuth] = useState(true)
   const handleAuth = (value:boolean) => {
     setAuth(value)

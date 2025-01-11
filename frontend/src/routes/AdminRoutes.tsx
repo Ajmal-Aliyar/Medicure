@@ -4,7 +4,7 @@ import Dashboard from "../pages/admin/Dashboard"
 
 
 
-function Admin() {
+function AdminRoutes() {
   return (
     <Routes>
         <Route path="/auth" element={<Auth/>}/>
@@ -13,4 +13,4 @@ function Admin() {
   )
 }
 
-export default Admin
+export default AdminRoutes

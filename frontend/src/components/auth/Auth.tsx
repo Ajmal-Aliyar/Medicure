@@ -3,8 +3,9 @@ import { api } from '../../utils/axiosInstance'
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate";
 import ErrorMessage from "../common/ErrorMessage";
 import { useDispatch } from "react-redux";
-import { setUserData } from "../../store/slices/authSlice";
+import { setData } from "../../store/slices/userSlice";
 import HoneyComb from "../common/HoneyComb";
+import { useNavigate } from "react-router-dom";
 type ErrorType = {
     name: string,
     email: string,
@@ -34,6 +35,7 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
         password: ''
     })
     const dipatch = useDispatch()
+    const navigate = useNavigate()
     const handleErrorMessage = (field: string, value: string) => {
         if (field === 'name') {
             const nameM = validateName(value)
@@ -75,12 +77,8 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
                 .then(response => {
                     setLoading(false);
                     console.log('Signup successful:', response.data);
-                    handleAuth(false);
-                    const user = {
-                        email,
-                        role:'user'
-                    }
-                    dipatch(setUserData({user, token: "token"}))
+                    dipatch(setData({email, role: "user"}))
+                    navigate('/')
                 })
                 .catch(error => {
                     setLoading(false);
@@ -103,14 +101,9 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
                 })
                     .then(response => {
                         setLoading(false);
-
                         console.log('Signup successful:', response.data);
-                        handleAuth(false);
-                        const user = {
-                            email,
-                            role:'user'
-                        }
-                        dipatch(setUserData({user, token: "token"}))
+                        handleAuth(true);
+                        dipatch(setData({email, role: "user"}))
                     })
                     .catch(error => {
                         setLoading(false);

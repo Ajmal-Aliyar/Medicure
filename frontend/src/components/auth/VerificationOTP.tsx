@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../utils/axiosInstance";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import ErrorMessage from "../common/ErrorMessage";
 import LoaderDots from "../common/LoaderDots";
 import SuccessModal from "../common/SuccessModal";
+import { login } from "../../store/slices/userSlice";
 
 type Prop = {
   handleAuth: (value: boolean) => void;
@@ -17,7 +18,8 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
   const [timer, setTimer] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [message,setMessage] = useState('')
-  const user = useSelector((state: RootState) => state?.auth?.user);
+  const email = useSelector((state: RootState) => state?.user?.email);
+  const dispatch = useDispatch()
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>, index: number): void => {
     const value = event.target.value;
     if (/^[0-9]$/.test(value)) {
@@ -55,7 +57,7 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
     setIsResendDisabled(true);
 
     api.post('/api/auth/send-otp', {
-      email: user?.email
+      email
     })
       .then(response => {
         console.log('Login successful:', response.data);
@@ -98,7 +100,6 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
   const handleSubmit = () => {
     setLoading(true)
     const OTP2Send = otp.join('')
-    const email = user?.email
     setOtp(Array(6).fill(""))
     api.post('/api/auth/verify-otp', {
       otp: OTP2Send, email
@@ -119,6 +120,7 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
   }
   const handleModal = () => {
     setMessage('')
+    dispatch(login())
     handleAuth(true)
   }
   return (

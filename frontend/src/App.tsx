@@ -1,16 +1,15 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Patient from './routes/Patient';
-import Doctors from './routes/Doctors';
-import Admin from './routes/Admin';
+import { Route, BrowserRouter as Router, Routes} from 'react-router-dom';
+import UserRoutes from './routes/UserRoutes';
+import DoctorRoutes from './routes/DoctorRoutes';
+import AdminRoutes from './routes/AdminRoutes';
 
 const App = () => {
   return (
     <Router>
-
       <Routes>
-        <Route path="/*" element={<Patient />} />
-        <Route path="/doctor/*" element={<Doctors />} />
-        <Route path="/admin/*" element={<Admin />} />
+        <Route path="/*" element={<UserRoutes />} />
+        <Route path="/doctor/*" element={<DoctorRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>
     </Router>
   );

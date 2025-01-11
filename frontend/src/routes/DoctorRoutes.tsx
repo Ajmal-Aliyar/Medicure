@@ -3,13 +3,13 @@ import Auth from "../pages/patient/Auth"
 import Dashboard from "../pages/doctor/Dashboard"
 
 
-function Doctors() {
+function DoctorRoutes() {
   return (
     <Routes>
-        <Route path="/auth" element={<Auth/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/auth" element={<Auth/>}/>
     </Routes>
   )
 }
 
-export default Doctors
+export default DoctorRoutes

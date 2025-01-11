@@ -4,9 +4,9 @@ import 'font-awesome/css/font-awesome.min.css';
 import gsap from 'gsap';
 import { useState } from 'react';
 
+
 function Menu() {
     const [isOpen, setIsOpen] = useState(false);
-    
     useGSAP(() => {
         gsap.from('.navbar', {
             y: -200,
@@ -25,7 +25,8 @@ function Menu() {
             </nav>
             <i 
                 className="fa fa-bars text-[25px] p-2 cursor-pointer lg:hidden"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() =>{ 
+                    setIsOpen(!isOpen)}}
             ></i>
             <i 
                 className="fa fa-bars text-[25px] p-2 cursor-pointer lg:block hidden"

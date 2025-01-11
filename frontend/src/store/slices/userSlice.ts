@@ -1,51 +1,45 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-
-interface User {
+interface UserState {
   email: string;
   role: string;
-}
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
-//   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-//   error: string | null;
+  //   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  //   error: string | null;
 }
 
 
 
-const authSlice = createSlice({
+const userSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
-    token: null,
+    email: '',
+    role: '',
     isAuthenticated: false,
     // status: 'idle',
     // error: null,
-  } as AuthState,
+  } as UserState,
   reducers: {
-    setUserData: (
-      state,
-      action: PayloadAction<{ user: User; token: string | null }>
-    ) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      state.isAuthenticated = true;
-    },
-    clearUserData: (state) => {
-      state.user = null;
-      state.token = null;
+    setData : (state, action: PayloadAction<{ email: string; role: string }>) => {
+      state.email = action.payload.email;
+      state.role = action.payload.role;
       state.isAuthenticated = false;
     },
+    login: (state) => {
+      state.isAuthenticated = true;
+    },
+    logout: (state) => {
+      state.email = '';
+      state.role = '';
+      state.isAuthenticated = false;
+    }
   },
-  
+
 });
 
 
-export const { setUserData, clearUserData } = authSlice.actions;
-export default authSlice.reducer;
+export const { setData, login, logout } = userSlice.actions;
+export default userSlice.reducer;
 
 
 

@@ -1,7 +1,7 @@
 import { UserModel } from "../models/userModel"
 
 export class UserRepository {
-    async createUser(fullName: string, email: string, phone: number, password: string) {
+    static async createUser(fullName: string, email: string, phone: number, password: string) {
         if (!email) {
             throw new Error('Email cannot be null or empty');
         }
@@ -14,8 +14,7 @@ export class UserRepository {
         return await user.save();
     }
     
-
-    async findByEmail(email: string) {
+    static async findByEmail(email: string) {
         return await UserModel.findOne({ email });
     }
 }
