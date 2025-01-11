@@ -38,10 +38,10 @@ export class AuthService {
         try {
             await checkBruteForce(email, 3)
             const User = await UserRepository.findByEmail(email)
-            if(!User) {
+            if (!User) {
                 throw new Error(`Email or Password is wrong`)
             }
-            const isMatch = await verifyPassword( password, User.password)
+            const isMatch = await verifyPassword(password, User.password)
             if (!isMatch) {
                 throw new Error('Password is wrong');
             }
@@ -56,8 +56,18 @@ export class AuthService {
             throw new Error(`Signin failed: ${error.message}`);
         }
     }
-    
-    async resendOTP(email: string) {
+
+    async changePassword (email: string, password: string):Promise<boolean> {
+        const hashedPassword = await hashPassword(password);
+        const result = await UserRepository.changePassword(email, password)
+        if (result.modifiedCount === 0) {
+            throw new Error('No user found with this email.');
+        }
+        console.log('Password updated successfully');
+        return true
+    }
+
+    async sendOTP(email: string) {
         try {
 
             const otp = await sendOtpToEmail(email)
@@ -72,7 +82,7 @@ export class AuthService {
         }
     }
 
-    async verifyOTP(email: string, otp: string): Promise<authorizedUserResponse> {
+    async verifyOTPAndRegister(email: string, otp: string): Promise<authorizedUserResponse> {
         try {
             await checkBruteForce(email, 30)
             const validOtp = await getRedisData(`otp-${email}`);
@@ -98,6 +108,20 @@ export class AuthService {
             console.error('Error verifying OTP:', error.message);
             throw new Error(error.message);
         }
+    }
+
+    async verifyOTP(email: string, otp: string): Promise<boolean> {
+        await checkBruteForce(email, 30)
+        const validOtp = await getRedisData(`otp-${email}`);
+        if (!validOtp) {
+            throw new Error('The OTP has either expired or is invalid. Please request a new one.');
+        }
+        if (validOtp !== otp) {
+            throw new Error('The OTP you entered is incorrect. Please try again.');
+        }
+        await deleteRedisData(`otp-${email}`);
+        await deleteBruteForce(email)
+        return true
     }
 
 }

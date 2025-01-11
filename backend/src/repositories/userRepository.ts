@@ -17,4 +17,11 @@ export class UserRepository {
     static async findByEmail(email: string) {
         return await UserModel.findOne({ email });
     }
+
+    static async changePassword (email: string, password: string) {
+        return await UserModel.updateOne(
+            { email },
+            { $set: { password } }
+        );
+    }
 }

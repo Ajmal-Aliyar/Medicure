@@ -9,8 +9,10 @@ import { login } from "../../store/slices/userSlice";
 
 type Prop = {
   handleAuth: (value: boolean) => void;
+  forgotPassword: boolean;
+  handleChangePassword:(value: boolean) => void
 }
-const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
+const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleChangePassword }) => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [serverError, setServerError] = useState<string>("")
@@ -101,27 +103,53 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth }) => {
     setLoading(true)
     const OTP2Send = otp.join('')
     setOtp(Array(6).fill(""))
-    api.post('/api/auth/verify-otp', {
-      otp: OTP2Send, email
-    })
-      .then(response => {
-        setLoading(false);
-        console.log('Login successful:', response.data);
-        setMessage('Thank you for registering! Your account has been created successfully. Please log in to continue.')
+
+    if (forgotPassword) {
+      console.log('forgot passowrd')
+      api.post('/api/auth/verify-otp', {
+        otp: OTP2Send, email
       })
-      .catch(error => {
-        setLoading(false);
-        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-        console.error('Login error:', error.response?.data || error.message);
-      });
+        .then(response => {
+          setLoading(false);
+          console.log('OTP verified successfully:', response.data);
+          setMessage('OTP verified successfully. Please set your new password.')
+        })
+        .catch(error => {
+          setLoading(false);
+          setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+          console.error('OTP verification error:', error.response?.data || error.message);
+        });
+
+    } else {
+
+      api.post('/api/auth/verify-otp-register', {
+        otp: OTP2Send, email
+      })
+        .then(response => {
+          setLoading(false);
+          console.log('Login successful:', response.data);
+          setMessage('Thank you for registering! Your account has been created successfully. Please log in to continue.')
+        })
+        .catch(error => {
+          setLoading(false);
+          setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+          console.error('Login error:', error.response?.data || error.message);
+        });
+
+    }
   }
   const handleErrorServerMessage = () => {
     setServerError('')
   }
   const handleModal = () => {
     setMessage('')
-    dispatch(login())
-    handleAuth(true)
+    if (forgotPassword) {
+      handleAuth(true)
+      handleChangePassword(true)
+    } else {
+      dispatch(login())
+      handleAuth(true)
+    }
   }
   return (
     <form className="form relative min-w-[290px] p-8 h-[380px] flex flex-col  min-h-[350px] w-[350px] lg:w-[400px] bg-[#e7eaec] shadow-lg rounded-lg items-center"

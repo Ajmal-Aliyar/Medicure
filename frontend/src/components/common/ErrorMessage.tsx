@@ -8,21 +8,16 @@ interface ErrorMessageProps {
 const ErrorMessage:React.FC<ErrorMessageProps> = ({message,handleModal}) => {
   return (
 <div
-  className={`${message !== '' ? '' : 'translate-y-28 opacity-0'} transition-all duration-500 z-50 flex w-3/4 min-h-24 overflow-hidden bg-[#eeeeee] shadow-lg max-w-96 rounded-xl`}
+  className={`${message !== '' ? '' : 'translate-y-28 opacity-0'} transition-all duration-500 z-50 flex flex-col w-3/4 min-h-24 overflow-hidden bg-[#eeeeee] shadow-lg max-w-96 rounded-xl`}
 >
   
-  <div className="mx-2.5 overflow-hidden w-full">
+  <div className="mx-2.5 overflow-hidden w-full flex justify-between">
     <p
-      className="mt-1.5 text-xl font-bold text-red-700 leading-8 mr-3 overflow-hidden text-ellipsis whitespace-nowrap"
+      className="mt-1.5 text-xl font-bold text-red-600 leading-8 mr-3 overflow-hidden text-ellipsis whitespace-nowrap"
     >
       Failed !
     </p>
-    <p className="overflow-hidden leading-5 break-all mt-2">
-
-      {message}
-    </p>
-  </div>
-  <button className="w-16 cursor-pointer focus:outline-none flex p-3" onClick={(e) => {
+    <button className="w-16 cursor-pointer focus:outline-none flex p-3" onClick={(e) => {
     e.preventDefault()
     handleModal()
   }}>
@@ -41,6 +36,12 @@ const ErrorMessage:React.FC<ErrorMessageProps> = ({message,handleModal}) => {
       ></path>
     </svg>
   </button>
+  </div>
+    <p className="overflow-hidden leading-5 p-4">
+
+      {message}
+    </p>
+   <div className='w-full h-2 bg-red-600'></div>
 </div>
 
   )

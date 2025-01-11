@@ -1,13 +1,16 @@
-import { useGSAP } from "@gsap/react";
 import SideAuthComponent from "../../components/auth/SideAuthComponent";
-import gsap from "gsap";
 import AuthPage from "../../components/auth/Auth";
 import { useEffect, useState } from "react";
 import VerificationForm from "../../components/auth/VerificationOTP";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import AuthAnimations from "../../components/auth/AuthAnimation";
+import ChangePassword from "../../components/auth/ChangePassword"
 
 function Auth() {
+  const [ auth, setAuth] = useState(true)
+  const [forgotPassword, setForgorPassword] = useState(false)
+  const [changePassword, setChangePassword] = useState(false)
   const token = Cookies.get('accessToken');
   const navigate = useNavigate()
   useEffect(()=>{
@@ -15,40 +18,19 @@ function Auth() {
           navigate('/')
       }
   },[token,navigate])
-  const [ auth, setAuth] = useState(true)
+
   const handleAuth = (value:boolean) => {
     setAuth(value)
   }
-  useGSAP(()=>{
-    const tl = gsap.timeline()
-    tl.from('.auth',{
-      opacity:0,
-      x:-100,
-      duration:1.2,
-    },'anime1')
-    tl.from('.form',{
-      opacity:0,
-      x:100,
-      duration:1.2,
-    },'anime1')
 
-    tl.from('.left-badge', {
-      scale: 0,
-      opacity:0,
-      y: -100,
-      delay:-0.2,
-      duration: 2,
-      ease: 'power3.out',
-    }, 'anime2')
-      .from('.right-badge', {
-        scale: 0,
-        opacity:0,
-        y: 100,
-        duration: 2,
-        delay:-0.2,
-        ease: 'power3.out',
-      }, 'anime2');
-  })
+  const handleForgotPassword = (value: boolean) => {
+    setForgorPassword(value)
+    setAuth(false)
+  } 
+  const handleChangePassword = (value: boolean) => {
+    setChangePassword(value)
+  }
+
   return (
     <div className="w-[100%] h-[100vh] flex justify-center items-center pt-24">
       <div className="lg:w-[80%] w-[100%] relative flex">
@@ -56,18 +38,14 @@ function Auth() {
           <div className="w-[400px] h-[400px] bg-[#b6ddfb] absolute -top-10 rounded-full blur-2xl">
           </div>
           <SideAuthComponent />
-          
         </div>
-
         <div className="w-[100%] lg:w-[50%] flex justify-center items-center">
-
-          
-            {auth ?
-            <AuthPage handleAuth={handleAuth}/> :
-            <VerificationForm handleAuth={handleAuth} />
-            }
+            {changePassword ? <ChangePassword handleChangePassword={handleChangePassword}/> : 
+             auth ? <AuthPage handleAuth={handleAuth} handleForgotPassword={handleForgotPassword}/> : 
+             <VerificationForm handleAuth={handleAuth} forgotPassword={forgotPassword} handleChangePassword={handleChangePassword}/> }
         </div>
       </div>
+      <AuthAnimations />
     </div>
   );
 }
