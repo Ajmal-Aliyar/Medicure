@@ -1,6 +1,5 @@
 import mongoose, { Schema, model } from 'mongoose';
 
-// Define the Patient Schema
 const userSchema = new Schema({
     fullName: {
         type: String,
@@ -13,9 +12,8 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: true,
-        maxlength: 150
+        maxlength: 150,
     },
     password: {
         type: String,
@@ -60,7 +58,4 @@ const userSchema = new Schema({
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 });
 
-
 export const UserModel = model('User', userSchema);
-
-

@@ -2,9 +2,9 @@ import { useState } from "react";
 import { api } from '../../utils/axiosInstance'
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate";
 import ErrorMessage from "../common/ErrorMessage";
-import LoaderDots from "../common/LoaderDots";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../store/slices/authSlice";
+import HoneyComb from "../common/HoneyComb";
 type ErrorType = {
     name: string,
     email: string,
@@ -276,9 +276,9 @@ const Auth: React.FC<Prop> = ({ handleAuth }) => {
                     }} href="" className="text-[#0c0b3e] font-medium">Sign in</a></p>}
             </div>
 
-            <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#333333] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
+            <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
                 {!loading ?  <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : '' }
-                {serverError === '' || loading ? <LoaderDots /> :''}
+                {loading ? <HoneyComb /> :''}
             </div>
 
         </div>

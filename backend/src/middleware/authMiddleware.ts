@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from "../utils/tokenUtils";
+import { verifyToken } from "../utils/tokenUtil";
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(' ')[1];

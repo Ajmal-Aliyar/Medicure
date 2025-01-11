@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const redisClient = createClient({
-    url: process.env.REDIS_URL || 'redis://localhost:6379', 
+    url: process.env.REDIS_URL || 'redis://localhost:6379',
 });
 
 redisClient.connect().catch((err) => {
@@ -17,7 +17,6 @@ redisClient.on('error', (err) => {
 
 export const setRedisData = async (key: string, value: string, ttl?: number) => {
     try {
-        
         if (ttl) {
             await redisClient.setEx(key, ttl, value);
         } else {
@@ -48,6 +47,22 @@ export const deleteRedisData = async (key: string) => {
     }
 };
 
+export const incRedisData = async (key: string) => {
+    try {
+        await redisClient.incr(key);
+    } catch (error) {
+        console.error(`Error increasing data for ${key}:`, error);
+    }
+};
+
+export const expRedisData = async (key: string, time: number) => {
+    try {
+        await redisClient.expire(key, time);
+    } catch (error) {
+        console.error(`Error setting expiration data for ${key}:`, error);
+    }
+};
+
 export const keyRedisExists = async (key: string): Promise<boolean> => {
     try {
         const exists = await redisClient.exists(key);
@@ -57,4 +72,3 @@ export const keyRedisExists = async (key: string): Promise<boolean> => {
         return false;
     }
 };
-
