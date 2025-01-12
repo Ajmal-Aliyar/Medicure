@@ -20,7 +20,6 @@ export const tokenMiddleware = (req: Request, res: Response, next: NextFunction)
         console.log('haai')
         const accessToken = req?.cookies?.accessToken ?? null;
         const refreshToken = req?.cookies?.refreshToken ?? null;
-        console.log(accessToken,refreshToken,'tokens')
         if (!accessToken && !refreshToken) {
             console.log('No tokens provided');
             return res.status(401).send('Access denied, no token provided');
@@ -58,7 +57,7 @@ export const tokenMiddleware = (req: Request, res: Response, next: NextFunction)
                 return res.status(403).send('Invalid or expired refresh token');
             }
         }
-        return res.status(401).send('Authentication failed');
+        return res.status(200).send('User not Logined');
         
     } catch (error) {
         console.error('Unexpected error in tokenMiddleware:', error);

@@ -11,9 +11,10 @@ type ErrorType = {
   confirmPassword: string;
 }
 type ForgotPasswordProps = {
-  handleChangePassword: (value: boolean) => void
+  handleChangePassword: (value: boolean) => void;
+  role:string;
 }
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleChangePassword }) => {
+const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleChangePassword , role}) => {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [newPasswordfocused, setNewPasswordFocused] = useState(false)
@@ -55,7 +56,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleChangePassword })
 
     if (!errorMessage.newPassword && !errorMessage.confirmPassword && confirmPassword && newPassword) {
       api.post('/api/auth/change-password', {
-        email,password:confirmPassword
+        email,password:confirmPassword,role
       })
         .then(response => {
           setLoading(false);

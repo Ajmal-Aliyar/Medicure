@@ -1,11 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET
-const ACCESS_TOKEN_EXPIRY = process.env.ACCESS_TOKEN_EXPIRY
-const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY
-
+import jwt from 'jsonwebtoken';
 
 interface Payload {
     email: string;
@@ -13,26 +7,20 @@ interface Payload {
 }
 
 
-interface DecodedToken extends JwtPayload {
-    email: string;
-    role: string;
-}
-
-
 export const generateAccessToken = (payload: Payload): string => {
-    console.log(ACCESS_TOKEN_EXPIRY,'extime')
-    return jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRY });
+    console.log(process.env.ACCESS_TOKEN_EXPIRY,'extime')
+    return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {  expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
 };
 
 
 export const generateRefreshToken = (payload: Payload): string => {
-    return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRY });
+    return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
 };
 
 
-export const verifyAccessToken = (token: string): DecodedToken => {
+export const verifyAccessToken = (token: string): Payload => {
     try {
-        const decoded = jwt.verify(token, JWT_ACCESS_SECRET) as DecodedToken;
+        const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as Payload;
         return decoded;
     } catch (error) {
         throw new Error('Invalid or expired access token');
@@ -40,9 +28,9 @@ export const verifyAccessToken = (token: string): DecodedToken => {
 };
 
 
-export const verifyRefreshToken = (token: string): DecodedToken => {
+export const verifyRefreshToken = (token: string): Payload => {
     try {
-        const decoded = jwt.verify(token, JWT_REFRESH_SECRET) as DecodedToken;
+        const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET) as Payload;
         return decoded;
     } catch (error) {
         throw new Error('Invalid or expired refresh token');

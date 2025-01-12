@@ -15,9 +15,10 @@ type ErrorType = {
 type AuthPageProps = {
     handleAuth: (value: boolean) => void;
     handleForgotPassword: (value: boolean) => void;
-  };
+    role: string
+};
 
-const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => {
+const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role }) => {
     const [isLogin, setIsLogin] = useState(true)
     const [isForgotPassword, setIsForgotPassword] = useState(false)
     const [nameFocused, setnameFocused] = useState(false);
@@ -39,24 +40,29 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
     const dipatch = useDispatch()
     const navigate = useNavigate()
     const handleSubmit = () => {
-        setLoading(true);  
+        setLoading(true);
         if (isLogin) {
             if (!errorMessage.email && !errorMessage.password && email && password) {
                 api.post('/api/auth/signin', {
                     email,
-                    password
+                    password,
+                    role
                 })
-                .then(response => {
-                    setLoading(false);
-                    console.log('Signup successful:', response.data);
-                    dipatch(setData({email, role: "user"}))
-                    navigate('/')
-                })
-                .catch(error => {
-                    setLoading(false);
-                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                    console.error('Signup error:', error.response?.data || error.message);
-                });
+                    .then(response => {
+                        setLoading(false);
+                        console.log('Signup successful:', response.data);
+                        dipatch(setData({ email, role }))
+                        if (role === 'doctor') {
+                            navigate('/doctor/dashboard')
+                        } else {
+                            navigate('/user')
+                        }
+                    })
+                    .catch(error => {
+                        setLoading(false);
+                        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+                        console.error('Signup error:', error.response?.data || error.message);
+                    });
             } else {
                 handleErrorMessage('email', email);
                 handleErrorMessage('password', password);
@@ -65,17 +71,19 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
 
         } else {
             if (!errorMessage.name && !errorMessage.email && !errorMessage.mobile && !errorMessage.password && name && email && mobile && password) {
+                console.log(role)
                 api.post('/api/auth/signup', {
                     name,
                     email,
                     mobile,
-                    password
+                    password,
+                    role
                 })
                     .then(response => {
                         setLoading(false);
                         console.log('Signup successful:', response.data);
-                        handleAuth(true);
-                        dipatch(setData({email, role: "user"}))
+                        dipatch(setData({ email, role }))
+                        handleAuth(false);
                     })
                     .catch(error => {
                         setLoading(false);
@@ -92,7 +100,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
         }
     };
 
-   
+
     const handleErrorServerMessage = () => {
         setServerError('')
     }
@@ -133,41 +141,50 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
     const sendOTP = () => {
         setLoading(true)
         if (!errorMessage.email && email) {
-        api.post('/api/auth/send-otp',{email})
-            .then(response => {
-                setLoading(false);
-                console.log('Signup successful:', response.data);
-                handleForgotPassword(true)
-                dipatch(setData({email, role: "user"}))
-            })
-            .catch(error => {
-                setLoading(false);
-                setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                console.error('Signup error:', error.response?.data || error.message);
-            });
+            api.post('/api/auth/send-otp', { email })
+                .then(response => {
+                    setLoading(false);
+                    console.log('Signup successful:', response.data);
+                    handleForgotPassword(true)
+                    dipatch(setData({ email, role }))
+                })
+                .catch(error => {
+                    setLoading(false);
+                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+                    console.error('Signup error:', error.response?.data || error.message);
+                });
         } else {
             handleErrorMessage('email', email);
             setLoading(false)
         }
     }
-    const setLoginTrue = (event:React.MouseEvent<HTMLAnchorElement>) => {
+    const setLoginTrue = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         setIsLogin(true)
     }
-    const setLoginFalse = (event:React.MouseEvent<HTMLAnchorElement>) => {
+    const setLoginFalse = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         setIsLogin(false)
     }
-    
+    const getButtonText = (isForgotPassword: boolean, isLogin: boolean, role: string) => {
+        if (isForgotPassword) return 'Submit';
+        if (isLogin) return role === 'user' ? 'Sign in as user' : 'Sign in as doctor';
+        return role === 'user' ? 'Sign up as user' : 'Sign up as doctor';
+    };
+
     return (
 
 
-        <div className={`form flex flex-col items-center justify-center min-h-[350px] w-[350px] lg:w-[400px] bg-[#eeeeee] shadow-lg rounded-lg py-10 relative`}
+        <div className={`form flex flex-col items-center justify-center min-h-[350px] w-[350px] lg:w-[400px] bg-[#eeeeee] shadow-lg rounded-lg pb-10 relative`}
             style={{ boxShadow: '16px 16px 32px #c8c8c8, -16px -16px 32px #fefefe' }}>
+            <div className=" w-full rounded-t-lg mb-4 flex items-center justify-around p-3 mt-10">
+                <a className="text-[#0c0b3e] uppercase font-bold text-xl tracking-wider">
+                    {isForgotPassword ? 'Enter Email' : isLogin ? 'Sign in' : 'Sign up'}
+                </a>
+            </div>
 
-            <a className="text-[#0c0b3e] uppercase font-bold text-xl tracking-wider mb-4">
-                {isForgotPassword? 'Enter Email' : isLogin ? 'Sign in' : 'Sign up'}
-            </a>
+
+
             <div className={`relative w-[250px] mt-6 ${isLogin ? 'hidden' : ''}`}>
                 <input
                     type="text"
@@ -177,7 +194,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
                     className={`w-full p-3  ${nameFocused || name ? 'border-t-2 border-r-2 rounded-lg ring-0 ' : ''} border-b-2 border-l-2 border-[#0c0b3eb5] bg-transparent outline-none text-[#0c0b3eb5] text-base  rounded-bl-lg  transition duration-300 `}
                     onFocus={() => setnameFocused(true)}
                     onChange={(e) => handleErrorMessage('name', e.target.value)}
-                    onBlur={(e) => e.target.value === '' ? setnameFocused(false): ''}
+                    onBlur={(e) => e.target.value === '' ? setnameFocused(false) : ''}
 
                 />
                 <label
@@ -189,7 +206,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
                 <p className={`${errorMessage.name !== '' ? '' : 'hidden'} text-[10px] text-red-500 pl-2`}>{errorMessage.name}</p>
             </div>
 
-            <div className={`relative w-[250px] mt-6 ${isForgotPassword?'':''} duration-300`}>
+            <div className={`relative w-[250px] mt-6 ${isForgotPassword ? '' : ''} duration-300`}>
                 <input
                     type="text"
                     required
@@ -219,7 +236,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
                     className={`w-full p-3 ${mobileFocused || mobile !== '' ? 'border-t-2 border-r-2 rounded-lg ring-0' : ''} border-b-2 border-l-2 border-[#0c0b3eb5] bg-transparent outline-none text-[#0c0b3eb5] text-base rounded-bl-lg transition duration-300`}
                     onFocus={() => setmobileFocused(true)}
                     onChange={(e) => handleErrorMessage('mobile', e.target.value)}
-                    onBlur={(e) => !e.target.value ? setmobileFocused(false) : '' }
+                    onBlur={(e) => !e.target.value ? setmobileFocused(false) : ''}
                 />
                 <label
                     htmlFor="username"
@@ -231,7 +248,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
 
             </div>
 
-            <div className={`relative w-[250px] mt-6 ${isForgotPassword?'hidden':''} duration-200`}>
+            <div className={`relative w-[250px] mt-6 ${isForgotPassword ? 'hidden' : ''} duration-200`}>
                 <input
                     type="password"
                     value={password}
@@ -239,7 +256,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
                     className={`w-full p-3   ${passwordFocused || password !== '' ? 'border-t-2 border-r-2 rounded-lg ring-0' : ''} border-b-2 border-l-2 border-[#0c0b3eb5] bg-transparent outline-none text-[#0c0b3eb5] text-base  rounded-bl-lg  transition duration-300 `}
                     onFocus={() => setPasswordFocused(true)}
                     onChange={(e) => handleErrorMessage('password', e.target.value)}
-                    onBlur={(e) => e.target.value === '' ? setPasswordFocused(false) : '' }
+                    onBlur={(e) => e.target.value === '' ? setPasswordFocused(false) : ''}
                 />
                 <label
                     htmlFor="password"
@@ -250,24 +267,24 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword }) => 
                 <p className={`${errorMessage.password !== '' ? '' : 'hidden'} text-[10px] text-red-500 pl-2`}>{errorMessage.password}</p>
             </div>
             <div className="w-[250px] mt-4">
-                <p className={`${!isLogin || isForgotPassword ? 'hidden' : ''} text-gray-500 text-xs pb-2 text-end hover:cursor-pointer hover:text-[#0c0b3eb5] `}  onClick={() => setIsForgotPassword(true)}>Forgot Password?</p>
+                <p className={`${!isLogin || isForgotPassword ? 'hidden' : ''} text-gray-500 text-xs pb-2 text-end hover:cursor-pointer hover:text-[#0c0b3eb5] `} onClick={() => setIsForgotPassword(true)}>Forgot Password?</p>
             </div>
             <button className=" w-[250px] h-[45px]  border-2 border-[#0c0b3eb5] text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-[#0c0b3eb5] hover:bg-[#0c0b3e] text-white rounded-md active:scale-90 "
-                onClick={ isForgotPassword ? sendOTP : handleSubmit}>
-
-                {isForgotPassword ? 'submit' :isLogin ? 'Sign in' : 'Sign up'}
-
-
+                onClick={isForgotPassword ? sendOTP : handleSubmit}>
+                {getButtonText(isForgotPassword, isLogin, role)}
             </button>
-            <div className={`h-[100px] flex items-center ${isForgotPassword?'hidden':''} duration-200`}>
+            <div className={`h-[100px] flex flex-col justify-center ${isForgotPassword ? 'hidden' : ''} duration-200 gap-1`}>
                 {isLogin ?
                     <p className="text-gray-600">Don't have an account? <a onClick={(e) => setLoginFalse(e)} href="" className="text-[#0c0b3e] font-medium">Sign up</a></p> :
-                    <p className="text-gray-600">Already have an account? <a onClick={(e)=>setLoginTrue(e)} href="" className="text-[#0c0b3e] font-medium">Sign in</a></p>}
+                    <p className="text-gray-600">Already have an account? <a onClick={(e) => setLoginTrue(e)} href="" className="text-[#0c0b3e] font-medium">Sign in</a></p>}
+
+                    <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={()=>navigate(role === 'user' ? '/doctor/auth' : '/user/auth')}>I'm a {role === 'user' ? 'doctor' : 'patient'}</p> 
             </div>
+            
 
             <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
-                {!loading ?  <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : '' }
-                {loading ? <HoneyComb /> :''}
+                {!loading ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
+                {loading ? <HoneyComb /> : ''}
             </div>
 
         </div>

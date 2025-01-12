@@ -4,10 +4,18 @@ import { AuthService } from "../services/authServices";
 const authService = new AuthService();
 
 export class AuthController {
-    async signUp(req: Request, res: Response) {
-        const { name, email, mobile, password } = req.body;
+    async checkRequest (req: Request, res: Response) {
         try {
-            const message = await authService.signUp(name, email, mobile, password);
+            console.log('success', req.body)
+            res.status(201)
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+    async signUp(req: Request, res: Response) {
+        const { name, email, mobile, password, role } = req.body;
+        try {
+            const message = await authService.signUp(name, email, mobile, password, role);
             console.log('success', message)
             res.status(201).json({ message })
         } catch (error: any) {
@@ -16,9 +24,9 @@ export class AuthController {
     }
 
     async signIn(req: Request, res: Response) {
-        const { email, password } = req.body
+        const { email, password, role } = req.body
         try {
-            const { accessToken, refreshToken } = await authService.signIn(email, password)
+            const { accessToken, refreshToken } = await authService.signIn(email, password, role)
             if (accessToken) {
                 res.cookie('accessToken', accessToken, {
                     httpOnly: false,
@@ -43,11 +51,11 @@ export class AuthController {
 
     async changePassword(req: Request, res: Response) {
         try {
-            const { email, password } = req.body
-            if (!email || !password) {
+            const { email, password, role } = req.body
+            if (!email || !password ) {
                 res.status(400).json({ error: 'Email and password are required.' });
             }
-            const status = await authService.changePassword(email, password)
+            const status = await authService.changePassword(email, password, role)
             if (status) {
                 res.status(200).json({ message: 'Password changed successfully.' });
             } else {

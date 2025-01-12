@@ -3,26 +3,25 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import mongoDB from './config/db'
-import authRouter from './routes/userRoutes'
+import authRouter from './routes/authRoutes'
+import morgan from 'morgan';
 
+mongoDB()
 dotenv.config();
 const app = express();
 app.use(cookieParser());
-const PORT = process.env.PORT || 3000;
-
-app.use(cors({
-    origin: process.env.CORS_URL,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    credentials: true
-  }));
-  
+app.use(morgan('dev'));
 app.use(express.json());
-mongoDB()
-
+app.use(cors({
+  origin: process.env.CORS_URL,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  credentials: true
+}));
 
 app.use('/api/auth',authRouter)
 
 
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

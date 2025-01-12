@@ -20,7 +20,7 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleCha
   const [timer, setTimer] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const [message,setMessage] = useState('')
-  const email = useSelector((state: RootState) => state?.user?.email);
+  const { email } = useSelector((state: RootState) => state?.user);
   const dispatch = useDispatch()
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>, index: number): void => {
     const value = event.target.value;
@@ -128,7 +128,7 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleCha
         .then(response => {
           setLoading(false);
           console.log('Login successful:', response.data);
-          setMessage('Thank you for registering! Your account has been created successfully. Please log in to continue.')
+          setMessage('Thank you for registering! Your account has been created successfully.')
         })
         .catch(error => {
           setLoading(false);

@@ -6,8 +6,8 @@ import AdminRoutes from './routes/AdminRoutes';
 const App = () => {
   return (
     <Router>
-      <Routes>
-        <Route path="/*" element={<UserRoutes />} />
+      <Routes >
+        <Route path="/user/*" element={<UserRoutes />} />
         <Route path="/doctor/*" element={<DoctorRoutes />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
       </Routes>

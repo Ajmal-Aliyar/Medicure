@@ -2,22 +2,25 @@ import SideAuthComponent from "../../components/auth/SideAuthComponent";
 import AuthPage from "../../components/auth/Auth";
 import { useEffect, useState } from "react";
 import VerificationForm from "../../components/auth/VerificationOTP";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+// import Cookies from "js-cookie";
+// import { useNavigate } from "react-router-dom";
 import AuthAnimations from "../../components/auth/AuthAnimation";
 import ChangePassword from "../../components/auth/ChangePassword"
 
-function Auth() {
+interface AuthProps {
+  role: string;
+}
+const Auth:React.FC<AuthProps> = ({role}) => {
   const [ auth, setAuth] = useState(true)
   const [forgotPassword, setForgorPassword] = useState(false)
   const [changePassword, setChangePassword] = useState(false)
-  const token = Cookies.get('accessToken');
-  const navigate = useNavigate()
-  useEffect(()=>{
-      if(token){
-          navigate('/')
-      }
-  },[token,navigate])
+  // const token = Cookies.get('accessToken');
+  // const navigate = useNavigate()
+  // useEffect(()=>{
+  //     if(token){
+  //         navigate('/user')
+  //     }
+  // },[token,navigate])
 
   const handleAuth = (value:boolean) => {
     setAuth(value)
@@ -40,8 +43,8 @@ function Auth() {
           <SideAuthComponent />
         </div>
         <div className="w-[100%] lg:w-[50%] flex justify-center items-center">
-            {changePassword ? <ChangePassword handleChangePassword={handleChangePassword}/> : 
-             auth ? <AuthPage handleAuth={handleAuth} handleForgotPassword={handleForgotPassword}/> : 
+            {changePassword ? <ChangePassword handleChangePassword={handleChangePassword} role={role}/> : 
+             auth ? <AuthPage handleAuth={handleAuth} handleForgotPassword={handleForgotPassword} role={role}/> : 
              <VerificationForm handleAuth={handleAuth} forgotPassword={forgotPassword} handleChangePassword={handleChangePassword}/> }
         </div>
       </div>
