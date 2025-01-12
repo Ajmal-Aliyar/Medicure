@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 interface Payload {
     email: string;
     role: string;
+    isApproved?: boolean;
 }
 
 

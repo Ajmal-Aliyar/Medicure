@@ -68,9 +68,9 @@ export class AuthController {
 
     async userInfo(req: Request, res: Response) {
         try {
-            const { email, role } = req.client
-            console.log({ email, role }, 'cli')
-            res.status(200).json({ email, role })
+            const { email, role, isApproved } = req.client
+            console.log({ email, role,isApproved }, 'cli')
+            res.status(200).json({ email, role, isApproved })
         } catch (error: any) {
             res.status(400).json({ error: error.message })
         }

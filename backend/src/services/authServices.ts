@@ -54,7 +54,12 @@ export class AuthService {
                 throw new Error('Invalid email or password');
             }
             await deleteBruteForce(email);
-            const payload = { email, role };
+            const payload = {
+                email,
+                role,
+                ...(role === 'doctor' && 'isApproved' in user ? { isApproved: user.isApproved } : {})
+            };
+    
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
             return { accessToken, refreshToken };
@@ -63,6 +68,7 @@ export class AuthService {
             throw new Error(`Sign-in failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
     }
+
     
 
     async changePassword (email: string, password: string, role:string):Promise<boolean> {

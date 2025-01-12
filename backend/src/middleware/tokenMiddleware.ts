@@ -11,6 +11,7 @@ declare global {
             client?: {
                 email: string;
                 role: string;
+                isApproved?: boolean;
             };
         }
     }
@@ -28,6 +29,7 @@ export const tokenMiddleware = (req: Request, res: Response, next: NextFunction)
         if (accessToken) {
             try {
                 const decoded = verifyAccessToken(accessToken);
+                console.log('decoced',decoded)
                 req.client = decoded;
                 return next();
             } catch (error) {
@@ -43,8 +45,8 @@ export const tokenMiddleware = (req: Request, res: Response, next: NextFunction)
         if (refreshToken) {
             try {
                 const refreshDecoded = verifyRefreshToken(refreshToken);
-                const { email, role } = refreshDecoded;
-                const newAccessToken = generateAccessToken({ email, role });
+                const { email, role, isApproved } = refreshDecoded;
+                const newAccessToken = generateAccessToken({ email, role, isApproved });
                 res.cookie('accessToken', newAccessToken, {
                     httpOnly: false,
                     maxAge: 15 * 60 * 1000, 

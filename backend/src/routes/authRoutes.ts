@@ -15,5 +15,5 @@ router.post('/change-password', authController.changePassword)                  
 
 
 router.get('/user-info', tokenMiddleware, authController.userInfo) // may be change to user
-router.post('/check-request', authController.checkRequest)
+router.post('/check-request', tokenMiddleware,authController.checkRequest)
 export default router;
