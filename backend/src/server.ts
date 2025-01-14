@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import mongoDB from './config/db'
 import authRouter from './routes/authRoutes'
+import doctorRoute from './routes/doctorRoutes'
 import morgan from 'morgan';
 
 mongoDB()
@@ -19,6 +20,7 @@ app.use(cors({
 }));
 
 app.use('/api/auth',authRouter)
+app.use('/api/doctor',doctorRoute)
 
 
 const PORT = process.env.PORT || 3000;

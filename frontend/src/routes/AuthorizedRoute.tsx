@@ -26,7 +26,7 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
         const fetchUserInfo = async () => {
             try {
                 const response = await api.get<UserInfo>('/api/auth/user-info');
-                console.log('Fetched user data:', response.data);  // Log the response for debugging
+                console.log('Fetched user data:', response.data); 
                 if (response.data) {
                     dispatch(setData(response.data));
                     dispatch(login());
@@ -45,13 +45,8 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
         }
     }, [dispatch, isAuthenticated, isApproved, role]);
 
-    // Debugging the state values
-    console.log('isApproved:', isApproved);
-    console.log('role:', role);
-    console.log('isAuthenticated:', isAuthenticated);
-
     if (loading) {
-        return <div className='flex justify-center items-center'><HoneyComb /></div>;
+        return <div className='flex justify-center items-center bg-[#e9e9e9]'><HoneyComb /></div>;
     }
 
     if (!isAuthenticated || allowedRole !== role) {
@@ -59,7 +54,7 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
     }
 
     if (role === 'doctor' && isApproved === false) {
-        return <Navigate to='/doctor/approve-details' replace />;
+        return <Navigate to='/doctor/verify-details' replace />;
     }
 
     return children;

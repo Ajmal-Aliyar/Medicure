@@ -1,20 +1,27 @@
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { RootState } from '../store/store';
-import VerifyDetails from '../pages/admin/VerifyDetails';
+import VerifyDetails from '../pages/doctor/VerifyDetails';
+import { useState } from 'react';
+import HoneyComb from '../components/common/HoneyComb';
 
 const PrivateRoute = () => {
-    const { isAuthenticated, isApproved, role } = useSelector((state: RootState) => state.user);
+    const { isAuthenticated, isApproved } = useSelector((state: RootState) => state.user);
+    const [ loading, setLoading ] = useState(false)
+
+    if (loading) {
+        return <div className='flex justify-center items-center bg-[#e9e9e9]'><HoneyComb /></div>;
+    }
 
     if (!isAuthenticated) {
         return <Navigate to="/doctor/auth" replace />;
     }
 
-    if (role === 'doctor' && !isApproved) {
-        return <Navigate to="/approve-details" replace />;
+    if (isAuthenticated && isApproved) {
+        return <Navigate to="/doctor/dashboard" replace />;
     }
 
-    return <VerifyDetails />;
+    return <VerifyDetails/>;
 };
 
 export default PrivateRoute;

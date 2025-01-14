@@ -34,7 +34,7 @@ const PublicRoutes = ({ children }: ProtectedRouteProps) => {
     }, [dispatch]);
 
     if (loading) {
-        return <div className='flex justify-center items-center'><HoneyComb/></div>;
+        return <div className='flex justify-center items-center bg-[#e9e9e9]'><HoneyComb /></div>;
     }
 
     return children;

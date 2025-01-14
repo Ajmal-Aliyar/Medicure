@@ -1,9 +1,7 @@
 import SideAuthComponent from "../../components/auth/SideAuthComponent";
 import AuthPage from "../../components/auth/Auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import VerificationForm from "../../components/auth/VerificationOTP";
-// import Cookies from "js-cookie";
-// import { useNavigate } from "react-router-dom";
 import AuthAnimations from "../../components/auth/AuthAnimation";
 import ChangePassword from "../../components/auth/ChangePassword"
 
@@ -14,14 +12,6 @@ const Auth:React.FC<AuthProps> = ({role}) => {
   const [ auth, setAuth] = useState(true)
   const [forgotPassword, setForgorPassword] = useState(false)
   const [changePassword, setChangePassword] = useState(false)
-  // const token = Cookies.get('accessToken');
-  // const navigate = useNavigate()
-  // useEffect(()=>{
-  //     if(token){
-  //         navigate('/user')
-  //     }
-  // },[token,navigate])
-
   const handleAuth = (value:boolean) => {
     setAuth(value)
   }

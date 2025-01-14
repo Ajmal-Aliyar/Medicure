@@ -57,7 +57,7 @@ function LandingBanner() {
                         <div className="w-full md:w-[50%] h-full flex items-end justify-center md:justify-end relative mt-8 md:mt-0">
 
                             <img className="doct-1 h-[100%] md:h-auto md:w-[80%] absolute bottom-0 left-0" src={maleDoctor} alt="Male Doctor" />
-                            <img className="doct-2 h-[100%] md:h-auto md:w-[80%] absolute bottom-0 right-0 md:left-0 md:ml-56" src={femaleDoctor} alt="Female Doctor" />
+                            <img className="doct-2 h-[100%] md:h-auto md:w-[80%] absolute bottom-0 right-0 md:left-0 md:ml-56 opacity-0 md:opacity-100" src={femaleDoctor} alt="Female Doctor" />
 
                             <div className="top-badge hidden md:flex absolute md:bottom-16 left-0  w-[12rem] lg:w-[16rem] md:h-[4rem] lg:h-[5rem] bg-white/15 border-2 border-white/30 backdrop-blur-lg rounded-full items-center justify-center">
                                 <PatientBadge />

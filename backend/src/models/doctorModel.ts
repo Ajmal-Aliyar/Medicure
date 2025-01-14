@@ -26,6 +26,7 @@ interface Doctor extends Document {
     languageSpoken: string;
     fees: string;
     isBlocked: boolean;
+    isProfileCompleted: boolean;
     isApproved: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -107,6 +108,10 @@ const DoctorSchema = new Schema<Doctor>({
     isBlocked: {
         type: Boolean,
         default: false
+    },
+    isProfileCompleted: {
+        type: Boolean,
+        default:false,
     },
     isApproved: {
         type: Boolean,
