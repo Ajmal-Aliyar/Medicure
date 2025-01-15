@@ -1,11 +1,11 @@
 
-import BooknowCard from "../../components/home/BooknowCard"
-import AboutSection from "../../components/home/AboutSection"
-import WhyChooseUs from "../../components/home/WhyChooseUs"
-import ExperienceCard from "../../components/home/ExperienceCard"
-import DoctorSlider from "../../components/home/DoctorSlider"
-import ReviewSection from "../../components/home/ReviewSection"
-import LandingBanner from "../../components/home/LandingBanner"
+import BooknowCard from "../../components/patient/home/BooknowCard"
+import AboutSection from "../../components/patient/home/AboutSection"
+import WhyChooseUs from "../../components/patient/home/WhyChooseUs"
+import ExperienceCard from "../../components/patient/home/ExperienceCard"
+import DoctorSlider from "../../components/patient/home/DoctorSlider"
+import ReviewSection from "../../components/patient/home/ReviewSection"
+import LandingBanner from "../../components/patient/home/LandingBanner"
 
 function Home() {
     return (

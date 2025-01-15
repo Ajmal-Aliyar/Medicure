@@ -2,9 +2,9 @@
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import doctor2 from '../../assets/doctors/slidedoctor2.png'
-import doctor1 from '../../assets/doctors/slidedoctor1.png'
-import doctor3 from '../../assets/doctors/slidedoctor3.png'
+import doctor2 from '../../../assets/doctors/slidedoctor2.png'
+import doctor1 from '../../../assets/doctors/slidedoctor1.png'
+import doctor3 from '../../../assets/doctors/slidedoctor3.png'
 import { useEffect, useState } from 'react';
 
 const data = [

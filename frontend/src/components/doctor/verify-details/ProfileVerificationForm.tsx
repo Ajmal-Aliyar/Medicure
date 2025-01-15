@@ -1,22 +1,31 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import FileUploader from "./FileUploader";
+import { uploadCloudinary } from "../../../utils/Cloudinary";
+import { api } from "../../../utils/axiosInstance";
 
 type ContentProps = {
     handleModal: (value: string) => void;
     setLoading: Dispatch<SetStateAction<boolean>>;
 };
+interface VerificationProofs {
+    identityProof?: string | null;
+    medicalRegistration?: string | null;
+    establishmentProof?: string | null;
+}
 
 const ProfileVerificationForm: React.FC<ContentProps> = ({ handleModal, setLoading }) => {
     const [currentStep, setCurrentStep] = useState<number>(1);
-    const [identityProofFile, setIdentityProofFile] = useState<File | null>(null);
+    const [identityProof, setIdentityProof] = useState<File | null>(null);
     const [identityProofPreview, setIdentityProofPreview] = useState<string | null>(null);
-    const [medicalRegistrationFile, setMedicalRegistrationFile] = useState<File | null>(null);
+    const [medicalRegistration, setMedicalRegistration] = useState<File | null>(null);
     const [medicalRegistrationPreview, setMedicalRegistrationPreview] = useState<string | null>(null);
-    const [establishmentProofFile, setEstablishmentProofFile] = useState<File | null>(null);
+    const [establishmentProof, setEstablishmentProof] = useState<File | null>(null);
     const [establishmentProofPreview, setEstablishmentProofPreview] = useState<string | null>(null);
+    const [error, setError] = useState<string>('')
 
     const goToNextStep = () => {
         if (currentStep < 3) {
+
             setCurrentStep((prevStep) => prevStep + 1);
         }
     };
@@ -28,30 +37,90 @@ const ProfileVerificationForm: React.FC<ContentProps> = ({ handleModal, setLoadi
     };
 
     const updateEstablishmentProof = (file: File | null, preview: string | null) => {
-        setEstablishmentProofFile(file);
+        setEstablishmentProof(file);
         setEstablishmentProofPreview(preview);
     };
 
     const updateMedicalRegistrationProof = (file: File | null, preview: string | null) => {
-        setMedicalRegistrationFile(file);
+        setMedicalRegistration(file);
         setMedicalRegistrationPreview(preview);
     };
 
     const updateIdentityProof = (file: File | null, preview: string | null) => {
-        setIdentityProofFile(file);
+        setIdentityProof(file);
         setIdentityProofPreview(preview);
     };
 
-    const handleFormSubmit = () => {
-        if (!identityProofFile || !medicalRegistrationFile || !establishmentProofFile) {
-            alert('Please upload all required documents before submitting.');
-            return;
+    const handleFirstAttempt = () => {
+        const cloudinaryBaseUrl = 'https://res.cloudinary.com/dwyxogyrk/image/upload/'
+        if (identityProofPreview?.startsWith(cloudinaryBaseUrl) ||
+            medicalRegistrationPreview?.startsWith(cloudinaryBaseUrl) ||
+            establishmentProofPreview?.startsWith(cloudinaryBaseUrl)) {
+            return false
+        } else {
+            return true
         }
-        console.log('Form submitted successfully');
-        console.log(identityProofFile,medicalRegistrationFile,establishmentProofFile)
+    }
+    useEffect(() => {
+        console.log('Component mounted');
+
+        const fetchVerificationDetails = async () => {
+            try {
+                const response = await api.get<VerificationProofs>('/api/doctor/verification-proofs');
+
+                const {
+                    identityProof = null,
+                    medicalRegistration = null,
+                    establishmentProof = null
+                } = response.data ?? {};
+
+                setIdentityProofPreview(identityProof);
+                setMedicalRegistrationPreview(medicalRegistration);
+                setEstablishmentProofPreview(establishmentProof);
+
+            } catch (error) {
+                console.error('Error fetching verification details:', error);
+            }
+        };
+
+        fetchVerificationDetails();
+    }, []);
+
+    const handleFormSubmit = async () => {
+        if (handleFirstAttempt() && (!establishmentProof || !identityProof || !medicalRegistration)) {
+            setError('*Please ensure that all files are submitted.');
+            return;
+        } else {
+            setError('');
+        }
+
         setLoading(true);
-        setTimeout(() => setLoading(false), 2000);  // Simulate form submission
+        try {
+            const uploadedFiles = await Promise.all([
+                identityProof ? uploadCloudinary(identityProof) : null,
+                medicalRegistration ? uploadCloudinary(medicalRegistration) : null,
+                establishmentProof ? uploadCloudinary(establishmentProof) : null
+            ]);
+            const [identityUrl, medicalUrl, establishmentUrl] = uploadedFiles;
+            console.log('hai')
+            if (identityUrl || medicalUrl || establishmentUrl) {
+                await api.patch('/api/doctor/verification-proofs', {
+                    identityProof: identityUrl,
+                    medicalRegistration: medicalUrl,
+                    establishmentProof: establishmentUrl
+                })
+            } else {
+                setError('*Already submitted');
+            }
+            setLoading(false)
+            handleModal('')
+        } catch (error) {
+            console.error('Error during file upload or API request:', error);
+            setError('Failed to upload files. Please try again.');
+            setLoading(false);
+        }
     };
+
 
     return (
         <div className="lg:min-w-[500px] lg:min-h-[600px] flex flex-col justify-between">
@@ -94,6 +163,7 @@ const ProfileVerificationForm: React.FC<ContentProps> = ({ handleModal, setLoadi
                     </>
                 )}
             </div>
+            {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
 
             <div className="flex justify-between border-t-2 py-4 px-3">
                 <button

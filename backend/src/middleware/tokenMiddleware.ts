@@ -1,15 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { generateAccessToken, verifyAccessToken, verifyRefreshToken } from '../utils/jwtUtil';
+import { generateAccessToken, verifyAccessToken, verifyRefreshToken } from '../utils/tokenUtil';
 
-interface DecodedToken {
-    email: string;
-    role: string;
-}
+
 declare global {
     namespace Express {
         interface Request {
             client?: {
-                email: string;
+                _id: string;
                 role: string;
                 isApproved?: boolean;
             };
@@ -45,8 +42,8 @@ export const tokenMiddleware = (req: Request, res: Response, next: NextFunction)
         if (refreshToken) {
             try {
                 const refreshDecoded = verifyRefreshToken(refreshToken);
-                const { email, role, isApproved } = refreshDecoded;
-                const newAccessToken = generateAccessToken({ email, role, isApproved });
+                const { _id, role, isApproved } = refreshDecoded;
+                const newAccessToken = generateAccessToken({ _id , role, isApproved });
                 res.cookie('accessToken', newAccessToken, {
                     httpOnly: false,
                     maxAge: 15 * 60 * 1000, 

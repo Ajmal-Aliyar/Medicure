@@ -1,7 +1,8 @@
+import { ICreateUser } from "../interfaces/doctorInterface";
 import { UserModel } from "../models/userModel"
 
 export class UserRepository {
-    static async createUser(fullName: string, email: string, phone: number, password: string) {
+    async createUser({fullName, email, phone, password}:ICreateUser) {
         if (!email) {
             throw new Error('Email cannot be null or empty');
         }
@@ -14,11 +15,15 @@ export class UserRepository {
         return await user.save();
     }
     
-    static async findByEmail(email: string) {
+    async findByEmail(email: string) {
         return await UserModel.findOne({ email });
     }
 
-    static async changePassword (email: string, password: string) {
+    async findByID(_id: string) {
+        return await UserModel.findById(_id);
+    }
+
+    async changePassword (email: string, password: string) {
         return await UserModel.updateOne(
             { email },
             { $set: { password } }

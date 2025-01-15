@@ -12,6 +12,7 @@ export class AuthController {
             res.status(400).json({ error: error.message });
         }
     }
+
     async signUp(req: Request, res: Response) {
         const { name, email, mobile, password, role } = req.body;
         try {
@@ -26,7 +27,7 @@ export class AuthController {
     async signIn(req: Request, res: Response) {
         const { email, password, role } = req.body
         try {
-            const { accessToken, refreshToken } = await authService.signIn(email, password, role)
+            const { accessToken, refreshToken, _id } = await authService.signIn(email, password, role)
             if (accessToken) {
                 res.cookie('accessToken', accessToken, {
                     httpOnly: false,
@@ -41,9 +42,7 @@ export class AuthController {
                     secure: process.env.NODE_ENV === 'production',
                 });
             }
-            res.status(200).json({
-                message: 'User sign in successfully.',
-            });
+            res.status(200).json({_id});
         } catch (error: any) {
             res.status(400).json({ error: error.message })
         }
@@ -68,9 +67,11 @@ export class AuthController {
 
     async userInfo(req: Request, res: Response) {
         try {
-            const { email, role, isApproved } = req.client
-            console.log({ email, role,isApproved }, 'cli')
-            res.status(200).json({ email, role, isApproved })
+            const { _id, role, isApproved } = req.client
+            const userData = await authService.userInfo(_id,role)
+            console.log(userData, 'cli')
+            const responseData = {...userData, isApproved}
+            res.status(200).json(responseData)
         } catch (error: any) {
             res.status(400).json({ error: error.message })
         }

@@ -1,6 +1,6 @@
 import doctor from '../../assets/doctors/homepage-female.png'
-import DoctorsBadge from '../common/DoctorsBadge'
-import PatientsBadge from '../common/PatientsBadge'
+import DoctorsBadge from './DoctorsBadge'
+import PatientsBadge from './PatientsBadge'
 
 
 function SideAuthComponent() {

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { api } from '../../../utils/axiosInstance';
 
 type ContentProps = {
@@ -12,9 +12,9 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
         registrationCouncil: '',
         registrationYear: '',
         degree: '',
-        college: '',
+        university: '',
         yearOfCompletion: '',
-        yearOfExperience: ''
+        yearsOfExperience: ''
     });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -73,11 +73,11 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
             valid = false;
         }
 
-        if (!formData.college) {
-            newErrors.college = 'college is required';
+        if (!formData.university) {
+            newErrors.university = 'university is required';
             valid = false;
-        } else if (!/^[A-Za-z\s]+$/.test(formData.college)) {
-            newErrors.college = 'Degree must only contain letters and spaces';
+        } else if (!/^[A-Za-z\s]+$/.test(formData.university)) {
+            newErrors.university = 'Degree must only contain letters and spaces';
             valid = false;
         }
 
@@ -85,8 +85,8 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
             newErrors.yearOfCompletion = 'Enter a valid year';
             valid = false;
         }
-        if (!formData.yearOfExperience || isNaN(Number(formData.yearOfExperience))) {
-            newErrors.yearOfExperience = 'Enter a valid number of years';
+        if (!formData.yearsOfExperience || isNaN(Number(formData.yearsOfExperience))) {
+            newErrors.yearsOfExperience = 'Enter a valid number of years';
             valid = false;
         }
 
@@ -94,14 +94,32 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
         return valid;
     };
 
+    useEffect(() => {
+        const fetchVerificationDetails = async () => {
+            try {
+                const response = await api.get('/api/doctor/profile-details');
+                const data = response.data;
+                console.log(data);
+                if (data) {
+                    setFormData(prevState => ({
+                        ...prevState, 
+                        ...data      
+                    }));
+                }
+            } catch (error) {
+                console.error('Error fetching verification details:', error);
+            }
+        };
+        fetchVerificationDetails();
+    }, []); 
     const handleSubmit = () => {
         if (validateSlide2()) {
             setLoading(true)
             console.log('Submitting:', formData);
-            api.post('/api/doctor/profile-details',{
-                formData
+            api.patch('/api/doctor/profile-details',{
+                ...formData
             })
-            // handleModal('');
+            handleModal('')
         }
     };
 
@@ -167,18 +185,18 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
                         {errors.degree && <p className="text-red-500 text-xs">{errors.degree}</p>}
                     </div>
                     <div className="mb-6">
-                        <label className="text-gray-500 block" htmlFor="college">College/Institute</label>
+                        <label className="text-gray-500 block" htmlFor="university">university/Institute</label>
                         <input
-                            id="college"
+                            id="university"
                             type="text"
                             className="w-72 p-2 border border-gray-300"
-                            value={formData.college}
+                            value={formData.university}
                             onChange={handleChange}
                         />
-                        {errors.college && <p className="text-red-500 text-xs">{errors.college}</p>}
+                        {errors.university && <p className="text-red-500 text-xs">{errors.university}</p>}
                     </div>
                     <div className="mb-6">
-                        <label className="text-gray-500 block" htmlFor="college">Year of completion</label>
+                        <label className="text-gray-500 block" htmlFor="university">Year of completion</label>
                         <input
                             id="yearOfCompletion"
                             type="text"
@@ -189,15 +207,15 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
                         {errors.yearOfCompletion && <p className="text-red-500 text-xs">{errors.yearOfCompletion}</p>}
                     </div>
                     <div className="mb-6">
-                        <label className="text-gray-500 block" htmlFor="college">Year of experience</label>
+                        <label className="text-gray-500 block" htmlFor="university">Years of experience</label>
                         <input
-                            id="yearOfExperience"
+                            id="yearsOfExperience"
                             type="text"
                             className="w-72 p-2 border border-gray-300"
-                            value={formData.yearOfExperience}
+                            value={formData.yearsOfExperience}
                             onChange={handleChange}
                         />
-                        {errors.yearOfExperience && <p className="text-red-500 text-xs">{errors.yearOfExperience}</p>}
+                        {errors.yearsOfExperience && <p className="text-red-500 text-xs">{errors.yearsOfExperience}</p>}
                     </div>
                 </>
             )}

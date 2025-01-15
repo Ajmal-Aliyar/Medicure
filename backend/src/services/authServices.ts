@@ -4,20 +4,46 @@ import { setRedisData, getRedisData, deleteRedisData } from '../utils/redisUtil'
 import { hashPassword, verifyPassword } from '../utils/passwordUtil';
 import { sendOtpToEmail } from '../utils/otpUtil';
 import { checkBruteForce, deleteBruteForce } from '../utils/BruteForceHandler';
-import { generateAccessToken, generateRefreshToken } from '../utils/jwtUtil';
+import { generateAccessToken, generateRefreshToken } from '../utils/tokenUtil';
 
 const OTP_EXPIRATION = 60;
-
 interface authorizedUserResponse {
     accessToken: string;
     refreshToken: string;
+    _id: string;
 }
+const userRepository = new UserRepository()
+const doctorRepository = new DoctorRepository()
+
 export class AuthService {
+
+    async  userInfo(_id: string, role: string) {
+        try {
+            const repository = role === 'doctor' ? doctorRepository : userRepository;
+            
+            const userData = await repository.findByID(_id);
+    
+            if (!userData) {
+                throw new Error(`User with ID: ${_id} not found`);
+            }
+    
+            return {
+                _id: userData._id.toString(),
+                fullName: userData.fullName,
+                email: userData.email,
+                phone: userData.phone,
+                role
+            };
+        } catch (error) {
+            console.error(`Error fetching user info: ${(error as Error).message}`);
+            throw new Error('Failed to retrieve user information');
+        }
+    }
 
     async signUp(fullname: string, email: string, number: number, password: string, role: string) {
         try {
             console.log(role, 'role');
-            const repository = role === 'doctor' ? DoctorRepository : UserRepository;
+            const repository = role === 'doctor' ? doctorRepository : userRepository;
             const existingAccount = await repository.findByEmail(email);
             if (existingAccount) {
                 throw new Error(`${role} already exists`);
@@ -44,7 +70,7 @@ export class AuthService {
     async signIn(email: string, password: string, role: string): Promise<authorizedUserResponse> {
         try {
             await checkBruteForce(email,5,600)
-            const repository = role === 'doctor' ? DoctorRepository : UserRepository;
+            const repository = role === 'doctor' ? doctorRepository : userRepository;
             const user = await repository.findByEmail(email);
             if (!user) {
                 throw new Error('Invalid email or password');
@@ -55,14 +81,14 @@ export class AuthService {
             }
             await deleteBruteForce(email);
             const payload = {
-                email,
+                _id: user._id.toString(),
                 role,
                 ...(role === 'doctor' && 'isApproved' in user ? { isApproved: user.isApproved } : {})
             };
     
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
-            return { accessToken, refreshToken };
+            return { accessToken, refreshToken, _id: user._id.toString() };
         } catch (error) {
             console.error('Error during sign-in:', error);
             throw new Error(`Sign-in failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -73,7 +99,7 @@ export class AuthService {
 
     async changePassword (email: string, password: string, role:string):Promise<boolean> {
         const hashedPassword = await hashPassword(password);
-        const repository = role === 'doctor' ? DoctorRepository : UserRepository;
+        const repository = role === 'doctor' ? doctorRepository : userRepository;
         const result = await repository.changePassword(email, hashedPassword)
         if (result.modifiedCount === 0) {
             throw new Error('No user found with this email.');
@@ -98,38 +124,58 @@ export class AuthService {
 
     async verifyOTPAndRegister(email: string, otp: string): Promise<authorizedUserResponse> {
         try {
-            await checkBruteForce(email, 30,1800)
+            await checkBruteForce(email, 30, 1800);
             const validOtp = await getRedisData(`otp-${email}`);
+            
             if (!validOtp) {
                 throw new Error('The OTP has either expired or is invalid. Please request a new one.');
             }
             if (validOtp !== otp) {
                 throw new Error('The OTP you entered is incorrect. Please try again.');
             }
+    
             await deleteRedisData(`otp-${email}`);
-            await deleteBruteForce(email)
+            await deleteBruteForce(email);
+            
             const userData = JSON.parse(await getRedisData(email));
+            
+            let _id: string; 
             if (userData.role === 'doctor') {
-                const doctor = await DoctorRepository.createDoctor(userData.fullname, userData.email, userData.number, userData.hashedPassword);
+                const doctor = await doctorRepository.createDoctor({
+                    fullName: userData.fullname, 
+                    email: userData.email, 
+                    phone: userData.number, 
+                    password: userData.hashedPassword
+                });
                 if (!doctor) {
                     throw new Error('Registration failed: We encountered an issue while creating your account.');
                 }
+                _id = doctor._id.toString();
             } else {
-                const user = await UserRepository.createUser(userData.fullname, userData.email, userData.number, userData.hashedPassword);
+                const user = await userRepository.createUser({
+                    fullName: userData.fullname, 
+                    email: userData.email, 
+                    phone: userData.number, 
+                    password: userData.hashedPassword
+                });
                 if (!user) {
                     throw new Error('Registration failed: We encountered an issue while creating your account.');
                 }
+                _id = user._id.toString();
             }
-
-            const payload = { email, role: userData.role };
+    
+            const payload = { _id, role: userData.role }; 
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
-            return { accessToken, refreshToken };
+            
+            return { accessToken, refreshToken, _id };
+    
         } catch (error: any) {
             console.error('Error verifying OTP:', error.message);
             throw new Error(error.message);
         }
     }
+    
 
     async verifyOTP(email: string, otp: string): Promise<boolean> {
         await checkBruteForce(email, 30,1800)

@@ -1,7 +1,7 @@
-import maleDoctor from "../../assets/doctors/homepage-male.png"
-import femaleDoctor from "../../assets/doctors/homepage-female.png"
-import DoctorsBadge from "../common/DoctorsBadge"
-import PatientBadge from "../common/PatientsBadge"
+import maleDoctor from "../../../assets/doctors/homepage-male.png"
+import femaleDoctor from "../../../assets/doctors/homepage-female.png"
+import DoctorsBadge from "../../auth/DoctorsBadge"
+import PatientBadge from "../../auth/PatientsBadge"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 

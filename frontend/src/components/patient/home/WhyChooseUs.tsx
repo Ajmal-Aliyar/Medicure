@@ -1,5 +1,5 @@
 import { useGSAP } from '@gsap/react'
-import ConsultImg from '../../assets/external/consulting.jpg'
+import ConsultImg from '../../../assets/external/consulting.jpg'
 import gsap from 'gsap'
 
 function WhyChooseUs() {

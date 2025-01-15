@@ -1,5 +1,5 @@
 import { useGSAP } from '@gsap/react'
-import AboutDoctors from '../../assets/doctors/aboutDoctorsCroped.png'
+import AboutDoctors from '../../../assets/doctors/aboutDoctorsCroped.png'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 

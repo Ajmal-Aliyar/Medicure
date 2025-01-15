@@ -1,28 +1,28 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { Schema, model, Document } from 'mongoose';
 
-interface EducationDetails {
-    degree: string;
-    university: string;
-    year: number;
-}
 
-interface Doctor extends Document {
-    doctorId: string;
+interface IDoctor extends Document {
     fullName: string;
     email: string;
-    phone: number;
+    phone: string; 
     password: string;
     gender: 'Male' | 'Female';
     profileImage: Buffer | string;
     dob: Date;
     registrationNumber: string;
     registrationCouncil: string;
-    registrationYear: Date;
-    proofDocument: string[];
+    registrationYear: number;
+    identityProof: string;
+    medicalRegistration: string;
+    establishmentProof: string;
     about: string;
-    educationDetails: EducationDetails;
+    educationDetails:  {
+        degree: string;
+        university: string;
+        yearOfCompletion: number;
+    }
     specialization: string;
-    experienceYears: number;
+    yearsOfExperience: number;
     languageSpoken: string;
     fees: string;
     isBlocked: boolean;
@@ -32,13 +32,7 @@ interface Doctor extends Document {
     updatedAt: Date;
 }
 
-const EducationDetailsSchema = new Schema<EducationDetails>({
-    degree: { type: String },
-    university: { type: String },
-    year: { type: Number }
-});
-
-const DoctorSchema = new Schema<Doctor>({
+const DoctorSchema = new Schema<IDoctor>({
     fullName: {
         type: String,
         required: true,
@@ -51,7 +45,7 @@ const DoctorSchema = new Schema<Doctor>({
         maxlength: 150
     },
     phone: {
-        type: Number,
+        type: String, 
         required: true,
         unique: true,
         maxlength: 15
@@ -80,22 +74,39 @@ const DoctorSchema = new Schema<Doctor>({
         maxlength: 100
     },
     registrationYear: {
-        type: Date
+        type: Number
     },
-    proofDocument: [{
+    identityProof: {
         type: String
-    }],
+    },
+    medicalRegistration: {
+        type: String
+    },
+    establishmentProof: {
+        type: String
+    },
     about: {
         type: String
     },
     educationDetails: {
-        type: EducationDetailsSchema
+        degree: {
+            type: String,
+            required: true
+        },
+        university: {
+            type: String,
+            required: true
+        },
+        yearOfCompletion: {
+            type: Number,
+            required: true
+        }
     },
     specialization: {
         type: String,
         maxlength: 100
     },
-    experienceYears: {
+    yearsOfExperience: {
         type: Number
     },
     languageSpoken: {
@@ -111,7 +122,7 @@ const DoctorSchema = new Schema<Doctor>({
     },
     isProfileCompleted: {
         type: Boolean,
-        default:false,
+        default: false,
     },
     isApproved: {
         type: Boolean,
@@ -131,4 +142,5 @@ DoctorSchema.pre('save', function (next) {
     this.updatedAt = new Date();
     next();
 });
-export const DoctorModel = model('Doctor', DoctorSchema);
+
+export const DoctorModel = model<IDoctor>('Doctor', DoctorSchema);

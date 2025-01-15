@@ -12,6 +12,7 @@ interface ProtectedRouteProps {
 }
 
 type UserInfo = {
+    _id: string;
     email: string;
     role: string;
 };
@@ -25,6 +26,7 @@ const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => 
         api.get<UserInfo>('/api/auth/user-info')
             .then((response) => {
                 const userData = response.data;
+                console.log(userData,'ussss')
                 dispatch(setData(userData));
                 dispatch(login());
                 setLoading(false);
@@ -54,7 +56,7 @@ const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => 
             case 'admin':
                 return <Navigate to="/admin/dashboard" />;
             case 'user':
-                return <Navigate to="/user/dashboard" />;
+                return <Navigate to="/user/" />;
             default:
                 return <Navigate to="/" />;
         }

@@ -34,7 +34,7 @@ const ModalAnimation: React.FC<ModalAnimationProps> = ({ children, onClose }) =>
     return (
         <div
             className="main-div fixed inset-0 bg-gradient-to-t from-[#00000093] flex justify-center items-center p-4 "
-            onClick={handleClose}
+            // onClick={handleClose}
         >
             <div
                 ref={modalRef}

@@ -3,9 +3,9 @@ import { api } from "../../utils/axiosInstance";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store';
 import ErrorMessage from "../common/ErrorMessage";
-import LoaderDots from "../common/LoaderDots";
 import SuccessModal from "../common/SuccessModal";
 import { login } from "../../store/slices/userSlice";
+import HoneyComb from "../common/HoneyComb";
 
 type Prop = {
   handleAuth: (value: boolean) => void;
@@ -191,7 +191,7 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleCha
 
       <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}   bg-[#333333] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
         {!loading ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
-        {serverError === '' || loading ? <LoaderDots /> : ''}
+        {serverError === '' || loading ? <HoneyComb /> : ''}
       </div>
       <div className={`${message !== ''? "" :"hidden"}`}>
         <SuccessModal handleModal={handleModal} message={message}/>

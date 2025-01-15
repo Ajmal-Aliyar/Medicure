@@ -12,8 +12,9 @@ interface ProtectedRouteProps {
 }
 
 type UserInfo = {
-    email: string;
+    _id: string;
     role: string;
+    email: string;
     isApproved?: boolean;
 };
 

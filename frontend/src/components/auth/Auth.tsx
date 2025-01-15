@@ -17,7 +17,11 @@ type AuthPageProps = {
     handleForgotPassword: (value: boolean) => void;
     role: string
 };
-
+interface SignInResponse {
+    _id: string;
+    role: string;
+    accessToken: string;
+}
 const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role }) => {
     const [isLogin, setIsLogin] = useState(true)
     const [isForgotPassword, setIsForgotPassword] = useState(false)
@@ -43,7 +47,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role 
         setLoading(true);
         if (isLogin) {
             if (!errorMessage.email && !errorMessage.password && email && password) {
-                api.post('/api/auth/signin', {
+                api.post<SignInResponse>('/api/auth/signin', {
                     email,
                     password,
                     role
@@ -51,7 +55,7 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role 
                     .then(response => {
                         setLoading(false);
                         console.log('Signup successful:', response.data);
-                        dipatch(setData({ email, role }))
+                        dipatch(setData({ _id:response.data._id, email, role }))
                         if (role === 'doctor') {
                             navigate('/doctor/dashboard')
                         } else {

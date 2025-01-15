@@ -10,7 +10,8 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [slotLimit, setSlotLimit] = useState('');
-    const [slots, setSlots] = useState<{ startTime: string, endTime: string, slotLimit: string, per: string }[]>([]); 
+    const [slots, setSlots] = useState<{ _id?: string|null, startTime: string, endTime: string, slotLimit: number, AvgConsultTime: string }[]>([]);
+    const [fee, setFee] = useState<number | undefined>(undefined);
     const [slotError, setSlotError] = useState('');
 
     const timeFormat12hr = (time: string) => {
@@ -20,14 +21,14 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
         return `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
     };
 
-    const handleSubmit = () => {
+    const handleAdd = () => {
         const start = parseInt(startTime.split(":")[0]) * 60 + parseInt(startTime.split(":")[1]);
         const end = parseInt(endTime.split(":")[0]) * 60 + parseInt(endTime.split(":")[1]);
 
         if (start < end) {
             const totalDuration = end - start;
             const per = totalDuration / parseInt(slotLimit);
-            if (per < 10) { 
+            if (per < 10) {
                 setSlotError('Patient consultation per slot will be less than the average of 10 minutes');
             } else {
                 const isOverlap = slots.some((slot) => {
@@ -41,7 +42,7 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
                 } else {
                     setSlots(prevSlots => [
                         ...prevSlots,
-                        { startTime, endTime, slotLimit, per: per.toFixed(2) }
+                        {  startTime, endTime, slotLimit:Number(slotLimit), AvgConsultTime : per.toFixed(2) }
                     ]);
                     setStartTime('');
                     setEndTime('');
@@ -57,6 +58,10 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
     const handleDelete = (index: number) => {
         setSlots(prevSlots => prevSlots.filter((_, i) => i !== index));
     };
+
+    const handleSubmit = () => {
+        console.log(slots, 'slots')
+    }
 
     return (
         <div className="lg:min-w-[500px] min-h-[500px] lg:h-[600px] flex flex-col justify-between">
@@ -109,12 +114,12 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
 
                         <button
                             className="text-green-500"
-                            onClick={handleSubmit}
+                            onClick={handleAdd}
                         >
                             <FontAwesomeIcon icon={faPlusCircle} size="2x" />
                         </button>
                     </div>
-                        <p className="text-red-500 py-2 text-sm">{slotError}</p>
+                    <p className="text-red-500 py-2 text-sm">{slotError}</p>
 
                     <div className="mt-4">
                         <h3 className="text-lg font-medium text-gray-800">Preview Available Slots</h3>
@@ -124,7 +129,7 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
                                     <tr>
                                         <th className="py-2 px-4 text-left">Time</th>
                                         <th className="py-2 px-4 text-left">Limit</th>
-                                        <th className="py-2 px-4 text-left">Per</th>
+                                        <th className="py-2 px-4 text-left">Avg Per</th>
                                         <th className="py-2 px-4 text-left"></th>
                                     </tr>
                                 </thead>
@@ -134,7 +139,7 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
                                             <tr key={index}>
                                                 <td className="py-2 px-4">{timeFormat12hr(slot.startTime)} - {timeFormat12hr(slot.endTime)}</td>
                                                 <td className="py-2 px-4">{slot.slotLimit} Patients</td>
-                                                <td className="py-2 px-4">{slot.per} minutes</td>
+                                                <td className="py-2 px-4">{slot.AvgConsultTime} minutes</td>
                                                 <td className="py-2 px-4 ">
                                                     <button
                                                         onClick={() => handleDelete(index)}
@@ -157,17 +162,20 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
                 </div>
             </div>
             <div className="flex justify-between border-t-2 pt-4 px-3 items-end">
-                            <input
-                                id="startTime"
-                                placeholder="Fees per consult"
-                                type="number"
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
-                                required
-                                className="block px-4 py-1 border border-gray-300 font-normal outline-none max-w-[200px]"
-                            />
-                <button className="cursor-pointer transition duration-300 hover:scale-105 active:scale-95 text-[#0c0b3eb0] font-bold px-4  h-fit">
-                    Done
+                <input
+                    id="fee"
+                    placeholder="Fees per consult"
+                    type="number"
+                    value={fee !== undefined ? fee : ""}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setFee(value ? parseFloat(value) : undefined);
+                    }}
+                    required
+                    className="block px-4 py-1 border border-gray-300 font-normal outline-none max-w-[200px]"
+                />
+                <button className="cursor-pointer transition duration-300 hover:scale-105 active:scale-95 text-[#0c0b3eb0] font-bold px-4  h-fit" onClick={handleSubmit}>
+                    Submit
                 </button>
             </div>
         </div>

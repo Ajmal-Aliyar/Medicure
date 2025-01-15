@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
+  _id?: string;
   email: string;
   role: string;
   isApproved?: boolean;
@@ -8,6 +9,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
+  _id: '',
   email: '',
   role: '',
   isApproved: false,
@@ -18,9 +20,10 @@ const userSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setData: (state, action: PayloadAction<{ email: string; role: string; isApproved?: boolean }>) => {
-      const { email, role, isApproved } = action.payload;
-      state.email = email;
+    setData: (state, action: PayloadAction<{ _id?: string; email: string, role: string; isApproved?: boolean }>) => {
+      const { _id, email, role, isApproved } = action.payload;
+      state._id = _id;
+      state.email = email
       state.role = role;
       state.isApproved = isApproved;
       state.isAuthenticated = false;
