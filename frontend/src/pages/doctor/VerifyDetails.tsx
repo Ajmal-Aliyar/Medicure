@@ -33,7 +33,7 @@ function VerifyDetails() {
             )}
             {isModalOpen === 'Appointments Setup' && (
                 <ModalAnimation onClose={handleModal}>
-                    <AppointmentSetUp handleModal={handleModal} />
+                    <AppointmentSetUp handleModal={handleModal} setLoading={setLoading}/>
                 </ModalAnimation>
             )}
             <div className={`${loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>

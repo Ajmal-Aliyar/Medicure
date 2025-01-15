@@ -82,8 +82,9 @@ const ProfileVerificationForm: React.FC<ContentProps> = ({ handleModal, setLoadi
                 console.error('Error fetching verification details:', error);
             }
         };
-
+        setLoading(true)
         fetchVerificationDetails();
+        setLoading(false)
     }, []);
 
     const handleFormSubmit = async () => {

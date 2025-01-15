@@ -21,13 +21,21 @@ type UserInfo = {
 const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
+    const [showSpinner, setShowSpinner] = useState(false);
     const { role, isAuthenticated, isApproved } = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
+
+        const spinnerTimeout = setTimeout(() => {
+            if (loading) {
+                setShowSpinner(true);
+            }
+        }, 500);
+
         const fetchUserInfo = async () => {
             try {
                 const response = await api.get<UserInfo>('/api/auth/user-info');
-                console.log('Fetched user data:', response.data); 
+                console.log('Fetched user data:', response.data);
                 if (response.data) {
                     dispatch(setData(response.data));
                     dispatch(login());
@@ -44,20 +52,17 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
         } else {
             setLoading(false);
         }
-    }, [dispatch, isAuthenticated, isApproved, role]);
 
-    if (loading) {
-        return <div className='flex justify-center items-center bg-[#e9e9e9]'><HoneyComb /></div>;
-    }
+        return () => clearTimeout(spinnerTimeout);
 
-    if (!isAuthenticated || allowedRole !== role) {
-        return <Navigate to={`/${allowedRole}/auth`} replace />;
-    }
+    }, [dispatch, isAuthenticated, isApproved, role, loading]);
 
-    if (role === 'doctor' && isApproved === false) {
-        return <Navigate to='/doctor/verify-details' replace />;
-    }
+    if (loading && showSpinner) return <div className='w-screen h-screen flex justify-center items-center fixed bg-[#e9e9e9]'><HoneyComb /></div>;
 
+    if (!isAuthenticated || allowedRole !== role) return <Navigate to={`/${allowedRole}/auth`} replace />;
+    
+    if (role === 'doctor' && isApproved === false) return <Navigate to='/doctor/verify-details' replace />;
+    
     return children;
 };
 

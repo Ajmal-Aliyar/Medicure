@@ -19,23 +19,23 @@ const AlertPortal: React.FC<AlertPortalProps> = ({ message, onClose }) => {
     }
     useGSAP(() => {
         gsap.from('.anim', {
-            x: 100,
+            y: -100,
             ease: 'elastic',
             duration: 1
         })
     })
     return ReactDOM.createPortal(
         <div
-            className='anim flex h-20 w-96 '
+            className='anim flex w-screen justify-center bg-black'
             style={alertStyle}
         >
 
             <div
-                className="absolute z-50 flex flex-col w-3/4 h-24 overflow-hidden bg-[#ebececed] shadow-lg max-w-96 rounded-xl"
+                className="absolute z-50 flex flex-col w-3/4 h-24 overflow-hidden bg-[#ffdddd] shadow-lg max-w-96 rounded-xl border-t-2 border-red-500"
             >
                 <div className='flex w-full justify-between items-center'>
                     <p
-                            className="mt-1.5 flex pl-2 text-xl font-bold text-[indianred] leading-8 mr-3 overflow-hidden text-ellipsis whitespace-nowrap"
+                            className="mt-1.5 flex pl-2 text-xl font-bold text-red-600 leading-8 mr-3 overflow-hidden text-ellipsis whitespace-nowrap"
                         >
                 <svg
                     stroke="currentColor"
@@ -57,7 +57,7 @@ const AlertPortal: React.FC<AlertPortalProps> = ({ message, onClose }) => {
                     <svg
                         className="w-7 h-7"
                         fill="none"
-                        stroke="indianred"
+                        stroke="#dc2626"
                         stroke-width="2"
                         viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
@@ -73,10 +73,10 @@ const AlertPortal: React.FC<AlertPortalProps> = ({ message, onClose }) => {
                 </div>
                 <div className="w-full mx-2.5 overflow-hidden">
                     
-                    <p className="overflow-hidden leading-5 break-all  max-h-10">
+                    <p className="overflow-hidden leading-5 break-all max-h-10 text-red-600">
                         {message}
                     </p>
-                    <p className='text-end mr-12 text-[indianred] cursor-pointer ' onClick={logOut}>yes</p>
+                    <p className='text-end mr-12 text-red-600 cursor-pointer ' onClick={logOut}>yes</p>
                 </div>
                 
             </div>
@@ -90,7 +90,6 @@ const AlertPortal: React.FC<AlertPortalProps> = ({ message, onClose }) => {
 const alertStyle: React.CSSProperties = {
     position: 'fixed',
     top: '20px',
-    right: '20px',
     zIndex: 1000,
 };
 

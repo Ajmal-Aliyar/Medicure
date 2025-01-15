@@ -1,6 +1,6 @@
 import { DoctorRepository } from "../repositories/doctorRepository";
 import { IProfileVerificationInput } from "../interfaces/doctorInterface";
-import { deleteCloudinaryImages, extractPublicId} from "../utils/CloudinaryUtil"
+import { deleteCloudinaryImages, extractPublicId } from "../utils/CloudinaryUtil"
 
 const doctorRepository = new DoctorRepository()
 
@@ -26,7 +26,7 @@ export class DoctorService {
             };
         } catch (error: any) {
             console.error(`Error fetching doctor profile verification details for ${_id}: ${error.message}`);
-            throw new Error(`Error fetching doctor profile verification details: ${error.message}`);
+            return error
         }
     };
 
@@ -43,12 +43,12 @@ export class DoctorService {
             return { identityProof, medicalRegistration, establishmentProof };
         } catch (error: any) {
             console.error(`Error fetching doctor profile verification details for ${_id}: ${error.message}`);
-            throw new Error(`Error fetching doctor profile verification details: ${error.message}`);
+            return error
         }
     };
 
     async profileVerification({
-        _id ,
+        _id,
         registrationNumber,
         registrationCouncil,
         registrationYear,
@@ -76,11 +76,11 @@ export class DoctorService {
             console.log('Profile successfully verified and updated.');
         } catch (error: any) {
             console.error(`Error during profile verification: ${error.message}`);
-            throw new Error(`Error during profile verification: ${error.message}`);
+            return error
         }
     }
 
-    async verificationProofs(_id: string, establishmentProof: string | null, identityProof: string | null, medicalRegistration: string | null) {
+    async verificationProofs(_id: string, establishmentProof: string | null, identityProof: string | null, medicalRegistration: string | null): Promise<void> {
         try {
             if (!_id) {
                 throw new Error('Email is required for verification update.');
@@ -91,7 +91,7 @@ export class DoctorService {
                 throw new Error('Doctor not found with the provided email.');
             }
             const publicIdsToDelete: string[] = [];
-            
+
             if (identityProof && doctorData.identityProof) {
                 publicIdsToDelete.push(extractPublicId(doctorData.identityProof));
             }
@@ -101,7 +101,7 @@ export class DoctorService {
             if (establishmentProof && doctorData.establishmentProof) {
                 publicIdsToDelete.push(extractPublicId(doctorData.establishmentProof));
             }
-            
+
             if (publicIdsToDelete.length > 0) {
                 await deleteCloudinaryImages(publicIdsToDelete);
             } else {
@@ -119,6 +119,44 @@ export class DoctorService {
         } catch (error: any) {
             console.error(`Error during uploading proofs document: ${error.message}`);
             throw new Error(`Error during uploading proofs document: ${error.message}`);
+        }
+    }
+
+    async submitDoctorVerification(id: string): Promise<boolean> {
+        try {
+            const doctorData = await doctorRepository.findByID(id)
+            const { registrationNumber, registrationCouncil, registrationYear, educationDetails, yearsOfExperience,
+                establishmentProof, identityProof, medicalRegistration } = doctorData
+
+                if ( registrationNumber && registrationCouncil && registrationYear && educationDetails && yearsOfExperience &&
+                    establishmentProof && identityProof && medicalRegistration ) {
+                        await doctorRepository.updatekProfileComplete(id)
+                        return true
+                    } else {
+                        return false
+                    }
+
+        } catch (error: any) {
+            return error
+        }
+    }
+
+    async updateFees({ _id, fees }: { _id: string, fees: number }) {
+        try {
+            const update = await doctorRepository.updateFees(_id, fees)
+            if (!update) {
+                throw new Error('Fees not updated')
+            }
+        } catch (error: any) {
+            return error
+        }
+    }
+
+    async getFees(doctorId: string) {
+        try {
+            return await doctorRepository.getFees(doctorId)
+        } catch (error: any) {
+            return error
         }
     }
 

@@ -20,34 +20,39 @@ type UserInfo = {
 const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
+    const [showSpinner, setShowSpinner] = useState(false); 
     const [error, setError] = useState<string | null>(null);
     
     useEffect(() => {
+
+        const spinnerTimeout = setTimeout(() => {
+            if (loading) {
+                setShowSpinner(true);
+            }
+        }, 500);
+
         api.get<UserInfo>('/api/auth/user-info')
             .then((response) => {
                 const userData = response.data;
-                console.log(userData,'ussss')
+                console.log(userData, 'ussss');
                 dispatch(setData(userData));
                 dispatch(login());
                 setLoading(false);
             })
             .catch((err) => {
-                setError('Failed to fetch user data.');
                 console.error('Error:', err);
                 setLoading(false);
             });
-    }, [dispatch]);
-    
-    
+
+        return () => clearTimeout(spinnerTimeout);
+
+    }, [dispatch, loading]);
+
     const { role, isAuthenticated } = useSelector((state: RootState) => state.user);
 
-    if (loading) {
-        return <div className='flex justify-center items-center'><HoneyComb /></div>;
-    }
-
-    if (error) {
-        // return <div className='text-red-500 text-center'>{error}</div>;
-    }
+    if (loading && showSpinner) return <div className='w-screen h-screen flex justify-center items-center fixed'><HoneyComb /></div>;
+    
+    if (error) return <div className='text-red-500 text-center'>{error}</div>;
 
     if (isAuthenticated && role === preventedRole) {
         switch (role) {

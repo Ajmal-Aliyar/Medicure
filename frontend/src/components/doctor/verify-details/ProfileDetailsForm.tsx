@@ -110,7 +110,9 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
                 console.error('Error fetching verification details:', error);
             }
         };
+        setLoading(true)
         fetchVerificationDetails();
+        setLoading(false)
     }, []); 
     const handleSubmit = () => {
         if (validateSlide2()) {
@@ -120,6 +122,7 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
                 ...formData
             })
             handleModal('')
+            setLoading(false)
         }
     };
 

@@ -24,7 +24,7 @@ interface IDoctor extends Document {
     specialization: string;
     yearsOfExperience: number;
     languageSpoken: string;
-    fees: string;
+    fees: number;
     isBlocked: boolean;
     isProfileCompleted: boolean;
     isApproved: boolean;
@@ -114,7 +114,7 @@ const DoctorSchema = new Schema<IDoctor>({
         maxlength: 255
     },
     fees: {
-        type: String
+        type: Number
     },
     isBlocked: {
         type: Boolean,

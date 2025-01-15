@@ -4,6 +4,7 @@ import { AuthService } from "../services/authServices";
 const authService = new AuthService();
 
 export class AuthController {
+
     async checkRequest (req: Request, res: Response) {
         try {
             console.log('success', req.body)
@@ -67,10 +68,10 @@ export class AuthController {
 
     async userInfo(req: Request, res: Response) {
         try {
-            const { _id, role, isApproved } = req.client
+            const { _id, role } = req.client
             const userData = await authService.userInfo(_id,role)
             console.log(userData, 'cli')
-            const responseData = {...userData, isApproved}
+            const responseData = {...userData}
             res.status(200).json(responseData)
         } catch (error: any) {
             res.status(400).json({ error: error.message })

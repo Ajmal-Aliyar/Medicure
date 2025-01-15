@@ -8,11 +8,11 @@ function UserRoutes() {
   return (
     <>
     <Routes>
+       {/* <Route path='/user/*' element={}/> */}
         <Route path='/user' element={<UserLayout/>}>
           <Route index element={<PublicRoutes><Home/></PublicRoutes>}/>
           <Route path="auth" element={<UnAuthorizedRoute preventedRole={'user'}><Auth role='user'/></UnAuthorizedRoute>}/>
         </Route>
-        {/* <Route path="/dashboard" element={<AuthorizedRoute allowedRole={'user'}><Home/></AuthorizedRoute>} /> */}
     </Routes>
     </>
   )

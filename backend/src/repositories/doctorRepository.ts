@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IProfileVerificationInput, ICreateUser } from "../interfaces/doctorInterface";
 import { DoctorModel } from "../models/doctorModel";
 
@@ -89,7 +90,19 @@ export class DoctorRepository {
         }
     }
 
+    async updatekProfileComplete (_id: string) {
+        return await DoctorModel.updateOne({_id},{$set:{isProfileCompleted:true}})
+    }
 
+    async updateFees(_id: string, fees: number) {
+        return await DoctorModel.updateMany({_id},{$set:{fees}})
+    }
+
+    async getFees(doctorId: string): Promise<number | null> {
+        const _id = new mongoose.Types.ObjectId(doctorId);
+        const doctor = await DoctorModel.findById(_id).select('fees');
+        return doctor ? doctor.fees : null;
+    }
 
     async changePassword(_id: string, password: string) {
         return await DoctorModel.updateOne(

@@ -19,8 +19,8 @@ app.use(cors({
   credentials: true
 }));
 
-app.use('/api/auth',authRouter)
-app.use('/api/doctor',doctorRoute)
+app.use('/api/auth', authRouter)
+app.use('/api/doctor', doctorRoute)
 
 
 const PORT = process.env.PORT || 3000;

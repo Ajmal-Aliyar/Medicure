@@ -17,21 +17,24 @@ const doctorRepository = new DoctorRepository()
 
 export class AuthService {
 
-    async  userInfo(_id: string, role: string) {
+    async userInfo(_id: string, role: string) {
         try {
             const repository = role === 'doctor' ? doctorRepository : userRepository;
-            
             const userData = await repository.findByID(_id);
     
             if (!userData) {
                 throw new Error(`User with ID: ${_id} not found`);
             }
+            
+            const isDoctor = (data: any): data is { isApproved: boolean } => 
+                role === 'doctor' && 'isApproved' in data;
     
             return {
                 _id: userData._id.toString(),
                 fullName: userData.fullName,
                 email: userData.email,
                 phone: userData.phone,
+                ...(isDoctor(userData) ? { isApproved: userData.isApproved ?? false } : {}),
                 role
             };
         } catch (error) {
@@ -39,6 +42,7 @@ export class AuthService {
             throw new Error('Failed to retrieve user information');
         }
     }
+    
 
     async signUp(fullname: string, email: string, number: number, password: string, role: string) {
         try {

@@ -5,7 +5,6 @@ import { RootState } from '../../store/store';
 import { useNavigate } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-// import { Link } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import AlertPortal from '../common/AlertPortal';
 

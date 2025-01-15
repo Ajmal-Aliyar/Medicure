@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { api } from "../../../utils/axiosInstance";
 
 type AppointmentSetUpProps = {
     handleModal: (val: string) => void
+    setLoading: Dispatch<SetStateAction<boolean>>;
+}
+interface SlotDetails {
+    _id?: string | null;
+    startTime: string;
+    endTime: string;
+    slotLimit: number;
+    avgConsultTime: string;
 }
 
-const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
+const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal, setLoading }) => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [slotLimit, setSlotLimit] = useState('');
-    const [slots, setSlots] = useState<{ _id?: string|null, startTime: string, endTime: string, slotLimit: number, AvgConsultTime: string }[]>([]);
-    const [fee, setFee] = useState<number | undefined>(undefined);
+    const [slots, setSlots] = useState<SlotDetails[]>([]);
+    const [fees, setFees] = useState<number | undefined>(undefined);
     const [slotError, setSlotError] = useState('');
 
     const timeFormat12hr = (time: string) => {
@@ -20,6 +29,24 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
         const hours12 = hours % 12 || 12;
         return `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
     };
+
+    useEffect(() => {
+            console.log('Component mounted');
+            
+            const fetchVerificationDetails = async () => {
+                try {
+                    const response = await api.get<{ slots:SlotDetails[], fees: number}>('/api/doctor/slots')
+                    const { slots, fees } = response.data ?? {};
+                    setFees(fees)
+                    setSlots(slots)
+                } catch (error) {
+                    console.error('Error fetching verification details:', error);
+                }
+            };
+            setLoading(true)
+            fetchVerificationDetails();
+            setLoading(false)
+        }, []);
 
     const handleAdd = () => {
         const start = parseInt(startTime.split(":")[0]) * 60 + parseInt(startTime.split(":")[1]);
@@ -42,7 +69,7 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
                 } else {
                     setSlots(prevSlots => [
                         ...prevSlots,
-                        {  startTime, endTime, slotLimit:Number(slotLimit), AvgConsultTime : per.toFixed(2) }
+                        {  startTime, endTime, slotLimit:Number(slotLimit), avgConsultTime : per.toFixed(2) }
                     ]);
                     setStartTime('');
                     setEndTime('');
@@ -59,8 +86,14 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
         setSlots(prevSlots => prevSlots.filter((_, i) => i !== index));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         console.log(slots, 'slots')
+        setLoading(false)
+        await api.put(`/api/doctor/slots`,{
+            slots, fees
+        })
+        setLoading(false)
+        handleModal('')
     }
 
     return (
@@ -139,7 +172,7 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
                                             <tr key={index}>
                                                 <td className="py-2 px-4">{timeFormat12hr(slot.startTime)} - {timeFormat12hr(slot.endTime)}</td>
                                                 <td className="py-2 px-4">{slot.slotLimit} Patients</td>
-                                                <td className="py-2 px-4">{slot.AvgConsultTime} minutes</td>
+                                                <td className="py-2 px-4">{slot.avgConsultTime} minutes</td>
                                                 <td className="py-2 px-4 ">
                                                     <button
                                                         onClick={() => handleDelete(index)}
@@ -166,10 +199,10 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal }) => {
                     id="fee"
                     placeholder="Fees per consult"
                     type="number"
-                    value={fee !== undefined ? fee : ""}
+                    value={fees !== undefined ? fees : ""}
                     onChange={(e) => {
                         const value = e.target.value;
-                        setFee(value ? parseFloat(value) : undefined);
+                        setFees(value ? parseFloat(value) : undefined);
                     }}
                     required
                     className="block px-4 py-1 border border-gray-300 font-normal outline-none max-w-[200px]"
