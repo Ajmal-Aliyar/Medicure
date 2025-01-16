@@ -1,19 +1,23 @@
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const AuthAnimations = () => {
   useGSAP(() => {
+
     const tl = gsap.timeline();
+
     tl.from('.auth', {
       opacity: 0,
       x: -100,
       duration: 1.2,
     }, 'anime1');
+
     tl.from('.form', {
       opacity: 0,
       x: 100,
       duration: 1.2,
     }, 'anime1');
+
     tl.from('.left-badge', {
       scale: 0,
       opacity: 0,
@@ -22,7 +26,8 @@ const AuthAnimations = () => {
       duration: 2,
       ease: 'power3.out',
     }, 'anime2')
-    .from('.right-badge', {
+
+    tl.from('.right-badge', {
       scale: 0,
       opacity: 0,
       y: 100,
@@ -31,7 +36,8 @@ const AuthAnimations = () => {
       ease: 'power3.out',
     }, 'anime2');
   });
-  return null; 
+  
+  return null;
 };
 
 export default AuthAnimations;

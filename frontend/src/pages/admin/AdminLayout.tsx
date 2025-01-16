@@ -1,5 +1,5 @@
-import { Outlet } from 'react-router-dom';
 import SlideMenu from '../../components/admin/SlideMenu';
+import { Outlet } from 'react-router-dom';
 
 const AdminLayout = () => {
     return (

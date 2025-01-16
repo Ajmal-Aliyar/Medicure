@@ -1,12 +1,10 @@
-
+import { IFileUploaderProps } from '../../../types/doctor/verifyDetailsType';
 import React from 'react';
 
-type FileUploaderProps = {
-  handleFileChange: (file: File | null, preview: string | null) => void;
-  imagePreview: string | null;
-};
 
-const FileUploader: React.FC<FileUploaderProps> = ({ handleFileChange, imagePreview }) => {
+
+const FileUploader: React.FC<IFileUploaderProps> = ({ handleFileChange, imagePreview }) => {
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {

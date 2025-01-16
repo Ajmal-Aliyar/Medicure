@@ -1,27 +1,39 @@
-import { useEffect, useRef, useState } from "react";
-import { api } from "../../utils/axiosInstance";
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store/store';
-import ErrorMessage from "../common/ErrorMessage";
-import SuccessModal from "../common/SuccessModal";
-import { login } from "../../store/slices/userSlice";
 import HoneyComb from "../common/HoneyComb";
+import { RootState } from '../../store/store';
+import SuccessModal from "../common/SuccessModal";
+import ErrorMessage from "../common/ErrorMessage";
+import { useEffect, useRef, useState } from "react";
+import { login } from "../../store/slices/userSlice";
+import { useSelector, useDispatch } from 'react-redux';
+import { IVerificationOTPProp } from "../../types/authType";
+import { sendOTPApi, verifyOtpAndRegisterApi, verifyOtpApi } from "../../sevices/authRepository";
 
-type Prop = {
-  handleAuth: (value: boolean) => void;
-  forgotPassword: boolean;
-  handleChangePassword:(value: boolean) => void
-}
-const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleChangePassword }) => {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-  const [serverError, setServerError] = useState<string>("")
-  const [loading, setLoading] = useState(false)
+const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPassword, handleChangePassword }) => {
   const [timer, setTimer] = useState(30);
+  const [message,setMessage] = useState('');
+  const [loading, setLoading] = useState(false)
+
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [serverError, setServerError] = useState<string>("");
+  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [isResendDisabled, setIsResendDisabled] = useState(true);
-  const [message,setMessage] = useState('')
   const { email } = useSelector((state: RootState) => state?.user);
+  
   const dispatch = useDispatch()
+  
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isResendDisabled && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setIsResendDisabled(false);
+    }
+    return () => clearInterval(interval);
+  }, [timer, isResendDisabled]);
+
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>, index: number): void => {
     const value = event.target.value;
     if (/^[0-9]$/.test(value)) {
@@ -41,50 +53,28 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleCha
     }
   };
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isResendDisabled && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      setIsResendDisabled(false);
-    }
-    return () => clearInterval(interval);
-  }, [timer, isResendDisabled]);
-
-  const handleResendOTP = () => {
+  const handleResendOTP = async () => {
     setTimer(30);
     setIsResendDisabled(true);
-
-    api.post('/api/auth/send-otp', {
-      email
-    })
-      .then(response => {
-        console.log('Login successful:', response.data);
-      })
-      .catch(error => {
-        setIsResendDisabled(false)
-        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-        console.error('Login error:', error.response?.data || error.message);
-      });
+    try {
+      await sendOTPApi(email)
+    } catch(error: any) {
+      setIsResendDisabled(false)
+      setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+      console.error('Login error:', error.response?.data || error.message);
+    }
   };
-
 
   const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>): void => {
     const pastedData = event.clipboardData.getData("Text");
     const otpValues = pastedData.split("").slice(0, 6);
     const newOtp = [...otp];
-
     otpValues.forEach((value, idx) => {
       if (/^[0-9]$/.test(value)) {
         newOtp[idx] = value;
       }
     });
-
     setOtp(newOtp);
-
     if (otpValues.length < 6 && inputRefs.current[otpValues.length]) {
       inputRefs.current[otpValues.length]?.focus();
     } else if (otpValues.length === 6) {
@@ -99,48 +89,40 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleCha
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setLoading(true)
     const OTP2Send = otp.join('')
     setOtp(Array(6).fill(""))
-
     if (forgotPassword) {
       console.log('forgot passowrd')
-      api.post('/api/auth/verify-otp', {
-        otp: OTP2Send, email
-      })
-        .then(response => {
-          setLoading(false);
-          console.log('OTP verified successfully:', response.data);
-          setMessage('OTP verified successfully. Please set your new password.')
-        })
-        .catch(error => {
-          setLoading(false);
-          setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-          console.error('OTP verification error:', error.response?.data || error.message);
-        });
-
+      try {
+        const response = await verifyOtpApi(OTP2Send, email)
+        setLoading(false);
+        console.log('OTP verified successfully:', response.data);
+        setMessage('OTP verified successfully. Please set your new password.')
+      } catch(error: any ) {
+        setLoading(false);
+        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+        console.error('OTP verification error:', error.response?.data || error.message);
+      }
     } else {
-
-      api.post('/api/auth/verify-otp-register', {
-        otp: OTP2Send, email
-      })
-        .then(response => {
-          setLoading(false);
+      try {
+        const response = await verifyOtpAndRegisterApi(OTP2Send, email)
+        setLoading(false);
           console.log('Login successful:', response.data);
           setMessage('Thank you for registering! Your account has been created successfully.')
-        })
-        .catch(error => {
-          setLoading(false);
+      } catch(error: any) {
+        setLoading(false);
           setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
           console.error('Login error:', error.response?.data || error.message);
-        });
-
+      }
     }
   }
+
   const handleErrorServerMessage = () => {
     setServerError('')
   }
+
   const handleModal = () => {
     setMessage('')
     if (forgotPassword) {
@@ -151,6 +133,7 @@ const VerificationOTP: React.FC<Prop> = ({ handleAuth, forgotPassword, handleCha
       handleAuth(true)
     }
   }
+
   return (
     <form className="form relative min-w-[290px] p-8 h-[380px] flex flex-col  min-h-[350px] w-[350px] lg:w-[400px] bg-[#e7eaec] shadow-lg rounded-lg items-center"
       style={{ boxShadow: '16px 16px 32px #c8c8c8, -16px -16px 32px #fefefe' }}>

@@ -15,7 +15,7 @@ declare global {
 }
 export const tokenMiddleware = (req: Request, res: Response, next: NextFunction): any => {
     try {
-        console.log('haai')
+        console.log('token middleware')
         const accessToken = req?.cookies?.accessToken ?? null;
         const refreshToken = req?.cookies?.refreshToken ?? null;
         if (!accessToken && !refreshToken) {

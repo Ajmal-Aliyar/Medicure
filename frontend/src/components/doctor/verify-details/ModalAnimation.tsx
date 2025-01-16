@@ -1,12 +1,8 @@
+import { IModalAnimationProps } from '../../../types/doctor/verifyDetailsType';
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-type ModalAnimationProps = {
-    children: React.ReactNode;
-    onClose?: (val:string) => void;
-};
-
-const ModalAnimation: React.FC<ModalAnimationProps> = ({ children, onClose }) => {
+const ModalAnimation: React.FC<IModalAnimationProps> = ({ children, onClose }) => {
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -18,13 +14,16 @@ const ModalAnimation: React.FC<ModalAnimationProps> = ({ children, onClose }) =>
     }, []);
 
     const handleClose = () => {
+
         const tl = gsap.timeline()
+
         tl.to(modalRef.current, {
             opacity: 0,
             y: 50,
             duration: 0.4,
             ease: 'power2.in',
         });
+
         tl.to('.main-div',{
             opacity:0,
             onComplete: () => onClose && onClose('')
@@ -34,7 +33,6 @@ const ModalAnimation: React.FC<ModalAnimationProps> = ({ children, onClose }) =>
     return (
         <div
             className="main-div fixed inset-0 bg-gradient-to-t from-[#00000093] flex justify-center items-center p-4 "
-            // onClick={handleClose}
         >
             <div
                 ref={modalRef}

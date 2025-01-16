@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { IProfileVerificationInput, ICreateUser } from "../interfaces/doctorInterface";
-import { DoctorModel } from "../models/doctorModel";
+import { DoctorModel, IDoctor } from "../models/doctorModel";
 
 
 
@@ -17,6 +17,15 @@ export class DoctorRepository {
         const doctor = new DoctorModel({ fullName, email, phone, password });
         console.log(doctor, 'doctor');
         return await doctor.save();
+    }
+
+    async updateDoctor(
+        _id: string, 
+        { fullName, headline, about, address }): Promise<void> {
+        console.log('hres',fullName,headline,about,address)
+
+        const result = await DoctorModel.updateOne({ _id },{$set: { fullName, headline, about, address }})
+        console.log(result,'res')
     }
 
     async findByEmail(email: string) {

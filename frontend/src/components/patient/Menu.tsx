@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import 'font-awesome/css/font-awesome.min.css';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store'; 
+import AlertPortal from '../common/AlertPortal';
 import { useNavigate } from 'react-router-dom';
+import 'font-awesome/css/font-awesome.min.css';
+import { RootState } from '../../store/store'; 
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { NavLink } from 'react-router-dom';
-import AlertPortal from '../common/AlertPortal';
 
 function Menu() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState<string>("");
     const { isAuthenticated, role } = useSelector((state: RootState) => state?.user);
+    const [alertMessage, setAlertMessage] = useState<string>("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
 
     useGSAP(() => {
@@ -23,6 +23,7 @@ function Menu() {
             ease: 'power4.out',
         });
     });
+
     useEffect(() => {
         const handleScroll = () => {
             setIsOpen(false);
@@ -41,6 +42,7 @@ function Menu() {
     const closeAlert = () => {
         setShowAlert(false);
     };
+    
     return (
         <div className="navbar w-full px-6 lg:px-28 py-1 md:py-3 flex-col lg:flex-row justify-end opacity-100 text-[#0c0b3eb5] absolute z-30 bg-white lg:bg-transparent">
             <div className='w-full flex justify-between items-center'>

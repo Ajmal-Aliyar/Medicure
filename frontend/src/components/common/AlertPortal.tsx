@@ -1,9 +1,9 @@
+import gsap from 'gsap';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { api } from '../../utils/axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../utils/axiosInstance';
 
 
 interface AlertPortalProps {
@@ -13,10 +13,12 @@ interface AlertPortalProps {
 
 const AlertPortal: React.FC<AlertPortalProps> = ({ message, onClose }) => {
     const navigate = useNavigate()
+
     const logOut = async () => {
         await api.get('/api/auth/logout')
         navigate('/user/auth')
     }
+
     useGSAP(() => {
         gsap.from('.anim', {
             y: -100,
@@ -24,6 +26,7 @@ const AlertPortal: React.FC<AlertPortalProps> = ({ message, onClose }) => {
             duration: 1
         })
     })
+
     return ReactDOM.createPortal(
         <div
             className='anim flex w-screen justify-center bg-black'
@@ -86,7 +89,6 @@ const AlertPortal: React.FC<AlertPortalProps> = ({ message, onClose }) => {
     );
 };
 
-// Optional: CSS styles for the alert
 const alertStyle: React.CSSProperties = {
     position: 'fixed',
     top: '20px',

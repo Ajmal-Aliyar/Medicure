@@ -1,17 +1,19 @@
 import SideAuthComponent from "../../components/auth/SideAuthComponent";
+import VerificationForm from "../../components/auth/VerificationOTP";
+import ChangePassword from "../../components/auth/ChangePassword";
+import AuthAnimations from "../../components/auth/AuthAnimation";
 import AuthPage from "../../components/auth/Auth";
 import { useState } from "react";
-import VerificationForm from "../../components/auth/VerificationOTP";
-import AuthAnimations from "../../components/auth/AuthAnimation";
-import ChangePassword from "../../components/auth/ChangePassword"
 
 interface AuthProps {
   role: string;
 }
+
 const Auth:React.FC<AuthProps> = ({role}) => {
-  const [ auth, setAuth] = useState(true)
   const [forgotPassword, setForgorPassword] = useState(false)
   const [changePassword, setChangePassword] = useState(false)
+  const [ auth, setAuth] = useState(true)
+  
   const handleAuth = (value:boolean) => {
     setAuth(value)
   }

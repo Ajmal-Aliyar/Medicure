@@ -1,33 +1,28 @@
 import { useState } from "react"
-import { validatePassword } from "../../utils/validate";
-import HoneyComb from "../common/HoneyComb";
-import ErrorMessage from "../common/ErrorMessage";
-import { api } from "../../utils/axiosInstance";
-import { RootState } from "../../store/store";
 import { useSelector } from "react-redux";
+import HoneyComb from "../common/HoneyComb";
+import { RootState } from "../../store/store";
+import ErrorMessage from "../common/ErrorMessage";
+import { validatePassword } from "../../utils/validate";
+import { changePasswordApi } from "../../sevices/authRepository";
+import {  IErrorTypeChangepassword, IForgotPasswordProps } from "../../types/authType";
 
-type ErrorType = {
-  newPassword: string;
-  confirmPassword: string;
-}
-type ForgotPasswordProps = {
-  handleChangePassword: (value: boolean) => void;
-  role:string;
-}
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleChangePassword , role}) => {
+const ForgotPassword: React.FC<IForgotPasswordProps> = ({ handleChangePassword , role}) => {
+  const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [newPasswordfocused, setNewPasswordFocused] = useState(false)
-  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false)
-  const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string>("")
+  const [newPasswordfocused, setNewPasswordFocused] = useState(false)
   const email = useSelector((state: RootState) => state?.user?.email);
-  const [errorMessage, setErrorMessage] = useState<ErrorType>({
+  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<IErrorTypeChangepassword>({
     newPassword: '', confirmPassword: ''
   })
+
   const handleErrorServerMessage = () => {
     setServerError('')
   }
+
   const handleErrorMessage = (field: string, value: string) => {
     if (field === 'new-password') {
       setNewPassword(value)
@@ -46,36 +41,29 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ handleChangePassword , 
       }));
     }
   }
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     setLoading(true);
     if (newPassword !== confirmPassword) {
       setServerError('The passwords do not match. Please make sure both the password and confirm password fields are the same')
       setLoading(false)
       return
     }
-
     if (!errorMessage.newPassword && !errorMessage.confirmPassword && confirmPassword && newPassword) {
-      api.post('/api/auth/change-password', {
-        email,password:confirmPassword,role
-      })
-        .then(response => {
-          setLoading(false);
-          console.log('Password changed successfully:', response.data)
-          
+      try {
+        await changePasswordApi(email, confirmPassword, role)
+         setLoading(false);
           handleChangePassword(false)
-        })
-        .catch(error => {
-          setLoading(false);
-          setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-          console.error('Password change error:', error.response?.data || error.message);
-        });
+      } catch (error: any) {
+        setLoading(false);
+        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+        console.error('Password change error:', error.response?.data || error.message);
+      }
     } else {
       handleErrorMessage('new-password', newPassword);
       handleErrorMessage('confirm-password', confirmPassword);
       setLoading(false);
     }
-
-
   };
 
   return (

@@ -1,27 +1,18 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IAppointmentSetUpProps, ISlotDetails } from "../../../types/doctor/verifyDetailsType";
+import { getSlotsApi, updateSlotsApi } from "../../../sevices/doctor/verifyDetailsRepository";
 import { faTrashAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import { api } from "../../../utils/axiosInstance";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useEffect, useState } from "react";
 
-type AppointmentSetUpProps = {
-    handleModal: (val: string) => void
-    setLoading: Dispatch<SetStateAction<boolean>>;
-}
-interface SlotDetails {
-    _id?: string | null;
-    startTime: string;
-    endTime: string;
-    slotLimit: number;
-    avgConsultTime: string;
-}
 
-const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal, setLoading }) => {
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [slotLimit, setSlotLimit] = useState('');
-    const [slots, setSlots] = useState<SlotDetails[]>([]);
+
+const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLoading }) => {
     const [fees, setFees] = useState<number | undefined>(undefined);
+    const [slots, setSlots] = useState<ISlotDetails[]>([]);
+    const [startTime, setStartTime] = useState('');
+    const [slotLimit, setSlotLimit] = useState('');
     const [slotError, setSlotError] = useState('');
+    const [endTime, setEndTime] = useState('');
 
     const timeFormat12hr = (time: string) => {
         const [hours, minutes] = time.split(':').map(Number);
@@ -35,7 +26,7 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal, setLoa
             
             const fetchVerificationDetails = async () => {
                 try {
-                    const response = await api.get<{ slots:SlotDetails[], fees: number}>('/api/doctor/slots')
+                    const response = await getSlotsApi()
                     const { slots, fees } = response.data ?? {};
                     setFees(fees)
                     setSlots(slots)
@@ -89,9 +80,7 @@ const AppointmentSetUp: React.FC<AppointmentSetUpProps> = ({ handleModal, setLoa
     const handleSubmit = async () => {
         console.log(slots, 'slots')
         setLoading(false)
-        await api.put(`/api/doctor/slots`,{
-            slots, fees
-        })
+        await updateSlotsApi(slots, fees)
         setLoading(false)
         handleModal('')
     }

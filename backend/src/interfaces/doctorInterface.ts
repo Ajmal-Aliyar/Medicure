@@ -22,3 +22,15 @@ export interface IProfileVerificationInput {
     yearOfCompletion: string;
     yearsOfExperience: string;
 }
+
+export interface IUpdateProfileRepository { 
+    addressLine: string; 
+    streetAddress: string; 
+    city: string; 
+    state: string; 
+    country: string; 
+    pincode: string; 
+    about: string; 
+    headline: string; 
+    fullName: string; 
+}

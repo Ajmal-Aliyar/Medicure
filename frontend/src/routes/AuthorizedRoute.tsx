@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
-import { RootState } from '../store/store';
-import { api } from '../utils/axiosInstance';
 import { login, setData } from '../store/slices/userSlice';
-import { useEffect, useState } from 'react';
 import HoneyComb from '../components/common/HoneyComb';
+import { useDispatch, useSelector } from 'react-redux';
+import { api } from '../utils/axiosInstance';
+import { Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { RootState } from '../store/store';
 
 interface ProtectedRouteProps {
     children: JSX.Element;
@@ -22,8 +22,10 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
     const [showSpinner, setShowSpinner] = useState(false);
-    const { role, isAuthenticated, isApproved } = useSelector((state: RootState) => state.user);
-
+    const { role, isAuthenticated, isApproved } = useSelector(
+        (state: RootState) => state.user
+    )
+    
     useEffect(() => {
 
         const spinnerTimeout = setTimeout(() => {

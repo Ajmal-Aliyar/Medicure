@@ -1,10 +1,42 @@
 import { DoctorRepository } from "../repositories/doctorRepository";
-import { IProfileVerificationInput } from "../interfaces/doctorInterface";
+import { IProfileVerificationInput, IUpdateProfileRepository } from "../interfaces/doctorInterface";
 import { deleteCloudinaryImages, extractPublicId } from "../utils/CloudinaryUtil"
+import { IAddress } from "../models/doctorModel";
 
 const doctorRepository = new DoctorRepository()
 
 export class DoctorService {
+
+    async getProfileDetails(_id: string) {
+        try {
+            return await doctorRepository.findByID(_id)
+        } catch (error) {
+            throw error;
+        }
+    }
+    
+
+    async updateDoctor(
+        _id: string, 
+        { addressLine, streetAddress, city, state, country, pincode, about, headline, fullName }: IUpdateProfileRepository
+    ): Promise<void> {
+        try {
+            const address: IAddress = {
+                addressLine,
+                streetAddress,
+                city,
+                state,
+                country,
+                pincode
+            };
+
+            await doctorRepository.updateDoctor(_id, { fullName, headline, about, address });
+            
+        } catch (error) {
+            return error
+        }
+    }
+    
 
     async getProfileVerificationDetailsByID(_id: string) {
         try {
@@ -128,13 +160,13 @@ export class DoctorService {
             const { registrationNumber, registrationCouncil, registrationYear, educationDetails, yearsOfExperience,
                 establishmentProof, identityProof, medicalRegistration } = doctorData
 
-                if ( registrationNumber && registrationCouncil && registrationYear && educationDetails && yearsOfExperience &&
-                    establishmentProof && identityProof && medicalRegistration ) {
-                        await doctorRepository.updatekProfileComplete(id)
-                        return true
-                    } else {
-                        return false
-                    }
+            if (registrationNumber && registrationCouncil && registrationYear && educationDetails && yearsOfExperience &&
+                establishmentProof && identityProof && medicalRegistration) {
+                await doctorRepository.updatekProfileComplete(id)
+                return true
+            } else {
+                return false
+            }
 
         } catch (error: any) {
             return error

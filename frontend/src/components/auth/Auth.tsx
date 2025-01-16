@@ -1,99 +1,74 @@
 import { useState } from "react";
-import { api } from '../../utils/axiosInstance'
-import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate";
-import ErrorMessage from "../common/ErrorMessage";
 import { useDispatch } from "react-redux";
-import { setData } from "../../store/slices/userSlice";
 import HoneyComb from "../common/HoneyComb";
 import { useNavigate } from "react-router-dom";
-type ErrorType = {
-    name: string,
-    email: string,
-    mobile: string,
-    password: string,
-}
-type AuthPageProps = {
-    handleAuth: (value: boolean) => void;
-    handleForgotPassword: (value: boolean) => void;
-    role: string
-};
-interface SignInResponse {
-    _id: string;
-    role: string;
-    accessToken: string;
-}
-const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role }) => {
-    const [isLogin, setIsLogin] = useState(true)
-    const [isForgotPassword, setIsForgotPassword] = useState(false)
+import ErrorMessage from "../common/ErrorMessage";
+import { setData } from "../../store/slices/userSlice";
+import { sendOTPApi, signInApi, signUpApi } from "../../sevices/authRepository"
+import { IAuthPageProps, IErrorType, ISignInResponse } from "../../types/authType";
+import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate";
+
+
+const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role }) => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [isLogin, setIsLogin] = useState(true);
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const [nameFocused, setnameFocused] = useState(false);
     const [emailFocused, setemailFocused] = useState(false);
     const [mobileFocused, setmobileFocused] = useState(false);
+    const [serverError, setServerError] = useState<string>("");
     const [passwordFocused, setPasswordFocused] = useState(false);
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [mobile, setMobile] = useState('');
-    const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false);
-    const [serverError, setServerError] = useState<string>("")
-    const [errorMessage, setErrorMessage] = useState<ErrorType>({
+    const [isForgotPassword, setIsForgotPassword] = useState(false)
+    const [errorMessage, setErrorMessage] = useState<IErrorType>({
         name: '',
         email: '',
         mobile: '',
         password: ''
     })
+
     const dipatch = useDispatch()
     const navigate = useNavigate()
-    const handleSubmit = () => {
+
+    const handleSubmit = async () => {
         setLoading(true);
         if (isLogin) {
             if (!errorMessage.email && !errorMessage.password && email && password) {
-                api.post<SignInResponse>('/api/auth/signin', {
-                    email,
-                    password,
-                    role
-                })
-                    .then(response => {
-                        setLoading(false);
-                        console.log('Signup successful:', response.data);
-                        dipatch(setData({ _id:response.data._id, email, role }))
-                        if (role === 'doctor') {
-                            navigate('/doctor/dashboard')
-                        } else {
-                            navigate('/user')
-                        }
-                    })
-                    .catch(error => {
-                        setLoading(false);
-                        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                        console.error('Signup error:', error.response?.data || error.message);
-                    });
+                try {
+                    const response: ISignInResponse = await signInApi(email, password, role)
+                    dipatch(setData({ email, role }))
+                    dipatch(setData({ _id: response.data._id, email, role }))
+                    setLoading(false);
+                    if (role === 'doctor') {
+                        navigate('/doctor/dashboard')
+                    } else {
+                        navigate('/user')
+                    }
+                } catch (error: any) {
+                    setLoading(false);
+                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+                    console.error('Signup error:', error.response?.data || error.message);
+                }
             } else {
                 handleErrorMessage('email', email);
                 handleErrorMessage('password', password);
                 setLoading(false);
             }
-
         } else {
             if (!errorMessage.name && !errorMessage.email && !errorMessage.mobile && !errorMessage.password && name && email && mobile && password) {
                 console.log(role)
-                api.post('/api/auth/signup', {
-                    name,
-                    email,
-                    mobile,
-                    password,
-                    role
-                })
-                    .then(response => {
-                        setLoading(false);
-                        console.log('Signup successful:', response.data);
-                        dipatch(setData({ email, role }))
-                        handleAuth(false);
-                    })
-                    .catch(error => {
-                        setLoading(false);
-                        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                        console.error('Signup error:', error.response?.data || error.message);
-                    });
+                try {
+                    await signUpApi(name, email, mobile, password, role)
+                    setLoading(false);
+                    dipatch(setData({ email, role }))
+                    handleAuth(false);
+                } catch (error: any) {
+                    setLoading(false);
+                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+                    console.error('Signup error:', error.response?.data || error.message);
+                }
             } else {
                 handleErrorMessage('name', name);
                 handleErrorMessage('email', email);
@@ -104,10 +79,10 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role 
         }
     };
 
-
     const handleErrorServerMessage = () => {
         setServerError('')
     }
+
     const handleErrorMessage = (field: string, value: string) => {
         if (field === 'name') {
             setName(value)
@@ -142,34 +117,37 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role 
             }));
         }
     }
-    const sendOTP = () => {
+
+    const sendOTP = async () => {
         setLoading(true)
         if (!errorMessage.email && email) {
-            api.post('/api/auth/send-otp', { email })
-                .then(response => {
-                    setLoading(false);
-                    console.log('Signup successful:', response.data);
-                    handleForgotPassword(true)
-                    dipatch(setData({ email, role }))
-                })
-                .catch(error => {
-                    setLoading(false);
-                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                    console.error('Signup error:', error.response?.data || error.message);
-                });
+            try {
+                const response = await sendOTPApi(email)
+                setLoading(false);
+                console.log('Signup successful:', response.data);
+                handleForgotPassword(true)
+                dipatch(setData({ email, role }))
+            } catch (error: any) {
+                setLoading(false);
+                setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
+                console.error('Signup error:', error.response?.data || error.message);
+            }
         } else {
             handleErrorMessage('email', email);
             setLoading(false)
         }
     }
+
     const setLoginTrue = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         setIsLogin(true)
     }
+
     const setLoginFalse = (event: React.MouseEvent<HTMLAnchorElement>) => {
         event.preventDefault()
         setIsLogin(false)
     }
+
     const getButtonText = (isForgotPassword: boolean, isLogin: boolean, role: string) => {
         if (isForgotPassword) return 'Submit';
         if (isLogin) return role === 'user' ? 'Sign in as user' : 'Sign in as doctor';
@@ -282,9 +260,9 @@ const Auth: React.FC<AuthPageProps> = ({ handleAuth, handleForgotPassword, role 
                     <p className="text-gray-600">Don't have an account? <a onClick={(e) => setLoginFalse(e)} href="" className="text-[#0c0b3e] font-medium">Sign up</a></p> :
                     <p className="text-gray-600">Already have an account? <a onClick={(e) => setLoginTrue(e)} href="" className="text-[#0c0b3e] font-medium">Sign in</a></p>}
 
-                    <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={()=>navigate(role === 'user' ? '/doctor/auth' : '/user/auth')}>I'm a {role === 'user' ? 'doctor' : 'patient'}</p> 
+                <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={() => navigate(role === 'user' ? '/doctor/auth' : '/user/auth')}>I'm a {role === 'user' ? 'doctor' : 'patient'}</p>
             </div>
-            
+
 
             <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
                 {!loading ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}

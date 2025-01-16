@@ -1,10 +1,10 @@
+import { login, setData } from '../store/slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import HoneyComb from '../components/common/HoneyComb';
+import { api } from '../utils/axiosInstance';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { RootState } from '../store/store';
-import { api } from '../utils/axiosInstance';
-import { login, setData } from '../store/slices/userSlice';
-import { useEffect, useState } from 'react';
-import HoneyComb from '../components/common/HoneyComb';
 
 interface ProtectedRouteProps {
     children: JSX.Element;

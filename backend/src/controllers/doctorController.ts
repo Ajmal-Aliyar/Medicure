@@ -1,11 +1,48 @@
 import { Request, Response } from "express";
 import { DoctorService } from "../services/doctorServices";
 import { IProfileVerificationRequestBody } from "../interfaces/doctorInterface";
+import { NextFunction } from "express-serve-static-core";
 
 
 const doctorService = new DoctorService()
 
 export class DoctorController {
+
+    async getProfileDetails(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { _id } = req.client;
+            const doctorData = await doctorService.getProfileDetails(_id)
+            res.status(200).json({doctorData})
+        } catch (error) {
+            next(error); 
+          }
+    }
+
+    async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { _id } = req.client;
+            const { fullName, headline, about, addressLine, streetAddress, city, state, country, pincode } = req.body;
+            console.log(about ,'asdf')
+            await doctorService.updateDoctor(_id, {
+                fullName,
+                headline,
+                about,
+                addressLine,
+                streetAddress,
+                city,
+                state,
+                country,
+                pincode
+            });
+    
+            res.status(200).json({ message: 'Profile updated successfully' });
+        } catch (error) {
+            console.log(error,'asdfas')
+            next(error);
+        }
+    }
+    
+    
 
     async getProfileVerificationDetails(req: Request, res: Response): Promise<void> {
         try {

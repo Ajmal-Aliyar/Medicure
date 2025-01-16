@@ -1,11 +1,11 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faNewspaper, faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
 import { faRightFromBracket, faBars, faCalendarAlt, faMessage, faThLarge } from '@fortawesome/free-solid-svg-icons';
+import { faNewspaper, faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 
 function SlideMenu() {
-    const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState('Dashboard')
+    const [isOpen, setIsOpen] = useState(false);
     const handleNav = () => setIsOpen(!isOpen);
 
     const menuItems = [
@@ -22,14 +22,14 @@ function SlideMenu() {
 
     return (
         <div
-            className={`h-full bg-gradient-to-l from-[#72b4e7] to-[#9fcced] fixed top-0 left-0 flex flex-col shadow-2xl z-40 overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'w-[270px]' : 'w-[100px]'}`}
+            className={`lg:h-full w-full bg-gradient-to-l from-[#72b4e7] to-[#9fcced]  top-0 left-0 flex flex-col shadow-2xl z-40 overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'lg:w-[270px] h-full' : 'lg:w-[100px] h-20'}`}
         >
 
             <nav
                 className="flex items-center cursor-pointer text-[#0c0b3eb5] p-4 gap-4"
                 onClick={handleNav}
             >
-                <FontAwesomeIcon icon={faBars} className="text-3xl p-5" />
+                <FontAwesomeIcon icon={faBars} className="text-3xl pl-5" />
                 <p className={`text-2xl font-black whitespace-nowrap transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>MEDI CURE</p>
             </nav>
 

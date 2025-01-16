@@ -1,6 +1,7 @@
 import profile from '../../assets/doctors/doctordp3.jpg'
 
 function ProfileCard() {
+
     return (
         <div className="w-full  bg-white rounded-lg shadow-lg flex flex-col items-center gap-2 p-5 py-4 mt-40">
             <img src={profile} className='w-[100px] h-[100px] rounded-md mt-2' alt="" />

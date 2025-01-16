@@ -1,13 +1,28 @@
 import mongoose, { Schema, model, Document } from 'mongoose';
 
 
-interface IDoctor extends Document {
+interface IEducation {
+    degree: string;
+    university: string;
+    yearOfCompletion: number;
+}
+
+export interface IAddress {
+    addressLine: string;
+    streetAddress: string;
+    city: string;
+    state: string;
+    country: string;
+    pincode: string;
+}
+
+export interface IDoctor extends Document {
     fullName: string;
     email: string;
     phone: string; 
     password: string;
     gender: 'Male' | 'Female';
-    profileImage: Buffer | string;
+    profileImage?: Buffer | string;
     dob: Date;
     registrationNumber: string;
     registrationCouncil: string;
@@ -16,11 +31,10 @@ interface IDoctor extends Document {
     medicalRegistration: string;
     establishmentProof: string;
     about: string;
-    educationDetails:  {
-        degree: string;
-        university: string;
-        yearOfCompletion: number;
-    }
+    educationDetails: IEducation;
+    education: IEducation[]; 
+    headline: string;
+    address: IAddress;
     specialization: string;
     yearsOfExperience: number;
     languageSpoken: string;
@@ -31,6 +45,7 @@ interface IDoctor extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
 
 const DoctorSchema = new Schema<IDoctor>({
     fullName: {
@@ -56,65 +71,74 @@ const DoctorSchema = new Schema<IDoctor>({
     },
     gender: {
         type: String,
-        enum: ['Male', 'Female']
+        enum: ['Male', 'Female'],
     },
     profileImage: {
-        type: Buffer
+        type: Buffer,
+        required: false
     },
     dob: {
-        type: Date
+        type: Date,
     },
     registrationNumber: {
         type: String,
         unique: true,
-        maxlength: 50
+        maxlength: 50,
     },
     registrationCouncil: {
         type: String,
-        maxlength: 100
+        maxlength: 100,
     },
     registrationYear: {
-        type: Number
+        type: Number,
+        required: true
     },
     identityProof: {
-        type: String
+        type: String,
     },
     medicalRegistration: {
-        type: String
+        type: String,
     },
     establishmentProof: {
-        type: String
+        type: String,
     },
     about: {
-        type: String
+        type: String,
     },
     educationDetails: {
-        degree: {
-            type: String,
-            required: true
-        },
-        university: {
-            type: String,
-            required: true
-        },
-        yearOfCompletion: {
-            type: Number,
-            required: true
-        }
+        degree: { type: String},
+        university: { type: String},
+        yearOfCompletion: { type: Number}
+    },
+    education: [{
+        degree: { type: String},
+        university: { type: String},
+        yearOfCompletion: { type: Number}
+    }],
+    headline: {
+        type: String,
+    },
+    address: {
+        addressLine: { type: String},
+        streetAddress: { type: String},
+        city: { type: String},
+        state: { type: String},
+        country: { type: String},
+        pincode: { type: String}
     },
     specialization: {
         type: String,
-        maxlength: 100
+        maxlength: 100,
     },
     yearsOfExperience: {
-        type: Number
+        type: Number,
     },
     languageSpoken: {
         type: String,
-        maxlength: 255
+        maxlength: 255,
     },
     fees: {
-        type: Number
+        type: Number,
     },
     isBlocked: {
         type: Boolean,

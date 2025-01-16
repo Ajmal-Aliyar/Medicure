@@ -1,11 +1,10 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { api } from '../../../utils/axiosInstance';
+import { getVerificationDetailsApi, patchVerificationDetailsApi } from '../../../sevices/doctor/verifyDetailsRepository';
+import { IProfileDetailsFormProps } from '../../../types/doctor/verifyDetailsType';
+import React, { useEffect, useState } from 'react';
+// import { api } from '../../../utils/axiosInstance';
 
-type ContentProps = {
-    handleModal: (val: string) => void;
-    setLoading: Dispatch<SetStateAction<boolean>>;
-};
-const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading }) => {
+
+const ProfileDetailsForm: React.FC<IProfileDetailsFormProps> = ({ handleModal, setLoading }) => {
     const [currentSlide, setCurrentSlide] = useState(1);
     const [formData, setFormData] = useState({
         registrationNumber: '',
@@ -97,7 +96,7 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
     useEffect(() => {
         const fetchVerificationDetails = async () => {
             try {
-                const response = await api.get('/api/doctor/profile-details');
+                const response = await getVerificationDetailsApi()
                 const data = response.data;
                 console.log(data);
                 if (data) {
@@ -114,13 +113,11 @@ const ProfileDetailsForm: React.FC<ContentProps> = ({ handleModal, setLoading })
         fetchVerificationDetails();
         setLoading(false)
     }, []); 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (validateSlide2()) {
             setLoading(true)
             console.log('Submitting:', formData);
-            api.patch('/api/doctor/profile-details',{
-                ...formData
-            })
+            await patchVerificationDetailsApi(formData)
             handleModal('')
             setLoading(false)
         }

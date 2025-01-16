@@ -1,9 +1,9 @@
-import { useSelector } from 'react-redux';
+import VerifyDetails from '../pages/doctor/VerifyDetails';
+import HoneyComb from '../components/common/HoneyComb';
+import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { RootState } from '../store/store';
-import VerifyDetails from '../pages/doctor/VerifyDetails';
-import { useState, useEffect } from 'react';
-import HoneyComb from '../components/common/HoneyComb';
+import { useSelector } from 'react-redux';
 
 const PrivateRoute = () => {
     const { isAuthenticated, isApproved } = useSelector((state: RootState) => state.user);

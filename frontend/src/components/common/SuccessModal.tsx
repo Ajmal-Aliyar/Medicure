@@ -4,6 +4,7 @@ interface Props {
     message: string,
     handleModal : () => void
 }
+
 const SuccessModal: React.FC<Props> = ({message, handleModal}) => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 ">

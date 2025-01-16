@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom"
 import Menu from "../../components/patient/Menu"
+import { Outlet } from "react-router-dom"
 
 
 function UserLayout() {

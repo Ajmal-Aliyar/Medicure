@@ -1,31 +1,22 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import FileUploader from "./FileUploader";
+import { getVerificationProofsApi, putVerficationProofsApi } from "../../../sevices/doctor/verifyDetailsRepository";
+import { IProfileVerificationFormProps } from "../../../types/doctor/verifyDetailsType";
 import { uploadCloudinary } from "../../../utils/Cloudinary";
-import { api } from "../../../utils/axiosInstance";
+import { useEffect, useState } from "react";
+import FileUploader from "./FileUploader";
 
-type ContentProps = {
-    handleModal: (value: string) => void;
-    setLoading: Dispatch<SetStateAction<boolean>>;
-};
-interface VerificationProofs {
-    identityProof?: string | null;
-    medicalRegistration?: string | null;
-    establishmentProof?: string | null;
-}
 
-const ProfileVerificationForm: React.FC<ContentProps> = ({ handleModal, setLoading }) => {
-    const [currentStep, setCurrentStep] = useState<number>(1);
-    const [identityProof, setIdentityProof] = useState<File | null>(null);
+const ProfileVerificationForm: React.FC<IProfileVerificationFormProps> = ({ handleModal, setLoading }) => {
+    const [medicalRegistrationPreview, setMedicalRegistrationPreview] = useState<string | null>(null);
+    const [establishmentProofPreview, setEstablishmentProofPreview] = useState<string | null>(null);
     const [identityProofPreview, setIdentityProofPreview] = useState<string | null>(null);
     const [medicalRegistration, setMedicalRegistration] = useState<File | null>(null);
-    const [medicalRegistrationPreview, setMedicalRegistrationPreview] = useState<string | null>(null);
     const [establishmentProof, setEstablishmentProof] = useState<File | null>(null);
-    const [establishmentProofPreview, setEstablishmentProofPreview] = useState<string | null>(null);
+    const [identityProof, setIdentityProof] = useState<File | null>(null);
+    const [currentStep, setCurrentStep] = useState<number>(1);
     const [error, setError] = useState<string>('')
 
     const goToNextStep = () => {
         if (currentStep < 3) {
-
             setCurrentStep((prevStep) => prevStep + 1);
         }
     };
@@ -66,7 +57,7 @@ const ProfileVerificationForm: React.FC<ContentProps> = ({ handleModal, setLoadi
 
         const fetchVerificationDetails = async () => {
             try {
-                const response = await api.get<VerificationProofs>('/api/doctor/verification-proofs');
+                const response = await getVerificationProofsApi()
 
                 const {
                     identityProof = null,
@@ -105,11 +96,7 @@ const ProfileVerificationForm: React.FC<ContentProps> = ({ handleModal, setLoadi
             const [identityUrl, medicalUrl, establishmentUrl] = uploadedFiles;
             console.log('hai')
             if (identityUrl || medicalUrl || establishmentUrl) {
-                await api.patch('/api/doctor/verification-proofs', {
-                    identityProof: identityUrl,
-                    medicalRegistration: medicalUrl,
-                    establishmentProof: establishmentUrl
-                })
+                await putVerficationProofsApi({identityUrl,medicalUrl,establishmentUrl})
             } else {
                 setError('*Already submitted');
             }

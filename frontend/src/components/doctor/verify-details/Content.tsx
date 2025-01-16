@@ -1,17 +1,16 @@
+import { IContentProps } from "../../../types/doctor/verifyDetailsType";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { api } from '../../../utils/axiosInstance';
 import HoneyComb from '../../common/HoneyComb';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import "./style.css"
-type ContentProps = {
-  handleModal: (val: string) => void
-}
 
-const Content: React.FC<ContentProps> = ({ handleModal }) => {
+const Content: React.FC<IContentProps> = ({ handleModal }) => {
   const [isProfileCompleted, setIsProfileCompleted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+
   const steps = [
     {
       title: 'Profile Details',
@@ -26,6 +25,7 @@ const Content: React.FC<ContentProps> = ({ handleModal }) => {
       description: "Location, Timings, Fees, etc.",
     },
   ];
+
   const handleSubmit = async () => {
     try {
       setLoading(true);

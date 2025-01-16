@@ -1,17 +1,19 @@
-import { useState } from "react";
 import AlertPortal from "../../common/AlertPortal";
+import { useState } from "react";
 
 function Banner() {
-  const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string>("");
+  const [showAlert, setShowAlert] = useState(false);
 
   const showAlertMessage = () => {
     setAlertMessage("Are you sure you want to log out?");
     setShowAlert(true);
   };
+
   const closeAlert = () => {
     setShowAlert(false);
-};
+  };
+
   return (
     <div className="flex justify-between items-center w-full p-5 lg:px-16 bg-white md:shadow-md border-b-2 md:border-0">
       <p className="text-4xl font-extrabold text-[#0c0b3eb5] tracking-wide">MEDI CURE</p>

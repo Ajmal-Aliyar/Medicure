@@ -1,6 +1,6 @@
+import { SlotRepository } from "../repositories/slotRepository";
 import { ISlot } from "../interfaces/slotInterface";
 import { ISlotSchema } from "../models/slotsModel";
-import { SlotRepository } from "../repositories/slotRepository";
 
 const slotRepository = new SlotRepository()
 

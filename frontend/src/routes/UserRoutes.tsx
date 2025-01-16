@@ -1,9 +1,10 @@
+import UserLayout from '../pages/patient/UserLayout';
+import UnAuthorizedRoute from './UnAuthorizedRoute';
 import { Route, Routes } from 'react-router-dom';
 import Home from '../pages/patient/Home';
 import Auth from '../pages/patient/Auth';
 import PublicRoutes from './PublicRoutes';
-import UnAuthorizedRoute from './UnAuthorizedRoute';
-import UserLayout from '../pages/patient/UserLayout';
+
 function UserRoutes() {
   return (
     <>

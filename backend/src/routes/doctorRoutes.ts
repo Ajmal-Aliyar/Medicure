@@ -7,10 +7,14 @@ const router = Router();
 const doctorController = new DoctorController()
 const slotController = new SlotController()
 
+//doctor profile
+router.get('/profile-details', tokenMiddleware, doctorController.getProfileDetails)
+router.patch('/profile-update', tokenMiddleware, doctorController.updateProfile)
+
 //profile verification
-router.get('/profile-details', tokenMiddleware, doctorController.getProfileVerificationDetails)
+router.get('/verification-details', tokenMiddleware, doctorController.getProfileVerificationDetails)
 router.get('/verification-proofs', tokenMiddleware, doctorController.getProofVerificationDetails)
-router.patch('/profile-details', tokenMiddleware, doctorController.profileVerification)
+router.patch('/verification-details', tokenMiddleware, doctorController.profileVerification)
 router.patch('/verification-proofs', tokenMiddleware, doctorController.verificationProofs)
 router.post('/submit-verification', tokenMiddleware, doctorController.submitDoctorVerification)
 

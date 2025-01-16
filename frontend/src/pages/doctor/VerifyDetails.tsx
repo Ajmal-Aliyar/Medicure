@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import Banner from '../../components/doctor/verify-details/Banner';
-import Content from '../../components/doctor/verify-details/Content';
-import ProfileDetailsForm from '../../components/doctor/verify-details/ProfileDetailsForm';
-import ModalAnimation from '../../components/doctor/verify-details/ModalAnimation';
 import ProfileVerificationForm from '../../components/doctor/verify-details/ProfileVerificationForm';
-import Animation from '../../components/doctor/verify-details/Animation';
+import ProfileDetailsForm from '../../components/doctor/verify-details/ProfileDetailsForm';
 import AppointmentSetUp from '../../components/doctor/verify-details/AppointmentSetUp';
+import ModalAnimation from '../../components/doctor/verify-details/ModalAnimation';
+import Animation from '../../components/doctor/verify-details/Animation';
+import Content from '../../components/doctor/verify-details/Content';
+import Banner from '../../components/doctor/verify-details/Banner';
 import HoneyComb from '../../components/common/HoneyComb';
+import { useState } from 'react';
 
 function VerifyDetails() {
-    const [loading, setLoading] = useState<boolean>(false)
     const [isModalOpen, setIsModalOpen] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleModal = (val: string) => {
         setIsModalOpen(val);

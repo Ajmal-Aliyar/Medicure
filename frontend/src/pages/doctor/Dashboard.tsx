@@ -1,14 +1,9 @@
-
-
-import 'font-awesome/css/font-awesome.min.css';
-import SlideMenu from '../../components/doctor/SlideMenu';
-import RightBar from '../../components/doctor/RightBar';
 import DoctorBanner from '../../assets/external/doctorBanner.png'
+import RightBar from '../../components/doctor/RightBar'
 
 function Dashboard() {
     return (
-        <div className='w-[100%] h-[100vh] bg-[#F5F5F5] relative flex justify-center lg:justify-end items-center '>
-            <SlideMenu />
+        <>
             <div className='h-full w-full md:w-[767px] p-2 space-y-2 overflow-y-auto '>
                 <div className='w-full h-[100px] bg-gradient-to-r from-[#72b4e7] to-[#aed4ef] rounded-xl relative overflow-hidden flex flex-col justify-center pl-6'>
                     <p className='font-semibold text-lg text-[#0c0b3eb5] tracking-widest'>Dr. Jackson Thomas</p>
@@ -24,8 +19,8 @@ function Dashboard() {
                     <div className='w-full md:w-[50%] h-[600px] bg-white rounded-lg'></div>
                 </div>
             </div>
-                <RightBar />        
-        </div>
+            <RightBar />
+        </>
     )
 }
 
