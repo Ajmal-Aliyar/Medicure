@@ -1,4 +1,4 @@
-import { login, setData } from '../store/slices/userSlice';
+import { login, setData } from '../store/slices/authSlices/AuthSlice';
 import HoneyComb from '../components/common/HoneyComb';
 import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../utils/axiosInstance';
@@ -11,7 +11,7 @@ interface ProtectedRouteProps {
     allowedRole: string;
 }
 
-type UserInfo = {
+type AuthInfo = {
     _id: string;
     role: string;
     email: string;
@@ -23,7 +23,7 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
     const [loading, setLoading] = useState(true);
     const [showSpinner, setShowSpinner] = useState(false);
     const { role, isAuthenticated, isApproved } = useSelector(
-        (state: RootState) => state.user
+        (state: RootState) => state.auth
     )
     
     useEffect(() => {
@@ -36,7 +36,7 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
 
         const fetchUserInfo = async () => {
             try {
-                const response = await api.get<UserInfo>('/api/auth/user-info');
+                const response = await api.get<AuthInfo>('/api/auth/user-info');
                 console.log('Fetched user data:', response.data);
                 if (response.data) {
                     dispatch(setData(response.data));

@@ -1,25 +1,27 @@
-import { UserRepository } from '../repositories/userRepository';
-import { DoctorRepository } from '../repositories/doctorRepository';
 import { setRedisData, getRedisData, deleteRedisData } from '../utils/redisUtil';
-import { hashPassword, verifyPassword } from '../utils/passwordUtil';
-import { sendOtpToEmail } from '../utils/otpUtil';
 import { checkBruteForce, deleteBruteForce } from '../utils/BruteForceHandler';
 import { generateAccessToken, generateRefreshToken } from '../utils/tokenUtil';
+import { PatientRepository } from '../repositories/patient.repository';
+import { hashPassword, verifyPassword } from '../utils/passwordUtil';
+import { DoctorRepository } from '../repositories/doctor.repository';
+import { sendOtpToEmail } from '../utils/otpUtil';
 
-const OTP_EXPIRATION = 60;
+
+
+
 interface authorizedUserResponse {
     accessToken: string;
     refreshToken: string;
     _id: string;
 }
-const userRepository = new UserRepository()
+const patientRepository = new PatientRepository()
 const doctorRepository = new DoctorRepository()
 
 export class AuthService {
 
     async userInfo(_id: string, role: string) {
         try {
-            const repository = role === 'doctor' ? doctorRepository : userRepository;
+            const repository = role === 'doctor' ? doctorRepository : patientRepository;
             const userData = await repository.findByID(_id);
     
             if (!userData) {
@@ -47,7 +49,7 @@ export class AuthService {
     async signUp(fullname: string, email: string, number: number, password: string, role: string) {
         try {
             console.log(role, 'role');
-            const repository = role === 'doctor' ? doctorRepository : userRepository;
+            const repository = role === 'doctor' ? doctorRepository : patientRepository;
             const existingAccount = await repository.findByEmail(email);
             if (existingAccount) {
                 throw new Error(`${role} already exists`);
@@ -56,7 +58,7 @@ export class AuthService {
             if (!otp) {
                 throw new Error('OTP not sent');
             }
-            await setRedisData(`otp-${email}`, otp.toString(), OTP_EXPIRATION);
+            await setRedisData(`otp-${email}`, otp.toString(), 60);
             const hashedPassword = await hashPassword(password);
             await setRedisData(
                 `${email}`,
@@ -74,7 +76,7 @@ export class AuthService {
     async signIn(email: string, password: string, role: string): Promise<authorizedUserResponse> {
         try {
             await checkBruteForce(email,5,600)
-            const repository = role === 'doctor' ? doctorRepository : userRepository;
+            const repository = role === 'doctor' ? doctorRepository : patientRepository;
             const user = await repository.findByEmail(email);
             if (!user) {
                 throw new Error('Invalid email or password');
@@ -103,7 +105,7 @@ export class AuthService {
 
     async changePassword (email: string, password: string, role:string):Promise<boolean> {
         const hashedPassword = await hashPassword(password);
-        const repository = role === 'doctor' ? doctorRepository : userRepository;
+        const repository = role === 'doctor' ? doctorRepository : patientRepository;
         const result = await repository.changePassword(email, hashedPassword)
         if (result.modifiedCount === 0) {
             throw new Error('No user found with this email.');
@@ -116,7 +118,7 @@ export class AuthService {
         try {
             const otp = await sendOtpToEmail(email)
             if (otp) {
-                await setRedisData(`otp-${email}`, otp.toString(), OTP_EXPIRATION);
+                await setRedisData(`otp-${email}`, otp.toString(), 60);
             } else {
                 throw new Error('OTP not sent');
             }
@@ -156,7 +158,7 @@ export class AuthService {
                 }
                 _id = doctor._id.toString();
             } else {
-                const user = await userRepository.createUser({
+                const user = await patientRepository.createUser({
                     fullName: userData.fullname, 
                     email: userData.email, 
                     phone: userData.number, 

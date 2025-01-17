@@ -1,4 +1,4 @@
-import { login, setData } from '../store/slices/userSlice';
+import { login, setData } from '../store/slices/authSlices/AuthSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import HoneyComb from '../components/common/HoneyComb';
 import { api } from '../utils/axiosInstance';
@@ -48,7 +48,7 @@ const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => 
 
     }, [dispatch, loading]);
 
-    const { role, isAuthenticated } = useSelector((state: RootState) => state.user);
+    const { role, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
     if (loading && showSpinner) return <div className='w-screen h-screen flex justify-center items-center fixed'><HoneyComb /></div>;
     

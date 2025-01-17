@@ -1,7 +1,7 @@
-import { DoctorRepository } from "../repositories/doctorRepository";
-import { IProfileVerificationInput, IUpdateProfileRepository } from "../interfaces/doctorInterface";
+import { DoctorRepository } from "../repositories/doctor.repository";
+import { IProfileVerificationInput, IUpdateProfileRepository } from "../interfaces/doctor/doctor.Interface";
 import { deleteCloudinaryImages, extractPublicId } from "../utils/CloudinaryUtil"
-import { IAddress } from "../models/doctorModel";
+import { IAddress } from "../models/doctor/doctor.interface"; 
 
 const doctorRepository = new DoctorRepository()
 
@@ -14,6 +14,15 @@ export class DoctorService {
             throw error;
         }
     }
+
+    async updateProfileImg(_id: string, profileImage: string): Promise<void> {
+        try {
+            await doctorRepository.profileImage({ _id, profileImage });
+        } catch (error) {
+            throw error
+        }
+    }
+    
     
 
     async updateDoctor(

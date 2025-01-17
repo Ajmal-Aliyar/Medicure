@@ -13,7 +13,7 @@ const ForgotPassword: React.FC<IForgotPasswordProps> = ({ handleChangePassword ,
   const [confirmPassword, setConfirmPassword] = useState('')
   const [serverError, setServerError] = useState<string>("")
   const [newPasswordfocused, setNewPasswordFocused] = useState(false)
-  const email = useSelector((state: RootState) => state?.user?.email);
+  const email = useSelector((state: RootState) => state?.auth?.email);
   const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false)
   const [errorMessage, setErrorMessage] = useState<IErrorTypeChangepassword>({
     newPassword: '', confirmPassword: ''

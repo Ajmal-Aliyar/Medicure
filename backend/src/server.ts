@@ -1,4 +1,7 @@
-import doctorRoute from './routes/doctorRoutes'
+import { errorHandler } from './middleware/errorMiddleware';
+import doctorRouter from './routes/doctorRoutes'
+import doctorVerifications from './routes/verificationRoutes'
+import slotRouter from "./routes/slot.routes"
 import authRouter from './routes/authRoutes'
 import cookieParser from 'cookie-parser';
 import mongoDB from './config/db'
@@ -6,7 +9,6 @@ import express from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { errorHandler } from './middleware/errorMiddleware';
 
 mongoDB()
 dotenv.config();
@@ -22,8 +24,10 @@ app.use(cors({
   credentials: true
 }));
 
+app.use('/api/doctor/verification', doctorVerifications)
+app.use('/api/doctor', doctorRouter)
 app.use('/api/auth', authRouter)
-app.use('/api/doctor', doctorRoute)
+app.use('/api/slot', slotRouter)
 
 app.use(errorHandler);
 

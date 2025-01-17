@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { DoctorService } from "../services/doctorServices";
-import { IProfileVerificationRequestBody } from "../interfaces/doctorInterface";
+import { IProfileVerificationRequestBody } from "../interfaces/doctor/doctor.Interface";
 import { NextFunction } from "express-serve-static-core";
 
 
@@ -18,6 +18,23 @@ export class DoctorController {
           }
     }
 
+    async updateProfileImg(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { _id } = req.client;
+        const { profileImage } = req.body;
+    
+        try {
+            console.log(_id,profileImage,'hjkgkjh')
+            if (!profileImage) {
+                res.status(400).json({ message: 'Profile image is required.' });
+                return;
+            }
+            await doctorService.updateProfileImg(_id, profileImage);
+            res.status(200).json({ message: 'Profile image updated successfully.' });
+        } catch (error) {
+            next(error);
+        }
+    }
+    
     async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { _id } = req.client;

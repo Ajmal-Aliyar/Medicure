@@ -6,7 +6,7 @@ import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
 
 const PrivateRoute = () => {
-    const { isAuthenticated, isApproved } = useSelector((state: RootState) => state.user);
+    const { isAuthenticated, isApproved } = useSelector((state: RootState) => state.auth);
     const [loading, setLoading] = useState(true);
     const [showSpinner, setShowSpinner] = useState(false);
 

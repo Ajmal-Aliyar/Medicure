@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { ISlotSchema } from "../../models/slot/slot.interface";
 
 export interface ISlot {
     doctorId?: string;
@@ -8,5 +8,9 @@ export interface ISlot {
     avgConsultTime: string;
     bookedSlot?: number;
     createdAt?: Date;
-    _id?: mongoose.Types.ObjectId;
+    _id?: string; // objectId
 }
+
+
+
+

@@ -9,7 +9,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 
 function Menu() {
-    const { isAuthenticated, role } = useSelector((state: RootState) => state?.user);
+    const { isAuthenticated, role } = useSelector((state: RootState) => state?.auth);
     const [alertMessage, setAlertMessage] = useState<string>("");
     const [showAlert, setShowAlert] = useState(false);
     const [isOpen, setIsOpen] = useState(false);

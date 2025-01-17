@@ -1,4 +1,4 @@
-import { login, setData } from '../store/slices/userSlice';
+import { login, setData } from '../store/slices/authSlices/AuthSlice';
 import HoneyComb from '../components/common/HoneyComb';
 import { api } from '../utils/axiosInstance';
 import { useEffect, useState } from 'react';

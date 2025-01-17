@@ -1,7 +1,6 @@
-import { getVerificationDetailsApi, patchVerificationDetailsApi } from '../../../sevices/doctor/verifyDetailsRepository';
+import { getVerificationDetailsApi, patchVerificationDetailsApi } from '../../../sevices/doctor/verification';
 import { IProfileDetailsFormProps } from '../../../types/doctor/verifyDetailsType';
 import React, { useEffect, useState } from 'react';
-// import { api } from '../../../utils/axiosInstance';
 
 
 const ProfileDetailsForm: React.FC<IProfileDetailsFormProps> = ({ handleModal, setLoading }) => {

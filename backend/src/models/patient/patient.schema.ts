@@ -1,6 +1,7 @@
-import mongoose, { Schema, model } from 'mongoose';
+import { Schema } from "mongoose";
+import { IPatient } from "./patient.interface";
 
-const userSchema = new Schema({
+export const PatientSchema = new Schema<IPatient>({
     fullName: {
         type: String,
         required: true,
@@ -57,5 +58,3 @@ const userSchema = new Schema({
 }, {
     timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' }
 });
-
-export const UserModel = model('User', userSchema);

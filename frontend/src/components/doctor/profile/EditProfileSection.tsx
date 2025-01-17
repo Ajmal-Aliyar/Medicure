@@ -1,8 +1,13 @@
+
+import { useSelector } from "react-redux";
 import { updateProfileApi } from "../../../sevices/doctor/profile";
 import { IEditProfileSectionProps } from "../../../types/doctor/profileType";
 import { useEffect, useState } from "react";
+import { RootState } from "../../../store/store";
 
-const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile, doctor }) => {
+const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile}) => {
+    const doctor = useSelector((state:RootState) => state.doctor)
+
     const [doctorData, setDoctorData] = useState({
         fullName: '',
         headline: '',
@@ -34,13 +39,14 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
     const handleSave = async () => {
         console.log(doctorData,'adfs')
         await updateProfileApi(doctorData)
+        setEditProfile('')
+        window.location.reload()
     };
 
     return (
         <div className="w-full h-full relative py-10">
             <div className="px-3 pt-2 pb-1 border-b-2 border-gray-100 flex justify-between h-12 absolute top-0 bg-white w-full rounded-t-md">
                 <p className="font-semibold text-lg text-blue-400">Edit Profile</p>
-                <button className="font-extralight text-2xl px-3 cursor-pointer" onClick={() => setEditProfile(false)}>x</button>
             </div>
 
             <div className="h-full w-full overflow-y-auto p-4 flex flex-col gap-3 bg-transparent">

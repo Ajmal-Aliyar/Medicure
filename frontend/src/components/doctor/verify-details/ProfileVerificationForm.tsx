@@ -1,4 +1,4 @@
-import { getVerificationProofsApi, putVerficationProofsApi } from "../../../sevices/doctor/verifyDetailsRepository";
+import { getVerificationProofsApi, putVerficationProofsApi } from "../../../sevices/doctor/verification";
 import { IProfileVerificationFormProps } from "../../../types/doctor/verifyDetailsType";
 import { uploadCloudinary } from "../../../utils/Cloudinary";
 import { useEffect, useState } from "react";

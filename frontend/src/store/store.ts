@@ -1,9 +1,15 @@
+import notification from './slices/commonSlices/notificationSlice'
+import doctorProfile from './slices/doctorSlices/profileSlice'
+import slotReducer from './slices/doctorSlices/slotSlice';
+import authReducer from './slices/authSlices/AuthSlice';
 import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './slices/userSlice';
 
 const store = configureStore({
   reducer: {
-    user: userReducer,
+    slot: slotReducer,
+    auth: authReducer,
+    doctor: doctorProfile,
+    notification: notification
   },
 });
 

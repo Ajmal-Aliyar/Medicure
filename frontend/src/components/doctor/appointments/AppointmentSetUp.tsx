@@ -1,5 +1,5 @@
 import { IAppointmentSetUpProps, ISlotDetails } from "../../../types/doctor/verifyDetailsType";
-import { getSlotsApi, updateSlotsApi } from "../../../sevices/doctor/verifyDetailsRepository";
+import { getSlotsApi, updateSlotsApi } from "../../../sevices/doctor/verification";
 import { faTrashAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from "react";
@@ -83,6 +83,7 @@ const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLo
         await updateSlotsApi(slots, fees)
         setLoading(false)
         handleModal('')
+        window.location.reload()
     }
 
     return (

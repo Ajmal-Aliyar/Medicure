@@ -3,7 +3,7 @@ import { RootState } from '../../store/store';
 import SuccessModal from "../common/SuccessModal";
 import ErrorMessage from "../common/ErrorMessage";
 import { useEffect, useRef, useState } from "react";
-import { login } from "../../store/slices/userSlice";
+import { login } from "../../store/slices/authSlices/AuthSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { IVerificationOTPProp } from "../../types/authType";
 import { sendOTPApi, verifyOtpAndRegisterApi, verifyOtpApi } from "../../sevices/authRepository";
@@ -17,7 +17,7 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
   const [serverError, setServerError] = useState<string>("");
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [isResendDisabled, setIsResendDisabled] = useState(true);
-  const { email } = useSelector((state: RootState) => state?.user);
+  const { email } = useSelector((state: RootState) => state?.auth);
   
   const dispatch = useDispatch()
   

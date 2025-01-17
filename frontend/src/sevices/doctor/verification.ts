@@ -3,21 +3,21 @@ import { api } from "../../utils/axiosInstance"
 
 
 export const getSlotsApi = async () => {
-    return  await api.get<{ slots:ISlotDetails[], fees: number}>('/api/doctor/slots')
+    return  await api.get<{ slots:ISlotDetails[], fees: number}>('/api/slot/get-slot-details')
 }
 
 export const updateSlotsApi = async (slots:ISlotDetails[], fees: number | undefined) => {
-    return await api.put(`/api/doctor/slots`,{
+    return await api.put(`/api/slot/manage-slots`,{
         slots, fees
     })
 }
 
 export const getVerificationProofsApi = async () => {
-    return  await api.get<IVerificationProofs>('/api/doctor/verification-proofs');
+    return  await api.get<IVerificationProofs>('/api/doctor/verification/verification-proofs');
 }
 
 export const putVerficationProofsApi = async ({identityUrl, medicalUrl, establishmentUrl}: IPutVerificationProofs ) => {
-    return await api.patch('/api/doctor/verification-proofs', {
+    return await api.patch('/api/doctor/verification/verification-proofs', {
         identityProof: identityUrl,
         medicalRegistration: medicalUrl,
         establishmentProof: establishmentUrl
@@ -25,11 +25,11 @@ export const putVerficationProofsApi = async ({identityUrl, medicalUrl, establis
 }
 
 export const getVerificationDetailsApi = async () => {
-    return  await api.get('/api/doctor/verification-details');
+    return  await api.get('/api/doctor/verification/verification-details');
 }
 
 export const patchVerificationDetailsApi = async (formData: IVerficationDetails) => {
-    return await api.patch('/api/doctor/verification-details',{
+    return await api.patch('/api/doctor/verification/verification-details',{
         ...formData
     })
 }

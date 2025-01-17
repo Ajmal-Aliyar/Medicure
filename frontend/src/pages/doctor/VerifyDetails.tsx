@@ -1,6 +1,6 @@
 import ProfileVerificationForm from '../../components/doctor/verify-details/ProfileVerificationForm';
 import ProfileDetailsForm from '../../components/doctor/verify-details/ProfileDetailsForm';
-import AppointmentSetUp from '../../components/doctor/verify-details/AppointmentSetUp';
+import AppointmentSetUp from '../../components/doctor/appointments/AppointmentSetUp';
 import ModalAnimation from '../../components/doctor/verify-details/ModalAnimation';
 import Animation from '../../components/doctor/verify-details/Animation';
 import Content from '../../components/doctor/verify-details/Content';

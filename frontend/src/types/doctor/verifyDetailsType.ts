@@ -49,8 +49,8 @@ export interface IVerificationProofs {
 
 export interface IPutVerificationProofs {
     identityUrl: string | null, 
-    medicalUrl: string | null, 
-    establishmentUrl: string | null
+    medicalUrl?: string | null, 
+    establishmentUrl?: string | null
 }
 
 export interface IVerficationDetails {

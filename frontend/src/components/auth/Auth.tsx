@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import HoneyComb from "../common/HoneyComb";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../common/ErrorMessage";
-import { setData } from "../../store/slices/userSlice";
+import { setData } from "../../store/slices/authSlices/AuthSlice";
 import { sendOTPApi, signInApi, signUpApi } from "../../sevices/authRepository"
 import { IAuthPageProps, IErrorType, ISignInResponse } from "../../types/authType";
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate";
@@ -29,7 +29,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
         password: ''
     })
 
-    const dipatch = useDispatch()
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleSubmit = async () => {
@@ -38,8 +38,8 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
             if (!errorMessage.email && !errorMessage.password && email && password) {
                 try {
                     const response: ISignInResponse = await signInApi(email, password, role)
-                    dipatch(setData({ email, role }))
-                    dipatch(setData({ _id: response.data._id, email, role }))
+                    dispatch(setData({ email, role }))
+                    dispatch(setData({ _id: response.data._id, email, role }))
                     setLoading(false);
                     if (role === 'doctor') {
                         navigate('/doctor/dashboard')
@@ -62,7 +62,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                 try {
                     await signUpApi(name, email, mobile, password, role)
                     setLoading(false);
-                    dipatch(setData({ email, role }))
+                    dispatch(setData({ email, role }))
                     handleAuth(false);
                 } catch (error: any) {
                     setLoading(false);
@@ -126,7 +126,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                 setLoading(false);
                 console.log('Signup successful:', response.data);
                 handleForgotPassword(true)
-                dipatch(setData({ email, role }))
+                dispatch(setData({ email, role }))
             } catch (error: any) {
                 setLoading(false);
                 setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
