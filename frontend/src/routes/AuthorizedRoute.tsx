@@ -21,23 +21,14 @@ type AuthInfo = {
 const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
-    const [showSpinner, setShowSpinner] = useState(false);
     const { role, isAuthenticated, isApproved } = useSelector(
         (state: RootState) => state.auth
-    )
-    
+    );
+
     useEffect(() => {
-
-        const spinnerTimeout = setTimeout(() => {
-            if (loading) {
-                setShowSpinner(true);
-            }
-        }, 500);
-
         const fetchUserInfo = async () => {
             try {
                 const response = await api.get<AuthInfo>('/api/auth/user-info');
-                console.log('Fetched user data:', response.data);
                 if (response.data) {
                     dispatch(setData(response.data));
                     dispatch(login());
@@ -49,22 +40,25 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
             }
         };
 
-        if (!isAuthenticated || isApproved === undefined || role === 'doctor') {
+        if (!isAuthenticated || isApproved === undefined) {
             fetchUserInfo();
         } else {
             setLoading(false);
         }
+    }, [dispatch, isAuthenticated, isApproved]);
 
-        return () => clearTimeout(spinnerTimeout);
+    if (loading) {
+        return (
+            <div className='w-screen h-screen flex justify-center items-center fixed bg-[#e9e9e9]'>
+                <HoneyComb />
+            </div>
+        );
+    }
 
-    }, [dispatch, isAuthenticated, isApproved, role, loading]);
-
-    if (loading && showSpinner) return <div className='w-screen h-screen flex justify-center items-center fixed bg-[#e9e9e9]'><HoneyComb /></div>;
-
-    if (!isAuthenticated || allowedRole !== role) return <Navigate to={`/${allowedRole}/auth`} replace />;
-    
+    if (!isAuthenticated) return <Navigate to={`/${allowedRole}/auth`} replace />;
     if (role === 'doctor' && isApproved === false) return <Navigate to='/doctor/verify-details' replace />;
-    
+    if (allowedRole !== role) return <Navigate to={`/${allowedRole}/auth`} replace />;
+
     return children;
 };
 

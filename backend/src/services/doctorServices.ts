@@ -15,11 +15,20 @@ export class DoctorService {
         }
     }
 
-    async updateProfileImg(_id: string, profileImage: string): Promise<void> {
+    async updateProfileImg(doctorId: string, newProfileImage: string): Promise<void> {
         try {
-            await doctorRepository.profileImage({ _id, profileImage });
+            const existingDoctor = await doctorRepository.findByID(doctorId);
+    
+            if (existingDoctor?.profileImage) {
+                const deleteId = await extractPublicId(existingDoctor.profileImage)
+                await deleteCloudinaryImages([deleteId]);
+                console.log('existing image deleted')
+            }
+
+            await doctorRepository.profileImage({ _id: doctorId, profileImage: newProfileImage });
         } catch (error) {
-            throw error
+            console.error('Error updating profile image:', error);
+            throw new Error('Failed to update profile image. Please try again.');
         }
     }
     
@@ -27,7 +36,10 @@ export class DoctorService {
 
     async updateDoctor(
         _id: string, 
-        { addressLine, streetAddress, city, state, country, pincode, about, headline, fullName }: IUpdateProfileRepository
+        { addressLine, streetAddress, city, state, gender,
+            specialization,
+            languageSpoken, 
+            dob, country, pincode, about, headline, fullName }: IUpdateProfileRepository
     ): Promise<void> {
         try {
             const address: IAddress = {
@@ -39,7 +51,7 @@ export class DoctorService {
                 pincode
             };
 
-            await doctorRepository.updateDoctor(_id, { fullName, headline, about, address });
+            await doctorRepository.updateDoctor(_id, { fullName, headline, about, address, gender, specialization,languageSpoken, dob, });
             
         } catch (error) {
             return error

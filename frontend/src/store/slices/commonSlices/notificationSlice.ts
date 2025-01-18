@@ -5,6 +5,7 @@ interface NotificationState {
     success: string | null;
     warning: string | null;
     loading: boolean;
+    extra: (() => void) | null
 }
 
 const initialState: NotificationState = {
@@ -12,6 +13,7 @@ const initialState: NotificationState = {
     success: null,
     warning: null,
     loading: false,
+    extra: null
 };
 
 const notificationSlice = createSlice({
@@ -39,17 +41,21 @@ const notificationSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
-    },
-});
-
-export const {
-    setError,
-    clearError,
-    setSuccess,
-    clearSuccess,
-    setWarning,
-    clearWarning,
-    setLoading,
-} = notificationSlice.actions;
-
-export default notificationSlice.reducer;
+        setExtra: (state, action: PayloadAction<((...args: any[]) => void) | null>) => {
+            state.extra = action.payload; 
+          },
+        },
+      });
+      
+      export const {
+        setError,
+        clearError,
+        setSuccess,
+        clearSuccess,
+        setWarning,
+        clearWarning,
+        setLoading,
+        setExtra,
+      } = notificationSlice.actions;
+      
+      export default notificationSlice.reducer;

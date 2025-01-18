@@ -38,12 +38,16 @@ export class DoctorController {
     async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { _id } = req.client;
-            const { fullName, headline, about, addressLine, streetAddress, city, state, country, pincode } = req.body;
-            console.log(about ,'asdf')
+            const { fullName, headline, about, gender, specialization, languageSpoken, dob, addressLine, streetAddress, city, state, country, pincode } = req.body;
+            console.log(req.body ,'asdf')
             await doctorService.updateDoctor(_id, {
                 fullName,
                 headline,
                 about,
+                gender,
+                specialization,
+                languageSpoken, 
+                dob,
                 addressLine,
                 streetAddress,
                 city,

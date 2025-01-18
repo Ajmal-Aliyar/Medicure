@@ -21,10 +21,16 @@ export class DoctorRepository implements IDoctorRepository {
 
     async updateDoctor(
         _id: string, 
-        { fullName, headline, about, address }): Promise<void> {
+        { fullName, headline, about, address, gender,
+            specialization,
+            languageSpoken, 
+            dob, }): Promise<void> {
         console.log('hres',fullName,headline,about,address)
 
-        const result = await DoctorModel.updateOne({ _id },{$set: { fullName, headline, about, address }})
+        const result = await DoctorModel.updateOne({ _id },{$set: { fullName, headline, about, address,gender,
+            specialization,
+            languageSpoken, 
+            dob, }})
         console.log(result,'res')
     }
 
@@ -127,5 +133,5 @@ export class DoctorRepository implements IDoctorRepository {
             { $set: { password } }
         );
     }
-    
+
 }

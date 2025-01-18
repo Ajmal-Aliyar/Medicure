@@ -25,10 +25,9 @@ export const deleteCloudinaryImages = async (publicIds: string[]): Promise<void>
 
 export const extractPublicId = (url: string): string => {
     try {
-        // Extract the public ID by removing Cloudinary domain and versioning
         const urlParts = url.split('/');
-        const filename = urlParts[urlParts.length - 1]; // Get the last part containing filename
-        const publicId = filename.split('.')[0]; // Remove file extension
+        const filename = urlParts[urlParts.length - 1];
+        const publicId = filename.split('.')[0];
         return publicId;
     } catch (error) {
         throw new Error('Invalid Cloudinary URL provided.');

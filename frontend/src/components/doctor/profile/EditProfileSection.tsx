@@ -1,19 +1,27 @@
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateProfileApi } from "../../../sevices/doctor/profile";
 import { IEditProfileSectionProps } from "../../../types/doctor/profileType";
 import { useEffect, useState } from "react";
 import { RootState } from "../../../store/store";
+import { IDoctorData, validateDoctorData } from "./validationProfile";
+import { setError } from "../../../store/slices/commonSlices/notificationSlice";
 
-const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile}) => {
-    const doctor = useSelector((state:RootState) => state.doctor)
+const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile }) => {
+    const doctor = useSelector((state: RootState) => state.doctor)
+    const dispatch = useDispatch()
 
-    const [doctorData, setDoctorData] = useState({
+    const [doctorData, setDoctorData] = useState<IDoctorData>({
         fullName: '',
         headline: '',
         about: '',
+        dob: '',
+        gender: '',
+        phone: '',
         addressLine: '',
         streetAddress: '',
+        specialization: '',
+        languageSpoken: '',
         city: '',
         state: '',
         country: '',
@@ -25,7 +33,7 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
             ...prevData,
             ...doctor, ...doctor.address
         }));
-    },[])
+    }, [])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
@@ -33,14 +41,24 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
             ...prevData,
             [id]: value
         }));
-        console.log(doctorData)
     };
 
     const handleSave = async () => {
-        console.log(doctorData,'adfs')
-        await updateProfileApi(doctorData)
-        setEditProfile('')
-        window.location.reload()
+        const errors = validateDoctorData(doctorData);
+        if (errors.length > 0) {
+            dispatch(setError(`${errors.join("\n")}`))
+            // alert(`Please fix the following errors:\n${errors.join("\n")}`);
+
+            return;
+        }
+
+        try {
+            await updateProfileApi(doctorData);
+            setEditProfile('');
+            window.location.reload();
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        }
     };
 
     return (
@@ -65,12 +83,32 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
                     <label htmlFor="about" className="text-md font-medium text-gray-400">About*</label>
 
                     <textarea
-                       id="about" value={doctorData.about} onChange={handleChange}
+                        id="about" value={doctorData.about} onChange={handleChange}
                         className="w-full h-20 border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 resize-none bg-transparent"
                         rows={5}
                         placeholder="Write about yourself..."
                     />
                 </div>
+                <label htmlFor="phone" className="text-md font-medium text-gray-400">Phone*</label>
+                <input id="phone" type="text" value={doctorData.phone} onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
+
+                <label htmlFor="dob" className="text-md font-medium text-gray-400">Date Of Birth*</label>
+                <input id="dob" type="text" value={doctorData.dob} onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
+
+                <label htmlFor="gender" className="text-md font-medium text-gray-400">Gender*</label>
+                <input id="gender" type="text" value={doctorData.gender} onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
+                <label htmlFor="specialization" className="text-md font-medium text-gray-400">specialization*</label>
+                <input id="specialization" type="text" value={doctorData.specialization} onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
+                <label htmlFor="languageSpoken" className="text-md font-medium text-gray-400">Spoken language*</label>
+                <input id="languageSpoken" type="text" value={doctorData.languageSpoken} onChange={handleChange}
+                    className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
+
+
+
 
 
 
@@ -89,59 +127,7 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
                     </div>
                 ))}
 
-                <div className="mt-10">
-                    <div className="text-xl font-medium text-gray-500 flex justify-between">
-                        <p>Education</p>
-                        <p className="font-extralight text-2xl px-3 cursor-pointer">+</p>
-
-                    </div>
-                    <div className="">
-                        <div className="flex gap-2 items-center">
-                            <div className="w-14 h-14 bg-blue-200"></div>
-                            <div>
-                                <p className="text-lg font-medium">Degree Bsc Science</p>
-                                <p className="text-sm">Harvard University</p>
-                                <p className="text-sm"> 2005</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-10">
-                    <div className="text-xl font-medium text-gray-500 flex justify-between">
-                        <p>Experience</p>
-                        <p className="font-extralight text-2xl px-3 cursor-pointer">+</p>
-
-                    </div>
-                    <div className="">
-                        <div className="flex gap-2 items-center">
-                            <div className="w-14 h-14 bg-blue-200"></div>
-                            <div>
-                                <p className="text-lg font-medium">Degree Bsc Science</p>
-                                <p className="text-sm">Harvard University</p>
-                                <p className="text-sm"> 2005</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mt-10">
-                    <div className="text-xl font-medium text-gray-500 flex justify-between">
-                        <p>Manage Slots</p>
-                        <p className="font-extralight text-2xl px-3 cursor-pointer">+</p>
-
-                    </div>
-                    <div className="">
-                        <div className="flex gap-2 items-center">
-                            <div className="w-14 h-14 bg-blue-200"></div>
-                            <div>
-                                <p className="text-lg font-medium">Degree Bsc Science</p>
-                                <p className="text-sm">Harvard University</p>
-                                <p className="text-sm"> 2005</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div className="mb-4"></div>
             </div>
 
             <div className="px-3 pt-2 pb-1 border-t-2 border-gray-100 bg-white flex justify-end h-12 absolute bottom-0 w-full rounded-b-md">

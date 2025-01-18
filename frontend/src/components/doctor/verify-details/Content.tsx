@@ -5,6 +5,7 @@ import { api } from '../../../utils/axiosInstance';
 import HoneyComb from '../../common/HoneyComb';
 import { useState } from 'react';
 import "./style.css"
+import { submitVerificationApi } from "../../../sevices/doctor/verification";
 
 const Content: React.FC<IContentProps> = ({ handleModal }) => {
   const [isProfileCompleted, setIsProfileCompleted] = useState(false)
@@ -29,7 +30,7 @@ const Content: React.FC<IContentProps> = ({ handleModal }) => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const response = await api.post<{ status: string }>('/api/doctor/submit-verification');
+      const response = await submitVerificationApi()
       if (!response.data.status) {
         setError(true);
       } else {

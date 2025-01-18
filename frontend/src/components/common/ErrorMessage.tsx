@@ -1,3 +1,5 @@
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
 import React from 'react'
 
 interface ErrorMessageProps {
@@ -6,12 +8,24 @@ interface ErrorMessageProps {
 }
 
 const ErrorMessage:React.FC<ErrorMessageProps> = ({message,handleModal}) => {
+  useGSAP(() => {
+    gsap.from('.anim', {
+        y: -100,
+        ease: 'elastic',
+        opacity:0,
+        duration: 1
+    })
+})
+  const CloseError = () => {
+    handleModal()
+
+  }
   return (
 <div
-  className={`${message !== '' ? '' : 'translate-y-28 opacity-0'} transition-all duration-500 z-50 flex flex-col w-3/4 min-h-24 overflow-hidden bg-[#eeeeee] shadow-lg max-w-96 rounded-xl`}
+  className={`anim  z-50 flex flex-col w-3/4 min-h-24 overflow-hidden bg-[#eeeeee] shadow-lg max-w-96 rounded-xl mt-4`}
 >
   
-  <div className="mx-2.5 overflow-hidden w-full flex justify-between">
+  <div className="mx-2.5 overflow-hidden w-full flex justify-between ">
     <p
       className="mt-1.5 text-xl font-bold text-red-600 leading-8 mr-3 overflow-hidden text-ellipsis whitespace-nowrap"
     >
@@ -19,7 +33,7 @@ const ErrorMessage:React.FC<ErrorMessageProps> = ({message,handleModal}) => {
     </p>
     <button className="w-16 cursor-pointer focus:outline-none flex p-3" onClick={(e) => {
     e.preventDefault()
-    handleModal()
+    CloseError()
   }}>
     <svg
       className="w-7 h-7"

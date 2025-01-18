@@ -33,3 +33,7 @@ export const patchVerificationDetailsApi = async (formData: IVerficationDetails)
         ...formData
     })
 }
+
+export const submitVerificationApi = async () => {
+    return api.post<{ status: string }>('/api/doctor/verification/submit-verification');
+}

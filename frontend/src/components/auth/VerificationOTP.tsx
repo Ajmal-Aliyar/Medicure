@@ -1,6 +1,6 @@
 import HoneyComb from "../common/HoneyComb";
 import { RootState } from '../../store/store';
-import SuccessModal from "../common/SuccessModal";
+import SuccessModal from "../common/SuccessMessage";
 import ErrorMessage from "../common/ErrorMessage";
 import { useEffect, useRef, useState } from "react";
 import { login } from "../../store/slices/authSlices/AuthSlice";

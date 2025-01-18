@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { IImageUploader } from '../../../types/doctor/profileType';
 import { uploadCloudinary } from '../../../utils/Cloudinary';
 import { updateProfileImageApi } from '../../../sevices/doctor/profile';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../../../store/slices/commonSlices/notificationSlice';
 
 const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profileImage }) => {
     const [identityUrl, setImage] = useState<string | null>(profileImage);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const dispatch = useDispatch()
 
     const convertToSquare = (img: HTMLImageElement): string | null => {
         const canvas = document.createElement('canvas');
@@ -46,8 +49,15 @@ const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profileImage 
     };
 
     const handleSave = async (): Promise<void> => {
+        dispatch(setLoading(true))
         if (identityUrl && imageFile) {
             try {
+                if (identityUrl.startsWith('https://res.cloudinary.com/')) {
+                    setError(null);
+                    setEditProfile('');
+                    return;
+                }
+    
                 const base64Data = identityUrl.split(',')[1];
                 const byteCharacters = atob(base64Data);
                 const byteArrays = [];
@@ -61,13 +71,14 @@ const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profileImage 
                 }
                 const blob = new Blob(byteArrays, { type: 'image/png' });
                 const file = new File([blob], 'cropped-image.png', { type: 'image/png' });
-
+    
                 const uploadResponse = await uploadCloudinary(file);
                 if (uploadResponse) {
                     const profileImage = uploadResponse;
                     console.log(profileImage, 'Image uploaded to Cloudinary');
                     setEditProfile(profileImage);
                     await updateProfileImageApi(profileImage);
+                    window.location.reload()
                     setError(null);
                     setEditProfile('');
                 }
@@ -75,21 +86,17 @@ const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profileImage 
                 setError('Failed to upload image.');
             }
         } else {
-            setError('Please upload an image first.');
+            setError(null);
+            setEditProfile('');
         }
+        dispatch(setLoading(false))
     };
+    
 
 
     return (
 
         <div className="flex flex-col items-center justify-center mt-8 w-full h-full relative overflow-hidden">
-            <div className='absolute top-0 left-0 bg-blue-400  rounded-r-md active:scale-95 transition-all duration-300 -translate-x-2 w-10 pl-2' onClick={() => setEditProfile('')}>
-                <button className="cursor-pointer duration-200" title="Go Back">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="40px" viewBox="0 0 24 24" className="stroke-white pt-1">
-                        <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M11 6L5 12M5 12L11 18M5 12H19"></path>
-                    </svg>
-                </button>
-            </div>
             <div className="relative w-64 h-64 border-2 border-dashed border-gray-400 rounded-lg overflow-hidden">
                 {identityUrl ? (
                     <img

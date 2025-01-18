@@ -14,8 +14,9 @@ function DoctorRoutes() {
         <Routes>
             <Route path="/" element={<DoctorLayout />}>
                 <Route path="dashboard" element={<AuthorizedRoute allowedRole='doctor'><Dashboard /></AuthorizedRoute>} />
-                <Route path="profile" element={<Profile />} />
+                <Route path="profile" element={<AuthorizedRoute allowedRole='doctor'><Profile /></AuthorizedRoute>} />
             </Route>
+            
             <Route
                 path="/verify-details"
                 element={<PrivateRoute />}

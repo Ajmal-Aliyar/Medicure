@@ -30,11 +30,6 @@ interface ProfileState {
     profileImage: string;
     dob:  '';
     registrationNumber: string;
-    registrationCouncil: string;
-    registrationYear: number;
-    identityProof: string;
-    medicalRegistration: string;
-    establishmentProof: string;
     about: string;
     educationDetails: IEducation;
     education: IEducation[];
@@ -59,11 +54,6 @@ const initialState: ProfileState = {
     profileImage: '',
     dob: '',
     registrationNumber: '',
-    registrationCouncil: '',
-    registrationYear: 0,
-    identityProof: '',
-    medicalRegistration: '',
-    establishmentProof: '',
     about: '',
     educationDetails: {
         degree: '',

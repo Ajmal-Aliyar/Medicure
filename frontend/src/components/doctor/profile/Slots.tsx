@@ -8,7 +8,7 @@ const Slots: React.FC<ISLots> = ({ setEditProfile }) => {
     const fees: number | null = useSelector((state: RootState) => state.slot.fees);
 
     return (
-        <div className="col-span-6 row-span-2 bg-white p-4 rounded-lg shadow-lg">
+        <div className="firstCard col-span-6 row-span-2 bg-white p-4 rounded-lg shadow-lg">
             <p className="font-bold text-2xl mb-2 text-[#0c0b3eb5] flex justify-between border-b-[2px] border-gray-100 cursor-pointer">
                 <span>Slots</span>
                 <span onClick={() => setEditProfile('editSlot')}>+</span>

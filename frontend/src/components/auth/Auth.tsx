@@ -38,7 +38,6 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
             if (!errorMessage.email && !errorMessage.password && email && password) {
                 try {
                     const response: ISignInResponse = await signInApi(email, password, role)
-                    dispatch(setData({ email, role }))
                     dispatch(setData({ _id: response.data._id, email, role }))
                     setLoading(false);
                     if (role === 'doctor') {

@@ -1,18 +1,12 @@
-import AlertPortal from "../../common/AlertPortal";
-import { useState } from "react";
+import { setWarning } from "../../../store/slices/commonSlices/notificationSlice";
+import { useDispatch } from "react-redux";
 
 function Banner() {
-  const [alertMessage, setAlertMessage] = useState<string>("");
-  const [showAlert, setShowAlert] = useState(false);
-
+  const dispatch = useDispatch()
   const showAlertMessage = () => {
-    setAlertMessage("Are you sure you want to log out?");
-    setShowAlert(true);
+    dispatch(setWarning("Are you sure you want to log out?"))
   };
 
-  const closeAlert = () => {
-    setShowAlert(false);
-  };
 
   return (
     <div className="flex justify-between items-center w-full p-5 lg:px-16 bg-white md:shadow-md border-b-2 md:border-0">
@@ -21,9 +15,6 @@ function Banner() {
       transition duration-300 hover:bg-[#0c0b3eb5] hover:text-white active:scale-95" onClick={showAlertMessage}>
         Log out
       </button>
-      {showAlert && (
-        <AlertPortal message={alertMessage} onClose={closeAlert} />
-      )}
     </div>
   )
 }
