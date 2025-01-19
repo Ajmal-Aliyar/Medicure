@@ -1,6 +1,10 @@
+import { IPatientProfilePayload } from "../../../types/patient/profileType";
 
-
-function AddressSection () {
+interface IAddressSectionProps {
+    patientData: IPatientProfilePayload;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChange}) => {
     return (
         <div className="flex flex-wrap gap-3">
             <div className="w-[250px]">
@@ -12,7 +16,9 @@ function AddressSection () {
                 </label>
                 <input
                     type="text"
-                    id="houseName"
+                    name="houseName"
+                    value={patientData.houseName || ''}
+                    onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
             </div>
@@ -26,7 +32,9 @@ function AddressSection () {
                 </label>
                 <input
                     type="text"
-                    id="street"
+                    name="street"
+                    value={patientData.street || ''}
+                    onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500" />
             </div>
 
@@ -39,7 +47,9 @@ function AddressSection () {
                 </label>
                 <input
                     type="text"
-                    id="city"
+                    name="city"
+                    value={patientData.city || ''}
+                    onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
             </div>
@@ -53,7 +63,9 @@ function AddressSection () {
                 </label>
                 <input
                     type="text"
-                    id="state"
+                    name="state"
+                    value={patientData.state || ''}
+                    onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
             </div>
@@ -67,7 +79,9 @@ function AddressSection () {
                 </label>
                 <input
                     type="text"
-                    id="country"
+                    name="country"
+                    value={patientData.country || ''}
+                    onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
             </div>
@@ -81,7 +95,9 @@ function AddressSection () {
                 </label>
                 <input
                     type="text"
-                    id="pincode"
+                    name="pincode"
+                    value={patientData.pincode || ''}
+                    onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
             </div>

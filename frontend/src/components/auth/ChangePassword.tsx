@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import HoneyComb from "../common/HoneyComb";
 import { RootState } from "../../store/store";
 import ErrorMessage from "../common/ErrorMessage";
-import { validatePassword } from "../../utils/validate";
+import { validatePassword } from "../../utils/validate/authValidate";
 import { changePasswordApi } from "../../sevices/authRepository";
 import {  IErrorTypeChangepassword, IForgotPasswordProps } from "../../types/authType";
 

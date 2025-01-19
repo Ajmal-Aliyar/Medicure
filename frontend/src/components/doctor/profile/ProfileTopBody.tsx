@@ -4,6 +4,7 @@ import { RootState } from "../../../store/store"
 
 
 
+
 const ProfileTopBody: React.FC<IDoctorTopProfile> = ({ setEditProfile }) => {
     const doctor = useSelector((state: RootState) => state.doctor)
 
@@ -38,6 +39,8 @@ const ProfileTopBody: React.FC<IDoctorTopProfile> = ({ setEditProfile }) => {
                 <p className="font-bold text-2xl mb-4 text-[#0c0b3eb5]">About Me</p>
                 <p className="text-gray-700 leading-relaxed">{doctor?.about}</p>
             </div>
+
+
         </>
     )
 }

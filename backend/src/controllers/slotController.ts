@@ -1,38 +1,37 @@
-// import { Request, Response } from "express";
-// import { ISlot } from "../interfaces/slot/slot.Interface";
-// import { SlotService } from "../services/slotServices";
-// import { DoctorService } from "../services/doctorServices";
+import { ISlotController } from '../types/slot/slot.controller.interface';
+import { NextFunction, Request, Response } from 'express';
+import { ISlotService } from '../services/interfaces/ISlotServices';
 
-// const slotService = new SlotService()
-// const doctorService = new DoctorService()
 
-// export class SlotController {
+export class SlotController implements ISlotController {
+    private slotService: ISlotService;
 
-//     async manageSlots(req: Request, res: Response): Promise<void> {
+    constructor(slotService: ISlotService) {
+        this.slotService = slotService;
 
-//         const { slots, fees }: { slots: ISlot[], fees: number } = req.body;
-//         const { _id } = req.client;
+        this.getSlots = this.getSlots.bind(this);
+        this.manageSlots = this.manageSlots.bind(this);
+    }
 
-//         try {
-//             if (fees) await doctorService.updateFees({ _id, fees })
-//             await slotService.manageSlots(_id, slots);
-//             console.log('Slots created successfully!')
-//             res.status(201).json({ message: 'Slots created successfully!' });
-//         } catch (error) {
-//             console.error('Error occurred while creating slots:', error);
-//             res.status(400).json({ error: error instanceof Error ? error.message : error });
-//         }
-//     }
+    async getSlots(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { _id } = req.client
+            console.log('worked 1',_id)
+            const slots = await this.slotService.getSlots(_id);
+            res.status(200).json(slots);
+        } catch (error) {
+            next(error)
+        }
+    }
 
-//     async getSlots(req: Request, res:Response): Promise<void> {
-//         const { _id }: {_id:string} = req.client
-//         try {
-//             const fees = await doctorService.getFees(_id)
-//             const slots =  await slotService.getSlots(_id)
-//            res.status(200).json({slots,fees})
-//         } catch(error: any) {
-//             console.error('Error occurred while fetching slots:', error);
-//             res.status(400).json({ error: error instanceof Error ? error.message : error });
-//         }
-//     }
-// }
+    async manageSlots(req: Request, res: Response): Promise<void> {
+        try {
+            const { slots, fees } = req.body;
+            const { _id } = req.client
+            await this.slotService.manageSlots( _id, slots, fees);
+            res.status(200).json({ message: 'Slots managed successfully' });
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+}

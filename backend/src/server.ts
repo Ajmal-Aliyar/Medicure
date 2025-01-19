@@ -1,6 +1,7 @@
-import { errorHandler } from './middleware/errorMiddleware';
-import doctorRouter from './routes/doctorRoutes'
 import doctorVerifications from './routes/verificationRoutes'
+import { errorHandler } from './middleware/errorMiddleware';
+import patientRouter from './routes/patientRoutes'
+import doctorRouter from './routes/doctorRoutes'
 import slotRouter from "./routes/slot.routes"
 import authRouter from './routes/authRoutes'
 import cookieParser from 'cookie-parser';
@@ -25,6 +26,7 @@ app.use(cors({
 }));
 
 app.use('/api/doctor/verification', doctorVerifications)
+app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/slot', slotRouter)

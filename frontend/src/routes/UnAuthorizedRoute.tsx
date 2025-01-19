@@ -1,4 +1,4 @@
-import { login, setData } from '../store/slices/authSlices/AuthSlice';
+import { login, setData } from '../store/slices/commonSlices/AuthSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import HoneyComb from '../components/common/HoneyComb';
 import { api } from '../utils/axiosInstance';

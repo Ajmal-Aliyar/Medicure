@@ -84,7 +84,7 @@ function Menu() {
 
                 <div className="flex items-center gap-2 relative">
                     <div
-                        className={`border-2 border-[#0c0b3eb5] rounded-lg px-5 lg:py-1 lg:px-7 lg:font-medium cursor-pointer transition-all transform  duration-300 hover:scale-105 `}
+                        className={`group/button overflow-hidden border-2 border-[#0c0b3eb5] rounded-lg px-5 lg:py-1 lg:px-7 lg:font-medium cursor-pointer transition-all transform  duration-300 active:scale-95 `}
                         onClick={() => {
                             if (isAuthenticated && role === 'user') {
                                 navigate('/user/profile');
@@ -93,6 +93,10 @@ function Menu() {
                             }
                         }}
                     >
+                        <div
+                            className="absolute bg-blue-300 inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-85%)] opacity-50 group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(85%)]"
+                        >
+                            <div className="relative h-full w-10 bg-white/20"></div></div>
                         {isAuthenticated && role === 'user' ? 'profile' : 'Login'}
                     </div>
                     <i

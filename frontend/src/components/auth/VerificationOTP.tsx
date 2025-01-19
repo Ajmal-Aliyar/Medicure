@@ -3,7 +3,7 @@ import { RootState } from '../../store/store';
 import SuccessModal from "../common/SuccessMessage";
 import ErrorMessage from "../common/ErrorMessage";
 import { useEffect, useRef, useState } from "react";
-import { login } from "../../store/slices/authSlices/AuthSlice";
+import { login } from "../../store/slices/commonSlices/AuthSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { IVerificationOTPProp } from "../../types/authType";
 import { sendOTPApi, verifyOtpAndRegisterApi, verifyOtpApi } from "../../sevices/authRepository";

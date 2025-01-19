@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthService } from "../services/authServices";
+import { AuthService } from "../services/implementations/authServices";
 
 const authService = new AuthService();
 

@@ -3,10 +3,10 @@ import { useDispatch } from "react-redux";
 import HoneyComb from "../common/HoneyComb";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../common/ErrorMessage";
-import { setData } from "../../store/slices/authSlices/AuthSlice";
+import { setData } from "../../store/slices/commonSlices/AuthSlice";
 import { sendOTPApi, signInApi, signUpApi } from "../../sevices/authRepository"
 import { IAuthPageProps, IErrorType, ISignInResponse } from "../../types/authType";
-import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate";
+import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate/authValidate";
 
 
 const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role }) => {

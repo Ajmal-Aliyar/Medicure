@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { IImageUploader } from '../../../types/doctor/profileType';
 import { uploadCloudinary } from '../../../utils/Cloudinary';
-import { updateProfileImageApi } from '../../../sevices/doctor/profile';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../../../store/slices/commonSlices/notificationSlice';
 
-const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profileImage }) => {
+const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profileImage, requestUpdateProfileImage }) => {
     const [identityUrl, setImage] = useState<string | null>(profileImage);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -77,8 +76,7 @@ const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profileImage 
                     const profileImage = uploadResponse;
                     console.log(profileImage, 'Image uploaded to Cloudinary');
                     setEditProfile(profileImage);
-                    await updateProfileImageApi(profileImage);
-                    window.location.reload()
+                    await requestUpdateProfileImage(profileImage)
                     setError(null);
                     setEditProfile('');
                 }

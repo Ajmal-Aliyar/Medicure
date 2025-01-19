@@ -32,7 +32,7 @@ const ModalAnimation: React.FC<IModalAnimationProps> = ({ children, onClose }) =
 
     return (
         <div
-            className="main-div fixed inset-0 bg-gradient-to-t from-[#00000093] flex justify-center items-center p-4 "
+            className="main-div fixed inset-0 bg-gradient-to-t from-[#00000093] flex justify-center items-center p-4 z-40"
         >
             <div
                 ref={modalRef}

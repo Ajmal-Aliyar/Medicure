@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { SlotRepository } from "../repositories/slot.repository";
-import { SlotService } from "../services/slot.services";
-import { SlotController } from "../controllers/slot.controller";
+import { SlotRepository } from "../repositories/implementations/slotRepository";
+import { SlotService } from "../services/implementations/slot.services";
+import { SlotController } from "../controllers/slotController";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
-import { DoctorRepository } from "../repositories/doctor.repository";
+import { DoctorRepository } from "../repositories/implementations/doctorRepository";
 
 const slotRepository = new SlotRepository();
 const doctorRepository = new DoctorRepository()

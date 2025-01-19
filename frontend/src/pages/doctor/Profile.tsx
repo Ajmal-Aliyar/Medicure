@@ -9,7 +9,7 @@ import ProfileTopBody from "../../components/doctor/profile/ProfileTopBody"
 import Experience from "../../components/doctor/profile/Experience"
 import { fetchSlotDetails } from "../../sevices/appointment/slot"
 import Education from "../../components/doctor/profile/Education"
-import { getProfileDetails } from "../../sevices/doctor/profile"
+import { getProfileDetails, updateProfileImageApi } from "../../sevices/doctor/profile"
 import Reviews from "../../components/doctor/profile/Reviews"
 import Slots from "../../components/doctor/profile/Slots"
 import { ISlotSlice } from "../../types/slot/fetchSlot"
@@ -67,6 +67,10 @@ function Profile() {
         getDoctorAndSlotData();
     }, []);
 
+    const requestUpdateProfileImage  = async (imageId: string) => {
+        await updateProfileImageApi(imageId)
+    }
+
 
     return (
         <div className='h-screen w-full p-4 flex justify-center overflow-y-auto rounded-md content'>
@@ -84,7 +88,7 @@ function Profile() {
                 <EditProfilePortal onClose={setEditProfile}>
                     {(editProfile === 'editProfile' || !doctor?.headline || !doctor?.fullName || !doctor?.dob || !doctor?.gender) &&
                         <EditProfileSection setEditProfile={setEditProfile} />}
-                    {editProfile === 'editImage' && <ImageUploader setEditProfile={setEditProfile} profileImage={doctor?.profileImage} />}
+                    {editProfile === 'editImage' && <ImageUploader setEditProfile={setEditProfile} profileImage={doctor?.profileImage} requestUpdateProfileImage={requestUpdateProfileImage} />}
                 </EditProfilePortal>
             ) : null}
 

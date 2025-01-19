@@ -47,7 +47,6 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
         const errors = validateDoctorData(doctorData);
         if (errors.length > 0) {
             dispatch(setError(`${errors.join("\n")}`))
-            // alert(`Please fix the following errors:\n${errors.join("\n")}`);
 
             return;
         }

@@ -3,7 +3,7 @@ import { faNewspaper, faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { logOutUser } from '../../../store/slices/authSlices/AuthSlice';
+import { logOutUser } from '../../../store/slices/commonSlices/AuthSlice';
 import { useDispatch } from 'react-redux';
 import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice';
 import { AppDispatch } from '../../../store/store';

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { DoctorService } from "../services/doctorServices";
-import { IProfileVerificationRequestBody } from "../interfaces/doctor/doctor.Interface";
+import { DoctorService } from "../services/implementations/doctorServices";
+import { IProfileVerificationRequestBody } from "../types/IDoctorInterface";
 import { NextFunction } from "express-serve-static-core";
 
 
@@ -23,7 +23,6 @@ export class DoctorController {
         const { profileImage } = req.body;
     
         try {
-            console.log(_id,profileImage,'hjkgkjh')
             if (!profileImage) {
                 res.status(400).json({ message: 'Profile image is required.' });
                 return;

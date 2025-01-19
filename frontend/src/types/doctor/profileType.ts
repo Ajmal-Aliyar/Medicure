@@ -16,6 +16,7 @@ export interface ISLots {
 export interface IImageUploader {
     profileImage: string;
     setEditProfile: Dispatch<SetStateAction<string>>;
+    requestUpdateProfileImage: (imageId: string) => Promise<void>
 }
 
 export interface IEditProfilePortalProps {
