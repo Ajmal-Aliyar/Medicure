@@ -13,7 +13,7 @@ const AdminLayout = () => {
                     className={`${
                         miniBar ? 'w-[97%] lg:w-[98%]' : 'w-[150px]'
                     } transition-all duration-1000 h-[8vh] z-40 flex justify-between items-center bg-white shadow-lg rounded-md m-2 mx-4 absolute top-0 right-0 p-2 px-4 overflow-hidden`}>
-                    <div className='w-3 h-full lg:bg-neutral-800 absolute left-0'></div>
+                    <div className='w-2 h-full lg:bg-neutral-800 absolute right-0'></div>
                     <div className="bg-neutral-300 h-full w-80 rounded-full"></div>
 
                     <div className="flex justify-center items-center gap-3">

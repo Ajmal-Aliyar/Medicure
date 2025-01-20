@@ -13,5 +13,4 @@ router.patch('/update-profile-image', tokenMiddleware, doctorController.updatePr
 
 
 
-
 export default router;

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { validateEmail } from '../../../utils/validate/authValidate';
-import { IPatientProfilePayload } from '../../../types/patient/profileType';
 import EditProfilePortal from '../../doctor/profile/EditProfilePortal';
 import ImageUploader from '../../doctor/profile/EditProfileImage';
 import { updateProfileImageApi } from '../../../sevices/patient/profile';

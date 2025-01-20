@@ -5,6 +5,7 @@ import AdminLayout from "../pages/admin/AdminLayout";
 import UnAuthorizedRoute from "./UnAuthorizedRoute";
 import AuthorizedRoute from "./AuthorizedRoute";
 import Doctors from "../pages/admin/Doctors";
+import Patients from "../pages/admin/Patients";
 
 function AdminRoutes() {
   return (
@@ -20,7 +21,7 @@ function AdminRoutes() {
       <Route path="/" element={<AdminLayout />}>
         <Route path="dashboard" element={<AuthorizedRoute allowedRole='admin'><Dashboard /></AuthorizedRoute>} />
         <Route path="doctors" element={<AuthorizedRoute allowedRole='admin'><Doctors /></AuthorizedRoute>} />
-        <Route path="patients" element={<AuthorizedRoute allowedRole='admin'><Dashboard /></AuthorizedRoute>} />
+        <Route path="patients" element={<AuthorizedRoute allowedRole='admin'><Patients /></AuthorizedRoute>} />
         <Route path="appointments" element={<AuthorizedRoute allowedRole='admin'><Dashboard /></AuthorizedRoute>} />
         <Route path="finance" element={<AuthorizedRoute allowedRole='admin'><Dashboard /></AuthorizedRoute>} />
       </Route>

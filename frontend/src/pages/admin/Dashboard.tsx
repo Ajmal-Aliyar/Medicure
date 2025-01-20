@@ -10,12 +10,7 @@ function Dashboard() {
         <ActivityChart />
         <div className="bg-neutral-800 w-full lg:min-w-[300px] max-w-[500px] mt-4 lg:mt-0 lg:flex-1 rounded-md shadow-md">
           <div className="w-full h-full">
-            <div className="font-semibold border-b-2 border-neutral-700 p-2 text-neutral-100">
-              Appointments
-            </div>
-            <div className="p-2">
               <Calendar />
-            </div>
           </div>
         </div>
       </div>

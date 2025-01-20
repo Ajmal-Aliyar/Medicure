@@ -62,3 +62,11 @@ export interface IVerficationDetails {
     yearOfCompletion: string,
     yearsOfExperience: string
 }
+
+export interface IFetchAllApprovedDoctors {
+    _id: string;
+    profileImage: string;
+    fullName: string;
+    specialization: string;
+    rating: string
+}

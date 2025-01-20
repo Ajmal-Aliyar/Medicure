@@ -8,7 +8,7 @@ import SuccessModal from './SuccessMessage';
 import WarningMessage from './WarningMessage';
 
 const NotificationPortal: React.FC = () => {
-    const { error, success, warning, loading } = useSelector(
+    const { error, success, warning, loading} = useSelector(
         (state: RootState) => state.notification
     );
     const dispatch = useDispatch()
@@ -35,11 +35,12 @@ const NotificationPortal: React.FC = () => {
             return <div className='w-screen h-screen bg-gradient-to-t from-[#00000070]  fixed top-0 z-50 flex flex-col items-center'><ErrorMessage message={error} handleModal={handleError}/></div>;
         }
         if (success) {
-            return <div className='w-screen h-screen bg-gradient-to-t from-[#21212156] to-[#0000003b] fixed top-0 z-50 flex flex-col items-center'><SuccessModal message={success} handleModal={handleSuccess}/></div>
+            return <div className='w-screen bg-gradient-to-t absolute top-0 z-50 flex flex-col items-center'><SuccessModal message={success} handleModal={handleSuccess}/></div>
         }
         if (warning) {
-            return <div className='w-screen h-screen bg-gradient-to-t from-[#00000070] fixed top-0 z-50 flex flex-col items-center'><WarningMessage message={warning} handleModal={handleWarning}/></div>
+            return <div className={`w-screen h-screen bg-gradient-to-t from-[#00000040] ${warning ? "bg-opacity-100" : 'bg-opacity-0'} duration-500 fixed top-0 flex justify-center items-center`}><WarningMessage message={warning} handleModal={handleWarning}/></div>
         }
+    
         return null;
     };
 

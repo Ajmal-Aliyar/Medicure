@@ -1,7 +1,6 @@
 import { IContentProps } from "../../../types/doctor/verifyDetailsType";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { api } from '../../../utils/axiosInstance';
 import HoneyComb from '../../common/HoneyComb';
 import { useState } from 'react';
 import "./style.css"
@@ -77,7 +76,7 @@ const Content: React.FC<IContentProps> = ({ handleModal }) => {
           Submit
         </button>
       {isProfileCompleted && (
-        <div className='absolute w-full top-0 left-0 h-full rounded-md bg-gray-200 bg-opacity-90 flex justify-center items-center '>
+        <div className='fixed w-full top-0 left-0 h-full rounded-md bg-gray-200 bg-opacity-90 flex justify-center items-center '>
           <div className="notifications-container">
             <div className="success">
               <div className="flex">

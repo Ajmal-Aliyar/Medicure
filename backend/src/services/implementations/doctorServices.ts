@@ -6,6 +6,7 @@ import { IAddress } from "../../models/doctor/doctorInterface";
 const doctorRepository = new DoctorRepository()
 
 export class DoctorService {
+    
 
     async getProfileDetails(_id: string) {
         try {

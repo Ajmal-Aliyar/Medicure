@@ -1,7 +1,7 @@
 import { ICreateUser, IDoctorDocument, IDoctorRepository, IProfileVerificationInput } from "../../types/IDoctorInterface";
 import { IDoctor } from "../../models/doctor/doctorInterface";
 import { DoctorModel } from "../../models/doctor/doctorModel";
-import mongoose, { UpdateResult } from "mongoose";
+import mongoose, { DeleteResult, UpdateResult } from "mongoose";
 
 
 
@@ -25,7 +25,6 @@ export class DoctorRepository implements IDoctorRepository {
             specialization,
             languageSpoken, 
             dob, }): Promise<void> {
-        console.log('hres',fullName,headline,about,address)
 
         const result = await DoctorModel.updateOne({ _id },{$set: { fullName, headline, about, address,gender,
             specialization,
@@ -33,6 +32,41 @@ export class DoctorRepository implements IDoctorRepository {
             dob, }})
         console.log(result,'res')
     }
+
+    async fetchAllApprovedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
+        try {
+            const doctors = await DoctorModel.find({ isApproved: true })
+                .skip(skip)
+                .limit(limit)
+                .select('rating profileImage fullName specialization')
+                .lean();
+    
+            const hasMore = doctors.length === limit;
+    
+            return { data: doctors, hasMore };
+        } catch (error) {
+            console.error("Error fetching doctors:", error);
+            throw new Error("Unable to fetch doctors");
+        }
+    }
+
+    async fetchAllRequestedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
+        try {
+            const doctors = await DoctorModel.find({ isProfileCompleted: true, isApproved: false })
+                .skip(skip)
+                .limit(limit)
+                .select('rating profileImage fullName specialization')
+                .lean();
+    
+            const hasMore = doctors.length === limit;
+    
+            return { data: doctors, hasMore };
+        } catch (error) {
+            console.error("Error fetching doctors:", error);
+            throw new Error("Unable to fetch doctors");
+        }
+    }
+
 
     async findByEmail(email: string): Promise<IDoctor> {
         return await DoctorModel.findOne({ email });
@@ -132,6 +166,14 @@ export class DoctorRepository implements IDoctorRepository {
             { _id },
             { $set: { password } }
         );
+    }
+
+    async approveDoctor (_id: string): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({_id},{$set:{isApproved:true}})
+    }
+
+    async deleteDoctor (_id: string): Promise<DeleteResult> {
+        return await DoctorModel.deleteOne({_id})
     }
 
 }

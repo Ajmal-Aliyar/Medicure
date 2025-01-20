@@ -6,6 +6,12 @@ import { useEffect, useState } from "react";
 
 
 
+export const timeFormat12hr = (time: string) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
+};
 const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLoading }) => {
     const [fees, setFees] = useState<number | undefined>(undefined);
     const [slots, setSlots] = useState<ISlotDetails[]>([]);
@@ -14,12 +20,7 @@ const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLo
     const [slotError, setSlotError] = useState('');
     const [endTime, setEndTime] = useState('');
 
-    const timeFormat12hr = (time: string) => {
-        const [hours, minutes] = time.split(':').map(Number);
-        const period = hours >= 12 ? 'PM' : 'AM';
-        const hours12 = hours % 12 || 12;
-        return `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
-    };
+    
 
     useEffect(() => {
             console.log('Component mounted');
@@ -79,7 +80,7 @@ const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLo
 
     const handleSubmit = async () => {
         console.log(slots, 'slots')
-        setLoading(false)
+        setLoading(true)
         await updateSlotsApi(slots, fees)
         setLoading(false)
         handleModal('')

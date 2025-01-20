@@ -39,7 +39,7 @@ const authSlice = createSlice({
       state.email = email;
       state.role = role;
       state.isApproved = isApproved;
-      state.isAuthenticated = true; 
+      state.isAuthenticated = false; 
     },
     login: (state) => {
       state.isAuthenticated = true;

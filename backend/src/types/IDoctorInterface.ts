@@ -1,4 +1,4 @@
-import { InferSchemaType, UpdateResult } from "mongoose";
+import { DeleteResult, InferSchemaType, UpdateResult } from "mongoose";
 import { IDoctor } from "../models/doctor/doctorInterface";
 import { DoctorSchema } from "../models/doctor/doctorSchema";
 
@@ -65,4 +65,8 @@ export interface IDoctorRepository {
     updateFees(_id: string, fees: number): Promise<UpdateResult>
     getFees(doctorId: string): Promise<number | null>
     changePassword(_id: string, password: string): Promise<UpdateResult>
+    fetchAllApprovedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }>
+    fetchAllRequestedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }>
+    approveDoctor (_id: string): Promise<UpdateResult>
+    deleteDoctor (_id: string): Promise<DeleteResult>
 }

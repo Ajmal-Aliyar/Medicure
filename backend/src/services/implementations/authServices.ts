@@ -25,14 +25,14 @@ export class AuthService {
         try {
             const repository = role === 'admin' ? adminRepository : role === 'doctor' ? doctorRepository : patientRepository;
             const userData = await repository.findByID(_id);
-    
+
             if (!userData) {
                 throw new Error(`User with ID: ${_id} not found`);
             }
-            
-            const isDoctor = (data: any): data is { isApproved: boolean } => 
+
+            const isDoctor = (data: any): data is { isApproved: boolean } =>
                 role === 'doctor' && 'isApproved' in data;
-    
+
             return {
                 _id: userData._id.toString(),
                 fullName: userData.fullName,
@@ -45,7 +45,7 @@ export class AuthService {
             throw new Error('Failed to retrieve user information');
         }
     }
-    
+
 
     async signUp(fullname: string, email: string, number: number, password: string, role: string) {
         try {
@@ -66,16 +66,16 @@ export class AuthService {
                 600
             );
             return 'Please check your inbox and verify your email address to complete the registration process';
-    
+
         } catch (error) {
             console.error('Error during signup:', error);
             throw new Error(`Signup failed: ${error.message}`);
         }
     }
-    
+
     async signIn(email: string, password: string, role: string): Promise<authorizedUserResponse> {
         try {
-            await checkBruteForce(email,5,600)
+            await checkBruteForce(email, 5, 600)
             const repository = role === 'doctor' ? doctorRepository : patientRepository;
             const user = await repository.findByEmail(email);
             if (!user) {
@@ -91,7 +91,7 @@ export class AuthService {
                 role,
                 ...(role === 'doctor' && 'isApproved' in user ? { isApproved: user.isApproved } : {})
             };
-    
+
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
             return { accessToken, refreshToken, _id: user._id.toString() };
@@ -101,17 +101,22 @@ export class AuthService {
         }
     }
 
-    
 
-    async changePassword (email: string, password: string, role:string):Promise<boolean> {
-        const hashedPassword = await hashPassword(password);
-        const repository = role === 'doctor' ? doctorRepository : patientRepository;
-        const result = await repository.changePassword(email, hashedPassword)
-        if (result.modifiedCount === 0) {
-            throw new Error('No user found with this email.');
+
+    async changePassword(email: string, password: string, role: string): Promise<boolean> {
+        try {
+            const hashedPassword = await hashPassword(password);
+            const repository = role === 'doctor' ? doctorRepository : patientRepository;
+            const result = await repository.changePassword(email, hashedPassword)
+            if (result.modifiedCount === 0) {
+                throw new Error('No user found with this email.');
+            }
+            console.log('Password updated successfully');
+            return true
+        } catch (error : any) {
+            throw error
         }
-        console.log('Password updated successfully');
-        return true
+        
     }
 
     async sendOTP(email: string) {
@@ -132,25 +137,25 @@ export class AuthService {
         try {
             await checkBruteForce(email, 30, 1800);
             const validOtp = await getRedisData(`otp-${email}`);
-            
+
             if (!validOtp) {
                 throw new Error('The OTP has either expired or is invalid. Please request a new one.');
             }
             if (validOtp !== otp) {
                 throw new Error('The OTP you entered is incorrect. Please try again.');
             }
-    
+
             await deleteRedisData(`otp-${email}`);
             await deleteBruteForce(email);
-            
+
             const userData = JSON.parse(await getRedisData(email));
-            
-            let _id: string; 
+
+            let _id: string;
             if (userData.role === 'doctor') {
                 const doctor = await doctorRepository.createDoctor({
-                    fullName: userData.fullname, 
-                    email: userData.email, 
-                    phone: userData.number, 
+                    fullName: userData.fullname,
+                    email: userData.email,
+                    phone: userData.number,
                     password: userData.hashedPassword
                 });
                 if (!doctor) {
@@ -159,9 +164,9 @@ export class AuthService {
                 _id = doctor._id.toString();
             } else {
                 const patient = await patientRepository.createUser({
-                    fullName: userData.fullname, 
-                    email: userData.email, 
-                    phone: userData.number, 
+                    fullName: userData.fullname,
+                    email: userData.email,
+                    phone: userData.number,
                     password: userData.hashedPassword
                 });
                 if (!patient) {
@@ -169,22 +174,22 @@ export class AuthService {
                 }
                 _id = patient._id.toString();
             }
-    
-            const payload = { _id, role: userData.role }; 
+
+            const payload = { _id, role: userData.role };
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
-            
+
             return { accessToken, refreshToken, _id };
-    
+
         } catch (error: any) {
             console.error('Error verifying OTP:', error.message);
             throw new Error(error.message);
         }
     }
-    
+
 
     async verifyOTP(email: string, otp: string): Promise<boolean> {
-        await checkBruteForce(email, 30,1800)
+        await checkBruteForce(email, 30, 1800)
         const validOtp = await getRedisData(`otp-${email}`);
         if (!validOtp) {
             throw new Error('The OTP has either expired or is invalid. Please request a new one.');

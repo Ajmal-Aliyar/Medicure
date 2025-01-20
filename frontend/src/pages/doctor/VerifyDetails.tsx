@@ -59,6 +59,16 @@ function VerifyDetails() {
             <Banner />
             <Content handleModal={handleModal} />
 
+            {/* updates */}
+            {isModalOpen === 'Profile Image' && 
+            <EditProfilePortal onClose={setIsModalOpen}>
+                <ImageUploader setEditProfile={setIsModalOpen} profileImage={doctor?.profileImage} requestUpdateProfileImage={requestUpdateProfileImage} />
+            </EditProfilePortal>}
+            {isModalOpen === 'Profile Details' &&
+                <EditProfilePortal onClose={setIsModalOpen}>
+                    <EditProfileSection setEditProfile={setIsModalOpen} />
+                </EditProfilePortal>
+            }
             {isModalOpen === 'Professional Details' && (
                 <ModalAnimation onClose={handleModal}>
                     <ProfileDetailsForm handleModal={handleModal} setLoading={setLoading} />
@@ -77,20 +87,10 @@ function VerifyDetails() {
 
 
 
-            {/* updates */}
-            {isModalOpen === 'Profile Details' &&
-                <EditProfilePortal onClose={setIsModalOpen}>
-                    <EditProfileSection setEditProfile={setIsModalOpen} />
-                </EditProfilePortal>
-            }
-            {isModalOpen === 'Profile Image' && 
-            <EditProfilePortal onClose={setIsModalOpen}>
-                <ImageUploader setEditProfile={setIsModalOpen} profileImage={doctor?.profileImage} requestUpdateProfileImage={requestUpdateProfileImage} />
-            </EditProfilePortal>}
 
 
 
-            <div className={`${loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
+            <div className={`${loading ? 'z-50' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] fixed top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
                 <HoneyComb />
             </div>
             <Animation />

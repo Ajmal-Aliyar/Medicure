@@ -8,20 +8,23 @@ const doctorService = new DoctorService()
 
 export class DoctorController {
 
+    
+
+
     async getProfileDetails(req: Request, res: Response, next: NextFunction) {
         try {
             const { _id } = req.client;
             const doctorData = await doctorService.getProfileDetails(_id)
-            res.status(200).json({doctorData})
+            res.status(200).json({ doctorData })
         } catch (error) {
-            next(error); 
-          }
+            next(error);
+        }
     }
 
     async updateProfileImg(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { _id } = req.client;
         const { profileImage } = req.body;
-    
+
         try {
             if (!profileImage) {
                 res.status(400).json({ message: 'Profile image is required.' });
@@ -33,19 +36,19 @@ export class DoctorController {
             next(error);
         }
     }
-    
+
     async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { _id } = req.client;
             const { fullName, headline, about, gender, specialization, languageSpoken, dob, addressLine, streetAddress, city, state, country, pincode } = req.body;
-            console.log(req.body ,'asdf')
+            console.log(req.body, 'asdf')
             await doctorService.updateDoctor(_id, {
                 fullName,
                 headline,
                 about,
                 gender,
                 specialization,
-                languageSpoken, 
+                languageSpoken,
                 dob,
                 addressLine,
                 streetAddress,
@@ -54,15 +57,14 @@ export class DoctorController {
                 country,
                 pincode
             });
-    
+
             res.status(200).json({ message: 'Profile updated successfully' });
         } catch (error) {
-            console.log(error,'asdfas')
             next(error);
         }
     }
-    
-    
+
+
 
     async getProfileVerificationDetails(req: Request, res: Response): Promise<void> {
         try {
@@ -98,13 +100,14 @@ export class DoctorController {
 
     async profileVerification(req: Request, res: Response): Promise<void> {
         const { registrationNumber, registrationCouncil, registrationYear, degree,
-             university, yearOfCompletion,yearsOfExperience}: IProfileVerificationRequestBody = req.body;
+            university, yearOfCompletion, yearsOfExperience }: IProfileVerificationRequestBody = req.body;
 
         const _id: string = req.client._id;
 
         try {
-            await doctorService.profileVerification({ _id, registrationNumber, registrationCouncil, registrationYear,
-                 degree, university, yearOfCompletion, yearsOfExperience
+            await doctorService.profileVerification({
+                _id, registrationNumber, registrationCouncil, registrationYear,
+                degree, university, yearOfCompletion, yearsOfExperience
             });
             res.status(200).json({ message: 'Profile verification details updated successfully' });
         } catch (error: any) {
@@ -126,12 +129,12 @@ export class DoctorController {
     }
 
     async submitDoctorVerification(req: Request, res: Response): Promise<void> {
-        const { _id }: { _id: string} = req.client
+        const { _id }: { _id: string } = req.client
 
         try {
             const status = await doctorService.submitDoctorVerification(_id)
-            res.status(200).json({status})
-        } catch(error: any) {
+            res.status(200).json({ status })
+        } catch (error: any) {
             res.status(404).json({ error: error.message })
         }
     }
