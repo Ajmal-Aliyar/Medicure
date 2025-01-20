@@ -5,23 +5,25 @@ import { PatientRepository } from '../../repositories/implementations/patientRep
 import { hashPassword, verifyPassword } from '../../utils/passwordUtil';
 import { DoctorRepository } from '../../repositories/implementations/doctorRepository';
 import { sendOtpToEmail } from '../../utils/otpUtil';
+import { AdminRepository } from '../../repositories/implementations/adminRepository';
 
 
 
 
-interface authorizedUserResponse {
+export interface authorizedUserResponse {
     accessToken: string;
     refreshToken: string;
     _id: string;
 }
 const patientRepository = new PatientRepository()
 const doctorRepository = new DoctorRepository()
+const adminRepository = new AdminRepository()
 
 export class AuthService {
 
     async userInfo(_id: string, role: string) {
         try {
-            const repository = role === 'doctor' ? doctorRepository : patientRepository;
+            const repository = role === 'admin' ? adminRepository : role === 'doctor' ? doctorRepository : patientRepository;
             const userData = await repository.findByID(_id);
     
             if (!userData) {
@@ -35,7 +37,6 @@ export class AuthService {
                 _id: userData._id.toString(),
                 fullName: userData.fullName,
                 email: userData.email,
-                phone: userData.phone,
                 ...(isDoctor(userData) ? { isApproved: userData.isApproved ?? false } : {}),
                 role
             };
@@ -48,7 +49,6 @@ export class AuthService {
 
     async signUp(fullname: string, email: string, number: number, password: string, role: string) {
         try {
-            console.log(role, 'role');
             const repository = role === 'doctor' ? doctorRepository : patientRepository;
             const existingAccount = await repository.findByEmail(email);
             if (existingAccount) {

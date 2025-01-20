@@ -1,35 +1,49 @@
+import { faRightFromBracket, faBars, faCalendarAlt, faThLarge, faUserDoctor, faUserAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faNewspaper, faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
-import { faRightFromBracket, faBars, faCalendarAlt, faMessage, faThLarge } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
+
 
 function SlideMenu() {
     const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState('Dashboard');
+    const [selected, setSelected] = useState('');
+    const location = useLocation(); 
     const navigate = useNavigate();  
+
+    useEffect(() => {
+            const currentPath = location.pathname;
+            const activeItem = menuItems.find(item => item.path === currentPath);
+            if (activeItem) {
+                setSelected(activeItem.label);
+            }
+        }, [location.pathname]);
 
     const handleNav = () => setIsOpen(!isOpen);
 
     const menuItems = [
         { icon: faThLarge, label: 'Dashboard', path: '/admin/dashboard' },
-        { icon: faCalendarAlt, label: 'Appointments', path: '/admin/appointment' },  
-        { icon: faMessage, label: 'Messages', path: '/admin/messages' },
-        { icon: faNewspaper, label: 'Articles', path: '/admin/articles' },
+        { icon: faUserDoctor, label: 'Doctors', path: '/admin/doctors' },
+        { icon: faUserAlt, label: 'Patients', path: '/admin/patients' },
+        { icon: faCalendarAlt, label: 'Appointments', path: '/admin/appointments' },  
         { icon: faMoneyBill1, label: 'Finance', path: '/admin/finance' },
     ];
 
-    const HandleSelected = (item: string, path?: string) => {
-        setSelected(item);
-        if (path) navigate(path);  
-    }
+    const handleSelected = (label: string, path:string) => {
+        if (selected !== label) {
+            setSelected(label);
+            navigate(path);
+        }
+    };
 
     return (
         <div
-            className={`lg:h-screen bg-gradient-to-l from-[#a9c9df] to-[#9fcced] fixed lg:relative flex flex-col shadow-2xl z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}
+            className={`lg:h-screen bg-neutral-800 fixed lg:relative flex flex-col z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}
         >
+             
             <nav
-                className="flex items-center cursor-pointer text-[#0c0b3eb5] pl-4 gap-3 py-4"
+                className="flex items-center cursor-pointer text-neutral-400 pl-4 gap-3 py-4"
                 onClick={handleNav}
             >
                 <FontAwesomeIcon icon={faBars} className={`text-[30px] duration-300 ${isOpen ? '' : 'lg:translate-x-3'}`} />
@@ -40,8 +54,8 @@ function SlideMenu() {
                 {menuItems.map((item, index) => (
                     <div
                         key={index}
-                        className={`flex items-center gap-4 w-full p-3 transition-all duration-500 active:scale-90  ${selected === item.label ? 'bg-white text-[#51AFF6]' : 'hover:bg-white/20 text-white'}`}
-                        onClick={() => HandleSelected(item.label, item.path)} 
+                        className={`flex items-center gap-4 w-full p-3 transition-all duration-500 active:scale-90  ${selected === item.label ? 'bg-neutral-200 text-neutral-700' : 'hover:bg-white/20 text-neutral-200'}`}
+                        onClick={() => handleSelected(item.label, item.path)} 
                     >
                         <FontAwesomeIcon icon={item.icon} className={`text-2xl p-2 rounded-full duration-300 ${isOpen ? '' : 'lg:translate-x-3'}`} />
                         <p className={`transition-opacity duration-500 whitespace-nowrap ${isOpen ? 'opacity-100' : 'lg:opacity-0'}`}>{item.label}</p>

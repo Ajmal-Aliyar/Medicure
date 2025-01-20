@@ -112,11 +112,48 @@ function Menu() {
             </div>
 
             <div className={`lg:hidden flex items-center justify-between overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'h-44 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}>
-                <span className='space-y-3'>
-                    <p className="cursor-pointer">Home</p>
-                    <p className="cursor-pointer">Find Doctors</p>
-                    <p className="cursor-pointer">Articles</p>
-                    <p className="cursor-pointer">Contact</p>
+                <span className='flex flex-col gap-4'>
+                <NavLink
+                        to="/user"
+                        end
+                        className={({ isActive }) =>
+                            isActive
+                                ? "font-bold cursor-pointer"
+                                : "cursor-pointer "
+                        }
+                    >
+                        Home
+                    </NavLink>
+                    <NavLink
+                        to="/user/find-doctors"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "font-bold cursor-pointer "
+                                : "cursor-pointer "
+                        }
+                    >
+                        Find Doctors
+                    </NavLink>
+                    <NavLink
+                        to="/user/articles"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "font-bold cursor-pointer "
+                                : "cursor-pointer"
+                        }
+                    >
+                        Articles
+                    </NavLink>
+                    <NavLink
+                        to="/user/contact"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "font-bold cursor-pointer"
+                                : "cursor-pointer"
+                        }
+                    >
+                        Contact
+                    </NavLink>
                 </span>
                 <span className={`${isAuthenticated ? '' : 'hidden'} text-end space-y-3`}>
                     <UserDriveBar />

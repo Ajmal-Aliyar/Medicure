@@ -55,7 +55,7 @@ const ProfileTopBody: React.FC = () => {
 
     return (
         <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-6 md:col-span-3 flex flex-col items-center">
+            <div className="col-span-12 lg:col-span-6  flex flex-col items-center">
                 <div className="max-w-[150px] w-full rounded-full border-2 border-[#0c0b3eb5] aspect-square m-4" onClick={() => setEditProfile('editProfile')}>
                     <img
                         src={ patientData?.profileImage || 'https://res.cloudinary.com/dwyxogyrk/image/upload/v1737173758/sk7hria3ngkaujeywrjy.png'}
@@ -65,9 +65,9 @@ const ProfileTopBody: React.FC = () => {
                 </div>
                 <p className="text-lg font-medium">{patientData.fullName}</p>
             </div>
-            <div className="flex col-span-6 flex-col justify-center gap-y-4 h-full pb-5">
+            <div className="flex col-span-12 lg:col-span-6 flex-col justify-center gap-y-4 h-full pb-5 items-center lg:items-start">
 
-                <div className='relative max-w-[350px]'>
+                <div className='relative max-w-[300px]'>
                     <input
                         type="text"
                         disabled
@@ -90,7 +90,7 @@ const ProfileTopBody: React.FC = () => {
                 </div>
 
 
-                <div className='relative max-w-[350px]'>
+                <div className='relative max-w-[300px]'>
                     <input
                         type="text"
                         id='phone'

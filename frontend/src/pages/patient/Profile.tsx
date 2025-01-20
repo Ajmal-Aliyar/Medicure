@@ -90,7 +90,7 @@ function Profile() {
 
 
     return (
-        <div className="w-screen h-screen flex justify-center items-center p-6 bg-[#eeeeee] ">
+        <div className="w-screen h-screen flex justify-center items-center md:p-6 bg-[#eeeeee] ">
             <div className="w-full md:w-4/5 lg:w-3/4 h-[90%] mt-16 rounded-md bg-[#f9f9f9] shadow-lg flex flex-col">
                 <div className="border-b-2 p-4 text-lg font-medium text-[#0c0b3eb5] flex justify-between shadow-md ">
                     <p>Account Settings</p>

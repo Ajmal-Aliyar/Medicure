@@ -6,7 +6,6 @@ import AuthorizedRoute from "./AuthorizedRoute";
 import Profile from "../pages/doctor/Profile";
 import PrivateRoute from "./PrivateRoute";
 import Auth from "../pages/patient/Auth";
-import TestNotificationPage from "../components/common/TestNotificationPage";
 
 function DoctorRoutes() {
     return (
@@ -29,10 +28,7 @@ function DoctorRoutes() {
                     </UnAuthorizedRoute>
                 }
             />
-            <Route
-                path="/test-notification"
-                element={<TestNotificationPage/>}
-            />
+
         </Routes>
     );
 }

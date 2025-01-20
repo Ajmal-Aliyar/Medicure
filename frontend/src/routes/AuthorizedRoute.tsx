@@ -29,12 +29,15 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
         const fetchUserInfo = async () => {
             try {
                 const response = await api.get<AuthInfo>('/api/auth/user-info');
+                console.log('Fetched user data:', response.data);
                 if (response.data) {
+
                     dispatch(setData(response.data));
                     dispatch(login());
                 }
             } catch (error) {
-                console.error('Error fetching user data:', error);
+                
+                console.error('Error fetching auth user data:', error);
             } finally {
                 setLoading(false);
             }

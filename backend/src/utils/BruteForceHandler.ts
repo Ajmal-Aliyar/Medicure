@@ -23,13 +23,6 @@ export const checkBruteForce = async (email: string,MAX_ATTEMPTS: number,LOCK_TI
     }
 }
 
-// export const incrementAttempts = async (email: string): Promise<void> => {
-//     const currentAttempts = await getRedisData(`attempts:${email}`);
-//     const newAttempts = currentAttempts ? parseInt(currentAttempts) + 1 : 1;
-//     console.log(`Total attempts : ${newAttempts}`)
-//     await setRedisData(`attempts:${email}`, newAttempts.toString(), LOCK_TIMEOUT);
-// }
-
 export const deleteBruteForce = async (email: string): Promise<void> => {
     await deleteRedisData(`account-locked:${email}`);
     await deleteRedisData(`attempts:${email}`);

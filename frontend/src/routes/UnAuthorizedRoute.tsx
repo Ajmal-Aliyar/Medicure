@@ -40,7 +40,7 @@ const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => 
                 setLoading(false);
             })
             .catch((err) => {
-                console.error('Error:', err);
+                console.error('Error from unauthorized:', err);
                 setLoading(false);
             });
 

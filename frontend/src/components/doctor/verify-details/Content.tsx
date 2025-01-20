@@ -14,7 +14,15 @@ const Content: React.FC<IContentProps> = ({ handleModal }) => {
 
   const steps = [
     {
+      title: 'Profile Image',
+      description: "Doctor’s basic details, medical registration, education qualification, establishment details, etc.",
+    },
+    {
       title: 'Profile Details',
+      description: "Doctor’s basic details, medical registration, education qualification, establishment details, etc.",
+    },
+    {
+      title: 'Professional Details',
       description: "Doctor’s basic details, medical registration, education qualification, establishment details, etc.",
     },
     {
@@ -56,7 +64,7 @@ const Content: React.FC<IContentProps> = ({ handleModal }) => {
             <p className="anime-text text-gray-700 mb-3">{step.description}</p>
             <button
               onClick={() => handleModal(step.title)}
-              className="anime-button flex items-center gap-1 text-[#2ea118c4] font-medium hover:scale-105 transition-transform active:scale-95">
+              className="cursor-pointer anime-button flex items-center gap-1 text-[#2ea118c4] font-medium hover:scale-105 transition-transform active:scale-95">
               <div className="w-4 h-4 border-2 border-[#2ea118c4] rounded-full flex justify-center items-center">
                 <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
               </div>

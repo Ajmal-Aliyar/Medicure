@@ -26,7 +26,7 @@ const EditProfilePortal: React.FC<IEditProfilePortalProps> = ({ children, onClos
     });
 
     tl.to('.main-div', {
-      opacity: 0,
+      // opacity: 0,
       duration: 0.3,
       onComplete: () => onClose && onClose('')
     })

@@ -32,10 +32,10 @@ const NotificationPortal: React.FC = () => {
             return <div className='w-screen h-screen bg-[#f4f4f4a9] fixed top-0 flex justify-center items-center z-50'><HoneyComb /></div>;
         }
         if (error) {
-            return <div className='w-screen h-screen bg-gradient-to-t from-[#00000070] fixed top-0 z-50 flex flex-col items-center'><ErrorMessage message={error} handleModal={handleError}/></div>;
+            return <div className='w-screen h-screen bg-gradient-to-t from-[#00000070]  fixed top-0 z-50 flex flex-col items-center'><ErrorMessage message={error} handleModal={handleError}/></div>;
         }
         if (success) {
-            return <div className='w-screen h-screen bg-gradient-to-t from-[#00000070] fixed top-0 z-50 flex flex-col items-center'><SuccessModal message={success} handleModal={handleSuccess}/></div>
+            return <div className='w-screen h-screen bg-gradient-to-t from-[#21212156] to-[#0000003b] fixed top-0 z-50 flex flex-col items-center'><SuccessModal message={success} handleModal={handleSuccess}/></div>
         }
         if (warning) {
             return <div className='w-screen h-screen bg-gradient-to-t from-[#00000070] fixed top-0 z-50 flex flex-col items-center'><WarningMessage message={warning} handleModal={handleWarning}/></div>
