@@ -100,6 +100,7 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
         setLoading(false);
         console.log('OTP verified successfully:', response.data);
         setMessage('OTP verified successfully. Please set your new password.')
+        handleChangePassword(true)
       } catch(error: any ) {
         setLoading(false);
         setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
@@ -176,9 +177,9 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
         {!loading ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
         {serverError === '' || loading ? <HoneyComb /> : ''}
       </div>
-      <div className={`${message !== ''? "" :"hidden"}`}>
+      {/* <div className={`${message !== ''? "" :"hidden"}`}>
         <SuccessModal handleModal={handleModal} message={message}/>
-      </div>
+      </div> */}
     </form>
 
   );

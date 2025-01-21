@@ -1,4 +1,4 @@
-import AuthForm from "../../components/admin/AuthForm"
+import AuthForm from "../../components/admin/common/AuthForm"
 
 
 interface AuthProps {

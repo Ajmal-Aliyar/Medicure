@@ -15,4 +15,7 @@ export interface IPatientRepository {
     getProfileData(_id: string): Promise<Partial<IPatient> | null>
     updateProfile ({ _id, dob, gender, address}: IUpdateProfile): Promise<UpdateResult>
     profileImage({ _id, profileImage }: { _id: string, profileImage: string }): Promise<UpdateResult>
+    getAllPatient(skip: number, limit: number): Promise<{ data: IPatientDocument[], hasMore: boolean }>
+    block(_id: string): Promise<UpdateResult> 
+    unblock(_id: string): Promise<UpdateResult>
 }

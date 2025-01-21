@@ -31,6 +31,7 @@ export interface IErrorTypeChangepassword {
   confirmPassword: string;
 }
 export interface IForgotPasswordProps {
+  handleAuth: (value: boolean) => void;
   handleChangePassword: (value: boolean) => void;
   role:string;
 }

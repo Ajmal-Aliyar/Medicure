@@ -11,7 +11,7 @@ interface ProtectedRouteProps {
     allowedRole: string;
 }
 
-type AuthInfo = {
+export type AuthInfo = {
     _id: string;
     role: string;
     email: string;

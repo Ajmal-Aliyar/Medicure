@@ -15,6 +15,9 @@ export class AdminController {
         this.getDoctorApprovalRequests = this.getDoctorApprovalRequests.bind(this)
         this.getDoctorAppointmentDetails = this.getDoctorAppointmentDetails.bind(this)
         this.approveDoctor = this.approveDoctor.bind(this)
+        this.getAllPatients = this.getAllPatients.bind(this)
+        this.block = this.block.bind(this)
+        this.unblock = this.unblock.bind(this)
     }
 
     async signIn(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -115,4 +118,44 @@ export class AdminController {
             next(error)
         }
     }
+
+    async getAllPatients(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const skip = parseInt(req.query.skip as string) || 0;
+            const limit = parseInt(req.query.limit as string) || 5;
+            const patientsData = await this.adminServices.getAllPatients(skip, limit);
+
+            res.status(200).json({
+                success: true,
+                data: patientsData.data,
+                hasMore: patientsData.hasMore
+            });
+        } catch (error: any) {
+            console.error('Error fetching approved doctors:', error.message);
+            next(error);
+        }
+    }
+
+    async block(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const _id = req.query._id as string
+            const role = req.query.role as string
+            await this.adminServices.block( _id, role)
+            res.status(200).json({message: `Blocked ${role} successfully`}) 
+        } catch( error: any) {
+            next(error)
+        }
+    }
+
+    async unblock(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const _id = req.query._id as string
+            const role = req.query.role as string
+            await this.adminServices.unblock( _id, role)
+            res.status(200).json({message: `Unblocked ${role} successfully`}) 
+        } catch( error: any) {
+            next(error)
+        }
+    }
+
 }

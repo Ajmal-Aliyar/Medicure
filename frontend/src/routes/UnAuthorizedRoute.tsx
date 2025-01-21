@@ -5,53 +5,45 @@ import { api } from '../utils/axiosInstance';
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { RootState } from '../store/store';
+import { AuthInfo } from './AuthorizedRoute';
 
 interface ProtectedRouteProps {
     children: JSX.Element;
     preventedRole: string;
 }
 
-type UserInfo = {
-    _id: string;
-    email: string;
-    role: string;
-};
+
 
 const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
-    const [showSpinner, setShowSpinner] = useState(false); 
     const [error, setError] = useState<string | null>(null);
-    
+
     useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const response = await api.get<AuthInfo>('/api/auth/user-info');
+                console.log('Fetched user data:', response.data);
+                if (response.data) {
 
-        const spinnerTimeout = setTimeout(() => {
-            if (loading) {
-                setShowSpinner(true);
+                    dispatch(setData(response.data));
+                    dispatch(login());
+                }
+            } catch (error) {
+
+                console.error('Error fetching auth user data:', error);
+            } finally {
+                setLoading(false);
             }
-        }, 500);
-
-        api.get<UserInfo>('/api/auth/user-info')
-            .then((response) => {
-                const userData = response.data;
-                console.log(userData, 'ussss');
-                dispatch(setData(userData));
-                dispatch(login());
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Error from unauthorized:', err);
-                setLoading(false);
-            });
-
-        return () => clearTimeout(spinnerTimeout);
+        };
+        fetchUserInfo()
 
     }, [dispatch, loading]);
 
     const { role, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
-    if (loading && showSpinner) return <div className='w-screen h-screen flex justify-center items-center fixed'><HoneyComb /></div>;
-    
+    if (loading) return <div className='w-screen h-screen flex justify-center items-center fixed'><HoneyComb /></div>;
+
     if (error) return <div className='text-red-500 text-center'>{error}</div>;
 
     if (isAuthenticated && role === preventedRole) {

@@ -84,7 +84,7 @@ function Profile() {
 
                 <div className="h-10"></div>
             </div>
-            {(!doctor?.headline || !doctor?.fullName || !doctor?.dob || !doctor?.gender) || (editProfile && editProfile !== 'editSlot') ? (
+            { editProfile && editProfile !== 'editSlot' ? (
                 <EditProfilePortal onClose={setEditProfile}>
                     {(editProfile === 'editProfile' || !doctor?.headline || !doctor?.fullName || !doctor?.dob || !doctor?.gender) &&
                         <EditProfileSection setEditProfile={setEditProfile} />}

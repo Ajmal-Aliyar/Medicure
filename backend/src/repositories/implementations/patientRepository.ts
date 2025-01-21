@@ -5,7 +5,7 @@ import { IPatient } from "../../models/patient/patientInterface";
 import { PatientModel } from "../../models/patient/patientModel"
 
 export class PatientRepository implements IPatientRepository {
-    async createUser({fullName, email, phone, password}:ICreatePatient): Promise<IPatientDocument> {
+    async createUser({ fullName, email, phone, password }: ICreatePatient): Promise<IPatientDocument> {
         if (!email) {
             throw new Error('Email cannot be null or empty');
         }
@@ -16,8 +16,8 @@ export class PatientRepository implements IPatientRepository {
         const user = new PatientModel({ fullName, email, phone, password });
         return await user.save();
     }
-    
-    async findByEmail(email: string): Promise<IPatient>  {
+
+    async findByEmail(email: string): Promise<IPatient> {
         return await PatientModel.findOne({ email });
     }
 
@@ -25,7 +25,7 @@ export class PatientRepository implements IPatientRepository {
         return await PatientModel.findById(_id);
     }
 
-    async changePassword (email: string, password: string): Promise<UpdateResult> {
+    async changePassword(email: string, password: string): Promise<UpdateResult> {
         return await PatientModel.updateOne(
             { email },
             { $set: { password } }
@@ -36,9 +36,9 @@ export class PatientRepository implements IPatientRepository {
         return await PatientModel.findById(_id)
             .select('profileImage fullName phone email dob bloodGroup gender address')
             .lean()
-            .exec(); 
+            .exec();
     }
-    
+
 
     async updateProfile({ _id, dob, gender, bloodGroup, address }: IUpdateProfile): Promise<UpdateResult> {
         try {
@@ -49,11 +49,35 @@ export class PatientRepository implements IPatientRepository {
     }
 
     async profileImage({ _id, profileImage }: { _id: string, profileImage: string }): Promise<UpdateResult> {
-            try {
-                return await PatientModel.updateOne({ _id }, { $set: { profileImage } });
-            } catch (error) {
-                throw ('Error updating profile image: ' + error.message);
-            }
+        try {
+            return await PatientModel.updateOne({ _id }, { $set: { profileImage } });
+        } catch (error) {
+            throw ('Error updating profile image: ' + error.message);
         }
-    
+    }
+
+    async getAllPatient(skip: number, limit: number): Promise<{ data: IPatientDocument[], hasMore: boolean }> {
+        try {
+            const patients = await PatientModel.find()
+                .skip(skip)
+                .limit(limit)
+                .lean();
+
+            const hasMore = patients.length === limit;
+
+            return { data: patients, hasMore };
+        } catch (error) {
+            console.error("Error fetching doctors:", error);
+            throw new Error("Unable to fetch doctors");
+        }
+    }
+
+    async block(_id: string): Promise<UpdateResult> {
+        return await PatientModel.updateOne({ _id }, { $set: { isBlocked: true } })
+    }
+
+    async unblock(_id: string): Promise<UpdateResult> {
+        return await PatientModel.updateOne({ _id }, { $set: { isBlocked: false } })
+    }
+
 }

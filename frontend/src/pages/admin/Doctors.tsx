@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 function Doctors() {
     const [openPage, setOpenPage] = useState('AllDoctors')
-    const [zoom, setZoom] = useState(true)
+    const [zoom, setZoom] = useState(false)
     return (
 
         <div className={`w-full h-full flex flex-col lg:flex-row flex-1 py-6 px-3 gap-5 lg:justify-center lg:items-center duration-700 ${openPage === 'ApprovalPage' ? '-translate-x-1/2' : '-translate-x-0'}`}>

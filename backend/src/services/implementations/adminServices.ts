@@ -1,5 +1,6 @@
 import { IDoctor } from "../../models/doctor/doctorInterface";
 import { IAdminRepository } from "../../repositories/interfaces/IAdminRepository";
+import { IPatientDocument, IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
 import { IDoctorRepository } from "../../types/IDoctorInterface";
 import { ISlot } from "../../types/ISlotInterface";
@@ -13,11 +14,13 @@ import { authorizedUserResponse } from "./authServices";
 export class AdminServices implements IAdminServices {
     private adminRepository: IAdminRepository;
     private doctorRepository: IDoctorRepository;
+    private patientRepository: IPatientRepository;
     private slotRepository: ISlotRepository;
 
-    constructor(adminRepository: IAdminRepository, doctorRepository: IDoctorRepository, slotRepository: ISlotRepository) {
+    constructor(adminRepository: IAdminRepository, doctorRepository: IDoctorRepository, slotRepository: ISlotRepository, patientRepository:IPatientRepository) {
         this.adminRepository = adminRepository
         this.doctorRepository = doctorRepository
+        this.patientRepository = patientRepository
         this.slotRepository = slotRepository
     }
 
@@ -159,6 +162,61 @@ export class AdminServices implements IAdminServices {
             throw error
         }
     }
+
+    async getAllPatients(skip: number, limit: number): Promise<{ data: IPatientDocument[], hasMore: boolean }> {
+        try {
+
+            const patientData = await this.patientRepository.getAllPatient(skip, limit);
+
+            if (!patientData.data.length) {
+                throw new Error('No patients found.');
+            }
+
+            return patientData;
+        } catch (error: any) {
+            console.error('Error fetching patients:', error);
+
+            if (error.name === 'MongoError') {
+                throw new Error('Database error occurred while fetching patients.');
+            } else if (error instanceof TypeError) {
+                throw new Error('Unexpected data processing error occurred.');
+            } else {
+                throw new Error('An unexpected error occurred. Please try again later.');
+            }
+        }
+    }
     
+    async block (_id: string, role: string): Promise<void> {
+        try {
+            if (!_id) {
+                throw new Error(' Missing ID.');
+            }
+
+            const respository = role === 'patient' ? this.patientRepository : this.doctorRepository
+            const block = await respository.block(_id);
     
+            if (block.modifiedCount === 0) {
+                throw new Error(`Block ${role} failed: No changes were made, please verify the ID.`);
+            }
+        } catch (error: any) {
+            throw error
+        }
+    }
+
+    async unblock (_id: string, role: string): Promise<void> {
+        try {
+            if (!_id) {
+                throw new Error(' Missing ID.');
+            }
+
+            const respository = role === 'patient' ? this.patientRepository : this.doctorRepository
+            const unblock = await respository.unblock(_id);
+    
+            if (unblock.modifiedCount === 0) {
+                throw new Error(`Unblock ${role} failed: No changes were made, please verify the ID.`);
+            }
+        } catch (error: any) {
+            throw error
+        }
+    }
 }

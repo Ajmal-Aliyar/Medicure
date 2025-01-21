@@ -43,9 +43,9 @@ const Calendar = () => {
     const daysInMonth = generateCalendarDays(currentDate);
 
     return (
-        <div className="bg-neutral-800 w-full lg:min-w-[300px] max-w-[500px] mt-4 lg:mt-0 lg:flex-1 rounded-md shadow-md">
+        <div className="bg-[#16423C] w-full lg:min-w-[300px] max-w-[500px] mt-4 lg:mt-0 lg:flex-1 rounded-md shadow-md">
             <div className="w-full h-full">
-                <div className="font-semibold border-b-2 border-neutral-700 p-2 text-neutral-100">
+                <div className="font-semibold border-b-2 border-neutral-700 p-2 text-[#E9EFEC]">
                     Appointments
                 </div>
                 <div className="p-2"></div>
@@ -53,7 +53,7 @@ const Calendar = () => {
                     <div className="flex justify-between items-center mb-4">
                         <button
                             onClick={goToPreviousMonth}
-                            className="text-lg bg-neutral-400 p-3 rounded-md text-gray-700 hover:text-gray-100 active:scale-95"
+                            className="text-lg bg-[#C4DAD2] p-3 rounded-md text-[#16423C] duration-300 active:scale-90"
                         >
                             &#8249;
                         </button>
@@ -62,7 +62,7 @@ const Calendar = () => {
                         </div>
                         <button
                             onClick={goToNextMonth}
-                            className="text-lg bg-neutral-400 p-3 rounded-md text-gray-700 hover:text-gray-100 active:scale-95"
+                            className="text-lg bg-[#C4DAD2] p-3 rounded-md text-[#16423C] duration-300 active:scale-90"
                         >
                             &#8250;
                         </button>
@@ -70,7 +70,7 @@ const Calendar = () => {
 
                     <div className="grid grid-cols-7 gap-2">
                         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                            <div key={day} className="text-center text-sm font-medium text-neutral-300">
+                            <div key={day} className="text-center text-sm font-medium text-[#C4DAD2]">
                                 {day}
                             </div>
                         ))}
@@ -78,8 +78,8 @@ const Calendar = () => {
                         {daysInMonth.map((day, index) => (
                             <div
                                 key={index}
-                                className={`p-2 rounded-md text-center ${day ? "text-neutral-100" : "text-transparent"
-                                    } ${day ? "hover:bg-neutral-400 cursor-pointer" : ""}`}
+                                className={`p-2 rounded-md text-center ${day ? "text-[#E9EFEC]" : "text-transparent"
+                                    } ${day ? "hover:bg-[#C4DAD2] hover:text-[#16423C] cursor-pointer" : ""}`}
                             >
                                 {day}
                             </div>

@@ -8,8 +8,6 @@ const doctorService = new DoctorService()
 
 export class DoctorController {
 
-    
-
 
     async getProfileDetails(req: Request, res: Response, next: NextFunction) {
         try {

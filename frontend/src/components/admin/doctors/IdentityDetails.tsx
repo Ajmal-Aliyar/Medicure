@@ -17,16 +17,16 @@ function IdentityDetails() {
         getDoctorData()
     }, [doctorId])
     return (
-        <div className="flex flex-col w-full ">
-            <div className='w-full '>
+        <div className="flex flex-col w-full  h-[540px]  text-[#16423cc1] p-6">
+            <div className='outline w-fit rounded-md'>
                 <img src={doctor.identityProof} alt="" className='max-h-[200px]' />
             </div>
             <div className='mt-5'>
-                 <p className='col-span-4 text-lg font-bold text-neutral-600'>Specialization</p>
+                 <p className='col-span-4 text-lg font-bold text-[#16423cc1]'>Specialization</p>
                  <p>{doctor.specialization}</p>
             </div>
             <div className='grid grid-cols-4 mt-4'>
-                 <p className='col-span-4 text-lg font-bold text-neutral-600'>Education</p>
+                 <p className='col-span-4 text-lg font-bold text-[#16423cc1]'>Education</p>
                  <p>Degree</p>
                  <p className='col-span-3'>: {doctor.educationDetails?.degree}</p>
                  <p>University</p>

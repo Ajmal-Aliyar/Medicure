@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import HoneyComb from '../common/HoneyComb'
-import { validateEmail, validatePassword } from '../../utils/validate/authValidate';
-import { IErrorType, ISignInResponse } from '../../types/authType';
-import { setData } from '../../store/slices/commonSlices/AuthSlice';
+import HoneyComb from '../../common/HoneyComb'
+import { validateEmail, validatePassword } from '../../../utils/validate/authValidate';
+import { IErrorType, ISignInResponse } from '../../../types/authType';
+import { setData } from '../../../store/slices/commonSlices/AuthSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setError } from '../../store/slices/commonSlices/notificationSlice';
-import { signInApi } from '../../sevices/admin/authRepository';
+import { setError } from '../../../store/slices/commonSlices/notificationSlice';
+import { signInApi } from '../../../sevices/admin/authRepository';
 
 interface IAuthForm {
     role: string

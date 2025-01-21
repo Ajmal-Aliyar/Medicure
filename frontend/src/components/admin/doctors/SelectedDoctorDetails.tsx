@@ -21,55 +21,70 @@ const SelectedDoctorDetails: React.FC = () => {
 
 
     return (
-        
-                <div className="grid grid-cols-12 w-full">
-                    <div className='w-full aspect-square col-span-3'>
-                        <img src={doctor.profileImage} alt="" className=''/>
-                    </div>
-                    <div className='w-full col-span-9 p-2 border '>
-                        <p className='font-semibold'>Professional Details</p>
-                        <div className='grid grid-cols-4'>
-                        <p>Full name</p>
-                        <p className='col-span-3'>: {doctor.fullName}</p>
-                            <p>Email</p>
-                            <p className='col-span-3'>: {doctor.email}</p>
-                            <p>Phone</p>
-                            <p className='col-span-3'>: {doctor.phone}</p>
-                            <p>Language</p>
-                            <p className='col-span-3'>: {doctor.languageSpoken}</p>
-                        </div>
-                    </div>
-                    <div className='w-full col-span-6 border p-2 h-full'>
-                        <p className='font-semibold'>About</p>
-                        <p className='text-xs'>{doctor.about}</p>
-                    </div>
-                    <div className='border w-full aspect-square col-span-6 p-2 h-full'>
-                        <p className='font-semibold'>Profile Details</p>
-                        <div className='grid grid-cols-4 text-sm'>
-                            <p>Headline</p>
-                            <p className='col-span-3'>: {doctor.headline}</p>
-                            <p>Category</p>
-                            <p className='col-span-3'>: {doctor.specialization}</p>
-                            <p>Fees</p>
-                            <p className='col-span-3'>: {doctor.fees} rs</p>
-                            <p className='col-span-4 text-md font-medium mt-2'>Address</p>
-                            <p>Line</p>
-                            <p className='col-span-3'>: {doctor.address?.addressLine}</p>
-                            <p>Street</p>
-                            <p className='col-span-3'>: {doctor.address?.streetAddress}</p>
-                            <p>City</p>
-                            <p className='col-span-3'>: {doctor.address?.city}</p>
-                            <p>State</p>
-                            <p className='col-span-3'>: {doctor.address?.state}</p>
-                            <p>Country</p>
-                            <p className='col-span-3'>: {doctor.address?.country}</p>
-                            <p>Pincode</p>
-                            <p className='col-span-3'>: {doctor.address?.pincode}</p>
-                        </div>
-                    </div>
 
+        <div className="grid grid-cols-12 gap-2 w-full p-6 bg-[#fafafa] text-[#16423cc1]">
+
+            <div className="col-span-12 flex justify-center gap-2">
+                <div className="w-full max-w-[200px] aspect-square rounded-lg overflow-hidden shadow-lg">
+                    <img src={doctor.profileImage} alt="Doctor Profile" className="w-full h-full object-cover" />
                 </div>
-           
+
+
+                <div className="col-span-12 bg-white rounded-lg shadow-lg p-6 border w-full">
+
+                    <h2 className="text-lg font-sans mb-4 border-b pb-2">Professional Details</h2>
+                    <div className="grid grid-cols-4 gap-y-2 text-gray-600  text-sm">
+                        <p className="font-medium">Full Name</p>
+                        <p className="col-span-3 font-sans">: {doctor.fullName}</p>
+                        <p className="font-medium">Email</p>
+                        <p className="col-span-3 font-sans ">: {doctor.email}</p>
+                        <p className="font-medium">Phone</p>
+                        <p className="col-span-3 font-sans">: {doctor.phone}</p>
+                        <p className="font-medium">Language</p>
+                        <p className="col-span-3 font-sans">: {doctor.languageSpoken}</p>
+                    </div>
+                </div>
+
+            </div>
+            <div className="col-span-12 bg-white rounded-lg shadow-lg p-6 border">
+                <h2 className="text-lg font-sans mb-4 border-b pb-2">Profile Details</h2>
+                <div className="grid grid-cols-4 gap-y-2 text-gray-600 text-sm">
+                    <p className="font-medium">Headline</p>
+                    <p className="col-span-3 font-sans">: {doctor.headline}</p>
+                    <p className="font-medium">Category</p>
+                    <p className="col-span-3 font-sans">: {doctor.specialization}</p>
+                    <p className="font-medium">Fees</p>
+                    <p className="col-span-3 font-sans">: {doctor.fees} rs</p>
+                </div>
+            </div>
+
+
+
+            <div className="col-span-12 bg-white rounded-lg shadow-lg p-6 border">
+                <h3 className="text-lg font-sans mb-4 border-b pb-2   ">Address</h3>
+                <div className="grid grid-cols-4 gap-y-3 mt-2 text-gray-600 text-sm">
+                    <p className="font-medium">Line</p>
+                    <p className="col-span-3">: {doctor.address?.addressLine}</p>
+                    <p className="font-medium">Street</p>
+                    <p className="col-span-3">: {doctor.address?.streetAddress}</p>
+                    <p className="font-medium">City</p>
+                    <p className="col-span-3">: {doctor.address?.city}</p>
+                    <p className="font-medium">State</p>
+                    <p className="col-span-3">: {doctor.address?.state}</p>
+                    <p className="font-medium">Country</p>
+                    <p className="col-span-3">: {doctor.address?.country}</p>
+                    <p className="font-medium">Pincode</p>
+                    <p className="col-span-3">: {doctor.address?.pincode}</p>
+                </div>
+            </div>
+
+            <div className="col-span-12 bg-white rounded-lg shadow-lg p-6 border">
+                <h2 className="text-lg font-sans mb-4 border-b pb-2">About</h2>
+                <p className="text-gray-600 text-sm leading-relaxed">{doctor.about}</p>
+            </div>
+        </div>
+
+
     )
 }
 

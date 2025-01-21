@@ -1,4 +1,5 @@
 import { IDoctor } from "../../models/doctor/doctorInterface";
+import { IPatientDocument } from "../../repositories/interfaces/IPatientRepository";
 import { ISlot } from "../../types/ISlotInterface";
 import { authorizedUserResponse } from "../implementations/authServices";
 
@@ -10,4 +11,7 @@ export interface IAdminServices {
     getDoctorAppointmentDetails(_id: string): Promise<ISlot[]> 
     approveDoctor (_id: string): Promise<void> 
     rejectDoctor(_id: string): Promise<void>
+    getAllPatients(skip: number, limit: number): Promise<{ data: IPatientDocument   [], hasMore: boolean }>
+    block (_id: string, role: string): Promise<void>
+    unblock (_id: string, role: string): Promise<void>
 }

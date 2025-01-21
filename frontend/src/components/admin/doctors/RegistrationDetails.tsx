@@ -17,8 +17,8 @@ function RegistrationDetails () {
         getDoctorData()
     }, [doctorId])
     return (
-        <div className="flex flex-col w-full ">
-            <div className='w-full flex'>
+        <div className="flex flex-col w-full p-6">
+            <div className='w-fit flex outline rounded-md'>
                 <img src={doctor.medicalRegistration} alt="" className='max-h-[200px]' />
             </div>
             

@@ -176,4 +176,12 @@ export class DoctorRepository implements IDoctorRepository {
         return await DoctorModel.deleteOne({_id})
     }
 
+    async block (_id:string): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({_id},{$set:{isBlocked: true}})
+    }
+
+    async unblock (_id:string): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({_id},{$set:{isBlocked: false}})
+    }
+
 }

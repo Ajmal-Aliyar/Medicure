@@ -18,8 +18,8 @@ function AppointmentDetails() {
         getSlotsDetails()
     }, [doctorId])
     return (
-        <div className="flex flex-col w-full ">
-            <div className=" bg-gray-100 px-4 rounded-md">
+        <div className="flex flex-col w-full p-6">
+            <div className=" bg-[#C4DAD2] px-4 rounded-md py-2">
                 <table className="min-w-full text-sm text-gray-700">
                     <thead>
                         <tr>

@@ -1,4 +1,5 @@
 export interface IPatientProfile {
+    _id: string;
     profileImage: string;
     fullName: string;
     phone: string; 
@@ -6,6 +7,8 @@ export interface IPatientProfile {
     dob: string; 
     bloodGroup: string;
     gender: string;
+    medicalHistory: string[];
+    isBlocked: boolean;
     address: IPatientAddress; 
 }
 export interface IPatientAddress {

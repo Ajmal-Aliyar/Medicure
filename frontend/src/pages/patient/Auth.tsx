@@ -35,7 +35,7 @@ const Auth:React.FC<AuthProps> = ({role}) => {
           <SideAuthComponent />
         </div>
         <div className="w-[100%] lg:w-[50%] flex justify-center items-center">
-            {changePassword ? <ChangePassword handleChangePassword={handleChangePassword} role={role}/> : 
+            {changePassword ? <ChangePassword handleChangePassword={handleChangePassword} handleAuth={handleAuth} role={role}/> : 
              auth ? <AuthPage handleAuth={handleAuth} handleForgotPassword={handleForgotPassword} role={role}/> : 
              <VerificationForm handleAuth={handleAuth} forgotPassword={forgotPassword} handleChangePassword={handleChangePassword}/> }
         </div>

@@ -69,4 +69,6 @@ export interface IDoctorRepository {
     fetchAllRequestedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }>
     approveDoctor (_id: string): Promise<UpdateResult>
     deleteDoctor (_id: string): Promise<DeleteResult>
+    block (_id:string): Promise<UpdateResult>
+    unblock (_id:string): Promise<UpdateResult>
 }

@@ -43,22 +43,22 @@ const AllDoctorsCard:React.FC<AllDoctorsCardProps> = ({setOpenPage}) => {
         setSkip(prevSkip => prevSkip + limit); 
     };
     return (
-        <div className=' bg-white shadow-md rounded-md'>
-            <div className=" border-b-2 border-neutral-100 flex justify-between p-2 relative">
-                <p className='font-semibold p-2'>All Doctors</p>
-                <input className="px-4 max-w-[300px] border-2 w-full rounded-full outline-none pr-12 peer"
+        <div className=' bg-[#fafafa] shadow-md rounded-md text-[#16423cc1]'>
+            <div className=" border-b-2 border-[#C4DAD2] flex justify-between p-2 relative">
+                <p className='font-semibold p-2 '>All Doctors</p>
+                <input className="px-4 max-w-[300px] border-2 w-full rounded-full outline-none pr-12 peer placeholder:text-[#C4DAD2] border-[#C4DAD2]"
                     placeholder="Search here" />
-                <FontAwesomeIcon icon={faSearch} className={`text-[25px]  text-neutral-400 absolute right-6 top-1/2 -translate-y-1/2 `} />
+                <FontAwesomeIcon icon={faSearch} className={`text-[25px] text-[#C4DAD2] absolute right-6 top-1/2 -translate-y-1/2 `} />
             </div>
             <div className="h-[516px] p-2 overflow-y-auto">
                 {doctors.map((doctor) => (
-                    <div key={doctor._id} className="border flex p-2 rounded-md items-center relative mb-2 hover:border-neutral-800 hover:border-2 active:scale-95 duration-300" onClick={() => handleDoctorSelect(doctor._id)}>
+                    <div key={doctor._id} className="border flex p-2 rounded-md items-center relative mb-2 hover:border-[#3ab8a7a8] hover:border-2 border-[#C4DAD2] active:scale-95 duration-300" onClick={() => handleDoctorSelect(doctor._id)}>
                         <div className="w-14 h-14 bg-blue-200 rounded-full">
                             <img src={doctor.profileImage} alt={doctor.fullName} className="w-full h-full object-cover rounded-full" />
                         </div>
                         <div className="ml-2">
                             <p className="font-semibold text-lg">{doctor.fullName}</p>
-                            <p className="font-semibold text-sm text-neutral-500 ">{doctor.specialization}</p>
+                            <p className="font-semibold text-sm text-[#6A9C89] ">{doctor.specialization}</p>
                             <p className="text-xs text-neutral-500 ">{doctor.rating} (170+ Reviews)</p>
                         </div>
                     </div>

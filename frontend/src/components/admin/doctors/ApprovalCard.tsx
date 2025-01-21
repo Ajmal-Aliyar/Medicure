@@ -43,7 +43,7 @@ const ApprovalCard: React.FC<ApprovalCardProps> = ({ setOpenPage }) => {
     }
 
     const handleBack = () => {
-        dispatch(setSelectedId({ _id: ''}))
+        dispatch(setSelectedId({ _id: '' }))
         setOpenPage('AllDoctors')
     }
 
@@ -51,15 +51,15 @@ const ApprovalCard: React.FC<ApprovalCardProps> = ({ setOpenPage }) => {
         setSkip(prevSkip => prevSkip + limit);
     };
     return (
-        <div className='w-full h-[700px] bg-white shadow-md rounded-md'>
-            <div className=" border-b-2 border-neutral-100 flex justify-between p-2 relative">
-                <p className='font-semibold p-2 flex' onClick={handleBack}>
+        <div className='w-full h-[700px] bg-[#fafafa] shadow-md rounded-md text-[#16423cc1]'>
+            <div className=" border-b-2 border-[#C4DAD2] flex justify-between p-2 relative">
+                <p className='font-semibold p-2 flex cursor-pointer' onClick={handleBack}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="15 18 9 12 15 6" />
                     </svg> Applicant Requests</p>
-                <input className="px-4 max-w-[300px] border-2 w-full rounded-full outline-none pr-12 peer"
+                <input className="px-4 max-w-[300px] border-2 w-full rounded-full outline-none pr-12 peer placeholder:text-[#C4DAD2] border-[#C4DAD2]"
                     placeholder="Search here" />
-                <FontAwesomeIcon icon={faSearch} className={`text-[25px]  text-neutral-400 absolute right-6 top-1/2 -translate-y-1/2 `} />
+                <FontAwesomeIcon icon={faSearch} className={`text-[25px] text-[#C4DAD2] absolute right-6 top-1/2 -translate-y-1/2 `} />
             </div>
             <div className="h-[616px] p-2 overflow-y-auto">
                 {doctors.map((doctor) => (
@@ -69,11 +69,11 @@ const ApprovalCard: React.FC<ApprovalCardProps> = ({ setOpenPage }) => {
                         </div>
                         <div className="ml-2">
                             <p className="font-semibold text-lg">{doctor.fullName}</p>
-                            <p className="font-semibold text-sm text-neutral-500 ">{doctor.specialization}</p>
+                            <p className="font-semibold text-sm text-[#6A9C89]  ">{doctor.specialization}</p>
                         </div>
-                        <div className={`${doctorId === doctor._id ? 'bg-neutral-800' : 'bg-neutral-100'} w-14 h-10  rounded-md absolute right-0 mr-2 flex justify-center items-center group active:scale-90 duration-300`} onClick={() => handleDoctorSelect(doctor._id)}>
-                        <FontAwesomeIcon icon={faArrowRight} className={`text-[25px] duration-300 text-neutral-400 group-hover:scale-110 ${doctorId === doctor._id ? 'translate-x-2 scale-110' : ''}`} />
-                    </div>
+                        <div className={`${doctorId === doctor._id ? 'bg-[#6A9C89]' : 'bg-[#C4DAD2]'} cursor-pointer w-14 h-10  rounded-md absolute right-0 mr-2 flex justify-center items-center group active:scale-90 duration-300`} onClick={() => handleDoctorSelect(doctor._id)}>
+                            <FontAwesomeIcon icon={faArrowRight} className={`text-[25px] duration-300 text-[#E9EFEC] group-hover:text-[#16423C] group-hover:scale-110 ${doctorId === doctor._id ? 'translate-x-2 scale-110' : ''}`} />
+                        </div>
                     </div>
                 ))}
             </div>

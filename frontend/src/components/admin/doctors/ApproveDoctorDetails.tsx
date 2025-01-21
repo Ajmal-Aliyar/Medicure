@@ -61,8 +61,8 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
     }
 
     return (
-        <div className="card w-[50%] h-[700px] bg-white rounded-md shadow-md absolute -right-1/2 flex flex-1 flex-col">
-            <div className=" border-b-2 border-neutral-100 flex justify-between p-2 relative">
+        <div className="card w-[50%]  bg-[#fafafa] shadow-md rounded-md text-[#16423cc1] absolute -right-1/2 flex flex-1 flex-col ">
+            <div className=" border-b-2 border-[#C4DAD2] flex justify-between p-2 relative">
 
                 <p className='font-semibold p-2'>
                     {currentPage === 0 && 'Profile Details'}
@@ -71,7 +71,7 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
                     {currentPage === 3 && 'Appointment Details'}
                 </p>
             </div>
-            <div className="w-full h-full flex flex-col items-center justify-between">
+            <div className="w-full h-[574px] flex flex-col items-center justify-between overflow-y-auto">
                 <div className={`w-full flex items-center justify-center p-2`}>
                     {currentPage === 0 && <SelectedDoctorDetails />}
                     {currentPage === 1 && <IdentityDetails />}
@@ -79,12 +79,13 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
                     {currentPage === 3 && <AppointmentDetails />}
                 </div>
 
+            </div>
                 <div className="mt-4 flex justify-between w-full p-2 border-t-2">
                     <div className="flex items-center space-x-2 ">
                         {[1, 2, 3, 4].map((_, index) => (
                             <button
                                 key={index}
-                                className={`px-3 py-1 rounded-md ${index === currentPage ? "bg-neutral-800 text-white" : "bg-gray-300 text-gray-700"
+                                className={`px-3 py-1 rounded-md ${index === currentPage ? "bg-[#6A9C89] text-white" : "bg-[#C4DAD2] text-gray-700"
                                     }`}
                                 onClick={() => setCurrentPage(index)}
                             >
@@ -97,7 +98,6 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
                         <button className="px-2 py-1 bg-green-700 w-[100px] opacity-85 rounded-sm active:scale-95 text-neutral-100" onClick={handleConfirm}>approve</button>
                     </div>
                 </div>
-            </div>
             <Animation />
         </div>
     )
