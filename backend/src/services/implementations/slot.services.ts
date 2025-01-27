@@ -1,8 +1,9 @@
-import { IDoctorRepository } from "../../types/IDoctorInterface";
+
 import { ISlot } from "../../types/ISlotInterface";
 import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
 import { ISlotService } from "../interfaces/ISlotServices";
 import { ISlotSchema } from "../../models/slot/slotInterface";
+import { IDoctorRepository } from "../../repositories/interfaces/IDoctorRepostory";
 
 
 export class SlotService implements ISlotService {

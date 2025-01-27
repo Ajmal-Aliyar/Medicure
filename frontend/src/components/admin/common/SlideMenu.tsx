@@ -39,11 +39,11 @@ function SlideMenu() {
 
     return (
         <div
-            className={`lg:h-screen bg-[#6A9C89] fixed lg:relative flex flex-col z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}
+            className={`lg:h-screen bg-[#16423C] fixed lg:relative flex flex-col z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}
         >
              
             <nav
-                className="flex items-center cursor-pointer text-[#16423C] pl-4 gap-3 py-4"
+                className="flex items-center cursor-pointer text-[#C4DAD2] pl-4 gap-3 py-4"
                 onClick={handleNav}
             >
                 <FontAwesomeIcon icon={faBars} className={`text-[30px] duration-300 ${isOpen ? '' : 'lg:translate-x-3'}`} />

@@ -1,8 +1,8 @@
 import { IDoctor } from "../../models/doctor/doctorInterface";
 import { IAdminRepository } from "../../repositories/interfaces/IAdminRepository";
+import { IDoctorRepository } from "../../repositories/interfaces/IDoctorRepostory";
 import { IPatientDocument, IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
-import { IDoctorRepository } from "../../types/IDoctorInterface";
 import { ISlot } from "../../types/ISlotInterface";
 import { checkBruteForce, deleteBruteForce } from "../../utils/BruteForceHandler";
 import { verifyPassword } from "../../utils/passwordUtil";

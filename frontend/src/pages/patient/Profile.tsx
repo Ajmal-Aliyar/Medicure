@@ -69,7 +69,6 @@ function Profile() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const key = e.target.name
         const val = e.target.value
-        console.log(key, val, 'kv')
         setProfileData((prev) => ({
             ...prev,
             [key]: val || '',

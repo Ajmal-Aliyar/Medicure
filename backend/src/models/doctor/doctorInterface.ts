@@ -23,7 +23,7 @@ import { Document } from 'mongoose';
 
 export interface IDoctor extends Document {
     fullName: string;
-    email: string;
+    email: string; 
     phone: string; 
     password: string;
     gender: 'Male' | 'Female';
@@ -45,6 +45,8 @@ export interface IDoctor extends Document {
     yearsOfExperience: number;
     languageSpoken: string;
     fees: number;
+    rating: number;
+    reviewCount: number;
     isBlocked: boolean;
     isProfileCompleted: boolean;
     isApproved: boolean;

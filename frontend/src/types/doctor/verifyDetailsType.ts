@@ -69,4 +69,5 @@ export interface IFetchAllApprovedDoctors {
     fullName: string;
     specialization: string;
     rating: string
+    reviewCount: string
 }

@@ -6,6 +6,7 @@ import Auth from '../pages/patient/Auth';
 import PublicRoutes from './PublicRoutes';
 import Profile from '../pages/patient/Profile';
 import AuthorizedRoute from './AuthorizedRoute';
+import FindDoctors from '../pages/patient/FindDoctors';
 
 function UserRoutes() {
   return (
@@ -15,6 +16,7 @@ function UserRoutes() {
           <Route index element={<PublicRoutes><Home/></PublicRoutes>}/>
           <Route path="auth" element={<UnAuthorizedRoute preventedRole={'user'}><Auth role='user'/></UnAuthorizedRoute>}/>
           <Route path="profile" element={<AuthorizedRoute allowedRole={'user'}><Profile/></AuthorizedRoute>}/>
+          <Route path='find-doctors' element={<PublicRoutes><FindDoctors/></PublicRoutes>}/>
         </Route>
     </Routes>
     </>

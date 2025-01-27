@@ -59,7 +59,7 @@ const AllDoctorsCard:React.FC<AllDoctorsCardProps> = ({setOpenPage}) => {
                         <div className="ml-2">
                             <p className="font-semibold text-lg">{doctor.fullName}</p>
                             <p className="font-semibold text-sm text-[#6A9C89] ">{doctor.specialization}</p>
-                            <p className="text-xs text-neutral-500 ">{doctor.rating} (170+ Reviews)</p>
+                            <p className="text-xs text-neutral-500 ">{doctor.rating} ({doctor.reviewCount} Reviews)</p>
                         </div>
                     </div>
                 ))}

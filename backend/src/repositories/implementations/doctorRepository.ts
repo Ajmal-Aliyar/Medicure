@@ -1,7 +1,8 @@
-import { ICreateUser, IDoctorDocument, IDoctorRepository, IProfileVerificationInput } from "../../types/IDoctorInterface";
+import { ICreateUser, IDoctorDocument, IProfileVerificationInput } from "../../types/IDoctorInterface";
 import { IDoctor } from "../../models/doctor/doctorInterface";
 import { DoctorModel } from "../../models/doctor/doctorModel";
 import mongoose, { DeleteResult, UpdateResult } from "mongoose";
+import { IDoctorRepository } from "../interfaces/IDoctorRepostory";
 
 
 
@@ -38,7 +39,7 @@ export class DoctorRepository implements IDoctorRepository {
             const doctors = await DoctorModel.find({ isApproved: true })
                 .skip(skip)
                 .limit(limit)
-                .select('rating profileImage fullName specialization')
+                .select('rating profileImage fullName specialization reviewCount')
                 .lean();
     
             const hasMore = doctors.length === limit;
@@ -182,6 +183,23 @@ export class DoctorRepository implements IDoctorRepository {
 
     async unblock (_id:string): Promise<UpdateResult> {
         return await DoctorModel.updateOne({_id},{$set:{isBlocked: false}})
+    }
+
+    async getTopDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
+        try {
+            const doctors = await DoctorModel.find({ isApproved: true })
+                .skip(skip)
+                .limit(limit)
+                .select('profileImage fullName specialization languageSpoken yearsOfExperience rating reviewcount fees')
+                .lean();
+    
+            const hasMore = doctors.length === limit;
+    
+            return { data: doctors, hasMore };
+        } catch (error) {
+            console.error("Error fetching doctors:", error);
+            throw new Error("Unable to fetch doctors");
+        }
     }
 
 }

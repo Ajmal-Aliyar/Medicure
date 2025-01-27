@@ -25,6 +25,7 @@
     "gsap": "^3.12.5",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.474.0",
     "postcss": "^8.4.49",
     "react": "^19.0.0",
     "react-cropper": "^2.3.3",

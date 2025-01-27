@@ -3,12 +3,16 @@ import { IPatientServices } from "../interfaces/IPatientServices";
 import { IPatientAddress } from "../../types/IPatientInterface";
 import { IPatient } from "../../models/patient/patientInterface";
 import { deleteCloudinaryImages, extractPublicId } from "../../utils/CloudinaryUtil";
+import { IDoctorRepository } from "../../repositories/interfaces/IDoctorRepostory";
+import { IDoctor } from "../../models/doctor/doctorInterface";
 
 export class PatientServices implements IPatientServices {
     private patientRepository: IPatientRepository;
+    private doctorRepository: IDoctorRepository;
 
-    constructor(patientRepository: IPatientRepository) {
+    constructor(patientRepository: IPatientRepository, doctorRepository: IDoctorRepository ) {
         this.patientRepository = patientRepository
+        this.doctorRepository = doctorRepository
     }
 
     async getProfile(_id: string): Promise<Partial<IPatient> | null> {
@@ -82,5 +86,28 @@ export class PatientServices implements IPatientServices {
                 : { message: 'An unexpected error occurred. Please try again later.', statusCode: 500 };
         }
     }
+
+   async getTopDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
+           try {
+               const approvedDoctors = await this.doctorRepository.getTopDoctors(skip, limit);
+               console.log(approvedDoctors,'asdfasdf')
+   
+               if (!approvedDoctors.data.length) {
+                   throw new Error('No approved doctors found.');
+               }
+   
+               return approvedDoctors;
+           } catch (error: any) {
+               console.error('Error fetching approved doctors:', error);
+   
+               if (error.name === 'MongoError') {
+                   throw new Error('Database error occurred while fetching approved doctors.');
+               } else if (error instanceof TypeError) {
+                   throw new Error('Unexpected data processing error occurred.');
+               } else {
+                   throw new Error('An unexpected error occurred. Please try again later.');
+               }
+           }
+       }
     
 }

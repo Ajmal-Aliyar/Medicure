@@ -1,12 +1,12 @@
 import HoneyComb from "../common/HoneyComb";
 import { RootState } from '../../store/store';
-import SuccessModal from "../common/SuccessMessage";
 import ErrorMessage from "../common/ErrorMessage";
 import { useEffect, useRef, useState } from "react";
 import { login } from "../../store/slices/commonSlices/AuthSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { IVerificationOTPProp } from "../../types/authType";
 import { sendOTPApi, verifyOtpAndRegisterApi, verifyOtpApi } from "../../sevices/authRepository";
+import RegisteredModal from "./RegisteredModal";
 
 const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPassword, handleChangePassword }) => {
   const [timer, setTimer] = useState(30);
@@ -177,9 +177,10 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
         {!loading ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
         {serverError === '' || loading ? <HoneyComb /> : ''}
       </div>
-      {/* <div className={`${message !== ''? "" :"hidden"}`}>
-        <SuccessModal handleModal={handleModal} message={message}/>
-      </div> */}
+
+      <div className={`${message !== ''? "" :"hidden"} fixed top-0 left-0  flex justify-center items-center w-screen h-screen`}>
+        <RegisteredModal handleModal={handleModal} message={message}/>
+      </div>
     </form>
 
   );
