@@ -33,7 +33,7 @@ const WarningMessage: React.FC<ErrorMessageProps> = ({ message, handleModal }) =
     };
 
     return (
-        <div className={`anim mb-20 z-50 flex flex-col justify-center items-center  min-h-24 overflow-hidden bg-[#e7e7e7ee] shadow-lg max-w-[500px] rounded-md p-4`}>
+        <div className={`anim mb-20 z-50 flex flex-col justify-center items-center  min-h-24 overflow-hidden bg-[#e7e7e7] shadow-lg max-w-[500px] rounded-md p-4`}>
             <svg
             className='max-w-16'
                 fill="none"

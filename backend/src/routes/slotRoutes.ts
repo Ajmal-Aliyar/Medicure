@@ -15,4 +15,6 @@ const router = Router();
 router.get('/get-slot-details', tokenMiddleware, slotController.getSlots);
 router.put('/manage-slots', tokenMiddleware, slotController.manageSlots);
 
+router.get('/doctorSlotDetails/:doctorId', tokenMiddleware, slotController.doctorSlotDetails)
+
 export default router;

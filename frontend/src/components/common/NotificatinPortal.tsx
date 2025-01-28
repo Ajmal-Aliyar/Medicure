@@ -38,7 +38,7 @@ const NotificationPortal: React.FC = () => {
             return <div className='w-screen bg-gradient-to-t absolute top-0 z-50 flex flex-col items-center'><SuccessModal message={success} handleModal={handleSuccess}/></div>
         }
         if (warning) {
-            return <div className={`w-screen h-screen bg-gradient-to-t from-[#00000040] ${warning ? "bg-opacity-100" : 'bg-opacity-0'} duration-500 fixed top-0 flex justify-center items-center`}><WarningMessage message={warning} handleModal={handleWarning}/></div>
+            return <div className={`w-screen h-screen bg-gradient-to-t from-[#00000059] ${warning ? "bg-opacity-100" : 'bg-opacity-0'} duration-500 fixed top-0 flex justify-center items-center z-50`}><WarningMessage message={warning} handleModal={handleWarning}/></div>
         }
     
         return null;

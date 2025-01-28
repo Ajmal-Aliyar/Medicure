@@ -1,10 +1,11 @@
 import doctorVerifications from './routes/verificationRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
+import specialization from './routes/specializationRoutes';
 import patientRouter from './routes/patientRoutes';
 import doctorRouter from './routes/doctorRoutes';
 import adminRouter from './routes/adminRoutes';
-import slotRouter from "./routes/slot.routes";
 import authRouter from './routes/authRoutes';
+import slotRouter from "./routes/slotRoutes";
 import cookieParser from 'cookie-parser';
 import mongoDB from './config/db';
 import express from 'express';
@@ -27,6 +28,7 @@ app.use(cors({
 }));
 
 app.use('/api/doctor/verification', doctorVerifications)
+app.use('/api/specialization', specialization)
 app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
 app.use('/api/admin', adminRouter)

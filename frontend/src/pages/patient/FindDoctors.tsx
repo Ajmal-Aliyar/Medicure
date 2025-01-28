@@ -4,9 +4,10 @@ import FindDoctorAnimation from '../../components/patient/findDoctors/FindDoctor
 import Specializations from '../../components/patient/findDoctors/Specializations'
 import TopSpecialists from '../../components/patient/findDoctors/TopSpecialists'
 
+
 const FindDoctors:React.FC = () => {
   return (
-    <div className='w-full pt-[74px] px-6 lg:px-28'>
+    <div className='w-full pt-[74px] px-2 lg:px-28'>
       <HeaderContent />
       <Specializations />
       <TopSpecialists />

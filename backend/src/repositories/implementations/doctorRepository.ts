@@ -43,7 +43,6 @@ export class DoctorRepository implements IDoctorRepository {
                 .lean();
     
             const hasMore = doctors.length === limit;
-    
             return { data: doctors, hasMore };
         } catch (error) {
             console.error("Error fetching doctors:", error);
@@ -190,7 +189,7 @@ export class DoctorRepository implements IDoctorRepository {
             const doctors = await DoctorModel.find({ isApproved: true })
                 .skip(skip)
                 .limit(limit)
-                .select('profileImage fullName specialization languageSpoken yearsOfExperience rating reviewcount fees')
+                .select('profileImage fullName specialization languageSpoken yearsOfExperience rating reviewCount fees')
                 .lean();
     
             const hasMore = doctors.length === limit;

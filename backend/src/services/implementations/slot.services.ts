@@ -43,6 +43,16 @@ export class SlotService implements ISlotService {
         }
     }
     
+    async fetchDoctorSlotDetails(doctorId: string): Promise<{ slots: ISlotSchema[]}> {
+        try {
+            console.log('Fetching slots and fee for doctor:', doctorId);
+            const slots = await this.slotRepository.getAllSlots(doctorId)
+            return { slots };
+        } catch (error: any) {
+            throw new Error(`Error fetching slots: ${error.message || error}`);
+        }
+    }
+    
     private async deleteSlots(slotIds: string[]): Promise<void> {
         await Promise.all(slotIds.map(_id => this.slotRepository.deleteSlot(_id)));
     }

@@ -61,7 +61,7 @@ const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLo
                 } else {
                     setSlots(prevSlots => [
                         ...prevSlots,
-                        {  startTime, endTime, slotLimit:Number(slotLimit), avgConsultTime : per.toFixed(2) }
+                        {  startTime, endTime, slotLimit:Number(slotLimit), avgConsultTime : per.toFixed(2)}
                     ]);
                     setStartTime('');
                     setEndTime('');

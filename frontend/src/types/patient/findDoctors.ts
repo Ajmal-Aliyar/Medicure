@@ -6,6 +6,15 @@ export interface IFetchTopDoctors {
     languageSpoken: string;
     yearsOfExperience: number;
     rating: number;
-    reviewcount: number;
+    reviewCount: number;
     fees: number;
+}
+
+export interface IDoctorSotDetails {
+    _id: string | null;
+    startTime: string;
+    endTime: string;
+    slotLimit: number;
+    bookedSlot: number
+    avgConsultTime: string;
 }

@@ -17,7 +17,10 @@ const initialState: IPatientProfile = {
         city: '',
         country: '',
         pincode: ''
-    }
+    },
+    _id: '',
+    medicalHistory: [],
+    isBlocked: false
 };
 
 const patientProfile = createSlice({

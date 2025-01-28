@@ -17,25 +17,25 @@ const HomeAnimation = () => {
         },'anime1')
         tl.from('.doct-1', {
             y: 80,
-            duration: 2
+            duration: 1.5
         },'anime1'); 
         tl.from('.doct-2', {
             y: 100,
-            duration: 2
+            duration: 1.5
         },'anime1');
+        
+        
         tl.from('.top-badge',{
             opacity: 0,
             x:-100,
             scale:0.4,
-            duration: 0.7,
-        },'anime2')
-        
-        
+            duration: 0.8,
+        },'-=0.9')
         tl.to('.book-bar',{
             y:-50,
             duration:2,
             ease:'bounce'
-        },'-=0.4')
+        },'-=0.6')
         
         tl.to('.mid-img ',{
             scale:1.3,

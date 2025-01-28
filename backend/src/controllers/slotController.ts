@@ -11,12 +11,12 @@ export class SlotController implements ISlotController {
 
         this.getSlots = this.getSlots.bind(this);
         this.manageSlots = this.manageSlots.bind(this);
+        this.doctorSlotDetails = this.doctorSlotDetails.bind(this)
     }
 
     async getSlots(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { _id } = req.client
-            console.log('worked 1',_id)
             const slots = await this.slotService.getSlots(_id);
             res.status(200).json(slots);
         } catch (error) {
@@ -32,6 +32,16 @@ export class SlotController implements ISlotController {
             res.status(200).json({ message: 'Slots managed successfully' });
         } catch (error) {
             res.status(500).json({ message: error.message });
+        }
+    }
+
+    async doctorSlotDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { doctorId } = req.params
+            const slots = await this.slotService.fetchDoctorSlotDetails(doctorId);
+            res.status(200).json(slots);
+        } catch (error) {
+            next(error)
         }
     }
 }
