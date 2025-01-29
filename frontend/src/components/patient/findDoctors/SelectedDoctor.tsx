@@ -3,6 +3,10 @@ import { IDoctorSotDetails, IFetchTopDoctors } from '../../../types/patient/find
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { fetchSlotDetailsApi } from '../../../sevices/patient/findDoctors'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../store/store'
+import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice'
 
 interface SelectedDoctorProps {
     doctor: IFetchTopDoctors
@@ -11,6 +15,11 @@ interface SelectedDoctorProps {
 const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
     const [slots, setSlots] = useState<IDoctorSotDetails[]>([])
     const [selectedSlot, setSelectedSlot] = useState<IDoctorSotDetails | null>(null)
+
+    const user = useSelector((state: RootState) => state.auth)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     useEffect(() => {
         const fetchSlotDetails = async () => {
             const { slots } = await fetchSlotDetailsApi(doctor._id)
@@ -21,6 +30,18 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
         setSelectedSlot(null)
         fetchSlotDetails()
     }, [doctor])
+
+    const handleAppointment = () => {
+        if (user.role === 'user' && user.isAuthenticated) {
+            alert('user is there')
+        } else {
+            dispatch(setWarning("You need to log in to book an appointment."));
+            dispatch(setExtra(() => {
+                dispatch(clearWarning());
+                navigate('/user/auth');
+            }));
+        }
+    };
 
 
 
@@ -77,11 +98,11 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
                             key={index}
                             className={`p-4 bg-white border border-gray-300 rounded-lg min-w-[200px]   relative
         ${selectedSlot && selectedSlot._id === slot._id ? 'outline outline-2 outline-[#51aff6ce]' : ''} 
-        ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.startTime).getTime() < Date.now())) ? 'pointer-events-none ' : 'shadow-md'}`}
-                            onClick={() => (slot.slotLimit > slot.bookedSlot && convertTimeStringToDate(slot.startTime).getTime() > Date.now()) && setSelectedSlot(slot)}
+        ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.endTime).getTime() < Date.now() + (10 * 60 * 1000))) ? 'pointer-events-none ' : 'shadow-md'}`}
+                            onClick={() => (slot.slotLimit > slot.bookedSlot && convertTimeStringToDate(slot.endTime).getTime() > Date.now() + (10 * 60 * 1000)) && setSelectedSlot(slot)}
                         >
-                            <div className={`w-full h-full absolute bg-[#36363642]  left-0 top-0 rounded-md flex justify-center items-center text-red-700 font-semibold
-                                ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.startTime).getTime() < Date.now())) ? 'pointer-events-none ' : 'hidden'}`}><p className='bg-white px-1'>not available</p></div>
+                            <div className={`w-full h-full absolute bg-[#36363642]  left-0 top-0 rounded-md flex justify-center items-center text-red-700 font-semibold backdrop-blur-sm
+                                ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.endTime).getTime() < Date.now() + (10 * 60 * 1000))) ? 'pointer-events-none ' : 'hidden'}`}><p className='bg-white px-1'>not available</p></div>
                             <div className='mb-2 flex gap-2'>
                                 <p className='font-semibold text-[#0c0b3eb5]'>Start Time:</p>
                                 <p>{convertTo12HourFormat(slot.startTime)}</p>
@@ -119,7 +140,7 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
                         </span>
                     </p>
 
-                    <div className='px-2 bg-[#51aff6ce]  text-white rounded-md font-semibold text-sm py-1 cursor-pointer active:scale-95 '>take appointment</div>
+                    <div className='px-2 bg-[#51aff6ce]  text-white rounded-md font-semibold text-sm py-1 cursor-pointer active:scale-95 ' onClick={handleAppointment}>take appointment</div>
                 </div>
             )}
 

@@ -1,4 +1,4 @@
-import { faRightFromBracket, faBars, faCalendarAlt, faThLarge, faUserDoctor, faUserAlt } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket, faBars, faCalendarAlt, faThLarge, faUserDoctor, faUserAlt, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,6 +27,7 @@ function SlideMenu() {
         { icon: faUserDoctor, label: 'Doctors', path: '/admin/doctors' },
         { icon: faUserAlt, label: 'Patients', path: '/admin/patients' },
         { icon: faCalendarAlt, label: 'Appointments', path: '/admin/appointments' },  
+        { icon: faLightbulb, label: 'Specialization', path: '/admin/specialization' },  
         { icon: faMoneyBill1, label: 'Finance', path: '/admin/finance' },
     ];
 
@@ -39,7 +40,7 @@ function SlideMenu() {
 
     return (
         <div
-            className={`lg:h-screen bg-[#16423C] fixed lg:relative flex flex-col z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}
+            className={`lg:h-screen bg-gradient-to-r from-[#266256] to-[#16423C] fixed lg:relative flex flex-col z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}
         >
              
             <nav

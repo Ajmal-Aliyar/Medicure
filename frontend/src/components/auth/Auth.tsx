@@ -264,7 +264,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
 
 
             <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
-                {!loading ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
+                {!loading && serverError !== ''  ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
                 {loading ? <HoneyComb /> : ''}
             </div>
 

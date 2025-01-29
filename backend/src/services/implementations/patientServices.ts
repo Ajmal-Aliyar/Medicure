@@ -87,9 +87,9 @@ export class PatientServices implements IPatientServices {
         }
     }
 
-   async getTopDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
+   async getTopDoctors(skip: number, limit: number, specialization: string | null): Promise<{ data: IDoctor[], hasMore: boolean }> {
            try {
-               const approvedDoctors = await this.doctorRepository.getTopDoctors(skip, limit);
+               const approvedDoctors = await this.doctorRepository.getTopDoctors(skip, limit, specialization);
                console.log(approvedDoctors,'asdfasdf')
    
                if (!approvedDoctors.data.length) {

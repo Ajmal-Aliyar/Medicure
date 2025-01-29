@@ -155,7 +155,7 @@ function Menu() {
                         Contact
                     </NavLink>
                 </span>
-                <span className={`${isAuthenticated ? '' : 'hidden'} text-end space-y-3`}>
+                <span className={`${isAuthenticated && role === 'user' ? '' : 'hidden'} text-end space-y-3`}>
                     <UserDriveBar />
                 </span>
             </div>

@@ -184,9 +184,16 @@ export class DoctorRepository implements IDoctorRepository {
         return await DoctorModel.updateOne({_id},{$set:{isBlocked: false}})
     }
 
-    async getTopDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
+    async getTopDoctors(skip: number, limit: number, specialization: string | null): Promise<{ data: IDoctor[], hasMore: boolean }> {
         try {
-            const doctors = await DoctorModel.find({ isApproved: true })
+            const query: any = { isApproved: true };
+    
+            if (specialization) {
+                query.specialization = { $regex: new RegExp(specialization, 'i') };
+            }
+    
+            const doctors = await DoctorModel.find(query)
+                .sort({ rating: -1 })
                 .skip(skip)
                 .limit(limit)
                 .select('profileImage fullName specialization languageSpoken yearsOfExperience rating reviewCount fees')
@@ -200,5 +207,6 @@ export class DoctorRepository implements IDoctorRepository {
             throw new Error("Unable to fetch doctors");
         }
     }
+    
 
 }

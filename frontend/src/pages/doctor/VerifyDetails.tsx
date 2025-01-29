@@ -59,7 +59,6 @@ function VerifyDetails() {
             <Banner />
             <Content handleModal={handleModal} />
 
-            {/* updates */}
             {isModalOpen === 'Profile Image' && 
             <EditProfilePortal onClose={setIsModalOpen}>
                 <ImageUploader setEditProfile={setIsModalOpen} profileImage={doctor?.profileImage} requestUpdateProfileImage={requestUpdateProfileImage} />

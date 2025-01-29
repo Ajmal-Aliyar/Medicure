@@ -6,6 +6,7 @@ import UnAuthorizedRoute from "./UnAuthorizedRoute";
 import AuthorizedRoute from "./AuthorizedRoute";
 import Doctors from "../pages/admin/Doctors";
 import Patients from "../pages/admin/Patients";
+import Specialization from "../pages/admin/Specialization";
 
 function AdminRoutes() {
   return (
@@ -23,6 +24,7 @@ function AdminRoutes() {
         <Route path="doctors" element={<AuthorizedRoute allowedRole='admin'><Doctors /></AuthorizedRoute>} />
         <Route path="patients" element={<AuthorizedRoute allowedRole='admin'><Patients /></AuthorizedRoute>} />
         <Route path="appointments" element={<AuthorizedRoute allowedRole='admin'><Dashboard /></AuthorizedRoute>} />
+        <Route path="specialization" element={<AuthorizedRoute allowedRole='admin'><Specialization /></AuthorizedRoute>} />
         <Route path="finance" element={<AuthorizedRoute allowedRole='admin'><Dashboard /></AuthorizedRoute>} />
       </Route>
 

@@ -49,7 +49,7 @@ const WarningMessage: React.FC<ErrorMessageProps> = ({ message, handleModal }) =
                 ></path>
             </svg>
             <p className="min-w-[300px] text-center mt-1.5 text-xl font-bold leading-8 mr-3 overflow-hidden text-ellipsis whitespace-nowrap">
-                Are You Sure !
+            Please confirm !
             </p>
             <p className="overflow-hidden leading-5 p-4 font-medium text-center max-w-[300px]">
                 {message}

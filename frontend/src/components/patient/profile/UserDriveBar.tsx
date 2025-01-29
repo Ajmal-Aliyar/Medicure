@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch } from 'react-redux';
 import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice';
 import { logOutUser } from '../../../store/slices/commonSlices/AuthSlice';

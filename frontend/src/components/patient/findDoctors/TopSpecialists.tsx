@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { clearWarning, setError, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice';
+import { setError } from '../../../store/slices/commonSlices/notificationSlice';
 import { fetchTopDoctorsApi } from '../../../sevices/patient/findDoctors';
 import { IFetchTopDoctors } from '../../../types/patient/findDoctors';
-import { useSelector } from 'react-redux'
-import { RootState } from '../../../store/store';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import SelectedDoctor from './SelectedDoctor';
 import { X } from 'lucide-react';
 
@@ -14,16 +12,20 @@ const TopSpecialists: React.FC = () => {
     const [doctors, setDoctors] = useState<IFetchTopDoctors[]>([]);
     const [showMore, setShowMore] = useState<boolean>(false)
     const [selectedDoctor, setSelectedDoctor] = useState<null | IFetchTopDoctors>(null)
-    const userId = useSelector((state: RootState) => state.auth._id)
+    const { specialization } = useParams();
     const dispatch = useDispatch();
-    const navigate = useNavigate()
     const [skip, setSkip] = useState(0);
     const limit = 3;
 
     useEffect(() => {
         const getDoctors = async () => {
             try {
-                const response = await fetchTopDoctorsApi(skip, limit);
+                let response: { data: IFetchTopDoctors[], hasMore: boolean };
+                if (specialization) {
+                    response = await fetchTopDoctorsApi(skip, limit, specialization);
+                } else {
+                    response = await fetchTopDoctorsApi(skip, limit);
+                }
                 setShowMore(response.hasMore)
                 setDoctors((prevDoctors) => [...prevDoctors, ...response.data]);
             } catch (error: any) {
@@ -32,27 +34,17 @@ const TopSpecialists: React.FC = () => {
         };
         getDoctors();
 
-    }, [skip, limit, dispatch]);
+    }, [skip, limit, dispatch, specialization]);
 
-    const handleAppointment = (doctor: IFetchTopDoctors) => {
-        if (userId) {
-            setSelectedDoctor(doctor);
-            setTimeout(() => {
-                const selectedCard = document.getElementById(`doctor-${doctor._id}aw23`);
-                if (selectedCard) {
-                    selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 100);
-        } else {
-            dispatch(setWarning("You need to log in to book an appointment."));
-            dispatch(setExtra(() => {
-                dispatch(clearWarning());
-                navigate('/user/auth');
-            }));
-        }
+    const handleSetDoctor = (doctor: IFetchTopDoctors) => {
+        setSelectedDoctor(doctor)
+        setTimeout(() => {
+            const selectedCard = document.getElementById(`doctor-${doctor._id}aw23`);
+            if (selectedCard) {
+                selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
     };
-    
-
 
     const loadMore = () => {
         setSkip(prevSkip => prevSkip + limit);
@@ -73,12 +65,12 @@ const TopSpecialists: React.FC = () => {
 
                     {doctors.map((doctor) => (
                         <div
-                        id={`doctor-${doctor._id}aw23`}
-                        key={doctor._id}
-                        className={`${selectedDoctor && selectedDoctor._id !== doctor._id ? 'bg-opacity-5 bg-black opacity-35' : 'bg-[#f8fbfb] '} 
+                            id={`doctor-${doctor._id}aw23`}
+                            key={doctor._id}
+                            className={`${selectedDoctor && selectedDoctor._id !== doctor._id ? 'bg-opacity-5 bg-black opacity-35' : 'bg-[#f8fbfb] '} 
                         duration-300 flex p-2 rounded-md items-center relative mb-2 shadow-md w-full min-w-[380px] md:min-w-[380px] md:w-[380px]`}
-                      >
-                      
+                        >
+
                             <div className='flex gap-2 flex-wrap'>
                                 <div className='max-w-[130px] '>
                                     <img src={doctor.profileImage} className='rounded-md' alt="" />
@@ -95,14 +87,14 @@ const TopSpecialists: React.FC = () => {
                                 </div>
                                 <div className='flex justify-between w-full'>
                                     <p className='font-semibold text-md text-[#0c0b3eb5]'>Fees : {doctor.fees}</p>
-                                    <button className='px-2 bg-[#51aff6ce] text-white text-sm font-medium rounded-md shadow-md active:scale-95 duration-300' onClick={() => handleAppointment(doctor)}>Book now</button>
+                                    <button className='px-2 bg-[#51aff6ce] text-white text-sm font-medium rounded-md shadow-md active:scale-95 duration-300' onClick={() => handleSetDoctor(doctor)}>Book now</button>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
                 <div className={`${selectedDoctor ? '' : 'hidden'} w-full relative`}>
-                    {selectedDoctor && <SelectedDoctor doctor={selectedDoctor} /> }
+                    {selectedDoctor && <SelectedDoctor doctor={selectedDoctor} />}
                     <div className='absolute top-2 right-3' onClick={() => setSelectedDoctor(null)}><X size={28} color="#51aff6ce" strokeWidth={3} /></div>
                 </div>
             </div>

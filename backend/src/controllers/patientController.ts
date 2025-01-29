@@ -55,8 +55,9 @@ export class PatientController {
         try {
             const skip = parseInt(req.query.skip as string) || 0;
             const limit = parseInt(req.query.limit as string) || 5;
-            console.log(skip,limit,'1')
-            const approvedDoctors = await this.patientServices.getTopDoctors(skip, limit);
+            const specialization = req.query?.specialization ? req.query.specialization as string : null;
+            
+            const approvedDoctors = await this.patientServices.getTopDoctors(skip, limit, specialization);
 
             res.status(200).json({
                 success: true,
