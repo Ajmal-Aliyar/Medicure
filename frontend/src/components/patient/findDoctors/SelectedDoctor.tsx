@@ -6,7 +6,8 @@ import { fetchSlotDetailsApi } from '../../../sevices/patient/findDoctors'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
-import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice'
+import { setError, setLoading } from '../../../store/slices/commonSlices/notificationSlice'
+import { createCheckoutSessionApi } from '../../../sevices/payment/payment'
 
 interface SelectedDoctorProps {
     doctor: IFetchTopDoctors
@@ -31,15 +32,29 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
         fetchSlotDetails()
     }, [doctor])
 
-    const handleAppointment = () => {
-        if (user.role === 'user' && user.isAuthenticated) {
-            alert('user is there')
-        } else {
-            dispatch(setWarning("You need to log in to book an appointment."));
-            dispatch(setExtra(() => {
-                dispatch(clearWarning());
-                navigate('/user/auth');
-            }));
+    const handleAppointment = async () => {
+        try {
+            dispatch(setLoading(true))
+            if (user.role === 'user' && user.isAuthenticated && selectedSlot) {
+                const response = await createCheckoutSessionApi({
+                    doctorName: doctor.fullName,
+                    specialization: doctor.specialization,
+                    startTime: convertTo12HourFormat(selectedSlot.endTime),
+                    endTime: convertTo12HourFormat(selectedSlot.endTime),
+                    duration: selectedSlot.avgConsultTime,
+                    fees: doctor.fees
+                })
+                dispatch(setLoading(false))
+                const { sessionUrl } =  response
+                window.location.href = sessionUrl;
+            } else {
+                dispatch(setError("You need to log in to book an appointment."));
+            }
+        } catch (error: any) {
+            dispatch(setError(error.message));
+        } finally {
+            dispatch(setLoading(false))
+
         }
     };
 

@@ -8,6 +8,7 @@ import Profile from '../pages/patient/Profile';
 import AuthorizedRoute from './AuthorizedRoute';
 import FindDoctors from '../pages/patient/FindDoctors';
 import Specialization from '../pages/patient/Specialization';
+import Checkout from '../components/patient/common/PaymentButton';
 
 
 function UserRoutes() {
@@ -21,6 +22,7 @@ function UserRoutes() {
           <Route path="profile" element={<AuthorizedRoute allowedRole={'user'}><Profile/></AuthorizedRoute>}/>
           <Route path='find-doctors' element={<PublicRoutes><FindDoctors/></PublicRoutes>}/>
           <Route path='find-doctors/:specialization' element={<PublicRoutes><Specialization/></PublicRoutes>}/>
+          <Route path='checkout' element={<Checkout />} />
         </Route>
     </Routes>
    

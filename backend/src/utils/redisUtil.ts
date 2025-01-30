@@ -46,29 +46,3 @@ export const deleteRedisData = async (key: string) => {
         console.error(`Error deleting data for ${key}:`, error);
     }
 };
-
-export const incRedisData = async (key: string) => {
-    try {
-        await redisClient.incr(key);
-    } catch (error) {
-        console.error(`Error increasing data for ${key}:`, error);
-    }
-};
-
-export const expRedisData = async (key: string, time: number) => {
-    try {
-        await redisClient.expire(key, time);
-    } catch (error) {
-        console.error(`Error setting expiration data for ${key}:`, error);
-    }
-};
-
-export const keyRedisExists = async (key: string): Promise<boolean> => {
-    try {
-        const exists = await redisClient.exists(key);
-        return exists === 1;
-    } catch (error) {
-        console.error(`Error checking existence of ${key}:`, error);
-        return false;
-    }
-};

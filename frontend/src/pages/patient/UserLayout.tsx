@@ -1,4 +1,4 @@
-import Menu from "../../components/patient/Menu"
+import Menu from "../../components/patient/common/Menu"
 import { Outlet } from "react-router-dom"
 
 

@@ -1,4 +1,4 @@
-import { setRedisData, getRedisData, deleteRedisData} from './redisUtil';
+import { setRedisData, getRedisData, deleteRedisData } from './redisUtil';
 // const LOCK_TIMEOUT = 1800;    
 
 export const checkBruteForce = async (email: string,MAX_ATTEMPTS: number,LOCK_TIMEOUT: number): Promise<void> => {

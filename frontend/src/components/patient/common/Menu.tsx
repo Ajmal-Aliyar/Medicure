@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
-import { RootState } from '../../store/store';
+import { RootState } from '../../../store/store';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import UserDriveBar from './profile/UserDriveBar';
+import UserDriveBar from '../profile/UserDriveBar';
 
 function Menu() {
     const { isAuthenticated, role } = useSelector((state: RootState) => state?.auth);

@@ -2,8 +2,8 @@ import { PatientRepository } from "../repositories/implementations/patientReposi
 import { PatientServices } from "../services/implementations/patientServices";
 import { PatientController } from "../controllers/patientController";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
-import { Router } from "express";
 import { DoctorRepository } from "../repositories/implementations/doctorRepository";
+import { Router } from "express";
 
 const router = Router();
 

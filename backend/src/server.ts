@@ -2,6 +2,7 @@ import doctorVerifications from './routes/verificationRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
 import specialization from './routes/specializationRoutes';
 import patientRouter from './routes/patientRoutes';
+import paymentRouter from './routes/paymentRoutes';
 import doctorRouter from './routes/doctorRoutes';
 import adminRouter from './routes/adminRoutes';
 import authRouter from './routes/authRoutes';
@@ -27,8 +28,10 @@ app.use(cors({
   credentials: true
 }));
 
+
 app.use('/api/doctor/verification', doctorVerifications)
 app.use('/api/specialization', specialization)
+app.use('/api/payment', paymentRouter)
 app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
 app.use('/api/admin', adminRouter)
