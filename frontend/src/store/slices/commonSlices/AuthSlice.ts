@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../../../utils/axiosInstance';
 
 interface AuthState {
-  _id?: string;
+  _id: string;
   email: string;
   role: string;
   isApproved?: boolean;
@@ -33,7 +33,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setData: (state, action: PayloadAction<{ _id?: string; email: string; role: string; isApproved?: boolean }>) => {
+    setData: (state, action: PayloadAction<{ _id: string; email: string; role: string; isApproved?: boolean }>) => {
       const { _id, email, role, isApproved } = action.payload;
       state._id = _id;
       state.email = email;

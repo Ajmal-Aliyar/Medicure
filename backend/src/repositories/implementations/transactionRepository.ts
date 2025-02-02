@@ -1,12 +1,13 @@
 import { TransactionModel } from "../../models/transaction/transactionModel";
-import { ITransactionDocument } from "../interfaces/ITransactionRepository";
+import { ITransactionDocument, ITransactionRepository } from "../interfaces/ITransactionRepository";
 
 
 
-export class TransactionRepository {
+export class TransactionRepository implements ITransactionRepository{
 
-    async createTransaction (patientId: string, doctorId: string, amount: number, status: string): Promise<ITransactionDocument> {
-        const transaction =  new TransactionModel({patientId, doctorId, amount, status})
+    async createTransaction (senderId: string, recieverId: string, amount: number, status: string): Promise<ITransactionDocument> {
+        const transaction =  new TransactionModel({senderId, recieverId, amount, status})
         return await transaction.save()
     }
-}
+
+}   

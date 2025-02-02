@@ -34,29 +34,38 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
 
     const handleAppointment = async () => {
         try {
-            dispatch(setLoading(true))
-            if (user.role === 'user' && user.isAuthenticated && selectedSlot) {
-                const response = await createCheckoutSessionApi({
-                    doctorName: doctor.fullName,
-                    specialization: doctor.specialization,
-                    startTime: convertTo12HourFormat(selectedSlot.endTime),
-                    endTime: convertTo12HourFormat(selectedSlot.endTime),
-                    duration: selectedSlot.avgConsultTime,
-                    fees: doctor.fees
-                })
-                dispatch(setLoading(false))
-                const { sessionUrl } =  response
-                window.location.href = sessionUrl;
+          dispatch(setLoading(true));
+          if (user.role === 'user' && user.isAuthenticated && selectedSlot) {
+            const response = await createCheckoutSessionApi({
+              doctorName: doctor.fullName,
+              specialization: doctor.specialization,
+              startTime: convertTo12HourFormat(selectedSlot.startTime),
+              endTime: convertTo12HourFormat(selectedSlot.endTime),
+              duration: selectedSlot.avgConsultTime,
+              fees: doctor.fees,
+              doctorId: doctor._id,
+              patientId: user._id,
+              slotId: selectedSlot._id || '',
+              appointmentDate: ''
+            });
+    
+            dispatch(setLoading(false));
+            const { sessionUrl } = response;
+    
+            if (sessionUrl) {
+              window.location.href = sessionUrl;
             } else {
-                dispatch(setError("You need to log in to book an appointment."));
+              dispatch(setError('Unable to process payment. Please try again.'));
             }
+          } else {
+            dispatch(setError('You need to log in to book an appointment.'));
+          }
         } catch (error: any) {
-            dispatch(setError(error.message));
+          dispatch(setError(error.message));
         } finally {
-            dispatch(setLoading(false))
-
+          dispatch(setLoading(false));
         }
-    };
+      };
 
 
 

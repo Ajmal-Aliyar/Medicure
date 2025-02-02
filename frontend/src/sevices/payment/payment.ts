@@ -8,6 +8,10 @@ export const createCheckoutSessionApi = async ({
     endTime,
     duration,
     fees,
+    doctorId,
+    patientId,
+    slotId,
+    appointmentDate
 }: IPayment): Promise<{ sessionUrl: string }> => {
     const response = await api.post<{ sessionUrl: string }>('/api/payment/create-checkout-session', {
         doctorName,
@@ -16,6 +20,10 @@ export const createCheckoutSessionApi = async ({
         endTime,
         duration,
         fees,
+        doctorId,
+        patientId,
+        slotId,
+        appointmentDate
     });
     return response.data;
 };

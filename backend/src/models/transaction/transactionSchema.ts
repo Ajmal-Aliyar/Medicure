@@ -4,17 +4,12 @@ import { ITransaction } from './transactionInterface';
 
 
 export const transactionSchema = new Schema<ITransaction>({
-  transactionID: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    default: () => new mongoose.Types.ObjectId(),
-  },
-  patientId: {
-    type: Schema.Types.ObjectId,
+    senderId: {
+    type: String,
     required: true,
   },
-  doctorId: {
-    type: Schema.Types.ObjectId,
+  recieverId: {
+    type: String,
     required: true,
   },
   amount: {

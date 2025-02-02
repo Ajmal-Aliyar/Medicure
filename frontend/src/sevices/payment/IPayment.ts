@@ -5,4 +5,8 @@ export interface IPayment {
     endTime: string;
     duration: string;
     fees: number;
+    doctorId: string;
+    patientId: string;
+    slotId: string
+    appointmentDate: string;
 }
