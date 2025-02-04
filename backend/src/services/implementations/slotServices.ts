@@ -4,6 +4,7 @@ import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
 import { ISlotService } from "../interfaces/ISlotServices";
 import { ISlotSchema } from "../../models/slot/slotInterface";
 import { IDoctorRepository } from "../../repositories/interfaces/IDoctorRepostory";
+import { UpdateResult } from "mongoose";
 
 
 export class SlotService implements ISlotService {
@@ -52,6 +53,35 @@ export class SlotService implements ISlotService {
             throw new Error(`Error fetching slots: ${error.message || error}`);
         }
     }
+
+    async isSlotLimitExceed(slotId: string): Promise<boolean> {
+        try {
+            const slotDetails = await this.slotRepository.getById(slotId);
+    
+            if (!slotDetails) {
+                throw new Error("Couldn't find the specified slot.");
+            }
+
+            return slotDetails.bookedSlot < slotDetails.slotLimit;
+        } catch (error) {
+            console.error('Error checking slot limit:', error);
+            throw(error);
+        }
+    }
+
+    async incBooked(slotId: string): Promise<UpdateResult> {
+        try {
+            const updateSlot = await this.slotRepository.incBooked(slotId);
+            if (updateSlot.modifiedCount === 0) {
+                throw new Error("Failed to increment booked slot. Slot not found or already updated.");
+            }
+            return updateSlot;
+        } catch (error) {
+            console.error('Error incrementing booked slot:', error);
+            throw error;
+        }
+    }
+    
     
     private async deleteSlots(slotIds: string[]): Promise<void> {
         await Promise.all(slotIds.map(_id => this.slotRepository.deleteSlot(_id)));
@@ -69,5 +99,7 @@ export class SlotService implements ISlotService {
             }
         }
     }
+
+    
     
 }

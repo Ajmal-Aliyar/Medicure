@@ -12,9 +12,9 @@ export class AppointmentServices implements IAppointmentServices {
     async createAppointment({ doctorId, patientId, slotId, appointmentDate, status, transactionId }: ICreateAppointment): Promise<IAppointmentDocument> {
         try {
             if (!doctorId || !patientId || !slotId || !appointmentDate || !status || !transactionId) {
+                console.log(doctorId,patientId,slotId,'dl', appointmentDate, status,'st', transactionId)
                 throw new Error("All appointment fields are required.");
             }
-    
             const response = await this.appointmentRepository.createAppointment(
                 doctorId, 
                 patientId, 
@@ -23,7 +23,6 @@ export class AppointmentServices implements IAppointmentServices {
                 status, 
                 transactionId
             );
-    
             if (!response) {
                 throw new Error("Failed to create appointment.");
             }
@@ -33,5 +32,16 @@ export class AppointmentServices implements IAppointmentServices {
             throw error (error);
         }
     }
+    async getUserAppointments(userId: string): Promise<IAppointmentDocument[]> {
+        try {
+            if (!userId) {
+                throw new Error('No user ID provided.');
+            }
+            return await this.appointmentRepository.getUserAppointments(userId);
+        } catch (error: any) {
+            throw error
+        }
+    }
+    
     
 }

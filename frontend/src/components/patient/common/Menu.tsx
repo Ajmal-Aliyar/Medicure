@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import UserDriveBar from '../profile/UserDriveBar';
+import UserDriveBar from './UserDriveBar';
 
 function Menu() {
     const { isAuthenticated, role } = useSelector((state: RootState) => state?.auth);
@@ -104,7 +104,7 @@ function Menu() {
                         onClick={() => setIsOpen(!isOpen)}
                     ></i>
                     <nav
-                        className={`flex-col overflow-hidden justify-center absolute top-full left-0 p-1 px-3 mt-2 bg-[#fefefe] rounded-md right-0 hidden lg:block transition-all duration-500 ease-in-out transform ${isOpen && isAuthenticated && role === 'user' ? 'h-44 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}
+                        className={`flex-col overflow-hidden w-[170px] justify-center absolute top-full left-0 p-1 px-3 mt-2 bg-[#fefefe] rounded-md right-0 hidden lg:block transition-all duration-500 ease-in-out transform ${isOpen && isAuthenticated && role === 'user' ? 'h-56 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}
                     >
                         <UserDriveBar />
                     </nav>

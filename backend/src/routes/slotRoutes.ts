@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { SlotRepository } from "../repositories/implementations/slotRepository";
-import { SlotService } from "../services/implementations/slot.services";
+import { SlotService } from "../services/implementations/slotServices";
 import { SlotController } from "../controllers/slotController";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
 import { DoctorRepository } from "../repositories/implementations/doctorRepository";

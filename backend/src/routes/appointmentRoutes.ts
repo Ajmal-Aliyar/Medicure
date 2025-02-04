@@ -11,4 +11,8 @@ const appointmentServices = new AppointmentServices(appointmentRepository)
 const appointmentController = new AppointmentController(appointmentServices)
 
 
+router.get('/get-appointments', tokenMiddleware, appointmentController.getUserAppointments)
 router.post('/create-appointment', tokenMiddleware, appointmentController.createAppointment)
+
+
+export default router

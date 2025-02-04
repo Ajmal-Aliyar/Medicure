@@ -11,6 +11,7 @@ export class AppointmentController {
         this. appointmentServices = appointmentServices
 
         this.createAppointment = this.createAppointment.bind(this)
+        this.getUserAppointments = this.getUserAppointments.bind(this)
     }
 
     async createAppointment(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -26,6 +27,19 @@ export class AppointmentController {
         } catch (error: any) {
             console.error("Error creating appointment:", error);
             next(error); 
+        }
+    }
+
+    async getUserAppointments(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { _id } = req.client
+            
+            const userAppointmentsList = await this.appointmentServices.getUserAppointments(_id)
+
+            console.log(userAppointmentsList,'response')
+            res.status(201).json({userAppointmentsList})
+        } catch(error: any) {
+            next(error)
         }
     }
     

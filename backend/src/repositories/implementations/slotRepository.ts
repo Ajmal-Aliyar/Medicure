@@ -2,6 +2,7 @@ import { ISlot } from "../../types/ISlotInterface";
 import { ISlotRepository } from "../interfaces/ISlotRepository";
 import { ISlotSchema } from "../../models/slot/slotInterface";
 import { SlotModel } from "../../models/slot/slotModel";
+import { UpdateResult } from "mongoose";
 
 export class SlotRepository implements ISlotRepository {
 
@@ -37,6 +38,13 @@ export class SlotRepository implements ISlotRepository {
             console.error("Error deleting slot:", error);
             throw new Error("Unable to delete slot");
         }
+    }
+
+    async getById(_id: string): Promise<ISlotSchema> {
+        return await SlotModel.findById(_id)
+    }
+    async incBooked(_id: string): Promise<UpdateResult> {
+        return await SlotModel.updateOne({_id},{$inc:{bookedSlot:1}})
     }
 
     async createSlot(slotData: ISlot): Promise<void> {

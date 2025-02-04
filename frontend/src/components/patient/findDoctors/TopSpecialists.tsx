@@ -59,7 +59,7 @@ const TopSpecialists: React.FC = () => {
                 <div
                     className={`flex justify-around py-5 gap-5 ${selectedDoctor
                         ? 'w-full md:w-[400px] lg:w-[400px] md:flex-col md:h-[640px] overflow-x-auto md:overflow-y-auto flex-none'
-                        : 'w-full flex-wrap h-auto flex-grow'
+                        : 'w-full flex-wrap h-auto flex-grow '
                         }`}
                 >
 
@@ -71,7 +71,7 @@ const TopSpecialists: React.FC = () => {
                         duration-300 flex p-2 rounded-md items-center relative mb-2 shadow-md w-full min-w-[380px] md:min-w-[380px] md:w-[380px]`}
                         >
 
-                            <div className='flex gap-2 flex-wrap'>
+                            <div className='flex gap-2 flex-wrap z-10'>
                                 <div className='max-w-[130px] '>
                                     <img src={doctor.profileImage} className='rounded-md' alt="" />
                                 </div>
@@ -85,7 +85,7 @@ const TopSpecialists: React.FC = () => {
                                     <p>Rating</p>
                                     <p className='col-span-2'>{`: ${doctor.rating}% (${doctor.reviewCount} reviews)`}</p>
                                 </div>
-                                <div className='flex justify-between w-full'>
+                                <div className='flex justify-between w-full '>
                                     <p className='font-semibold text-md text-[#0c0b3eb5]'>Fees : {doctor.fees}</p>
                                     <button className='px-2 bg-[#51aff6ce] text-white text-sm font-medium rounded-md shadow-md active:scale-95 duration-300' onClick={() => handleSetDoctor(doctor)}>Book now</button>
                                 </div>

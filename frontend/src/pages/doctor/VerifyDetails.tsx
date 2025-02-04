@@ -12,7 +12,7 @@ import ImageUploader from '../../components/doctor/profile/EditProfileImage';
 import EditProfileSection from '../../components/doctor/profile/EditProfileSection';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfileDetails, updateProfileImageApi } from '../../sevices/doctor/profile';
-import { fetchSlotDetails } from '../../sevices/appointment/slot';
+import { fetchSlotDetails } from '../../sevices/slot/slot';
 import { ISlotSlice } from '../../types/slot/fetchSlot';
 import { setProfileData } from '../../store/slices/doctorSlices/profileSlice';
 import { setFees, setSlotData } from '../../store/slices/doctorSlices/slotSlice';

@@ -1,6 +1,7 @@
 import doctorVerifications from './routes/verificationRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
 import specialization from './routes/specializationRoutes';
+import appointment from './routes/appointmentRoutes'
 import patientRouter from './routes/patientRoutes';
 import paymentRouter from './routes/paymentRoutes';
 import doctorRouter from './routes/doctorRoutes';
@@ -33,6 +34,7 @@ app.use(express.json());
 
 app.use('/api/doctor/verification', doctorVerifications)
 app.use('/api/specialization', specialization)
+app.use('/api/appointment', appointment)
 app.use('/api/payment', paymentRouter)
 app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)

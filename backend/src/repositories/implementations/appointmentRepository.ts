@@ -5,10 +5,73 @@ import { IAppointmentDocument, IAppointmentRepository } from "../interfaces/IApp
 
 export class AppointmentRepository implements IAppointmentRepository {
 
-    async createAppointment (patientId: string, doctorId: string, slotId: string,appointmentDate: Date, status: string, transactionId: string): Promise<IAppointmentDocument> {
+    async createAppointment (doctorId: string, patientId: string, slotId: string,appointmentDate: Date, status: string, transactionId: string): Promise<IAppointmentDocument> {
         const appointment =  new AppointmentModel({doctorId, patientId, slotId, appointmentDate, status, transactionId})
         return await appointment.save()
     }
 
+    async getUserAppointments (patientId: string): Promise<IAppointmentDocument[]> {
+        const result = await AppointmentModel.aggregate([
+            { $match: { patientId } },
+            {
+              $lookup: {
+                from: "doctors",
+                let: { doctorIdStr: "$doctorId" },
+                pipeline: [
+                  {
+                    $addFields: {
+                      doctorIdAsString: { $toString: "$_id" }
+                    }
+                  },
+                  {
+                    $match: {
+                      $expr: { $eq: ["$doctorIdAsString", "$$doctorIdStr"] }
+                    }
+                  },
+                  {
+                    $project: {
+                      fullName: 1,
+                      profileImage: 1,
+                      specialization: 1
+                    }
+                  }
+                ],
+                as: "doctorDetails"
+              }
+            },
+            {
+              $lookup: {
+                from: "slots",
+                let: { slotIdStr: "$slotId" },
+                pipeline: [
+                  {
+                    $addFields: {
+                      slotIdAsString: { $toString: "$_id" }
+                    }
+                  },
+                  {
+                    $match: {
+                      $expr: { $eq: ["$slotIdAsString", "$$slotIdStr"] }
+                    }
+                  },
+                  {
+                    $project: {
+                      startTime: 1,
+                      endTime: 1,
+                      avgConsultTime: 1
+                    }
+                  }
+                ],
+                as: "slotDetails"
+              }
+            },
+
+            { $unwind: { path: "$doctorDetails", preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: "$slotDetails", preserveNullAndEmptyArrays: true } }
+          ]);
+          
+        console.log('result',result)
+        return result
+    }
 
 }
