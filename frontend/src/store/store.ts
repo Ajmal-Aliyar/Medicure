@@ -5,13 +5,14 @@ import doctorProfile from './slices/doctorSlices/profileSlice'
 import slotReducer from './slices/doctorSlices/slotSlice';
 import authReducer from './slices/commonSlices/AuthSlice';
 import { configureStore } from '@reduxjs/toolkit';
-
+import videoConsultReducer from './slices/commonSlices/videoConsultSlice'
 const store = configureStore({
   reducer: {
     slot: slotReducer,
     auth: authReducer,
     doctor: doctorProfile,
     patient: patientProfile,
+    videoConsult: videoConsultReducer,
     notification,
     manageDoctor
   }
