@@ -3,6 +3,7 @@ import store from '../store/store';
 import { setCanditates, setRoomId } from '../store/slices/commonSlices/videoConsultSlice';
 import { ICandidate } from '../store/slices/commonSlices/videoConsultSlice'
 import { handleSignalData, prepareNewPeerConnection } from './webrtc';
+import { setError } from '../store/slices/commonSlices/notificationSlice';
 
 const SERVER: string = 'http://localhost:3000';
 let socket: any = null;
@@ -38,7 +39,7 @@ export const connectWithSocketIOServer = () => {
 
 export const createNewRoom = (candidateId: string) => {
     if (!socket) {
-        console.error('Socket not initialized. Cannot create room.');
+        store.dispatch(setError(`Socket not initialized. Cannot create room.`))
         return;
     }
     socket.emit('create-new-room', { candidateId });
@@ -46,16 +47,15 @@ export const createNewRoom = (candidateId: string) => {
 
 export const joinRoom = (candidateId: string, roomId: string) => {
     if (!socket) {
-        alert('socket missing')
+        store.dispatch(setError(`Socket not initialized. Cannot create room.`))
         return
     }
-    console.log(candidateId, roomId, 'c+r, ids')
     socket.emit('join-room', {candidateId, roomId})
 }
 
 export const signalPeerData = (data: {signal:any, socketId: string}) => {
     if (!socket) {
-        alert('socket missing')
+        store.dispatch(setError(`Socket not initialized. Cannot create room.`))
         return
     }
     console.log('problem ficese')
