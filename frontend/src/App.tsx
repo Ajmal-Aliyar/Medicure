@@ -5,7 +5,9 @@ import AdminRoutes from './routes/AdminRoutes';
 import NotificationPortal from './components/common/NotificatinPortal';
 import VideoCallRoute from './routes/VideoCallRoute';
 
+
 const App = () => {
+
   return (
     <Router>
       <NotificationPortal />
