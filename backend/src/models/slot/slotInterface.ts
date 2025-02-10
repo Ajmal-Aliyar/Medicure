@@ -4,6 +4,7 @@ export interface ISlotSchema extends Document {
     endTime: string;
     slotLimit: number;
     avgConsultTime: string;
+    consulted: number;
     bookedSlot: number;
     createdAt: Date;
 }

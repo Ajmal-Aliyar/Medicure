@@ -12,6 +12,7 @@ export class AppointmentController {
 
         this.createAppointment = this.createAppointment.bind(this)
         this.getUserAppointments = this.getUserAppointments.bind(this)
+        this.getBookedPatients = this.getBookedPatients.bind(this)
     }
 
     async createAppointment(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -39,6 +40,19 @@ export class AppointmentController {
             console.log(userAppointmentsList,'response')
             res.status(201).json({userAppointmentsList})
         } catch(error: any) {
+            next(error)
+        }
+    }
+
+    async getBookedPatients(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { slotId } = req.params
+
+            const userDetails = await this.appointmentServices.getBookedPatients(slotId)
+
+            res.status(200).json({userDetails})
+
+        } catch (error: any) {
             next(error)
         }
     }

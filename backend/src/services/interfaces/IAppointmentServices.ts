@@ -3,6 +3,7 @@ import { IAppointmentDocument } from "../../repositories/interfaces/IAppointment
 export interface IAppointmentServices {
     createAppointment({doctorId, patientId, slotId, appointmentDate, status, transactionId}: ICreateAppointment): Promise<IAppointmentDocument>
     getUserAppointments(userId: string): Promise<IAppointmentDocument[]>
+    getBookedPatients(slotId: string): Promise<any>
 }
 
 

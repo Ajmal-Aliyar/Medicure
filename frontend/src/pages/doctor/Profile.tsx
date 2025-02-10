@@ -16,8 +16,7 @@ import { ISlotSlice } from "../../types/slot/fetchSlot"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../store/store"
 import { useEffect, useState } from "react"
-import { useGSAP } from "@gsap/react"
-import gsap from "gsap"
+import ProfileAnimation from "../../components/doctor/profile/ProfileAnimation"
 
 
 
@@ -27,24 +26,7 @@ function Profile() {
     const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
 
-    useGSAP(() => {
-        const tl = gsap.timeline()
-        tl.from('.firstCard', {
-            x:100,
-            opacity:0,
-            duration:1
-        })
-        tl.from('.secondCard', {
-            x:100,
-            opacity:0,
-            duration:1
-        },'-=0.8')
-        tl.from('.thirdCard', {
-            x:100,
-            opacity:0,
-            duration:1
-        },'-=0.9')
-    })
+    
 
 
     useEffect(() => {
@@ -97,7 +79,7 @@ function Profile() {
                     <AppointmentSetUp handleModal={setEditProfile} setLoading={setLoading} />
                 </ModalAnimation>
             )}
-
+            <ProfileAnimation />
 
         </div>
     )

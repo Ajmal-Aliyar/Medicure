@@ -9,11 +9,13 @@ import { tokenMiddleware } from '../middleware/tokenMiddleware';
 import { SlotService } from '../services/implementations/slotServices';
 import { DoctorRepository } from '../repositories/implementations/doctorRepository';
 import { SlotRepository } from '../repositories/implementations/slotRepository';
+import { PatientRepository } from '../repositories/implementations/patientRepository';
 
 const transactionRepository = new TransactionRepository();
 const transactionServices = new TransactionServices(transactionRepository);
+const patientRepository = new PatientRepository()
 const appointmentRepository = new AppointmentRepository();
-const appointmentServices = new AppointmentServices(appointmentRepository);
+const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository);
 const doctorRepository = new DoctorRepository()
 const slotRepository = new SlotRepository()
 const slotServices = new SlotService(slotRepository, doctorRepository)
