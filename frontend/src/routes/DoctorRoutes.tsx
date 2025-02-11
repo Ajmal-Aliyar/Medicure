@@ -6,6 +6,8 @@ import AuthorizedRoute from "./AuthorizedRoute";
 import Profile from "../pages/doctor/Profile";
 import PrivateRoute from "./PrivateRoute";
 import Auth from "../pages/patient/Auth";
+import Appointments from "../pages/doctor/Appointments";
+
 
 function DoctorRoutes() {
     return (
@@ -14,6 +16,7 @@ function DoctorRoutes() {
             <Route path="/" element={<DoctorLayout />}>
                 <Route path="dashboard" element={<AuthorizedRoute allowedRole='doctor'><Dashboard /></AuthorizedRoute>} />
                 <Route path="profile" element={<AuthorizedRoute allowedRole='doctor'><Profile /></AuthorizedRoute>} />
+                <Route path="appointments" element={<AuthorizedRoute allowedRole='doctor'><Appointments /></AuthorizedRoute>} />
             </Route>
             
             <Route
@@ -28,6 +31,8 @@ function DoctorRoutes() {
                     </UnAuthorizedRoute>
                 }
             />
+
+           
 
         </Routes>
     );

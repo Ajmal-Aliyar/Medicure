@@ -1,12 +1,15 @@
 import { IAppointmentDocument, IAppointmentRepository } from "../../repositories/interfaces/IAppointmentRepository";
+import { IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { IAppointmentServices, ICreateAppointment } from "../interfaces/IAppointmentServices";
 
 
 export class AppointmentServices implements IAppointmentServices {
     private appointmentRepository: IAppointmentRepository;
+    private patientRepository: IPatientRepository;
 
-    constructor(appointmentRepository: IAppointmentRepository) {
+    constructor(appointmentRepository: IAppointmentRepository, patientRepository: IPatientRepository) {
         this.appointmentRepository = appointmentRepository
+        this.patientRepository = patientRepository
     }
 
     async createAppointment({ doctorId, patientId, slotId, appointmentDate, status, transactionId }: ICreateAppointment): Promise<IAppointmentDocument> {
@@ -43,5 +46,27 @@ export class AppointmentServices implements IAppointmentServices {
         }
     }
     
+    async getBookedPatients(slotId: string): Promise<any> {
+        try {
+          const appointments = await this.appointmentRepository.getAppointmentsBySlodId(slotId);
+      console.log(appointments)
+          if (appointments.length === 0) {
+            return [];
+          }
+
+          const userDetails = await Promise.all(
+            appointments.map(async (appointment) => {
+              const patientDetails = await this.patientRepository.getProfileData(appointment.patientId);
+              console.log(appointment.roomId)
+              return {patientDetails, roomId: appointment.roomId}
+            })
+          );
+          return userDetails;
+        } catch (error) {
+          console.error("Error fetching booked patients:", error);
+          throw error;
+        }
+      }
+      
     
 }

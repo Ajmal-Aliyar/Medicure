@@ -16,6 +16,14 @@ export class DoctorService {
         }
     }
 
+    async getProfileImage(_id: string) {
+        try {
+            return await doctorRepository.getProfileImage(_id)
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async updateProfileImg(doctorId: string, newProfileImage: string): Promise<void> {
         try {
             const existingDoctor = await doctorRepository.findByID(doctorId);

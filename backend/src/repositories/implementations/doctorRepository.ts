@@ -76,6 +76,11 @@ export class DoctorRepository implements IDoctorRepository {
         return await DoctorModel.findById(_id)
     }
 
+    async getProfileImage(_id: string): Promise<{ profileImage: string | null }> {
+        const doctor = await DoctorModel.findOne({ _id }, { profileImage: 1 }).lean();
+        return doctor ? { profileImage: doctor.profileImage } : { profileImage: null };
+      }
+      
     async profileImage({ _id, profileImage }: { _id: string, profileImage: string }): Promise<any> {
         try {
             return await DoctorModel.updateOne({ _id }, { $set: { profileImage } });

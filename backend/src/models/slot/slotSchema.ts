@@ -7,6 +7,7 @@ export const SlotSchema: Schema = new Schema<ISlotSchema>({
     endTime: { type: String, required: true },
     slotLimit: { type: Number, required: true, min: 1 },
     avgConsultTime: { type: String, required: true },
+    consulted: { type: Number, default: 0},
     bookedSlot: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now }
 });
