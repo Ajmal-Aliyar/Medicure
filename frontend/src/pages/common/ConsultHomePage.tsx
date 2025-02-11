@@ -13,37 +13,37 @@ const ConsultHomePage = () => {
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
-    useEffect(() => {
-        // if (user.role === 'doctor') {
-        //     createNewRoom(user._id)
-        // }
-        const initLocalStream = async () => {
-            const localStream = await getLocalPreviewAndInitRoomConnection();
-      
-            if (localStream && localVideoRef.current) {
-              // Assign the local stream to the video element
-              localVideoRef.current.srcObject = localStream;
-            }
-          };
-      
-          initLocalStream();
+      useEffect(() => {
+          // if (user.role === 'doctor') {
+          //     createNewRoom(user._id)
+          // }
+          const initLocalStream = async () => {
+              const localStream = await getLocalPreviewAndInitRoomConnection();
+        
+              if (localStream && localVideoRef.current) {
+                // Assign the local stream to the video element
+                localVideoRef.current.srcObject = localStream;
+              }
+            };
+        
+            initLocalStream();
 
-          const handleNewStream = (stream: MediaStream) => {
-            if (remoteVideoRef.current) {
-              remoteVideoRef.current.srcObject = stream;
-            }
-          };
-      
-          streamEvents.on('new-remote-stream', handleNewStream);
-      
-          return () => {
-            streamEvents.off('new-remote-stream', handleNewStream);
-          };
-    },[])
+            const handleNewStream = (stream: MediaStream) => {
+              if (remoteVideoRef.current) {
+                remoteVideoRef.current.srcObject = stream;
+              }
+            };
+        
+            streamEvents.on('new-remote-stream', handleNewStream);
+        
+            return () => {
+              streamEvents.off('new-remote-stream', handleNewStream);
+            };
+      },[])
     
     const createRoomHandler = () => {
         console.log('userid we',user._id)
-        createNewRoom(user._id)
+        createNewRoom(user._id,'')
     }
     const joinRoomHandler = () => {
         console.log('userid asd',user._id, room)

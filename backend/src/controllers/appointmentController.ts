@@ -48,9 +48,8 @@ export class AppointmentController {
         try {
             const { slotId } = req.params
 
-            const userDetails = await this.appointmentServices.getBookedPatients(slotId)
-
-            res.status(200).json({userDetails})
+            const bookedPatientsData = await this.appointmentServices.getBookedPatients(slotId)
+            res.status(200).json({bookedPatientsData})
 
         } catch (error: any) {
             next(error)

@@ -8,6 +8,16 @@ const doctorService = new DoctorService()
 
 export class DoctorController {
 
+    async getProfileImage(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { _id } = req.client;
+            const profileImage = await doctorService.getProfileImage(_id)
+            res.status(200).json({ profileImage: profileImage.profileImage })
+        } catch (error) {
+            next(error);
+        }
+    }
+
 
     async getProfileDetails(req: Request, res: Response, next: NextFunction) {
         try {

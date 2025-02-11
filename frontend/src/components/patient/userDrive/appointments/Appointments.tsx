@@ -1,26 +1,32 @@
-import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { setError, setSuccess } from "../../../../store/slices/commonSlices/notificationSlice";
 import { useEffect, useState } from "react";
 import { fetchAppointmentDetailsApi } from "../../../../sevices/appointments/fetchAppointments";
 import { IFetchAppointmentResponse } from "../../../../types/appointment/fetchAppointments";
 import { convertTo12HourFormat } from "../../../../utils/timeStructure";
+import { connectWithSocketIOServer, joinRoom } from "../../../../utils/wss";
+import { RootState } from "../../../../store/store";
+import { setRoomId } from "../../../../store/slices/commonSlices/videoConsultSlice";
 
 
 const Appointments = () => {
     const [pendingAppointments, setPendingAppointments] = useState<IFetchAppointmentResponse[]>([])
     const [historyAppointments, setHistoryAppointments] = useState<IFetchAppointmentResponse[]>([])
+    const user = useSelector((state: RootState) => state.auth)
     const location = useLocation();
+    const navigate = useNavigate()
     const queryParams = new URLSearchParams(location.search)
     const session = queryParams.get('session_id')
-
+    
     const dispatch = useDispatch()
-
+    
     if (session) {
         setTimeout(() => {
             dispatch(setSuccess('Booked appointment successfully.'))
         }, 500)
     }
+    
 
     useEffect(() => {
         const fetchUserAppointmentDetails = async () => {
@@ -43,7 +49,16 @@ const Appointments = () => {
             }
         }
         fetchUserAppointmentDetails()
+        connectWithSocketIOServer()
     },[])
+
+    const createRoomHandler = (roomId: string) => {
+        dispatch(setRoomId(roomId))
+        
+        navigate(`/consult/meeting/${roomId}`)
+      }
+
+
     return (
         <div className=" p-2 w-full flex flex-col gap-4">
             <div className="">
@@ -64,7 +79,7 @@ const Appointments = () => {
                             <p className="text-[#51aff6]">-</p>
                             <p className="text-sm text-gray-400 font-semibold">{convertTo12HourFormat(appointment.slotDetails.endTime)}</p>
                         </div>
-                        <div className="text-center text-sm text-red-400 px-3 font-semibold">
+                        <div className="text-center text-sm text-red-400 px-3 font-semibold" onClick={() => createRoomHandler(appointment.roomId)}>
                             waiting...
                         </div>
 

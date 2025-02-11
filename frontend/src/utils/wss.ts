@@ -37,12 +37,12 @@ export const connectWithSocketIOServer = () => {
     })
 }
 
-export const createNewRoom = (candidateId: string) => {
+export const createNewRoom = (candidateId: string, roomId: string) => {
     if (!socket) {
         store.dispatch(setError(`Socket not initialized. Cannot create room.`))
         return;
     }
-    socket.emit('create-new-room', { candidateId });
+    socket.emit('create-new-room', { candidateId, roomId });
 };
 
 export const joinRoom = (candidateId: string, roomId: string) => {
@@ -61,3 +61,4 @@ export const signalPeerData = (data: {signal:any, socketId: string}) => {
     console.log('problem ficese')
     socket.emit('conn-signal',data)
 }
+

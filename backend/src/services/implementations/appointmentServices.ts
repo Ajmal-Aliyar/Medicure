@@ -49,14 +49,16 @@ export class AppointmentServices implements IAppointmentServices {
     async getBookedPatients(slotId: string): Promise<any> {
         try {
           const appointments = await this.appointmentRepository.getAppointmentsBySlodId(slotId);
-      
+      console.log(appointments)
           if (appointments.length === 0) {
             return [];
           }
 
           const userDetails = await Promise.all(
             appointments.map(async (appointment) => {
-              return await this.patientRepository.getProfileData(appointment.patientId);
+              const patientDetails = await this.patientRepository.getProfileData(appointment.patientId);
+              console.log(appointment.roomId)
+              return {patientDetails, roomId: appointment.roomId}
             })
           );
           return userDetails;

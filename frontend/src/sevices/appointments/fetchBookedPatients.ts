@@ -6,10 +6,15 @@ export interface UserDetailsPartial {
     profileImage: string;
     gender: string;
   }
+
+  export interface fetchBookedPatientsResponse {
+    patientDetails: UserDetailsPartial;
+    roomId:string  
+  }
   
-  export const fetchBookedPatients = async (slotId: string): Promise<{userDetails: UserDetailsPartial[]}> => {
+  export const fetchBookedPatients = async (slotId: string): Promise<{bookedPatientsData: fetchBookedPatientsResponse[]}> => {
     try {
-      const response = await api.get<{userDetails: UserDetailsPartial[]}>(`/api/appointment/bookedPatients/${slotId}`);
+      const response = await api.get<{bookedPatientsData: fetchBookedPatientsResponse[]}>(`/api/appointment/bookedPatients/${slotId}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching booked patients:", error);

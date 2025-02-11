@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IAppointment } from "./appointmentInterface";
-
+import { v4 as uuidv4 } from 'uuid';
 export const appointmentSchema = new Schema<IAppointment>({
     doctorId: {
       type: String,
@@ -13,6 +13,10 @@ export const appointmentSchema = new Schema<IAppointment>({
     slotId: {
       type: String,
       required: true,
+    },
+    roomId: {
+      type: String,
+      default: () => uuidv4()
     },
     appointmentDate: {
       type: Date,

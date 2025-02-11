@@ -3,6 +3,7 @@ export interface IFetchAppointmentResponse {
     doctorId: string;
     patientId: string
     slotId: string;
+    roomId: string;
     appointmentDate: string
     status: string;
     transactionId: string;

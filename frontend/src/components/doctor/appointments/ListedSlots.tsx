@@ -5,6 +5,7 @@ import { RootState } from '../../../store/store'
 import { IDoctorSotDetails } from '../../../types/patient/findDoctors'
 import {  convertTo12HourFormat } from '../../../utils/timeStructure'
 
+
 interface ListedSlotsProps {
     selectedSlot: null | string;
     setSelectedSlot: React.Dispatch<React.SetStateAction<string | null>>
@@ -21,7 +22,8 @@ const ListedSlots:React.FC<ListedSlotsProps> = ({selectedSlot, setSelectedSlot})
       
         getListedSlots();
       }, [doctorId]);
-      
+
+
     return (
         <div className='w-full h-fit pb-6 rounded-md shadow-md bg-[#fff]'>
             <div className='p-2  border-b'>

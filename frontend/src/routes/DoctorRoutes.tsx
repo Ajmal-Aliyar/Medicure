@@ -8,6 +8,7 @@ import PrivateRoute from "./PrivateRoute";
 import Auth from "../pages/patient/Auth";
 import Appointments from "../pages/doctor/Appointments";
 
+
 function DoctorRoutes() {
     return (
         
@@ -30,6 +31,8 @@ function DoctorRoutes() {
                     </UnAuthorizedRoute>
                 }
             />
+
+           
 
         </Routes>
     );

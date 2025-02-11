@@ -10,6 +10,8 @@ router.get('/profile-details', tokenMiddleware, doctorController.getProfileDetai
 router.patch('/profile-update', tokenMiddleware, doctorController.updateProfile)
 router.patch('/update-profile-image', tokenMiddleware, doctorController.updateProfileImg)
 
+router.get('/getProfileImage', tokenMiddleware, doctorController.getProfileImage)
+
 
 
 

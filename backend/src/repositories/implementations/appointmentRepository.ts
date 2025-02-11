@@ -74,8 +74,8 @@ export class AppointmentRepository implements IAppointmentRepository {
         return result
     }
 
-    async getAppointmentsBySlodId(slotId: string): Promise<{patientId:string}[]> {
-      return await AppointmentModel.find({slotId},{patientId:1})
+    async getAppointmentsBySlodId(slotId: string): Promise<{patientId:string,roomId:string}[]> {
+      return await AppointmentModel.find({slotId},{patientId:1,roomId:1})
     }
 
 }

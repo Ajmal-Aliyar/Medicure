@@ -66,14 +66,14 @@ let io = new Server(server, {
 io.on('connection', (socket) => {
   console.log('New user connected', socket.id);
 
-  socket.on('create-new-room', (data: {candidateId: string}) => createRoom(data, socket))
+  socket.on('create-new-room', (data: {candidateId: string, roomId: string}) => createRoom(data, socket))
   socket.on('join-room',(data: {candidateId: string, roomId: string}) => joinRoom(data, socket))
   socket.on('conn-init', (data:{socketId: string}) => initializeConnectionHandler(data, socket))
   socket.on('conn-signal', (data) => signalingHandler(data, socket))
 });
 
-const createRoom = (data: {candidateId: string}, socket: Socket) => {
-  const roomId = uuidv4();
+const createRoom = (data: {candidateId: string, roomId: string}, socket: Socket) => {
+  const roomId = data.roomId
 
   const newCandidate = {
     id: data.candidateId,
