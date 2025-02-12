@@ -69,13 +69,11 @@ export class AppointmentRepository implements IAppointmentRepository {
             { $unwind: { path: "$doctorDetails", preserveNullAndEmptyArrays: true } },
             { $unwind: { path: "$slotDetails", preserveNullAndEmptyArrays: true } }
           ]);
-          
-        console.log('result',result)
         return result
     }
 
-    async getAppointmentsBySlodId(slotId: string): Promise<{patientId:string,roomId:string}[]> {
-      return await AppointmentModel.find({slotId},{patientId:1,roomId:1})
+    async getAppointmentsBySlodId(slotId: string): Promise<{patientId:string,roomId:string, status: string}[]> {
+      return await AppointmentModel.find({slotId},{patientId:1,roomId:1,status:1})
     }
 
 }

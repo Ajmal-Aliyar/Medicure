@@ -36,8 +36,6 @@ export class AppointmentController {
             const { _id } = req.client
             
             const userAppointmentsList = await this.appointmentServices.getUserAppointments(_id)
-
-            console.log(userAppointmentsList,'response')
             res.status(201).json({userAppointmentsList})
         } catch(error: any) {
             next(error)
@@ -49,6 +47,7 @@ export class AppointmentController {
             const { slotId } = req.params
 
             const bookedPatientsData = await this.appointmentServices.getBookedPatients(slotId)
+            console.log(bookedPatientsData,'sdf')
             res.status(200).json({bookedPatientsData})
 
         } catch (error: any) {

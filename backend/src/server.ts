@@ -16,8 +16,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import http from 'http';
 import { Server, Socket } from 'socket.io';
-import { v4 as uuidv4 } from 'uuid';
-// import { socket } from './utils/socket';
+
 
 mongoDB()
 dotenv.config();

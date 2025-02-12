@@ -17,6 +17,6 @@ router.get('/get-appointments', tokenMiddleware, appointmentController.getUserAp
 router.post('/create-appointment', tokenMiddleware, appointmentController.createAppointment)
 
 router.get('/bookedPatients/:slotId', tokenMiddleware, appointmentController.getBookedPatients)
-
+router.get('/finish-consulting')
 
 export default router
