@@ -1,29 +1,32 @@
 import { IAppointmentDocument, IAppointmentRepository } from "../../repositories/interfaces/IAppointmentRepository";
 import { IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
+import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
 import { IAppointmentServices, ICreateAppointment } from "../interfaces/IAppointmentServices";
 
 
 export class AppointmentServices implements IAppointmentServices {
     private appointmentRepository: IAppointmentRepository;
     private patientRepository: IPatientRepository;
+    private slotRepository: ISlotRepository;
 
-    constructor(appointmentRepository: IAppointmentRepository, patientRepository: IPatientRepository) {
+    constructor(appointmentRepository: IAppointmentRepository, patientRepository: IPatientRepository, slotRepository: ISlotRepository) {
         this.appointmentRepository = appointmentRepository
         this.patientRepository = patientRepository
+        this.slotRepository = slotRepository
     }
 
     async createAppointment({ doctorId, patientId, slotId, appointmentDate, status, transactionId }: ICreateAppointment): Promise<IAppointmentDocument> {
         try {
             if (!doctorId || !patientId || !slotId || !appointmentDate || !status || !transactionId) {
-                console.log(doctorId,patientId,slotId,'dl', appointmentDate, status,'st', transactionId)
+                console.log(doctorId, patientId, slotId, 'dl', appointmentDate, status, 'st', transactionId)
                 throw new Error("All appointment fields are required.");
             }
             const response = await this.appointmentRepository.createAppointment(
-                doctorId, 
-                patientId, 
-                slotId, 
-                appointmentDate, 
-                status, 
+                doctorId,
+                patientId,
+                slotId,
+                appointmentDate,
+                status,
                 transactionId
             );
             if (!response) {
@@ -32,7 +35,7 @@ export class AppointmentServices implements IAppointmentServices {
             return response
         } catch (error) {
             console.error("Error creating appointment:", error);
-            throw error (error);
+            throw error(error);
         }
     }
     async getUserAppointments(userId: string): Promise<IAppointmentDocument[]> {
@@ -45,28 +48,44 @@ export class AppointmentServices implements IAppointmentServices {
             throw error
         }
     }
-    
+
     async getBookedPatients(slotId: string): Promise<any> {
         try {
-          const appointments = await this.appointmentRepository.getAppointmentsBySlodId(slotId);
+            const appointments = await this.appointmentRepository.getAppointmentsBySlodId(slotId);
 
-          if (appointments.length === 0) {
-            return [];
-          }
+            if (appointments.length === 0) {
+                return [];
+            }
 
-          const userDetails = await Promise.all(
-            appointments.map(async (appointment) => {
-              const patientDetails = await this.patientRepository.getProfileData(appointment.patientId);
-              console.log(appointment.roomId)
-              return {patientDetails, roomId: appointment.roomId, status: appointment.status}
-            })
-          );
-          return userDetails;
+            const userDetails = await Promise.all(
+                appointments.map(async (appointment) => {
+                    const patientDetails = await this.patientRepository.getProfileData(appointment.patientId);
+                    console.log(appointment.roomId)
+                    return { patientDetails, roomId: appointment.roomId, status: appointment.status, appointmentId: appointment._id }
+                })
+            );
+            return userDetails;
         } catch (error) {
-          console.error("Error fetching booked patients:", error);
-          throw error;
+            console.error("Error fetching booked patients:", error);
+            throw error;
         }
-      }
-      
+    }
+
+    async consultingCompleted(appointmentId: string, slotId: string): Promise<boolean> {
+        try {
+            const updateAppointment = await this.appointmentRepository.consultingCompleted(appointmentId);
+            if (!updateAppointment) throw new Error("Failed to update appointment");
     
+            const updateSlot = await this.slotRepository.consultingCompleted(slotId);
+            if (!updateSlot) throw new Error("Failed to update slot");
+    
+            return true;
+        } catch (error) {
+            console.log('error occured')
+            throw error
+        }
+    }
+    
+
+
 }

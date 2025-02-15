@@ -9,8 +9,8 @@ const UserDriveLayout = () => {
     ];
 
     return (
-        <div className="w-screen h-screen flex justify-center items-center md:p-6 bg-[#eeeeee]">
-            <div className="w-full md:w-4/5 lg:w-3/4 h-[90%] mt-16 rounded-md bg-[#f9f9f9] shadow-lg flex flex-col">
+        <div className="w-screen h-screen flex justify-center items-center md:p-6 bg-[#eeeeee] ">
+            <div className="w-full md:w-4/5 lg:w-3/4 h-[90%] mt-16 rounded-md bg-[#f9f9f9] shadow-lg flex flex-col overflow-hidden">
                 <div className="border-b p-5 w-full max-h-[80px] hidden md:block">
                     <p className="text-[#0c0b3eb5] text-lg font-medium">My Drive</p>
                 </div>
@@ -21,10 +21,9 @@ const UserDriveLayout = () => {
                                 key={item.path}
                                 to={item.path}
                                 className={({ isActive }) =>
-                                    `block p-3 border-b ${
-                                        isActive
-                                            ? "text-[#0c0b3eb5] font-semibold bg-gray-200"
-                                            : "hover:bg-gray-100"
+                                    `block p-3 border-b ${isActive
+                                        ? "text-[#0c0b3eb5] font-semibold bg-gray-200"
+                                        : "hover:bg-gray-100"
                                     }`
                                 }
                             >
@@ -32,9 +31,14 @@ const UserDriveLayout = () => {
                             </NavLink>
                         ))}
                     </div>
-                    <div className="flex-grow">
-                        <Outlet />
+                    <div className="flex flex-col flex-grow overflow-hidden">
+                        <div className="p-2 w-full flex flex-col gap-4">
+                            <div className="flex-grow overflow-y-auto max-h-[80%] p-2">
+                                <Outlet />
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

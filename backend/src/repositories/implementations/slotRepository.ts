@@ -56,4 +56,8 @@ export class SlotRepository implements ISlotRepository {
             throw new Error("Unable to create slot");
         }
     }
+
+    async consultingCompleted(_id: string): Promise<UpdateResult> {
+        return await SlotModel.updateOne({_id},{$inc:{consulted:1}})
+    }
 }

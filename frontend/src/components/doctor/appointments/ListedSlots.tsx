@@ -57,6 +57,10 @@ const ListedSlots:React.FC<ListedSlotsProps> = ({selectedSlot, setSelectedSlot})
                         <p className='font-semibold text-[#0c0b3eb5]'>Booked Slots:</p>
                         <p>{slot.bookedSlot}</p>
                     </div>
+                    <div className='mb-2 flex gap-2'>
+                        <p className='font-semibold text-[#0c0b3eb5]'>Consulted:</p>
+                        <p>{slot.consulted}</p>
+                    </div>
                 </div>
 
             ))}

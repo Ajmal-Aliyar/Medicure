@@ -3,6 +3,7 @@ import { IDoctor } from "../../models/doctor/doctorInterface"
 import { ICreateUser, IDoctorDocument, IProfileVerificationInput } from "../../types/IDoctorInterface"
 
 export interface IDoctorRepository {
+    updateReview( _id: string, rating: number, reviewCount: number): Promise<UpdateResult>
     createDoctor({ fullName, email, phone, password }: ICreateUser): Promise<IDoctorDocument>
     updateDoctor(_id: string, { fullName, headline, about, address }): Promise<void>
     findByEmail(email: string): Promise<IDoctor>

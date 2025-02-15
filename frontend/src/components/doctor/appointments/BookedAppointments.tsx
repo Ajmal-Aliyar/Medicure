@@ -25,10 +25,9 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
     fetchPatients()
   }, [selectedSlot])
 
-  const createRoomHandler = (roomId: string) => {
+  const createRoomHandler = (roomId: string, appointmentId: string) => {
     dispatch(setRoomId(roomId))
-    
-    navigate(`/consult/meeting/${roomId}`)
+    navigate(`/consult/meeting/${roomId}?appointment=${appointmentId}&slot=${selectedSlot}`)
   }
 
   return (
@@ -51,8 +50,8 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
 
             <div className='flex gap-2'>
               <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300'>profile</button>
-              <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300'>action</button>
-              <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'scheduled' ? '' : 'hidden'}`} onClick={() =>createRoomHandler(patient.roomId)}>join</button>
+              <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300' onClick={() =>createRoomHandler(patient.roomId, patient.appointmentId)}>action</button>
+              <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'scheduled' ? '' : 'hidden'}`} onClick={() =>createRoomHandler(patient.roomId, patient.appointmentId)}>join</button>
             </div>
           </div>
         ))}

@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import ConsultLanding from "./ConsultLanding";
 import { getLocalPreviewAndInitRoomConnection, streamEvents } from "../../utils/webrtc";
 import { Mic, MicOff, Phone, Pin, Video, VideoOff } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { stopStreaming } from '../../utils/webrtc';
 import { clearWarning, setExtra, setWarning } from "../../store/slices/commonSlices/notificationSlice";
+import { changeAppointmentStatusApi } from "../../sevices/appointments/changeAppointmentStatus";
 
 const VideoCallInterface = () => {
   const [callStarted, setCallStarted] = useState<boolean>(false);
@@ -16,6 +17,9 @@ const VideoCallInterface = () => {
   const [videoOn, setVideoOn] = useState<boolean>(true);
   const [pinned, setPinned] = useState<"A" | "B">("A");
   const [micOn, setMicOn] = useState<boolean>(true);
+  const [searchParams] = useSearchParams();
+  const appointmentId = searchParams.get("appointment");
+  const slotId = searchParams.get('slot')
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const client = useSelector((state: RootState) => state.auth)
@@ -80,25 +84,28 @@ const VideoCallInterface = () => {
       }
     }
   };
-
-  const stopTrackingStream = () => {
+  
+  const stopTrackingStream = async () => {
+    console.log(appointmentId, slotId)
+    
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
       setLocalStream(null);
     }
-
+    
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = null;
     }
     if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
     }
-
+    
     stopStreaming();
-
+    
     if (client.role === "user") {
       navigate("/user/drive/appointments");
     } else if (client.role === "doctor") {
+      await changeAppointmentStatusApi(appointmentId as string, slotId as string)
       navigate("/doctor/appointments");
       window.location.reload();
     } else {

@@ -212,6 +212,10 @@ export class DoctorRepository implements IDoctorRepository {
             throw new Error("Unable to fetch doctors");
         }
     }
+
+    async updateReview( _id: string, rating: number, reviewCount: number): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({_id},{$set:{rating, reviewCount}})
+    }
     
 
 }

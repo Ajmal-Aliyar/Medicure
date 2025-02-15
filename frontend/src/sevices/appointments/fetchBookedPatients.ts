@@ -8,6 +8,7 @@ export interface UserDetailsPartial {
   }
 
   export interface fetchBookedPatientsResponse {
+    appointmentId: string
     patientDetails: UserDetailsPartial;
     roomId: string;
     status: string;
