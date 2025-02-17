@@ -43,6 +43,7 @@ interface ProfileState {
     isBlocked: boolean;
     isProfileCompleted: boolean;
     isApproved: boolean;
+    rating: number;
 }
 
 const initialState: ProfileState = {
@@ -77,7 +78,8 @@ const initialState: ProfileState = {
     fees: 0,
     isBlocked: false,
     isProfileCompleted: false,
-    isApproved: false
+    isApproved: false,
+    rating: 0
 };
 
 const doctorProfile = createSlice({

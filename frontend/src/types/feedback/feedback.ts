@@ -1,8 +1,15 @@
-import { IDoctorData } from "../../components/doctor/profile/validationProfile";
+
 
 export interface IFetchFeedbacks {
-    doctorDetails: IDoctorData;
+    _id: string;
+    details: IFeedbackDetails;
     patientId: string;
     rating: number;
     comments: string;
+}
+
+export interface IFeedbackDetails {
+    profileImage: string;
+    fullName: string;
+    specialization: string;
 }

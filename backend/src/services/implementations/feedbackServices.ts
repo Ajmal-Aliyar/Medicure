@@ -37,9 +37,17 @@ export class FeedbackService implements IFeedbackService {
         }
     }
     
-    async getFeedbackByUser( _id: string ): Promise<IFeedbackDocument[]> {
+    async getFeedbackByUser( _id: string, skip: number, limitNumber: number ): Promise<IFeedbackDocument[]> {
         try {
             return await this.feedbackRepository.getFeedbackByUser(_id)
+        } catch (error: any) {
+            throw error
+        }
+    }
+
+    async getFeedbackForDoctor( _id: string, skip: number, limitNumber: number ): Promise<IFeedbackDocument[]> {
+        try {
+            return await this.feedbackRepository.getFeedbackForDoctor(_id)
         } catch (error: any) {
             throw error
         }

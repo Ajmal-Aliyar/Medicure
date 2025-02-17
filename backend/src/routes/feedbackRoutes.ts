@@ -5,6 +5,8 @@ import { FeedbackRepository } from '../repositories/implementations/feedbackRepo
 import { FeedbackService } from '../services/implementations/feedbackServices';
 import { FeedbackController } from '../controllers/feedbackController';
 import { DoctorRepository } from '../repositories/implementations/doctorRepository';
+import { isDoctor } from '../middleware/isDoctor';
+import { isAdmin } from '../middleware/isAdmin';
 
 const router = Router();
 
@@ -15,6 +17,6 @@ const feedbackController = new FeedbackController(feedbackService)
 
 router.post('/submit-feedback', tokenMiddleware, isUser, feedbackController.handleFeedbackSubmission);
 router.get('/fetch-feedback/user', tokenMiddleware, isUser, feedbackController.getFeedbackByUser)
-router.get('/fetch-feedback/doctor')
+router.get('/fetch-feedback/doctor', tokenMiddleware, isDoctor, feedbackController.getFeedbackForDoctor)
 
 export default router

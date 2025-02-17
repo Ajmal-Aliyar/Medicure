@@ -10,7 +10,7 @@ import FindDoctors from '../pages/patient/FindDoctors';
 import Specialization from '../pages/patient/Specialization';
 import UserDriveLayout from '../pages/patient/UserDriveLayout';
 import Appointments from '../components/patient/userDrive/appointments/Appointments';
-import Feedback from '../components/patient/userDrive/appointments/Feedback';
+import Feedback from '../components/patient/userDrive/feedbacks/Feedback';
 
 
 function UserRoutes() {

@@ -2,7 +2,8 @@ import { IFeedbackDocument } from "../../models/feedback/feedbackSchema";
 
 export interface IFeedbackRepository {
     createFeedback(feedbackData: ICreateFeedbackInput): Promise<IFeedbackDocument>;
-    getFeedbackByUser(_id: string): Promise<IFeedbackDocument[]>;
+    getFeedbackByUser(doctorId: string): Promise<IFeedbackDocument[]>;
+    getFeedbackForDoctor(doctorId: string): Promise<IFeedbackDocument[]>;
 }
 
 export interface ICreateFeedbackInput {

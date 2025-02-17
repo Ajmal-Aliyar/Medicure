@@ -8,7 +8,9 @@ export class FeedbackRepository implements IFeedbackRepository {
         return feedback.save();
     }
 
-    async getFeedbackByUser(patientId: string): Promise<IFeedbackDocument[]> {
+    async getFeedbackByUser(patientId: string, page: number = 1, limit: number = 10): Promise<IFeedbackDocument[]> {
+        const skip = (page - 1) * limit;
+    
         return await FeedbackModel.aggregate([
             { $match: { patientId } }, 
             {
@@ -22,23 +24,59 @@ export class FeedbackRepository implements IFeedbackRepository {
                             }
                         }
                     ],
-                    as: "doctorDetails"
+                    as: "details"
                 }
             },
-            { $unwind: "$doctorDetails" }, 
+            { $unwind: "$details" }, 
             {
                 $project: {
                     _id: 1,
                     rating: 1,
                     comments: 1,
                     doctorId: 1,
-                    "doctorDetails.fullName": 1,
-                    "doctorDetails.specialization": 1,
-                    "doctorDetails.profileImage": 1
+                    "details.fullName": 1,
+                    "details.specialization": 1,
+                    "details.profileImage": 1
                 }
-            }
+            },
+            { $skip: skip }, 
+            { $limit: limit }
         ]);
+    }
 
+    async getFeedbackForDoctor(doctorId: string, page: number = 1, limit: number = 10): Promise<IFeedbackDocument[]> {
+        const skip = (page - 1) * limit;
+    
+        return await FeedbackModel.aggregate([
+            { $match: { doctorId } }, 
+            {
+                $lookup: {
+                    from: "patients",
+                    let: { patientIdStr: "$patientId" }, 
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", { $toObjectId: "$$patientIdStr" }] }
+                            }
+                        }
+                    ],
+                    as: "details"
+                }
+            },
+            { $unwind: "$details" }, 
+            {
+                $project: {
+                    _id: 1,
+                    rating: 1,
+                    comments: 1,
+                    doctorId: 1,
+                    "details.fullName": 1,
+                    "details.profileImage": 1
+                }
+            },
+            { $skip: skip }, 
+            { $limit: limit }
+        ]);
     }
 
 }

@@ -6,7 +6,26 @@ export const createFeedbackApi = async ( doctorId: string, patientId: string, ra
     return response.data;
 };
 
-export const fetchFeedbacksApi = async (): Promise<{feedbackData: IFetchFeedbacks[]}> =>  {
-    const response = await api.get<{feedbackData: IFetchFeedbacks[]}>('/api/feedback/fetch-feedback/user')
-    return response.data
-}
+export const fetchFeedbacksApi = async (
+    role: string,
+    pageNumber: number, 
+    limit: number
+  ): Promise<{ feedbackData: IFetchFeedbacks[] }> => {  
+      const response = await api.get<{ feedbackData: IFetchFeedbacks[] }>(
+        `/api/feedback/fetch-feedback/${role}?page=${pageNumber}&limit=${limit}`
+      );
+      return response.data;
+  };
+
+
+  export const fetchFeedbacksAdminApi = async (
+    pageNumber: number, 
+    limit: number
+  ): Promise<{ feedbackData: IFetchFeedbacks[] }> => {  
+      const response = await api.get<{ feedbackData: IFetchFeedbacks[] }>(
+        `/api/feedback/fetch-feedback/admin?page=${pageNumber}&limit=${limit}`
+      );
+      return response.data;
+  };
+
+  

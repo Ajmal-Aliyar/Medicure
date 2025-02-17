@@ -5,7 +5,6 @@ import { DoctorController } from '../controllers/doctorController';
 const router = Router();
 const doctorController = new DoctorController()
 
-//profile verification
 router.get('/verification-details', tokenMiddleware, doctorController.getProfileVerificationDetails)
 router.get('/verification-proofs', tokenMiddleware, doctorController.getProofVerificationDetails)
 router.patch('/verification-details', tokenMiddleware, doctorController.profileVerification)
