@@ -30,7 +30,7 @@ const Feedback = () => {
   }
 
   return (
-    <div className="p-2 w-full flex flex-col gap-4">
+    <div className="p-2 w-full flex flex-col gap-4 h-[560px] overflow-auto">
       <div className="pr-2">
         <p className="text-lg text-[#2f3c62d8] font-medium mb-2">Reviews</p>
 
@@ -53,15 +53,17 @@ const Feedback = () => {
         {feedback.length === 0 && <p className="text-sm text-gray-400">No pending reviews!</p>}
 
          
-
-        {hasMore && (
+<div className='flex justify-end'>
+  {hasMore && (
           <button 
             onClick={() => setPage(page + 1)}
-            className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-md"
+            className="mt-4 px-4 py-2 rounded-md text-gray-400 underline"
           >
-            Load More
+            load More
           </button>
         )}
+</div>
+        
       </div>
     </div>
   )

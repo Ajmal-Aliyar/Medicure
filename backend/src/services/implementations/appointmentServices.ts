@@ -38,6 +38,7 @@ export class AppointmentServices implements IAppointmentServices {
             throw error(error);
         }
     }
+
     async getUserAppointments(userId: string): Promise<IAppointmentDocument[]> {
         try {
             if (!userId) {
@@ -49,9 +50,17 @@ export class AppointmentServices implements IAppointmentServices {
         }
     }
 
+    async getAllAppointments(): Promise<IAppointmentDocument[]> {
+        try {
+            return await this.appointmentRepository.getAllAppointmentsForAdmin();
+        } catch (error: any) {
+            throw error
+        }
+    }
+
     async getBookedPatients(slotId: string): Promise<any> {
         try {
-            const appointments = await this.appointmentRepository.getAppointmentsBySlodId(slotId);
+            const appointments = await this.appointmentRepository.getAppointmentsBySlotId(slotId);
 
             if (appointments.length === 0) {
                 return [];

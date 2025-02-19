@@ -3,8 +3,7 @@ import { IPatientProfile } from "../../../types/patient/profileType";
 import { useDispatch } from "react-redux";
 import { blockRole, fetchAllPatientsApi, unblockRole } from "../../../sevices/admin/patientRepository";
 import { clearWarning, setError, setExtra, setSuccess, setWarning } from "../../../store/slices/commonSlices/notificationSlice";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+
 
 function PatientsList() {
     const [patients, setPatients] = useState<IPatientProfile[]>([]);

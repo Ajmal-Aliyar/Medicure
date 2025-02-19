@@ -7,6 +7,7 @@ import Profile from "../pages/doctor/Profile";
 import PrivateRoute from "./PrivateRoute";
 import Auth from "../pages/patient/Auth";
 import Appointments from "../pages/doctor/Appointments";
+import Finance from "../pages/doctor/Finance";
 
 
 function DoctorRoutes() {
@@ -17,6 +18,7 @@ function DoctorRoutes() {
                 <Route path="dashboard" element={<AuthorizedRoute allowedRole='doctor'><Dashboard /></AuthorizedRoute>} />
                 <Route path="profile" element={<AuthorizedRoute allowedRole='doctor'><Profile /></AuthorizedRoute>} />
                 <Route path="appointments" element={<AuthorizedRoute allowedRole='doctor'><Appointments /></AuthorizedRoute>} />
+                <Route path="finance" element={<AuthorizedRoute allowedRole='doctor'><Finance /></AuthorizedRoute>} />
             </Route>
             
             <Route

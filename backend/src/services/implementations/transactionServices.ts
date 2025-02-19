@@ -1,3 +1,4 @@
+import { ITransaction } from "../../models/transaction/transactionInterface";
 import { ITransactionDocument, ITransactionRepository } from "../../repositories/interfaces/ITransactionRepository";
 import { ICreateTransaction, ITransactionServices } from "../interfaces/ITransactionServices";
 
@@ -25,6 +26,14 @@ export class TransactionServices implements ITransactionServices {
         } catch (error) {
             console.error("Error creating transaction:", error);
             throw error(error);
+        }
+    }
+
+    async getTransactionById(_id: string, role: string ): Promise<ITransaction[]> {
+        try {
+            return await this.transactionRepository.getTransactions(_id,role)
+        } catch (error: unknown) {
+            throw error
         }
     }
     

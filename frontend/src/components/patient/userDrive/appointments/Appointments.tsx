@@ -71,7 +71,7 @@ const Appointments = () => {
 
 
     return (
-        <div className="p-2 w-full flex flex-col gap-4">
+        <div className="p-2 w-full flex flex-col gap-4 h-[560px] overflow-auto">
             {feedback && <FeedbackModal _id={feedback} setFeedback={setFeedback}/>}
             <div className="pr-2">
                 <div className="">

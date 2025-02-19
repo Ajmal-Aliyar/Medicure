@@ -17,10 +17,10 @@ const patientRepository = new PatientRepository()
 const adminServices = new AdminServices( adminRepository, doctorRepository,  slotRepository, patientRepository)
 const adminController = new AdminController(adminServices)
 
-//auth
+
 router.post('/sign-in', adminController.signIn)
 
-//doctor
+
 router.get('/getAppointmentdetails/:_id', tokenMiddleware, isAdmin, adminController.getDoctorAppointmentDetails)
 router.get('/getDoctorApprovalRequests', tokenMiddleware, isAdmin, adminController.getDoctorApprovalRequests)
 router.get('/getDoctorDetails/:_id', tokenMiddleware, isAdmin, adminController.getDoctorDetails)
@@ -31,7 +31,7 @@ router.get('/reject-doctor/:_id', tokenMiddleware, isAdmin, adminController.reje
 router.get('/block-role', tokenMiddleware, isAdmin, adminController.block)
 router.get('/unblock-role', tokenMiddleware, isAdmin, adminController.unblock)
 
-//patients
+
 router.get('/getAllPatients', tokenMiddleware, isAdmin, adminController.getAllPatients)
 
 export default router
