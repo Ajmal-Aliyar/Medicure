@@ -1,10 +1,13 @@
 import doctorVerifications from './routes/verificationRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
 import specialization from './routes/specializationRoutes';
-import appointment from './routes/appointmentRoutes';
+import appointmentRouter from './routes/appointmentRoutes';
+import transactionRouter from './routes/transactionRoutes'
+import feedbackRouter from './routes/feedbackRoutes';
 import patientRouter from './routes/patientRoutes';
 import paymentRouter from './routes/paymentRoutes';
 import doctorRouter from './routes/doctorRoutes';
+import walletRouter from './routes/walletRoutes'
 import adminRouter from './routes/adminRoutes';
 import authRouter from './routes/authRoutes';
 import slotRouter from "./routes/slotRoutes";
@@ -16,8 +19,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import http from 'http';
 import { Server, Socket } from 'socket.io';
-import { v4 as uuidv4 } from 'uuid';
-// import { socket } from './utils/socket';
+
 
 mongoDB()
 dotenv.config();
@@ -41,14 +43,16 @@ app.use(express.json());
 
 app.use('/api/doctor/verification', doctorVerifications)
 app.use('/api/specialization', specialization)
-app.use('/api/appointment', appointment)
+app.use('/api/appointment', appointmentRouter)
+app.use('/api/transaction', transactionRouter)
+app.use('/api/feedback', feedbackRouter)
+app.use('/api/wallet', walletRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/patient', patientRouter)
 app.use('/api/doctor', doctorRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/slot', slotRouter)
-
 app.use(errorHandler);
 
 

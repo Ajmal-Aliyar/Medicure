@@ -10,6 +10,8 @@ import FindDoctors from '../pages/patient/FindDoctors';
 import Specialization from '../pages/patient/Specialization';
 import UserDriveLayout from '../pages/patient/UserDriveLayout';
 import Appointments from '../components/patient/userDrive/appointments/Appointments';
+import Feedback from '../components/patient/userDrive/feedbacks/Feedback';
+import Finance from '../components/patient/userDrive/finance/Finance';
 
 
 function UserRoutes() {
@@ -30,8 +32,8 @@ function UserRoutes() {
           <Route path='drive' element={<UserDriveLayout/>}>
             <Route path='medical-records' element={<AuthorizedRoute allowedRole={'user'}><div>medical record</div></AuthorizedRoute>}/>
             <Route path='appointments' element={<AuthorizedRoute allowedRole={'user'}><Appointments /></AuthorizedRoute>}/>
-            <Route path='feedbacks' element={<AuthorizedRoute allowedRole={'user'}><div>feedbacks</div></AuthorizedRoute>}/>
-            <Route path='payments' element={<AuthorizedRoute allowedRole={'user'}><div>payments</div></AuthorizedRoute>}/>
+            <Route path='feedbacks' element={<AuthorizedRoute allowedRole={'user'}><Feedback /></AuthorizedRoute>}/>
+            <Route path='payments' element={<AuthorizedRoute allowedRole={'user'}><Finance /></AuthorizedRoute>}/>
           </Route>
 
           

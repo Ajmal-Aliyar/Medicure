@@ -24,7 +24,7 @@ export const appointmentSchema = new Schema<IAppointment>({
     },
     status: {
       type: String,
-      enum: ['scheduled', 'completed', 'cancelled'],
+      enum: ['Scheduled', 'Completed', 'Cancelled'],
       required: true,
     },
     transactionId: {

@@ -80,4 +80,6 @@ export class PatientRepository implements IPatientRepository {
         return await PatientModel.updateOne({ _id }, { $set: { isBlocked: false } })
     }
 
+
+
 }

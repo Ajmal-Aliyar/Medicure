@@ -8,8 +8,10 @@ export interface UserDetailsPartial {
   }
 
   export interface fetchBookedPatientsResponse {
+    appointmentId: string
     patientDetails: UserDetailsPartial;
-    roomId:string  
+    roomId: string;
+    status: string;
   }
   
   export const fetchBookedPatients = async (slotId: string): Promise<{bookedPatientsData: fetchBookedPatientsResponse[]}> => {

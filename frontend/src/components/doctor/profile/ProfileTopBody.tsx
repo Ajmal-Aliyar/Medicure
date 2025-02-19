@@ -13,8 +13,11 @@ const ProfileTopBody: React.FC<IDoctorTopProfile> = ({ setEditProfile }) => {
             <div className="firstCard col-span-8 md:col-span-3 flex items-center justify-center " onClick={() => setEditProfile('editImage')}>
                 <img src={doctor?.profileImage || 'https://res.cloudinary.com/dwyxogyrk/image/upload/v1737173758/sk7hria3ngkaujeywrjy.png'} alt={doctor?.fullName} className=" w-full object-cover rounded-md  shadow-lg border-4 border-white" />
             </div>
+            <div className="secondCard col-span-4 md:col-span-6 bg-white p-6 rounded-lg shadow-lg relative">
+                <div className="absolute right-0 top-0 m-2 bg-blue-200 text-white px-2 py-1 rounded-lg flex items-center gap-1 text-sm font-medium">
+                    ⭐ {doctor?.rating}%
+                </div>
 
-            <div className="secondCard col-span-4 md:col-span-6 bg-white p-6 rounded-lg shadow-lg">
                 <p className="font-bold text-3xl text-[#0c0b3eb5]">{doctor?.fullName}</p>
                 <p className="text-xl text-gray-700 mt-2">{doctor?.headline}</p>
                 <p className="text-md text-gray-500 ">{`${doctor?.address?.city}, ${doctor?.address?.state}, ${doctor?.address?.country}`}</p>

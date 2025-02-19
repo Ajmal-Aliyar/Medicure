@@ -14,10 +14,10 @@ import { PatientRepository } from '../repositories/implementations/patientReposi
 const transactionRepository = new TransactionRepository();
 const transactionServices = new TransactionServices(transactionRepository);
 const patientRepository = new PatientRepository()
-const appointmentRepository = new AppointmentRepository();
-const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository);
-const doctorRepository = new DoctorRepository()
 const slotRepository = new SlotRepository()
+const appointmentRepository = new AppointmentRepository();
+const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository, slotRepository);
+const doctorRepository = new DoctorRepository()
 const slotServices = new SlotService(slotRepository, doctorRepository)
 const paymentService = new PaymentServices(transactionServices, appointmentServices, slotServices)
 const paymentController = new PaymentController(paymentService)

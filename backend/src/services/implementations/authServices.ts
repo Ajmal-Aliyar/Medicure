@@ -6,6 +6,7 @@ import { hashPassword, verifyPassword } from '../../utils/passwordUtil';
 import { DoctorRepository } from '../../repositories/implementations/doctorRepository';
 import { sendOtpToEmail } from '../../utils/otpUtil';
 import { AdminRepository } from '../../repositories/implementations/adminRepository';
+import { WalletRepository } from '../../repositories/implementations/walletRepository';
 
 
 
@@ -18,6 +19,7 @@ export interface authorizedUserResponse {
 const patientRepository = new PatientRepository()
 const doctorRepository = new DoctorRepository()
 const adminRepository = new AdminRepository()
+const walletRepository = new WalletRepository()
 
 export class AuthService {
 
@@ -25,6 +27,7 @@ export class AuthService {
         try {
             const repository = role === 'admin' ? adminRepository : role === 'doctor' ? doctorRepository : patientRepository;
             const userData = await repository.findByID(_id);
+            // const wallet = walletRepository.createWallet(_id, role)
 
             if (!userData) {
                 throw new Error(`User with ID: ${_id} not found`);
@@ -176,6 +179,7 @@ export class AuthService {
             }
 
             const payload = { _id, role: userData.role };
+            const wallet = walletRepository.createWallet( _id, userData.role )
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
 

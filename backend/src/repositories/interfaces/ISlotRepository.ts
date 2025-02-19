@@ -9,4 +9,5 @@ export interface ISlotRepository {
     deleteSlot(_id: string): Promise<void>;
     createSlot(slotData: ISlot): Promise<void>;
     incBooked(_id: string): Promise<UpdateResult>
+    consultingCompleted(_id: string): Promise<UpdateResult>
 }

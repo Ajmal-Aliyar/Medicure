@@ -1,4 +1,4 @@
-import { setError } from "../store/slices/commonSlices/notificationSlice";
+import { setError, setSuccess } from "../store/slices/commonSlices/notificationSlice";
 import store from "../store/store";
 import { signalPeerData } from "./wss";
 import EventEmitter from 'eventemitter3';
@@ -32,6 +32,30 @@ export const getLocalPreviewAndInitRoomConnection = async (): Promise<any> => {
     return localStream
   } catch (error) {
     store.dispatch(setError(`Error accessing local stream`))
+  }
+};
+
+
+export const stopStreaming = () => {
+  try {
+    for (const socketId in peerConnections) {
+      if (peerConnections.hasOwnProperty(socketId)) {
+        peerConnections[socketId].close();
+        delete peerConnections[socketId];
+      }
+    }
+
+    if (localStream) {
+      localStream.getTracks().forEach(track => {
+        track.stop();
+      });
+      localStream = null;
+    }
+    streams = [];
+
+    store.dispatch(setSuccess('Consulting finished successfully.'));
+  } catch (error) {
+    store.dispatch(setError('Error while stopping streaming.'));
   }
 };
 

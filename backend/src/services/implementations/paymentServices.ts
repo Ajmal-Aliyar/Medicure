@@ -89,7 +89,7 @@ export class PaymentServices implements IPaymentServices {
                     patientId: metadata.patientId,
                     slotId: metadata.slotId,
                     appointmentDate: new Date(),
-                    status: 'scheduled',
+                    status: 'Scheduled',
                     transactionId: transaction._id as string,
                 });
     
