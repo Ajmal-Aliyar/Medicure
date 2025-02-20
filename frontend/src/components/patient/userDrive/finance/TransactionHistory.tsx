@@ -35,6 +35,7 @@ const TransactionHistory: FC = () => {
         <div>
             <h3 className="text-lg font-semibold text-gray-700 mb-2">Recent Transactions</h3>
             <ul className="text-sm text-gray-600 space-y-2">
+                {transactions.length <= 0 && <p className="text-gray-500 text-sm">No transation history</p>}
                 {(showAll ? transactions : transactions.slice(0, 3)).map((tx, index) => (
                     <li key={index} className="flex justify-between">
                         <span>{tx.senderFullName ? `Received from ${tx.senderFullName}` : `Paid to ${tx.recieverFullName}`}</span>

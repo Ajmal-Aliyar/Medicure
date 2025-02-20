@@ -104,14 +104,14 @@ function Menu() {
                         onClick={() => setIsOpen(!isOpen)}
                     ></i>
                     <nav
-                        className={`flex-col overflow-hidden w-[170px] justify-center absolute top-full left-0 p-1 px-3 mt-2 bg-[#fefefe] rounded-md right-0 hidden lg:block transition-all duration-500 ease-in-out transform ${isOpen && isAuthenticated && role === 'user' ? 'h-56 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}
+                        className={`flex-col overflow-hidden w-[170px] justify-center absolute top-full left-0 p-1 px-3 mt-2 bg-[#fefefe] rounded-md right-0 hidden lg:block transition-all duration-300 ease-in-out transform ${isOpen && isAuthenticated && role === 'user' ? 'h-56 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}
                     >
                         <UserDriveBar />
                     </nav>
                 </div>
             </div>
 
-            <div className={`lg:hidden flex items-center justify-between overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'h-44 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}>
+            <div className={`lg:hidden flex items-center justify-between overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'h-44 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}>
                 <span className='flex flex-col gap-4'>
                 <NavLink
                         to="/user"

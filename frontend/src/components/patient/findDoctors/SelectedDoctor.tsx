@@ -3,12 +3,12 @@ import { IDoctorSotDetails, IFetchTopDoctors } from '../../../types/patient/find
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { fetchSlotDetailsApi } from '../../../sevices/patient/findDoctors'
-import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
-import { setError, setLoading } from '../../../store/slices/commonSlices/notificationSlice'
+import { setError, setExtra, setLoading, setWarning } from '../../../store/slices/commonSlices/notificationSlice'
 import { createCheckoutSessionApi } from '../../../sevices/payment/payment'
 import { convertTimeStringToDate, convertTo12HourFormat } from '../../../utils/timeStructure'
+import { fetchAppointmentDetailsApi } from '../../../sevices/appointments/fetchAppointments'
 
 interface SelectedDoctorProps {
     doctor: IFetchTopDoctors
@@ -20,7 +20,6 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
 
     const user = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchSlotDetails = async () => {
@@ -33,6 +32,27 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
         fetchSlotDetails()
     }, [doctor])
 
+    const doesAppointmentExist = async () => {
+        try {
+            const data = await fetchAppointmentDetailsApi();
+            
+            const hasScheduledAppointment = data.userAppointmentsList.some(item => item.status === 'Scheduled');
+    
+            if (hasScheduledAppointment) {
+                dispatch(setWarning('You already have a pending appointment. Are you sure you want to take another one?'));
+                dispatch(setExtra(handleAppointment));
+            } else {
+                handleAppointment()
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                dispatch(setError(error.message));
+            } else {
+                dispatch(setError('An unknown error occurred'));
+            }
+        }
+    };
+    
     const handleAppointment = async () => {
         try {
           dispatch(setLoading(true));
@@ -149,7 +169,7 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
                         </span>
                     </p>
 
-                    <div className='px-2 bg-[#51aff6ce]  text-white rounded-md font-semibold text-sm py-1 cursor-pointer active:scale-95 ' onClick={handleAppointment}>take appointment</div>
+                    <div className='px-2 bg-[#51aff6ce]  text-white rounded-md font-semibold text-sm py-1 cursor-pointer active:scale-95 ' onClick={doesAppointmentExist}>take appointment</div>
                 </div>
             )}
 

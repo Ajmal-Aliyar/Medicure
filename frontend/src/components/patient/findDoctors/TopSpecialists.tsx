@@ -62,7 +62,7 @@ const TopSpecialists: React.FC = () => {
                         : 'w-full flex-wrap h-auto flex-grow '
                         }`}
                 >
-
+                    {doctors.length <= 0 && <p className='text-gray-500'>No slots are available for this specialization at the moment.</p>}
                     {doctors.map((doctor) => (
                         <div
                             id={`doctor-${doctor._id}aw23`}

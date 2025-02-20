@@ -90,23 +90,10 @@ export class PatientServices implements IPatientServices {
    async getTopDoctors(skip: number, limit: number, specialization: string | null): Promise<{ data: IDoctor[], hasMore: boolean }> {
            try {
                const approvedDoctors = await this.doctorRepository.getTopDoctors(skip, limit, specialization);
-               console.log(approvedDoctors,'asdfasdf')
-   
-               if (!approvedDoctors.data.length) {
-                   throw new Error('No approved doctors found.');
-               }
-   
                return approvedDoctors;
            } catch (error: any) {
                console.error('Error fetching approved doctors:', error);
-   
-               if (error.name === 'MongoError') {
-                   throw new Error('Database error occurred while fetching approved doctors.');
-               } else if (error instanceof TypeError) {
-                   throw new Error('Unexpected data processing error occurred.');
-               } else {
-                   throw new Error('An unexpected error occurred. Please try again later.');
-               }
+               throw error
            }
        }
     
