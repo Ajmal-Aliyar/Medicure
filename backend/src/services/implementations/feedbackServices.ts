@@ -24,7 +24,7 @@ export class FeedbackService implements IFeedbackService {
 
             const totalRating = (doctorData.rating * doctorData.reviewCount) + (rating * 20);
             const newReviewCount = doctorData.reviewCount + 1;
-            const updatedRating = (totalRating / (newReviewCount * 100)) * 100;
+            const updatedRating = Math.round((totalRating / (newReviewCount * 100)) * 100);
 
             const result = await this.doctorRepository.updateReview(doctorId, updatedRating, newReviewCount);
             if (!result || result.modifiedCount <= 0) {
