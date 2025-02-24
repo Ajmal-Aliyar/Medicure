@@ -15,7 +15,7 @@ const WarningMessage: React.FC<ErrorMessageProps> = ({ message, handleModal }) =
             scale:0.4,
             ease: 'circ.out',
             opacity: 0,
-            duration: 0.3
+            duration: 0.15
         })
     })
 

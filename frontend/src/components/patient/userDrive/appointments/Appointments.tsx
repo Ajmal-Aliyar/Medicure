@@ -37,7 +37,7 @@ const Appointments = () => {
                 console.log(data)
 
                 for (let appointment of data.userAppointmentsList) {
-                    if (appointment.status === 'scheduled') {
+                    if (appointment.status === 'Scheduled') {
                         pending.push(appointment)
                     } else {
                         history.push(appointment)

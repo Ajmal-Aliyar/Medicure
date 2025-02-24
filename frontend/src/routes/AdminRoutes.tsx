@@ -8,7 +8,7 @@ import Doctors from "../pages/admin/Doctors";
 import Patients from "../pages/admin/Patients";
 import Specialization from "../pages/admin/Specialization";
 import Appointments from "../pages/admin/Appointments";
-import WalletPage from "../pages/common/WalletPage";
+import Finance from "../pages/admin/Finance";
 
 function AdminRoutes() {
   return (
@@ -27,7 +27,7 @@ function AdminRoutes() {
         <Route path="patients" element={<AuthorizedRoute allowedRole='admin'><Patients /></AuthorizedRoute>} />
         <Route path="appointments" element={<AuthorizedRoute allowedRole='admin'><Appointments /></AuthorizedRoute>} />
         <Route path="specialization" element={<AuthorizedRoute allowedRole='admin'><Specialization /></AuthorizedRoute>} />
-        <Route path="finance" element={<AuthorizedRoute allowedRole='admin'><WalletPage /></AuthorizedRoute>} />
+        <Route path="finance" element={<AuthorizedRoute allowedRole='admin'><Finance /></AuthorizedRoute>} />
       </Route>
 
     </Routes>

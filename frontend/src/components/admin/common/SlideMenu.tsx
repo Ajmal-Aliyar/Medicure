@@ -3,6 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice';
+import { logOutUser } from '../../../store/slices/commonSlices/AuthSlice';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -11,6 +14,7 @@ function SlideMenu() {
     const [selected, setSelected] = useState('');
     const location = useLocation(); 
     const navigate = useNavigate();  
+    const dispatch = useDispatch()
 
     useEffect(() => {
             const currentPath = location.pathname;
@@ -38,6 +42,15 @@ function SlideMenu() {
         }
     };
 
+    const handleLogout = () => {
+            dispatch(setWarning("Are you sure you want to log out?"))
+            dispatch(setExtra(() => {
+                dispatch(clearWarning())
+                 dispatch(logOutUser())
+                }));
+        };
+    
+
     return (
         <div
             className={`lg:h-screen bg-gradient-to-r from-[#266256] to-[#16423C] fixed lg:relative flex flex-col z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}
@@ -62,7 +75,8 @@ function SlideMenu() {
                         <p className={`transition-opacity duration-500 whitespace-nowrap ${isOpen ? 'opacity-100' : 'lg:opacity-0'}`}>{item.label}</p>
                     </div>
                 ))}
-                <div className="flex items-center gap-4 w-full p-3 rounded-lg transition-all duration-500 hover:bg-white/20 active:scale-95">
+                <div className="flex items-center gap-4 w-full p-3 rounded-lg transition-all duration-500 hover:bg-white/20 active:scale-95"
+                onClick={handleLogout}>
                     <FontAwesomeIcon icon={faRightFromBracket} className={`text-2xl p-2 text-[#E9EFEC] rotate-180 rounded-full duration-300 ${isOpen ? '' : 'lg:translate-x-3'}`} />
                     <p className={`transition-opacity duration-500 whitespace-nowrap text-[#E9EFEC] ${isOpen ? 'opacity-100' : 'lg:opacity-0'}`}>Log out</p>
                 </div>
