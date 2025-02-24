@@ -8,6 +8,7 @@ import PrivateRoute from "./PrivateRoute";
 import Auth from "../pages/patient/Auth";
 import Appointments from "../pages/doctor/Appointments";
 import Finance from "../pages/doctor/Finance";
+import PageNotFound from "../pages/common/PageNotFound";
 
 
 function DoctorRoutes() {
@@ -35,7 +36,7 @@ function DoctorRoutes() {
             />
 
            
-
+<Route path="*" element={<PageNotFound/>} />
         </Routes>
     );
 }

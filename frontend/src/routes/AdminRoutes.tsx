@@ -9,6 +9,7 @@ import Patients from "../pages/admin/Patients";
 import Specialization from "../pages/admin/Specialization";
 import Appointments from "../pages/admin/Appointments";
 import Finance from "../pages/admin/Finance";
+import PageNotFound from "../pages/common/PageNotFound";
 
 function AdminRoutes() {
   return (
@@ -29,6 +30,7 @@ function AdminRoutes() {
         <Route path="specialization" element={<AuthorizedRoute allowedRole='admin'><Specialization /></AuthorizedRoute>} />
         <Route path="finance" element={<AuthorizedRoute allowedRole='admin'><Finance /></AuthorizedRoute>} />
       </Route>
+      <Route path="*" element={<PageNotFound />} />
 
     </Routes>
   );
