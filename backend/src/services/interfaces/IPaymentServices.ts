@@ -1,6 +1,7 @@
 export interface IPaymentServices {
     checkoutSession (data: ICheckoutSession): Promise<any>
     webhookHandler(bodyData: any, sig: string): Promise<void>
+    processRefund(transactionId: string): Promise<any>
 }
 
 export interface ICheckoutSession {

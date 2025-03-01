@@ -11,6 +11,7 @@ export class PaymentController {
 
         this.checkoutSession = this.checkoutSession.bind(this)
         this.webhookHandler = this.webhookHandler.bind(this)
+        this.refundPayment = this.refundPayment.bind(this)
     }
 
     async checkoutSession(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -33,4 +34,16 @@ export class PaymentController {
             next(error);
         }
     }
+
+    async refundPayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { transactionId } = req.body;
+            console.log(transactionId,'asdf')
+            const refund = await this.paymentService.processRefund(transactionId);
+            res.status(200).json({ success: true, refund });
+        } catch (error: any) {
+            next(error);
+        }
+    }
+    
 }

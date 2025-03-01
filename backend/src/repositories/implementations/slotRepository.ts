@@ -8,18 +8,31 @@ export class SlotRepository implements ISlotRepository {
 
     async getAllSlotsId(doctorId: string): Promise<string[]> {
         try {
-            const slots = await SlotModel.find({ doctorId }).select('_id').lean();
+            const twentyFourHoursAgo = new Date();
+            twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+    
+            const slots = await SlotModel.find({
+                doctorId,
+                createdAt: { $gte: twentyFourHoursAgo }
+            }).select('_id').lean();
+    
             return slots.map(slot => slot._id.toString());
         } catch (error) {
             console.error("Error fetching slot IDs:", error);
             throw new Error("Unable to fetch slot IDs");
         }
     }
+    
 
     async getAllSlots(doctorId: string): Promise<ISlotSchema[]> {
         try {
+            const twentyFourHoursAgo = new Date();
+            twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
             console.log(doctorId)
-            const slots = await SlotModel.find({ doctorId })
+            const slots = await SlotModel.find({
+                doctorId,
+                createdAt: { $gte: twentyFourHoursAgo }
+            })
             console.log(slots,'sdds')
             return slots;
         } catch (error) {

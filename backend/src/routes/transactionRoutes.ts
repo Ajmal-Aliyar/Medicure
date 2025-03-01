@@ -10,7 +10,6 @@ const transactionRepository = new TransactionRepository()
 const transactionServices = new TransactionServices(transactionRepository)
 const transactionController = new TransactionController(transactionServices)
 
-router.post('/create-transaction', tokenMiddleware, transactionController.createTransaction)
 router.get('/get-transaction', tokenMiddleware, transactionController.getTransactionById)
 
 

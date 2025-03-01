@@ -28,7 +28,7 @@ export const appointmentSchema = new Schema<IAppointment>({
       required: true,
     },
     transactionId: {
-      type: Schema.Types.ObjectId,
+      type: String,
       required: true,
     },
     createdAt: {

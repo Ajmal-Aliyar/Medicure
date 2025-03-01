@@ -7,7 +7,7 @@ export interface IAppointment extends Document {
     roomId: string;
     appointmentDate: Date;
     status: 'Scheduled' | 'Completed' | 'Cancelled';
-    transactionId: mongoose.Types.ObjectId;
+    transactionId: string;
     createdAt: Date;
   }
   

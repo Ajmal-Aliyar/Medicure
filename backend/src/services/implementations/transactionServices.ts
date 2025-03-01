@@ -13,12 +13,12 @@ export class TransactionServices implements ITransactionServices {
         this.transactionRepository = transactionRepository
     }
 
-    async createTransaction({ senderId, recieverId, amount, status }: ICreateTransaction): Promise<ITransactionDocument> {
+    async createTransaction({ transactionId, senderId, recieverId, amount, status }: ICreateTransaction): Promise<ITransactionDocument> {
         try {
             if (!senderId || !recieverId || amount <= 0 || !status) {
                 throw new Error("Invalid transaction details");
             }
-            const response = await this.transactionRepository.createTransaction(senderId, recieverId, amount, status);
+            const response = await this.transactionRepository.createTransaction( transactionId, senderId, recieverId, amount, status);
             if (!response) {
                 throw new Error("Transaction creation failed in the repository");
             }
@@ -35,6 +35,10 @@ export class TransactionServices implements ITransactionServices {
         } catch (error: unknown) {
             throw error
         }
+    }
+
+    async updateTransactionStatus( transactionId: string, status: string ): Promise<void> {
+         await this.transactionRepository.updateTransactionStatus(transactionId, status)
     }
     
 }

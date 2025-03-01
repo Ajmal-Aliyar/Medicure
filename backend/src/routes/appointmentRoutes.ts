@@ -19,9 +19,11 @@ const appointmentController = new AppointmentController(appointmentServices)
 
 router.get('/get-appointments', tokenMiddleware, appointmentController.getUserAppointments)
 router.get('/get-appointments-admin', tokenMiddleware, isAdmin, appointmentController.getAllAppointments)
+router.get('/get-appointments-doctor', tokenMiddleware, isDoctor, appointmentController.getAllAppointmentsOfDoctor)
 router.post('/create-appointment', tokenMiddleware, appointmentController.createAppointment)
 
 router.get('/bookedPatients/:slotId', tokenMiddleware, appointmentController.getBookedPatients)
 router.get('/finish-consulting/:appointmentId/:slotId', tokenMiddleware, isDoctor, appointmentController.finishedConsulting)
+
 
 export default router
