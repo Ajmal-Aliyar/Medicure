@@ -27,5 +27,6 @@ const router = Router();
 
 router.post('/create-checkout-session', tokenMiddleware, paymentController.checkoutSession);
 router.post('/webhook', express.raw({ type: 'application/json' }), paymentController.webhookHandler);
+router.post('/refund', tokenMiddleware, paymentController.refundPayment);
 
 export default router;

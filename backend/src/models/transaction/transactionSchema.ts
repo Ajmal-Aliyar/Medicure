@@ -4,7 +4,11 @@ import { ITransaction } from './transactionInterface';
 
 
 export const transactionSchema = new Schema<ITransaction>({
-    senderId: {
+  transactionId: {
+    type: String,
+    required: true
+  },
+  senderId: {
     type: String,
     required: true,
   },

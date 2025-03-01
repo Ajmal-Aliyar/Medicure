@@ -29,4 +29,10 @@ export const createCheckoutSessionApi = async ({
 };
 
 
+export const refundApi =  async (transactionId: string): Promise<{message:string}> => {
+    console.log(transactionId,'dsf')
+    const response = await api.post<{message: string}>('/api/payment/refund', {transactionId})
+    return response.data
+}
+
 

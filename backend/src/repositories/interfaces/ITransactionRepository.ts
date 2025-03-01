@@ -6,6 +6,7 @@ import { ITransaction } from "../../models/transaction/transactionInterface";
 export type ITransactionDocument = InferSchemaType<typeof transactionSchema>;
 
 export interface ITransactionRepository {
-    createTransaction (senderId: string, recieverId: string, amount: number, status: string): Promise<ITransactionDocument>
+    createTransaction ( transactionId: string, senderId: string, recieverId: string, amount: number, status: string): Promise<ITransactionDocument>
     getTransactions( id: string, role: string ): Promise<ITransaction[]>
+    updateTransactionStatus(transactionId: string, status: string): Promise<void>
 }

@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
-import { CalendarCheck, Clock, CheckCircle, ChevronLeft, ChevronRight, Hourglass } from "lucide-react";
+import { CalendarCheck, Clock, CheckCircle, ChevronLeft, ChevronRight, Hourglass, XCircle, Undo2 } from "lucide-react";
 import { fetchAllAppointmentDetailsApi } from "../../sevices/appointments/fetchAppointments";
 import { IFetchAllAppointmentResponse } from "../../types/appointment/fetchAppointments";
 import { useDispatch } from "react-redux";
-import { setLoading } from "../../store/slices/commonSlices/notificationSlice";
+import { setError, setLoading } from "../../store/slices/commonSlices/notificationSlice";
+import { refundApi } from "../../sevices/payment/payment";
+
+
+const isExpired = (createdAt: string) => {
+    const twentyFourHoursAgo = new Date();
+    twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 2);
+    return new Date(createdAt) < twentyFourHoursAgo;
+};
 
 const Appointments = () => {
     const [appointments, setAppointments] = useState<IFetchAllAppointmentResponse[]>([]);
-    const [error, setError] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+
     const appointmentsPerPage = 5;
     const dispatch = useDispatch()
 
@@ -47,6 +55,16 @@ const Appointments = () => {
         }
     };
 
+    const refundHandler = async (transactionId: string) => {
+        try {
+            const {message} = await refundApi(transactionId)
+            console.log(message)
+        } catch (error: any) {
+            dispatch(setError(error.message))
+        }
+    }
+
+   
     return (
         <div className="w-full mx-auto  p-6 rounded-lg shadow-lg flex flex-col">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2 border-b pb-2">
@@ -54,9 +72,7 @@ const Appointments = () => {
                 Appointments
             </h2>
 
-            {error ? (
-                <p className="text-red-500 mt-4 text-center">{error}</p>
-            ) : (
+            
                 <div className="flex flex-col justify-between flex-1">
                     <div className="mt-4 space-y-2">
                         {currentAppointments.length > 0 ? (
@@ -107,19 +123,31 @@ const Appointments = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 ">
+                                        {appointment.status === "Scheduled" && isExpired(appointment.createdAt) && 
+                                        <span className="flex items-center text-green-800 cursor-pointer active:scale-95"
+                                        onClick={() => refundHandler(appointment.transactionId) }><Undo2 size={15} />refund</span>}
                                         {appointment.status === "Completed" ? (
                                             <CheckCircle className="w-6 h-5 text-green-500" />
+                                        ) : isExpired(appointment.createdAt) ? (
+                                            <XCircle className="w-6 h-5 text-gray-500" />
                                         ) : (
                                             <Hourglass className="w-6 h-5 text-orange-400" />
                                         )}
                                         <span
-                                            className={`text-sm font-semibold ${appointment.status === "Completed" ? "text-green-600" : "text-orange-400"
+                                            className={`text-sm font-semibold ${appointment.status === "Completed"
+                                                ? "text-green-600"
+                                                : isExpired(appointment.createdAt)
+                                                    ? "text-gray-500"
+                                                    : "text-orange-400"
                                                 }`}
                                         >
-                                            {appointment.status}
+                                            {appointment.status === "Scheduled" && isExpired(appointment.createdAt)
+                                                ? "Expired"
+                                                : appointment.status}
                                         </span>
                                     </div>
+
                                 </div>
                             ))
                         ) : (
@@ -141,19 +169,12 @@ const Appointments = () => {
                                     <button
                                         key={i + 1}
                                         onClick={() => setCurrentPage(i + 1)}
-                                        className={`px-3 py-1 rounded-md ${i+1 === currentPage ? "bg-[#6A9C89] text-white" : "bg-[#C4DAD2] text-gray-700"
-                                        }`}
+                                        className={`px-3 py-1 rounded-md ${i + 1 === currentPage ? "bg-[#6A9C89] text-white" : "bg-[#C4DAD2] text-gray-700"
+                                            }`}
                                     >
                                         {i + 1}
                                     </button>
-                                //     <button
-                                //     key={index}
-                                //     className={`px-3 py-1 rounded-md ${i+1 === currentPage ? "bg-[#6A9C89] text-white" : "bg-[#C4DAD2] text-gray-700"
-                                //         }`}
-                                //     onClick={() => setCurrentPage(index)}
-                                // >
-                                //     {index + 1}
-                                // </button>
+
                                 ))}
                                 <button
                                     onClick={nextPage}
@@ -167,8 +188,9 @@ const Appointments = () => {
 
                     </div>
                 </div>
-            )}
+
 
         </div>
-)}
+    )
+}
 export default Appointments;

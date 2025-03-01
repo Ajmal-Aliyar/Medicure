@@ -73,7 +73,10 @@ export class PaymentServices implements IPaymentServices {
                 const session = event.data.object as Stripe.Checkout.Session;
                 const metadata = session.metadata || {};
     
+                const paymentIntentId = session.payment_intent as string; // Extract Payment Intent ID
+    
                 const transaction = await this.transactionServices.createTransaction({
+                    transactionId: paymentIntentId,
                     senderId: metadata.patientId,
                     recieverId: metadata.doctorId,
                     amount: (session.amount_total || 0) / 100,
@@ -90,15 +93,15 @@ export class PaymentServices implements IPaymentServices {
                     slotId: metadata.slotId,
                     appointmentDate: new Date(),
                     status: 'Scheduled',
-                    transactionId: transaction._id as string,
+                    transactionId: paymentIntentId,
                 });
     
                 if (!appointment) {
                     throw new Error('Failed to create appointment');
                 }
-
-                const incBooked = await this.slotServices.incBooked(metadata.slotId)
-
+    
+                const incBooked = await this.slotServices.incBooked(metadata.slotId);
+    
                 if (incBooked.modifiedCount === 0) {
                     throw new Error('Unable to update slot booking.');
                 }
@@ -114,4 +117,30 @@ export class PaymentServices implements IPaymentServices {
             throw new Error('Webhook handling failed.');
         }
     }
+    
+
+    async processRefund(transactionId: string): Promise<any> {
+        try {
+            const transaction = await this.transactionServices.getTransactionById(transactionId,'user');
+            if (!transaction) {
+                throw new Error('Transaction not found or not refundable.');
+            }
+    
+            const refund = await this.stripe.refunds.create({
+                payment_intent: transactionId,
+            });
+    
+            if (true) {
+                await this.transactionServices.updateTransactionStatus(transactionId, 'refunded');
+                await this.appointmentServices.cancelAppointmentByTransactionId(transactionId);
+                console.log('refund status success')
+            }
+    
+            return refund;
+        } catch (error) {
+            console.error('Refund error:', error);
+            throw new Error('Refund process failed.');
+        }
+    }
+    
 }

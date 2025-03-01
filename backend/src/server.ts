@@ -18,8 +18,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import http from 'http';
-import { Server, Socket } from 'socket.io';
-
+import {socketHandler} from './utils/socket'
 
 mongoDB()
 dotenv.config();
@@ -56,75 +55,8 @@ app.use('/api/slot', slotRouter)
 app.use(errorHandler);
 
 
-const rooms = []
-const connectedCandidates = []
 const server = http.createServer(app);
-let io = new Server(server, {
-  cors: {
-    origin: process.env.CORS_URL,
-    methods: ['GET', 'POST'],
-    credentials: true
-  }
-});
-
-io.on('connection', (socket) => {
-  console.log('New user connected', socket.id);
-
-  socket.on('create-new-room', (data: {candidateId: string, roomId: string}) => createRoom(data, socket))
-  socket.on('join-room',(data: {candidateId: string, roomId: string}) => joinRoom(data, socket))
-  socket.on('conn-init', (data:{socketId: string}) => initializeConnectionHandler(data, socket))
-  socket.on('conn-signal', (data) => signalingHandler(data, socket))
-});
-
-const createRoom = (data: {candidateId: string, roomId: string}, socket: Socket) => {
-  const roomId = data.roomId
-
-  const newCandidate = {
-    id: data.candidateId,
-    socketId: socket.id,
-    roomId
-  }
-
-  connectedCandidates.push(newCandidate)
-  rooms.push({ roomId, connectedCandidates: [newCandidate]})
-
-  socket.join(roomId)
-  socket.emit('room-id', {roomId})
-  socket.emit('room-update', {candidates: [newCandidate]})
-}
-
-const joinRoom = (data: {candidateId: string, roomId: string}, socket: Socket) => {
-  const {candidateId, roomId} = data
-  const room = rooms.find(room => room.roomId === roomId)
-  if (room) {
-    const newCandidate = {
-      id: candidateId,
-      socketId: socket.id,
-      roomId
-    }
-
-    room.connectedCandidates.push(newCandidate)
-    connectedCandidates.push(newCandidate)
-
-    socket.join(roomId)
-
-    room.connectedCandidates.forEach((candidate) => {
-      if (candidate.socketId !== socket.id) {
-        io.to(candidate.socketId).emit('conn-prepare', {socketId: socket.id})
-      }
-    })
-  }
-}
-
-const initializeConnectionHandler = (data: {socketId: string}, socket: Socket) => {
-  io.to(data.socketId).emit('conn-init', { socketId: socket.id}) 
-}
-
-const signalingHandler = (data, socket: Socket) => {
-  console.log('i am conn signal')
-  const {socketId, signal} = data
-  io.to(socketId).emit('conn-signal', {signal, socketId: socket.id})
-}
+socketHandler(server)
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

@@ -96,6 +96,14 @@ export class AppointmentRepository implements IAppointmentRepository {
     return result;
   }
 
+  async getAllAppointmentsOfDoctor(doctorId: string): Promise<{ patientId: string, roomId: string, status: string, _id: string }[]> {
+    return await AppointmentModel.find({ doctorId }, { patientId: 1, roomId: 1, status: 1 });
+  }
+
+  async cancelAppointmentByTransactionId(transactionId: string): Promise<void> {
+    await AppointmentModel.updateOne({transactionId},{$set:{status: 'Cancelled'}})
+  }
+
   async getAppointmentsBySlotId(slotId: string): Promise<{ patientId: string, roomId: string, status: string, _id: string }[]> {
     return await AppointmentModel.find({ slotId }, { patientId: 1, roomId: 1, status: 1 });
   }

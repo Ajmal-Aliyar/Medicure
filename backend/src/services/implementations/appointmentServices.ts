@@ -58,6 +58,28 @@ export class AppointmentServices implements IAppointmentServices {
         }
     }
 
+    async getAllAppointmentsOfDoctor(_id: string): Promise<any> {
+        try {
+            const appointments = await this.appointmentRepository.getAllAppointmentsOfDoctor(_id);
+
+            if (appointments.length === 0) {
+                return [];
+            }
+
+            const userDetails = await Promise.all(
+                appointments.map(async (appointment) => {
+                    const patientDetails = await this.patientRepository.getProfileData(appointment.patientId);
+                    console.log(appointment.roomId)
+                    return { patientDetails, roomId: appointment.roomId, status: appointment.status, appointmentId: appointment._id }
+                })
+            );
+            return userDetails;
+        } catch (error) {
+            console.error("Error fetching booked patients:", error);
+            throw error;
+        }
+    }
+
     async getBookedPatients(slotId: string): Promise<any> {
         try {
             const appointments = await this.appointmentRepository.getAppointmentsBySlotId(slotId);
@@ -91,6 +113,14 @@ export class AppointmentServices implements IAppointmentServices {
             return true;
         } catch (error) {
             console.log('error occured')
+            throw error
+        }
+    }
+
+    async cancelAppointmentByTransactionId(transactionId: string): Promise<void> {
+        try {
+            await this.appointmentRepository.cancelAppointmentByTransactionId(transactionId)
+        } catch(error: unknown) {
             throw error
         }
     }
