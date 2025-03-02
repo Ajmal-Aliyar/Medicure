@@ -11,8 +11,7 @@ export const PatientSchema = new Schema<IPatient>({
         maxlength: 100
     },
     phone: {
-        type: Number,
-        required: true
+        type: Number
     },
     email: {
         type: String,

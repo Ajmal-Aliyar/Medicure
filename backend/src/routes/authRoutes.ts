@@ -19,8 +19,7 @@ router.post('/send-otp', authController.sendOTP)
 router.post('/verify-otp-register', authController.verifyOTPAndRegister)        
 router.post('/verify-otp', authController.verifyOTP)                            
 router.post('/change-password', authController.changePassword)                  
-
-
+router.post('/google-auth', authController.googleAuth)
 
 router.get('/user-info', tokenMiddleware, authController.userInfo) 
 router.post('/check-request', tokenMiddleware,authController.checkRequest)

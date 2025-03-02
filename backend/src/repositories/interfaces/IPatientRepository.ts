@@ -9,6 +9,7 @@ export type IPatientDocument = InferSchemaType<typeof PatientSchema>
 
 export interface IPatientRepository {
     createUser ({fullName, email, phone, password}:ICreatePatient): Promise<IPatientDocument>
+    createAuthUser({ fullName, email, profileImage, password }: ICreatePatient): Promise<IPatientDocument>
     findByEmail (email: string): Promise<IPatient> 
     findByID (_id: string): Promise<IPatient>
     changePassword (email: string, password: string): Promise<UpdateResult>

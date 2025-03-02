@@ -2,24 +2,28 @@
 import { Phone } from 'lucide-react';
 import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createNewRoom, joinRoom } from '../../utils/wss';
+import { createNewRoom, joinRoom, sendNotification } from '../../utils/wss';
+import { useSearchParams } from 'react-router-dom';
 
 interface ConsultLandingProps {
     localVideoRef: React.RefObject<HTMLVideoElement>;
     setCallStarted: (started: boolean) => void;
 }
 
-const ConsultLanding:React.FC <ConsultLandingProps> = ({localVideoRef, setCallStarted}) => {
-    const roomId = useSelector((state: RootState) => state.videoConsult.roomId)  
+const ConsultLanding: React.FC<ConsultLandingProps> = ({ localVideoRef, setCallStarted }) => {
+    const roomId = useSelector((state: RootState) => state.videoConsult.roomId)
     const doctorId = useSelector((state: RootState) => state.auth._id)
-    const navigate = useNavigate();
+    const patientId = useSelector((state: RootState) => state.videoConsult.patientId)
+    const [searchParams] = useSearchParams();
+    const slotId = searchParams.get("slot") as string
 
     const createRoomHandler = () => {
         if (roomId) {
+            console.log(slotId, doctorId, roomId)
+            patientId ? sendNotification(patientId, { slotId, _id: doctorId, roomId }) : ''
             createNewRoom(doctorId, roomId)
             setCallStarted(true)
-            joinRoom(doctorId,roomId)
+            joinRoom(doctorId, roomId)
         }
     }
     return (

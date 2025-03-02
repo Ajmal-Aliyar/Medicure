@@ -57,10 +57,7 @@ const ApprovalCard: React.FC<ApprovalCardProps> = ({ setOpenPage }) => {
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="15 18 9 12 15 6" />
                     </svg> Applicant Requests</p>
-                <input className="px-4 max-w-[300px] border-2 w-full rounded-full outline-none pr-12 peer placeholder:text-[#C4DAD2] border-[#C4DAD2]"
-                    placeholder="Search here" />
-                <FontAwesomeIcon icon={faSearch} className={`text-[25px] text-[#C4DAD2] absolute right-6 top-1/2 -translate-y-1/2 `} />
-            </div>
+                </div>
             <div className="h-[616px] p-2 overflow-y-auto">
                 {doctors.map((doctor) => (
                     <div key={doctor._id} className={`border flex p-2 rounded-md items-center relative mb-2  duration-300 `} >

@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 interface IInitialState {
     roomId: string | null
     candidates: ICandidate[]
+    patientId: string | null
 }
 
 export interface ICandidate {
@@ -13,7 +14,8 @@ export interface ICandidate {
 
 const initialState: IInitialState = {
     roomId: null,
-    candidates: []
+    candidates: [],
+    patientId: null
 }
 
 const videoConsultSlice = createSlice({
@@ -25,9 +27,12 @@ const videoConsultSlice = createSlice({
         },
         setCanditates: (state, action:PayloadAction<{candidates:ICandidate[]}>) => {
             state.candidates = action.payload.candidates
-        }
+        },
+        setPatientId: (state, action: PayloadAction<string>) => {
+            state.patientId = action.payload
+        },
     }
 })
 
-export const { setRoomId, setCanditates } = videoConsultSlice.actions
+export const { setRoomId, setCanditates, setPatientId } = videoConsultSlice.actions
 export default videoConsultSlice.reducer 

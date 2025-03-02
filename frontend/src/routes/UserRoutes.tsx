@@ -13,35 +13,41 @@ import Appointments from '../components/patient/userDrive/appointments/Appointme
 import Feedback from '../components/patient/userDrive/feedbacks/Feedback';
 import Finance from '../components/patient/userDrive/finance/Finance';
 import PageNotFound from '../pages/common/PageNotFound';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
+const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com";
 
 function UserRoutes() {
   return (
     <>
-       <Routes>
-        <Route path='/user' element={<UserLayout/>}>
+      <Routes>
+        <Route path='/user' element={<UserLayout />}>
 
 
-          <Route index element={<PublicRoutes><Home/></PublicRoutes>}/>
-          <Route path="auth" element={<UnAuthorizedRoute preventedRole={'user'}><Auth role='user'/></UnAuthorizedRoute>}/>
-          <Route path="profile" element={<AuthorizedRoute allowedRole={'user'}><Profile/></AuthorizedRoute>}/>
-          <Route path='find-doctors' element={<PublicRoutes><FindDoctors/></PublicRoutes>}/>
-          <Route path='find-doctors/:specialization' element={<PublicRoutes><Specialization/></PublicRoutes>}/>
+          <Route index element={<PublicRoutes><Home /></PublicRoutes>} />
+          <Route path="auth" element={<UnAuthorizedRoute preventedRole={'user'}>
+            <GoogleOAuthProvider clientId={clientId}>
+              <Auth role='user' />
+            </GoogleOAuthProvider>
+          </UnAuthorizedRoute>} />
+          <Route path="profile" element={<AuthorizedRoute allowedRole={'user'}><Profile /></AuthorizedRoute>} />
+          <Route path='find-doctors' element={<PublicRoutes><FindDoctors /></PublicRoutes>} />
+          <Route path='find-doctors/:specialization' element={<PublicRoutes><Specialization /></PublicRoutes>} />
 
 
 
-          <Route path='drive' element={<UserDriveLayout/>}>
-            <Route path='medical-records' element={<AuthorizedRoute allowedRole={'user'}><div>medical record</div></AuthorizedRoute>}/>
-            <Route path='appointments' element={<AuthorizedRoute allowedRole={'user'}><Appointments /></AuthorizedRoute>}/>
-            <Route path='feedbacks' element={<AuthorizedRoute allowedRole={'user'}><Feedback /></AuthorizedRoute>}/>
-            <Route path='payments' element={<AuthorizedRoute allowedRole={'user'}><Finance /></AuthorizedRoute>}/>
+          <Route path='drive' element={<UserDriveLayout />}>
+            <Route path='medical-records' element={<AuthorizedRoute allowedRole={'user'}><div>medical record</div></AuthorizedRoute>} />
+            <Route path='appointments' element={<AuthorizedRoute allowedRole={'user'}><Appointments /></AuthorizedRoute>} />
+            <Route path='feedbacks' element={<AuthorizedRoute allowedRole={'user'}><Feedback /></AuthorizedRoute>} />
+            <Route path='payments' element={<AuthorizedRoute allowedRole={'user'}><Finance /></AuthorizedRoute>} />
           </Route>
 
-          
+
         </Route>
-        <Route path="*" element={<PageNotFound/>} />
-    </Routes>
-   
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+
     </>
   )
 }

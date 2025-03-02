@@ -16,6 +16,11 @@ export class PatientRepository implements IPatientRepository {
         const user = new PatientModel({ fullName, email, phone, password });
         return await user.save();
     }
+    
+    async createAuthUser({ fullName, email, profileImage, password }: ICreatePatient): Promise<IPatientDocument> {
+        const user = new PatientModel({ fullName, email, profileImage, password });
+        return await user.save();
+    }
 
     async findByEmail(email: string): Promise<IPatient> {
         return await PatientModel.findOne({ email });

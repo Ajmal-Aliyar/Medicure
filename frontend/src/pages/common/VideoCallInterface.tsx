@@ -115,7 +115,6 @@ const VideoCallInterface = () => {
   }
 
   const handleEndCall = (): void => {
-    console.log('sdfasdfn')
     dispatch(setWarning('Are you do you finish the consultation'))
     dispatch(setExtra(stopTrackingStream))
   };

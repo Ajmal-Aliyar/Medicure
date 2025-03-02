@@ -7,7 +7,7 @@ import { DoctorRepository } from '../../repositories/implementations/doctorRepos
 import { sendOtpToEmail } from '../../utils/otpUtil';
 import { AdminRepository } from '../../repositories/implementations/adminRepository';
 import { WalletRepository } from '../../repositories/implementations/walletRepository';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -102,6 +102,34 @@ export class AuthService {
             console.error('Error during sign-in:', error);
             throw new Error(`Sign-in failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
+    }
+
+    async googleAuth({fullName, email, profileImage}): Promise<authorizedUserResponse> {
+            const user = await patientRepository.findByEmail(email);
+            let _id: string = ''
+            if (!user) {
+                const patient = await patientRepository.createAuthUser({
+                    fullName,
+                    email,
+                    profileImage,
+                    password: uuidv4()
+                });
+                if (!patient) {
+                    throw new Error('Registration failed: We encountered an issue while creating your account.');
+                }
+                _id = patient._id.toString();
+            } else {
+                _id = user._id.toString()
+            }
+            
+        const payload = {
+            _id,
+            role: 'user'
+        };
+
+        const accessToken = generateAccessToken(payload);
+        const refreshToken = generateRefreshToken(payload);
+        return { accessToken, refreshToken, _id};
     }
 
 
