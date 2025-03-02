@@ -49,6 +49,30 @@ export class AuthController {
         }
     }
 
+    async googleAuth (req: Request, res: Response) {
+        const { email, profileImage, fullName } = req.body
+        try {
+            const { accessToken, refreshToken, _id } = await authService.googleAuth({ fullName, email, profileImage, })
+            if (accessToken) {
+                res.cookie('accessToken', accessToken, {
+                    httpOnly: false,
+                    maxAge: 15 * 60 * 1000,
+                    secure: process.env.NODE_ENV === 'production',
+                });
+            }
+            if (refreshToken) {
+                res.cookie('refreshToken', refreshToken, {
+                    httpOnly: true,
+                    maxAge: 7 * 24 * 60 * 60 * 1000,
+                    secure: process.env.NODE_ENV === 'production',
+                });
+            }
+            res.status(200).json({_id});
+        } catch (error: any) {
+            res.status(400).json({ error: error.message })
+        }
+    }
+
     async changePassword(req: Request, res: Response) {
         try {
             const { email, password, role } = req.body

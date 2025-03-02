@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setError, setSuccess } from "../../../../store/slices/commonSlices/notificationSlice";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { convertTo12HourFormat } from "../../../../utils/timeStructure";
 import { connectWithSocketIOServer } from "../../../../utils/wss";
 import { setRoomId } from "../../../../store/slices/commonSlices/videoConsultSlice";
 import FeedbackModal from "./FeedbackModal";
+import { RootState } from "../../../../store/store";
 
 
 const Appointments = () => {
@@ -18,6 +19,7 @@ const Appointments = () => {
     const navigate = useNavigate()
     const queryParams = new URLSearchParams(location.search)
     const session = queryParams.get('session_id')
+    const clientId = useSelector((state: RootState) => state.auth._id)
 
     const dispatch = useDispatch()
 
@@ -58,7 +60,7 @@ const Appointments = () => {
         }
 
         fetchUserAppointmentDetails()
-        connectWithSocketIOServer()
+        connectWithSocketIOServer(clientId)
     }, [])
 
 
@@ -92,7 +94,7 @@ const Appointments = () => {
                                 <p className="text-[#51aff6]">-</p>
                                 <p className="text-sm text-gray-400 font-semibold">{convertTo12HourFormat(appointment.slotDetails.endTime)}</p>
                             </div>
-                            <div className="text-center text-sm text-red-400 px-3 font-semibold" onClick={() => createRoomHandler(appointment.roomId, appointment._id, appointment.slotId)}>
+                            <div className="text-center text-sm text-red-400 px-3 font-semibold" >
                                 waiting...
                             </div>
                         </div>

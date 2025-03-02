@@ -111,7 +111,9 @@ function Menu() {
                 </div>
             </div>
 
-            <div className={`lg:hidden flex items-center justify-between overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'h-44 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}>
+            <div className={`lg:hidden lg:!hidden items-center justify-between overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'h-44 opacity-100 flex' : 'h-0 opacity-0 pointer-events-none'}`}>
+
+
                 <span className='flex flex-col gap-4'>
                 <NavLink
                         to="/user"

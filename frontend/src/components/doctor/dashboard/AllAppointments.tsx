@@ -1,42 +1,35 @@
 import React, { useEffect, useState } from 'react'
-import { fetchBookedPatients, fetchBookedPatientsResponse } from '../../../sevices/appointments/fetchBookedPatients';
-import { ChevronLeft } from 'lucide-react';
+import { fetchAllAppointmentsApi, fetchBookedPatientsResponse } from '../../../sevices/appointments/fetchBookedPatients';
 import { useDispatch } from 'react-redux';
-import { setPatientId, setRoomId } from '../../../store/slices/commonSlices/videoConsultSlice';
+import { setRoomId } from '../../../store/slices/commonSlices/videoConsultSlice';
 import { useNavigate } from 'react-router-dom';
 
-interface BookedAppointmentsProps {
-  selectedSlot: null | string;
-  setSelectedSlot: React.Dispatch<React.SetStateAction<string | null>>
-}
-const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, setSelectedSlot }) => {
+
+const BookedAppointments: React.FC = () => {
   const [patientDetails, setPatientDetails] = useState<fetchBookedPatientsResponse[] | null>(null)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPatients = async () => {
-      if (selectedSlot) {
-        const {bookedPatientsData} = await fetchBookedPatients(selectedSlot)
+        const {bookedPatientsData} = await fetchAllAppointmentsApi()
         console.log(bookedPatientsData)
         setPatientDetails(bookedPatientsData)
-      }
     }
     fetchPatients()
-  }, [selectedSlot])
+  }, [])
 
-  const createRoomHandler = (roomId: string, appointmentId: string, patientId: string) => {
-    dispatch(setPatientId(patientId))
+  const createRoomHandler = (roomId: string, appointmentId: string) => {
     dispatch(setRoomId(roomId))
-    navigate(`/consult/meeting/${roomId}?appointment=${appointmentId}&slot=${selectedSlot}`)
+    navigate(`/consult/meeting/${roomId}?appointment=${appointmentId}&slot=${'selectedSlot'}`)
   }
 
   return (
-    <div>
+    <div className='bg-white rounded-md shadow-md pb-4'>
       <div className='p-2  border-b'>
-        <p className='font-medium text-sm text-gray-700 flex items-center cursor-pointer' onClick={() => setSelectedSlot(null)}><ChevronLeft size={16} />Patients</p>
+        <p>Appointments</p>
       </div>
-      <div className='h-[610px] overflow-auto'>
+      <div className='overflow-auto'>
         {patientDetails && patientDetails.map((patient) => (
           <div key={patient.patientDetails._id} className="flex justify-between p-2 items-center border-b relative mb-2  duration-300" >
             <div className='flex'>
@@ -52,7 +45,7 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
             <div className='flex gap-2'>
               <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300'>profile</button>
               <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300' >cancel</button>
-              <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'Scheduled' ? '' : 'hidden'}`} onClick={() => createRoomHandler(patient.roomId, patient.appointmentId, patient.patientDetails._id)}>join</button>
+              <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'Scheduled' ? '' : 'hidden'}`} onClick={() =>createRoomHandler(patient.roomId, patient.appointmentId)}>join</button>
             </div>
           </div>
         ))}

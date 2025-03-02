@@ -13,7 +13,7 @@ export interface IUpdateProfilePayload {
 
 
 export interface ICreatePatient {
-    fullName: string, email: string, phone: number, password: string
+    fullName: string, email: string, phone?: number, password: string, profileImage?: string
 }
 
 export interface IGetProfilePayload {

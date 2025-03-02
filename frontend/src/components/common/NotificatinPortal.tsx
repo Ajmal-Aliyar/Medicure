@@ -6,9 +6,10 @@ import ErrorMessage from './ErrorMessage';
 import { clearError, clearSuccess, clearWarning } from '../../store/slices/commonSlices/notificationSlice';
 import SuccessModal from './SuccessMessage';
 import WarningMessage from './WarningMessage';
+import ConsultationAlert from './ConsultationAlert';
 
 const NotificationPortal: React.FC = () => {
-    const { error, success, warning, loading} = useSelector(
+    const { error, success, warning, loading, consulting} = useSelector(
         (state: RootState) => state.notification
     );
     const dispatch = useDispatch()
@@ -39,6 +40,9 @@ const NotificationPortal: React.FC = () => {
         }
         if (warning) {
             return <div className={`w-screen h-screen bg-gradient-to-t from-[#00000059] ${warning ? "bg-opacity-100" : 'bg-opacity-0'} duration-500 fixed top-0 flex justify-center items-center z-50`}><WarningMessage message={warning} handleModal={handleWarning}/></div>
+        }
+        if (consulting) {
+            return <div className={`w-screen h-screen bg-[#00000059] ${consulting ? "bg-opacity-100" : 'bg-opacity-0'} duration-500 fixed top-0 flex justify-center items-center z-50`}><ConsultationAlert /></div>
         }
     
         return null;

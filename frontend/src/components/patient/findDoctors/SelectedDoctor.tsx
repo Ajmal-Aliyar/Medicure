@@ -130,8 +130,8 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
         ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.endTime).getTime() < Date.now() + (10 * 60 * 1000))) ? 'pointer-events-none ' : 'shadow-md'}`}
                             onClick={() => (slot.slotLimit > slot.bookedSlot && convertTimeStringToDate(slot.endTime).getTime() > Date.now() + (10 * 60 * 1000)) && setSelectedSlot(slot)}
                         >
-                            <div className={`w-full h-full absolute bg-[#36363642]  left-0 top-0 rounded-md flex justify-center items-center text-red-700 font-semibold backdrop-blur-sm
-                                ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.endTime).getTime() < Date.now() + (10 * 60 * 1000))) ? 'pointer-events-none ' : 'hidden'}`}><p className='bg-white px-1'>not available</p></div>
+                            <div className={`w-full h-full absolute bg-[#36363642]  left-0 top-0 rounded-md  justify-center items-center text-red-700 font-semibold backdrop-blur-sm
+                                ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.endTime).getTime() < Date.now() + (10 * 60 * 1000))) ? 'pointer-events-none flex' : 'hidden'}`}><p className='bg-white px-1'>not available</p></div>
                             <div className='mb-2 flex gap-2'>
                                 <p className='font-semibold text-[#0c0b3eb5]'>Start Time:</p>
                                 <p>{convertTo12HourFormat(slot.startTime)}</p>

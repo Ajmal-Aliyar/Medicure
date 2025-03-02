@@ -7,6 +7,7 @@ import { setData } from "../../store/slices/commonSlices/AuthSlice";
 import { sendOTPApi, signInApi, signUpApi } from "../../sevices/authRepository"
 import { IAuthPageProps, IErrorType, ISignInResponse } from "../../types/authType";
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate/authValidate";
+import GoogleAuth from "./GoogleAuth";
 
 
 const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role }) => {
@@ -262,7 +263,8 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                 <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={() => navigate(role === 'user' ? '/doctor/auth' : '/user/auth')}>I'm a {role === 'user' ? 'doctor' : 'patient'}</p>
             </div>
 
-
+            {role === 'user' && <GoogleAuth />}
+            
             <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
                 {!loading && serverError !== ''  ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
                 {loading ? <HoneyComb /> : ''}

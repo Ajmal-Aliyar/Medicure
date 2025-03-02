@@ -67,8 +67,8 @@ const TopSpecialists: React.FC = () => {
                         <div
                             id={`doctor-${doctor._id}aw23`}
                             key={doctor._id}
-                            className={`${selectedDoctor && selectedDoctor._id !== doctor._id ? 'bg-opacity-5 bg-black opacity-35' : 'bg-[#f8fbfb] '} 
-                        duration-300 flex p-2 rounded-md items-center relative mb-2 shadow-md w-full min-w-[380px] md:min-w-[380px] md:w-[380px]`}
+                            className={`${selectedDoctor && selectedDoctor._id !== doctor._id ? 'bg-opacity-5 bg-black opacity-35' : ''} 
+                        duration-300 flex p-2 rounded-md items-center relative mb-2 shadow-md w-full min-w-[380px] md:min-w-[380px] md:w-[380px] bg-white`}
                         >
 
                             <div className='flex gap-2 flex-wrap z-10'>
