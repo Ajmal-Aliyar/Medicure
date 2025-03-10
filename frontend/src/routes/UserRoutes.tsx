@@ -14,6 +14,7 @@ import Feedback from '../components/patient/userDrive/feedbacks/Feedback';
 import Finance from '../components/patient/userDrive/finance/Finance';
 import PageNotFound from '../pages/common/PageNotFound';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import ChatLayout from '../pages/patient/ChatLayout';
 
 const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com";
 
@@ -33,6 +34,7 @@ function UserRoutes() {
           <Route path="profile" element={<AuthorizedRoute allowedRole={'user'}><Profile /></AuthorizedRoute>} />
           <Route path='find-doctors' element={<PublicRoutes><FindDoctors /></PublicRoutes>} />
           <Route path='find-doctors/:specialization' element={<PublicRoutes><Specialization /></PublicRoutes>} />
+          <Route path="chat" element={<AuthorizedRoute allowedRole={'user'}><ChatLayout /></AuthorizedRoute>} />
 
 
 

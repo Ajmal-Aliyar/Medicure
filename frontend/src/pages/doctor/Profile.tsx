@@ -55,8 +55,8 @@ function Profile() {
 
 
     return (
-        <div className='h-screen w-full p-4 flex justify-center overflow-y-auto rounded-md content'>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 w-full max-w-5xl pt-20 ">
+        <div className='h-screen w-full p-4 flex justify-center overflow-y-auto rounded-md content '>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 w-full max-w-5xl">
 
                 <ProfileTopBody setEditProfile={setEditProfile} />
                 <Slots setEditProfile={setEditProfile} />
@@ -64,7 +64,7 @@ function Profile() {
                 <Experience />
                 <Reviews />
 
-                <div className="h-10"></div>
+                <div className="h-20"></div>
             </div>
             { editProfile && editProfile !== 'editSlot' ? (
                 <EditProfilePortal onClose={setEditProfile}>

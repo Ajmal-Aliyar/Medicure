@@ -4,6 +4,7 @@ import patientProfile from './slices/patientSlices/profileSlice'
 import doctorProfile from './slices/doctorSlices/profileSlice'
 import slotReducer from './slices/doctorSlices/slotSlice';
 import authReducer from './slices/commonSlices/AuthSlice';
+import chatReducer from './slices/commonSlices/chatSlice'
 import { configureStore } from '@reduxjs/toolkit';
 import videoConsultReducer from './slices/commonSlices/videoConsultSlice'
 const store = configureStore({
@@ -13,6 +14,7 @@ const store = configureStore({
     doctor: doctorProfile,
     patient: patientProfile,
     videoConsult: videoConsultReducer,
+    chat: chatReducer,
     notification,
     manageDoctor
   }

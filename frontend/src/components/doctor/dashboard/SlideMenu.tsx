@@ -35,8 +35,7 @@ function SlideMenu() {
     const menuItems: MenuItem[] = [
         { icon: faThLarge, label: 'Dashboard', path: '/doctor/dashboard' },
         { icon: faCalendarAlt, label: 'Appointments', path: '/doctor/appointments' },
-        { icon: faMessage, label: 'Messages', path: '/doctor/messages' },
-        { icon: faNewspaper, label: 'Articles', path: '/doctor/articles' },
+        { icon: faMessage, label: 'Chats', path: '/doctor/chats' },
         { icon: faMoneyBill1, label: 'Finance', path: '/doctor/finance' },
         { icon: faUser, label: 'Profile', path: '/doctor/profile' },
     ];

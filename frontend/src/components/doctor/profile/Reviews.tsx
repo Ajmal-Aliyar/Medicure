@@ -35,7 +35,7 @@ function Reviews() {
   };
 
   return (
-    <div className="firstCard col-span-12 bg-white p-4 rounded-lg shadow-lg">
+    <div className="firstCard col-span-12 bg-white p-4 rounded-lg shadow-lg ">
       <p className="font-bold text-2xl mb-2 text-[#0c0b3eb5] flex justify-between border-b-[2px] border-gray-100">
         Reviews
       </p>

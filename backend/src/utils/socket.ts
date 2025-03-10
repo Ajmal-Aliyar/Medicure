@@ -4,9 +4,10 @@ import { setRedisData, getRedisData } from './redisUtil';
 
 const rooms = []
 const connectedCandidates = []
+let io: Server;
 
 export const socketHandler = (server) => {
-  let io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: process.env.CORS_URL,
       methods: ['GET', 'POST'],
@@ -21,11 +22,12 @@ export const socketHandler = (server) => {
     socket.on('join-room', (data: { candidateId: string, roomId: string }) => joinRoom(data, socket))
     socket.on('conn-init', (data: { socketId: string }) => initializeConnectionHandler(data, socket))
     socket.on('conn-signal', (data) => signalingHandler(data, socket))
+    socket.on("joinChat", (chatId) => joinChat(chatId, socket));
 
     socket.on('register-user', async (data: { candidateId: string }) => {
       const { candidateId } = data;
-      await setRedisData(`user:${candidateId}`, socket.id, 86400); 
-      await setRedisData(`socket:${socket.id}`, candidateId, 86400); 
+      await setRedisData(`user:${candidateId}`, socket.id, 86400);
+      await setRedisData(`socket:${socket.id}`, candidateId, 86400);
 
       console.log(`User ${candidateId} registered with socket ${socket.id}`);
     });
@@ -44,11 +46,11 @@ export const socketHandler = (server) => {
       console.log('socket id got sent notification')
       const socketId = await getRedisData(`user:${patientId}`);
       if (socketId && socketId !== 'disconnected') {
-          io.to(socketId).emit('notification', { slotId:consultingData.slotId, doctorId:consultingData.doctorId, roomId:consultingData.roomId });
+        io.to(socketId).emit('notification', { slotId: consultingData.slotId, doctorId: consultingData.doctorId, roomId: consultingData.roomId });
       } else {
-          console.log(`User ${patientId} is offline. Store the message.`);
+        console.log(`User ${patientId} is offline. Store the message.`);
       }
-  });
+    });
   });
 
   const createRoom = (data: { candidateId: string, roomId: string }, socket: Socket) => {
@@ -102,3 +104,12 @@ export const socketHandler = (server) => {
   }
 }
 
+export const getSocketInstance = () => {
+  if (!io) throw new Error("Socket.io is not initialized!");
+  return io;
+};
+
+const joinChat = (chatId: string, socket: Socket) => {
+  socket.join(chatId);
+  console.log(`User ${socket.id} joined chat ${chatId}`);
+}
