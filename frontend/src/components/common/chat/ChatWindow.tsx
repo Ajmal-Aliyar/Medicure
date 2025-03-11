@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { addMessage } from '../../../store/slices/commonSlices/chatSlice';
 import { sendMessageApi } from '../../../sevices/chat/fetchMessage';
+import { IMessage } from '../../../types/chat/ChatType';
 
 const ChatWindow = () => {
     const [message, setMessage] = useState('');
@@ -55,7 +56,7 @@ const ChatWindow = () => {
             </div>
 
             <div className="flex-grow bg-gray-100 p-4 overflow-y-auto">
-            {selectedChat.messages.map((msg) => (
+            {selectedChat.messages.map((msg: IMessage) => (
                 <div
                     key={msg._id}
                     className={`flex mb-4 ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
