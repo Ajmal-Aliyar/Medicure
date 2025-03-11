@@ -16,6 +16,10 @@ export class ChatRepository implements IChatRepository {
         return await Chat.findById(chatId).populate("participants").populate("lastMessage");
     }
 
+    async getChatByUserId(userId: mongoose.Types.ObjectId): Promise<IChat[] | null> {
+        return await Chat.find({ participants: userId }).lean();
+    }
+
     async getUserChats(userId: mongoose.Types.ObjectId, role: string): Promise<any[]> {
         try {
             const chats = await Chat.find({ participants: userId }).lean();

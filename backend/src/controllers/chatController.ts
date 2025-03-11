@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import { IChatRepository } from "../repositories/interfaces/IChatRepository";
+import { IChatServices } from "../services/interfaces/IChatServices";
 
 export class ChatController {
-    private chatRepository: IChatRepository;
+    private chatRepository: IChatServices;
 
-    constructor(chatRepository: IChatRepository) {
+    constructor(chatRepository: IChatServices) {
         this.chatRepository = chatRepository;
 
         this.createChat = this.createChat.bind(this)
@@ -22,7 +22,7 @@ export class ChatController {
                 res.status(400).json({ message: "At least two participants are required." });
             }
 
-            const newChat = await this.chatRepository.createChat(participants, isGroup, groupName, groupIcon);
+            const newChat = await this.chatRepository.createChat({participants, isGroup, groupName, groupIcon});
             res.status(201).json(newChat);
         } catch (error) {
             res.status(500).json({ message: "Error creating chat", error });
@@ -32,7 +32,7 @@ export class ChatController {
     async getChatById(req: Request, res: Response): Promise<void> {
         try {
             const chatId = new mongoose.Types.ObjectId(req.params.chatId);
-            const chat = await this.chatRepository.getChatById(chatId);
+            const chat = await this.chatRepository.getChatById({chatId});
             
             if (!chat) {
                 res.status(404).json({ message: "Chat not found" });
@@ -48,7 +48,7 @@ export class ChatController {
         try {
             const userId = new mongoose.Types.ObjectId(req.params.userId);
             const { role } = req.client
-            const chats = await this.chatRepository.getUserChats(userId, role);
+            const chats = await this.chatRepository.getUserChats({userId, role});
             res.status(200).json({data: chats});
         } catch (error) {
             res.status(500).json({ message: "Error fetching user chats", error });
@@ -58,7 +58,7 @@ export class ChatController {
     async updateLastMessage(req: Request, res: Response): Promise<void> {
         try {
             const { chatId, messageId } = req.body;
-            const updatedChat = await this.chatRepository.updateLastMessage(new mongoose.Types.ObjectId(chatId), new mongoose.Types.ObjectId(messageId));
+            const updatedChat = await this.chatRepository.updateLastMessage({ chatId, messageId });
             
             if (!updatedChat) {
                 res.status(404).json({ message: "Chat not found" });
@@ -73,7 +73,7 @@ export class ChatController {
     async deleteChat(req: Request, res: Response): Promise<void> {
         try {
             const chatId = new mongoose.Types.ObjectId(req.params.chatId);
-            await this.chatRepository.deleteChat(chatId);
+            await this.chatRepository.deleteChat({chatId});
             res.status(200).json({ message: "Chat deleted successfully" });
         } catch (error) {
             res.status(500).json({ message: "Error deleting chat", error });

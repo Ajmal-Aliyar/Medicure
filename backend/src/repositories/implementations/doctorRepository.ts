@@ -67,6 +67,14 @@ export class DoctorRepository implements IDoctorRepository {
         }
     }
 
+    async getMinDetails(_id: mongoose.Types.ObjectId): Promise<{ _id:mongoose.Types.ObjectId, fullName: string, profileImage: string }> {
+            try {
+                return await DoctorModel.findOne({_id}, {fullName: 1, profileImage: 1 })
+            } catch (error) {
+                throw ('Error fetching details: ' + error.message);
+            }
+        }
+
 
     async findByEmail(email: string): Promise<IDoctor> {
         return await DoctorModel.findOne({ email });
