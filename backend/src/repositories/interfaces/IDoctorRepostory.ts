@@ -1,4 +1,4 @@
-import { DeleteResult, UpdateResult } from "mongoose"
+import mongoose, { DeleteResult, UpdateResult } from "mongoose"
 import { IDoctor } from "../../models/doctor/doctorInterface"
 import { ICreateUser, IDoctorDocument, IProfileVerificationInput } from "../../types/IDoctorInterface"
 
@@ -6,6 +6,7 @@ export interface IDoctorRepository {
     updateReview( _id: string, rating: number, reviewCount: number): Promise<UpdateResult>
     createDoctor({ fullName, email, phone, password }: ICreateUser): Promise<IDoctorDocument>
     updateDoctor(_id: string, { fullName, headline, about, address }): Promise<void>
+    getMinDetails(_id: mongoose.Types.ObjectId): Promise<{ _id:mongoose.Types.ObjectId, fullName: string, profileImage: string }>
     findByEmail(email: string): Promise<IDoctor>
     findByID(_id: string): Promise<IDoctor>
     updateProfileData({

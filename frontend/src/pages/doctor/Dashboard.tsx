@@ -11,7 +11,7 @@ function Dashboard() {
 
     return (
         <>
-            <div className='content h-screen w-full p-4 flex flex-col justify-center overflow-y-auto rounded-md mt-20'
+            <div className='content h-screen w-full  flex flex-col justify-center overflow-y-auto rounded-md '
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     
                 <div className="grid grid-cols-2 grid-rows-2 gap-2 w-full p-4 h-screen pb-20">

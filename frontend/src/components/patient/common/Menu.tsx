@@ -60,14 +60,14 @@ function Menu() {
                         Find Doctors
                     </NavLink>
                     <NavLink
-                        to="/user/articles"
+                        to="/user/chat"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer hover:scale-105 transition-all duration-300"
                                 : "cursor-pointer hover:scale-105 transition-all duration-300"
                         }
                     >
-                        Articles
+                        Connection
                     </NavLink>
                     <NavLink
                         to="/user/contact"
@@ -111,7 +111,7 @@ function Menu() {
                 </div>
             </div>
 
-            <div className={`lg:hidden lg:!hidden items-center justify-between overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'h-44 opacity-100 flex' : 'h-0 opacity-0 pointer-events-none'}`}>
+            <div className={` lg:!hidden items-center justify-between overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'h-44 opacity-100 flex' : 'h-0 opacity-0 pointer-events-none'}`}>
 
 
                 <span className='flex flex-col gap-4'>
@@ -137,14 +137,14 @@ function Menu() {
                         Find Doctors
                     </NavLink>
                     <NavLink
-                        to="/user/articles"
+                        to="/user/chat"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer "
                                 : "cursor-pointer"
                         }
                     >
-                        Articles
+                        Connection
                     </NavLink>
                     <NavLink
                         to="/user/contact"

@@ -6,10 +6,15 @@ import NotificationPortal from './components/common/NotificatinPortal';
 import VideoCallRoute from './routes/VideoCallRoute';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import GoogleAuth from './components/auth/GoogleAuth';
+import { connectWithSocketIOServer } from './utils/wss';
+import { useEffect } from 'react';
 
 const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com"; 
 
 const App = () => {
+  useEffect(() => {
+    connectWithSocketIOServer(clientId)
+}, [])
 
   return (
     <Router>

@@ -1,4 +1,4 @@
-import { InferSchemaType, UpdateResult } from "mongoose";
+import mongoose, { InferSchemaType, UpdateResult } from "mongoose";
 import { ICreatePatient, IUpdateProfile } from "../../types/IPatientInterface";
 import { PatientSchema } from "../../models/patient/patientSchema";
 import { IPatient } from "../../models/patient/patientInterface";
@@ -19,4 +19,5 @@ export interface IPatientRepository {
     getAllPatient(skip: number, limit: number): Promise<{ data: IPatientDocument[], hasMore: boolean }>
     block(_id: string): Promise<UpdateResult> 
     unblock(_id: string): Promise<UpdateResult>
+    getMinDetails(_id: mongoose.Types.ObjectId): Promise<{ _id:mongoose.Types.ObjectId, fullName: string, profileImage: string }>
 }

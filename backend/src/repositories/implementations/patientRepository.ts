@@ -1,4 +1,4 @@
-import { UpdateResult } from "mongoose";
+import mongoose, { UpdateResult } from "mongoose";
 import { ICreatePatient, IUpdateProfile } from "../../types/IPatientInterface";
 import { IPatientDocument, IPatientRepository } from "../interfaces/IPatientRepository";
 import { IPatient } from "../../models/patient/patientInterface";
@@ -58,6 +58,14 @@ export class PatientRepository implements IPatientRepository {
             return await PatientModel.updateOne({ _id }, { $set: { profileImage } });
         } catch (error) {
             throw ('Error updating profile image: ' + error.message);
+        }
+    }
+
+    async getMinDetails(_id: mongoose.Types.ObjectId): Promise<{ _id:mongoose.Types.ObjectId, fullName: string, profileImage: string }> {
+        try {
+            return await PatientModel.findOne({_id}, {fullName: 1, profileImage: 1 })
+        } catch (error) {
+            throw ('Error fetching details: ' + error.message);
         }
     }
 
