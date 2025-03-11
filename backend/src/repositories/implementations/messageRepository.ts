@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IMessage } from "../../models/message/messageInterface";
 import { Message } from "../../models/message/messageSchema";
 import { IMessageRepository } from "../interfaces/IMessageRepository";
@@ -9,7 +10,7 @@ export class MessageRepository implements IMessageRepository {
         return await message.save();
     }
 
-    async getMessagesByChatId(chatId: string, limit: number = 50): Promise<IMessage[]> {
+    async getMessagesByChatId(chatId: mongoose.Types.ObjectId, limit: number = 50): Promise<IMessage[]> {
         console.log(chatId,'dhad')
         return await Message.find({ chatId }).sort({ timestamp: 1 }).limit(limit);
     }

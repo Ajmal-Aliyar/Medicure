@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { producer } from "../utils/kafkaUtil";
 import { IMessageRepository } from "../repositories/interfaces/IMessageRepository";
+import { IMessageServices } from "../services/interfaces/IMessageServices";
+import mongoose from "mongoose";
 
 export class MessageController {
-    private messageRepository: IMessageRepository;
+    private messageServices: IMessageServices;
 
-    constructor(messageRepository: IMessageRepository) {
-        this.messageRepository = messageRepository;
+    constructor(messageServices: IMessageServices) {
+        this.messageServices = messageServices;
 
         this.createMessage = this.createMessage.bind(this)
         this.getMessagesByChatId = this.getMessagesByChatId.bind(this)
@@ -21,45 +23,41 @@ export class MessageController {
             res.send("Message sent!");
         } catch (error) {
             console.error(error)
-            res.status(500).json({ error: "Failed to create message" });
+            throw error
         }
     }
 
     async getMessagesByChatId(req: Request, res: Response): Promise<void> {
         try {
             const { chatId } = req.params;
-            const messages = await this.messageRepository.getMessagesByChatId(chatId);
+            const messages = await this.messageServices.getMessagesByChatId({ chatId: new mongoose.Types.ObjectId(chatId) });
             res.status(200).json(messages);
         } catch (error) {
-            res.status(500).json({ error: "Failed to retrieve messages" });
+            throw error
         }
     }
 
     async updateMessage(req: Request, res: Response): Promise<void> {
         try {
             const { messageId } = req.params;
-            const updatedMessage = await this.messageRepository.updateMessage(messageId, req.body);
+            const updatedMessage = await this.messageServices.updateMessage({messageId, data: req.body});
             if (!updatedMessage) {
                 res.status(404).json({ error: "Message not found" });
                 return;
             }
             res.status(200).json(updatedMessage);
         } catch (error) {
-            res.status(500).json({ error: "Failed to update message" });
+            throw error
         }
     }
 
     async deleteMessage(req: Request, res: Response): Promise<void> {
         try {
             const { messageId } = req.params;
-            const deleted = await this.messageRepository.deleteMessage(messageId);
-            if (!deleted) {
-                res.status(404).json({ error: "Message not found" });
-                return;
-            }
+            await this.messageServices.deleteMessage({ messageId });
             res.status(200).json({ message: "Message deleted successfully" });
         } catch (error) {
-            res.status(500).json({ error: "Failed to delete message" });
+            throw error
         }
     }
 
@@ -67,14 +65,14 @@ export class MessageController {
         try {
             const { messageId } = req.params;
             const { userId } = req.body;
-            const updatedMessage = await this.messageRepository.markMessageAsSeen(messageId, userId);
+            const updatedMessage = await this.messageServices.markMessageAsSeen({messageId, userId});
             if (!updatedMessage) {
                 res.status(404).json({ error: "Message not found" });
                 return;
             }
             res.status(200).json(updatedMessage);
         } catch (error) {
-            res.status(500).json({ error: "Failed to mark message as seen" });
+            throw error;
         }
     }
 }

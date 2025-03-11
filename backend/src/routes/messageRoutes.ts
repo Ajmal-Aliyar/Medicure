@@ -2,11 +2,13 @@ import { Router } from "express";
 import { MessageRepository } from "../repositories/implementations/messageRepository";
 import { MessageController } from "../controllers/messageController";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
+import { MessageServices } from "../services/implementations/messageServices";
 
 const router = Router();
 
 const messageRepository = new MessageRepository();
-const messageController = new MessageController(messageRepository);
+const messageServices = new MessageServices(messageRepository)
+const messageController = new MessageController(messageServices);
 
 router.post("/messages", tokenMiddleware, messageController.createMessage);
 router.get("/messages/:chatId", tokenMiddleware, messageController.getMessagesByChatId);
