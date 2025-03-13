@@ -12,4 +12,5 @@ export interface IAppointmentRepository {
     consultingCompleted(_id: string): Promise<UpdateResult>
     getAllAppointmentsForAdmin(): Promise<IAppointmentDocument[]>
     cancelAppointmentByTransactionId(transactionId: string): Promise<void>
+    getConsultents(_id: string): Promise<{patientId:string, doctorId: string}>
 }

@@ -8,4 +8,10 @@ export interface IChatRepository {
     getUserChats(userId: mongoose.Types.ObjectId, role: string): Promise<IChat[]>;
     updateLastMessage(chatId: mongoose.Types.ObjectId, messageId: mongoose.Types.ObjectId): Promise<IChat | null>;
     deleteChat(chatId: mongoose.Types.ObjectId): Promise<void>;
+    isChatExists({ patientId, doctorId }: IIsChatExists): Promise<boolean>
+}
+
+export interface IIsChatExists {
+    patientId: mongoose.Types.ObjectId;
+    doctorId: mongoose.Types.ObjectId;
 }

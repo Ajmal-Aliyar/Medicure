@@ -23,6 +23,7 @@
     "@tailwindcss/vite": "^4.0.9",
     "axios": "^1.7.9",
     "cropperjs": "^1.6.2",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "eventemitter3": "^5.0.1",
     "font-awesome": "^4.7.0",

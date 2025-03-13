@@ -10,13 +10,11 @@ const ChatWindow = () => {
     const [message, setMessage] = useState('');
     const { selectedChat } = useSelector((state: RootState) => state.chat);
     const userId = useSelector((state: RootState) => state.auth._id)
-    
     const dispatch = useDispatch()
 
      const bottomRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        // Scroll to bottom when messages update
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [selectedChat]);
 
@@ -65,8 +63,8 @@ const ChatWindow = () => {
                         <img src={selectedChat.profileImage} className="max-w-[30px] rounded-full mr-2" alt="" />
                     )}
                     <div
-                        className={`px-3 py-1 rounded-tl-none rounded-md max-w-md h-fit ${
-                            msg.senderId === userId ? "bg-[#93cdf990] text-right" : "bg-white text-left"
+                        className={`px-3 py-1  rounded-xl max-w-md h-fit ${
+                            msg.senderId === userId ? "bg-[#93cdf990] text-right rounded-br-none" : "bg-white text-left rounded-bl-none "
                         }`}
                     >
                         {msg.content}

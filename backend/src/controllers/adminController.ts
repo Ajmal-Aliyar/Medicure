@@ -57,9 +57,11 @@ export class AdminController {
 
     async getApprovedDoctors(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            const searchQuery: string = (req.query.searchQuery as string) || "";
             const skip = parseInt(req.query.skip as string) || 0;
             const limit = parseInt(req.query.limit as string) || 5;
-            const approvedDoctors = await this.adminServices.getApprovedDoctors(skip, limit);
+            console.log(searchQuery,'ds')
+            const approvedDoctors = await this.adminServices.getApprovedDoctors(skip, limit, searchQuery);
 
             res.status(200).json({
                 success: true,

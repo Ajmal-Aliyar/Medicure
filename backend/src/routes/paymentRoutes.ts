@@ -10,13 +10,15 @@ import { SlotService } from '../services/implementations/slotServices';
 import { DoctorRepository } from '../repositories/implementations/doctorRepository';
 import { SlotRepository } from '../repositories/implementations/slotRepository';
 import { PatientRepository } from '../repositories/implementations/patientRepository';
+import { ChatRepository } from '../repositories/implementations/chatRepository';
 
 const transactionRepository = new TransactionRepository();
 const transactionServices = new TransactionServices(transactionRepository);
 const patientRepository = new PatientRepository()
 const slotRepository = new SlotRepository()
 const appointmentRepository = new AppointmentRepository();
-const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository, slotRepository);
+const chatRepository = new ChatRepository()
+const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository, slotRepository, chatRepository);
 const doctorRepository = new DoctorRepository()
 const slotServices = new SlotService(slotRepository, doctorRepository)
 const paymentService = new PaymentServices(transactionServices, appointmentServices, slotServices)

@@ -13,7 +13,6 @@ interface AllDoctorsCardProps {
 
 const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
     const [doctors, setDoctors] = useState<IFetchAllApprovedDoctors[]>([]);
-    const [filteredDoctors, setFilteredDoctors] = useState<IFetchAllApprovedDoctors[]>([]);
     const [showMore, setShowMore] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const dispatch = useDispatch();
@@ -23,28 +22,17 @@ const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
     useEffect(() => {
         const getDoctors = async () => {
             try {
-                const response = await fetchAllApprovedDoctorsApi(skip, limit);
+                const response = await fetchAllApprovedDoctorsApi(skip, limit, searchTerm);
+                console.log(response)
                 setShowMore(response.hasMore);
-                setDoctors((prevDoctors) => [...prevDoctors, ...response.data]);
+                setDoctors(response.data);
             } catch (error: any) {
                 dispatch(setError(error.message));
             }
         };
 
         getDoctors();
-    }, [skip, limit, dispatch]);
-
-    useEffect(() => {
-        if (searchTerm.trim() === "") {
-            setFilteredDoctors(doctors);
-        } else {
-            setFilteredDoctors(
-                doctors.filter((doctor) =>
-                    doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-            );
-        }
-    }, [searchTerm, doctors]);
+    }, [skip, limit, searchTerm, dispatch]);
 
     const handleDoctorSelect = (_id: string) => {
         dispatch(setSelectedId({ _id }));
@@ -71,7 +59,7 @@ const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
                 />
             </div>
             <div className="h-[516px] p-2 overflow-y-auto">
-                {filteredDoctors.map((doctor) => (
+                {doctors.map((doctor) => (
                     <div
                         key={doctor._id}
                         className="border flex p-2 rounded-md items-center relative mb-2 hover:border-[#3ab8a7a8] hover:border-2 border-[#C4DAD2] active:scale-95 duration-300"

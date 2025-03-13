@@ -24,7 +24,7 @@ export interface IDoctorRepository {
     updateFees(_id: string, fees: number): Promise<UpdateResult>
     getFees(doctorId: string): Promise<number | null>
     changePassword(_id: string, password: string): Promise<UpdateResult>
-    fetchAllApprovedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }>
+    fetchAllApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], hasMore: boolean }>
     fetchAllRequestedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }>
     approveDoctor (_id: string): Promise<UpdateResult>
     deleteDoctor (_id: string): Promise<DeleteResult>

@@ -10,6 +10,7 @@ import Specialization from "../pages/admin/Specialization";
 import Appointments from "../pages/admin/Appointments";
 import Finance from "../pages/admin/Finance";
 import PageNotFound from "../pages/common/PageNotFound";
+import Message from "../pages/admin/Message";
 
 function AdminRoutes() {
   return (
@@ -28,6 +29,7 @@ function AdminRoutes() {
         <Route path="patients" element={<AuthorizedRoute allowedRole='admin'><Patients /></AuthorizedRoute>} />
         <Route path="appointments" element={<AuthorizedRoute allowedRole='admin'><Appointments /></AuthorizedRoute>} />
         <Route path="specialization" element={<AuthorizedRoute allowedRole='admin'><Specialization /></AuthorizedRoute>} />
+        <Route path="messages" element={<AuthorizedRoute allowedRole='admin'><Message /></AuthorizedRoute>} />
         <Route path="finance" element={<AuthorizedRoute allowedRole='admin'><Finance /></AuthorizedRoute>} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

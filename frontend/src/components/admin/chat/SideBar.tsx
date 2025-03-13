@@ -1,4 +1,3 @@
-import { Search } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { setChats, setSelectedChat } from '../../../store/slices/commonSlices/chatSlice';
@@ -6,6 +5,7 @@ import { fetchMessagesApi } from '../../../sevices/chat/fetchMessage';
 import { useEffect } from 'react';
 import { fetchChatsApi } from '../../../sevices/chat/fetchChats';
 import { joinChat } from '../../../utils/wss';
+import Header from './Header';
 import broadcastImg from '../../../assets/external/broadcast.png'
 import defaultUser from '../../../assets/external/defaultUserImage.jpg'
 
@@ -38,20 +38,11 @@ const SideBar = () => {
 
     return (
         <div className="w-80 border-r border-gray-300 flex flex-col">
-            <div className="p-3 bg-[#51aff6a1] flex justify-between items-center">
-            
-                <div className="relative w-full">
-                    <Search className="absolute left-3 top-2 text-white" size={20} />
-                    <input
-                        placeholder="Search..."
-                        className="pl-10 border rounded-md w-full border-white outline-none p-1 placeholder:text-white"
-                    />
-                </div>
-            </div>
+            <Header />
 
             <div className="flex-grow overflow-y-auto">
                 {chats.length === 0 ? (
-                    <p>No chats available</p>
+                    <p className='p-3'>No chats available</p>
                 ) : (
                     <ul>
                         {chats.map((chat: any) => (
@@ -72,6 +63,7 @@ const SideBar = () => {
                                     />
                                 </div>
 
+
                                 <div className="flex-grow">
                                     <div className="flex justify-between">
                                         <span className="font-semibold">
@@ -79,7 +71,7 @@ const SideBar = () => {
                                                 ? chat.groupName
                                                 : `${chat.participants[0].fullName}`}
 
-                                 </span>
+                                        </span>
                                         <span className="text-xs text-gray-400">12:30 PM</span>
                                     </div>
                                     <div className="flex justify-between">
