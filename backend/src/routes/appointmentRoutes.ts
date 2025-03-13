@@ -7,13 +7,15 @@ import { PatientRepository } from "../repositories/implementations/patientReposi
 import { isDoctor } from "../middleware/isDoctor";
 import { SlotRepository } from "../repositories/implementations/slotRepository";
 import { isAdmin } from "../middleware/isAdmin";
+import { ChatRepository } from "../repositories/implementations/chatRepository";
 
 const router = Router()
 
 const appointmentRepository = new AppointmentRepository()
 const patientRepository = new PatientRepository()
 const slotRepository = new SlotRepository()
-const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository, slotRepository)
+const chatRepository = new ChatRepository()
+const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository, slotRepository, chatRepository)
 const appointmentController = new AppointmentController(appointmentServices)
 
 

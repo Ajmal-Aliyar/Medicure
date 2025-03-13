@@ -4,7 +4,7 @@ import { IChat } from "../../models/chat/chatInterface";
 import { IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { IDoctorRepository } from "../../repositories/interfaces/IDoctorRepostory";
 
-  
+
 export class ChatServices implements IChatServices {
     private chatRepository: IChatRepository;
     private patientRepository: IPatientRepository
@@ -39,24 +39,31 @@ export class ChatServices implements IChatServices {
         }
     }
 
-    async getUserChats({ userId, role }: IGetUserChats): Promise<IChatListResponse[]> {
+    async getUserChats({ userId, role }: IGetUserChats): Promise<(IChatListResponse|IChat)[]> {
         try {
             const chats = await this.chatRepository.getChatByUserId(userId)
+            console.log(chats)
 
             const client = (role === 'doctor' ? this.patientRepository : this.doctorRepository)
 
             const populatedChats = await Promise.all(
                 chats.map(async (chat) => {
-                    const populatedParticipants = await Promise.all(
-                        chat.participants.map(async (_id) => {
-                            const user = await client.getMinDetails(_id)
-                            return user || null;
-                        })
-                    );
+                    if (chat.isGroup) {
+                        return chat
+                    } else {
+                        const populatedParticipants = await Promise.all(
+                            chat.participants.map(async (_id) => {
+                                const user = await client.getMinDetails(_id)
+                                return user || null;
+                            })
+                        );
 
-                    return { ...chat, participants: populatedParticipants.filter(Boolean) };
+                        return { ...chat, participants: populatedParticipants.filter(Boolean) };
+                    }
+
                 })
             );
+
             return populatedChats
         } catch (error) {
             throw error

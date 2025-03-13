@@ -34,21 +34,32 @@ export class DoctorRepository implements IDoctorRepository {
         console.log(result,'res')
     }
 
-    async fetchAllApprovedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
+    async fetchAllApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], hasMore: boolean }> {
         try {
-            const doctors = await DoctorModel.find({ isApproved: true })
+            const query: any = { isApproved: true };
+    
+            if (searchQuery) {
+                query.$or = [
+                    { fullName: { $regex: searchQuery, $options: "i" } },
+                    { specialization: { $regex: searchQuery, $options: "i" } }
+                ];
+            }
+    
+            const doctors = await DoctorModel.find(query)
                 .skip(skip)
                 .limit(limit)
                 .select('rating profileImage fullName specialization reviewCount')
                 .lean();
     
             const hasMore = doctors.length === limit;
+    
             return { data: doctors, hasMore };
         } catch (error) {
             console.error("Error fetching doctors:", error);
             throw new Error("Unable to fetch doctors");
         }
     }
+    
 
     async fetchAllRequestedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
         try {

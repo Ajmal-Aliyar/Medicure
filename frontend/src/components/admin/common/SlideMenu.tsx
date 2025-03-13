@@ -1,4 +1,4 @@
-import { faRightFromBracket, faBars, faCalendarAlt, faThLarge, faUserDoctor, faUserAlt, faLightbulb } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket, faBars, faCalendarAlt, faThLarge, faUserDoctor, faUserAlt, faLightbulb, faMessage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -32,6 +32,7 @@ function SlideMenu() {
         { icon: faUserAlt, label: 'Patients', path: '/admin/patients' },
         { icon: faCalendarAlt, label: 'Appointments', path: '/admin/appointments' },  
         { icon: faLightbulb, label: 'Specialization', path: '/admin/specialization' },  
+        { icon: faMessage, label: 'Messages', path: '/admin/messages' },  
         { icon: faMoneyBill1, label: 'Finance', path: '/admin/finance' },
     ];
 

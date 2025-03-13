@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import { IAppointmentDocument, IAppointmentRepository } from "../../repositories/interfaces/IAppointmentRepository";
+import { IChatRepository } from "../../repositories/interfaces/IChatRepository";
 import { IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
 import { IAppointmentServices, ICreateAppointment } from "../interfaces/IAppointmentServices";
@@ -8,11 +10,13 @@ export class AppointmentServices implements IAppointmentServices {
     private appointmentRepository: IAppointmentRepository;
     private patientRepository: IPatientRepository;
     private slotRepository: ISlotRepository;
+    private chatRepository: IChatRepository;
 
-    constructor(appointmentRepository: IAppointmentRepository, patientRepository: IPatientRepository, slotRepository: ISlotRepository) {
+    constructor(appointmentRepository: IAppointmentRepository, patientRepository: IPatientRepository, slotRepository: ISlotRepository, chatRepository: IChatRepository) {
         this.appointmentRepository = appointmentRepository
         this.patientRepository = patientRepository
         this.slotRepository = slotRepository
+        this.chatRepository = chatRepository;
     }
 
     async createAppointment({ doctorId, patientId, slotId, appointmentDate, status, transactionId }: ICreateAppointment): Promise<IAppointmentDocument> {
@@ -104,19 +108,38 @@ export class AppointmentServices implements IAppointmentServices {
 
     async consultingCompleted(appointmentId: string, slotId: string): Promise<boolean> {
         try {
-            const updateAppointment = await this.appointmentRepository.consultingCompleted(appointmentId);
-            if (!updateAppointment) throw new Error("Failed to update appointment");
+            const [updateAppointment, updateSlot] = await Promise.all([
+                this.appointmentRepository.consultingCompleted(appointmentId),
+                this.slotRepository.consultingCompleted(slotId),
+            ]);
     
-            const updateSlot = await this.slotRepository.consultingCompleted(slotId);
+            if (!updateAppointment) throw new Error("Failed to update appointment");
             if (!updateSlot) throw new Error("Failed to update slot");
+    
+            console.log("Consulting finished", updateAppointment, updateSlot);
+    
+            const appointment = await this.appointmentRepository.getConsultents(appointmentId);
+            if (!appointment) throw new Error("Appointment details not found");
+    
+            const { doctorId, patientId } = appointment;
+    
+            const doctorObjectId = new mongoose.Types.ObjectId(doctorId);
+            const patientObjectId = new mongoose.Types.ObjectId(patientId);
+    
+            const chatExists = await this.chatRepository.isChatExists({ doctorId: doctorObjectId, patientId: patientObjectId });
+            console.log('chat exist is:', chatExists)
+    
+            if (!chatExists) {
+                await this.chatRepository.createChat([doctorObjectId, patientObjectId]);
+            }
     
             return true;
         } catch (error) {
-            console.log('error occured')
+            console.error("Error in consultingCompleted:", error);
             throw error
         }
     }
-
+    
     async cancelAppointmentByTransactionId(transactionId: string): Promise<void> {
         try {
             await this.appointmentRepository.cancelAppointmentByTransactionId(transactionId)

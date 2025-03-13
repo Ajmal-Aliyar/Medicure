@@ -4,7 +4,7 @@ import { IChat } from "../../models/chat/chatInterface";
 export interface IChatServices {
     createChat({ participants, isGroup, groupName, groupIcon }: ICreateChat): Promise<IChat>
     getChatById({ chatId }: IChatId): Promise<IChat>
-    getUserChats({ userId, role }: IGetUserChats): Promise<IChatListResponse[]>
+    getUserChats({ userId, role }: IGetUserChats): Promise<(IChatListResponse|IChat)[]>
     updateLastMessage({ chatId, messageId }: IUpdateLastMessage): Promise<IChat>
     deleteChat({ chatId }: IChatId): Promise<void>
 }

@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import ConsultLanding from "./ConsultLanding";
 import { getLocalPreviewAndInitRoomConnection, streamEvents } from "../../utils/webrtc";
-import { Mic, MicOff, Phone, Pin, Video, VideoOff } from 'lucide-react';
+import { FilePlus, Mic, MicOff, Phone, Pin, Video, VideoOff } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { stopStreaming } from '../../utils/webrtc';
 import { clearWarning, setExtra, setWarning } from "../../store/slices/commonSlices/notificationSlice";
 import { changeAppointmentStatusApi } from "../../sevices/appointments/changeAppointmentStatus";
+import MedicalRecordForm from "../doctor/MedicalReport";
 
 const VideoCallInterface = () => {
   const [callStarted, setCallStarted] = useState<boolean>(false);
@@ -20,6 +21,7 @@ const VideoCallInterface = () => {
   const [searchParams] = useSearchParams();
   const appointmentId = searchParams.get("appointment");
   const slotId = searchParams.get('slot')
+  const [medicalReport, setMedicalReport] = useState<boolean>(false)
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const client = useSelector((state: RootState) => state.auth)
@@ -172,6 +174,12 @@ const VideoCallInterface = () => {
               {videoOn ? <Video size={32} strokeWidth={2.25} /> : <VideoOff size={32} strokeWidth={2.25} />}
             </button>
           </div>
+          <div className='fixed bottom-8 right-8 w-16 h-16 bg-[#98c8ed] rounded-full z-50 flex justify-center items-center'
+          onClick={() => setMedicalReport(p => !p)}>
+              <FilePlus className="text-white" strokeWidth={3} size={36} />
+          </div>
+          { medicalReport && <MedicalRecordForm />}
+
         </>
       )}
     </div>

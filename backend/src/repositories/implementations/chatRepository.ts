@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IChatRepository } from "../interfaces/IChatRepository";
+import { IChatRepository, IIsChatExists } from "../interfaces/IChatRepository";
 import { Chat } from "../../models/chat/chatModel";
 import { IChat } from "../../models/chat/chatInterface";
 import { PatientModel } from "../../models/patient/patientModel";
@@ -19,6 +19,17 @@ export class ChatRepository implements IChatRepository {
     async getChatByUserId(userId: mongoose.Types.ObjectId): Promise<IChat[] | null> {
         return await Chat.find({ participants: userId }).lean();
     }
+
+    async isChatExists({ patientId, doctorId }: IIsChatExists): Promise<boolean> {
+        try {
+            return !!(await Chat.exists({ participants: [patientId, doctorId] }));
+        } catch (error) {
+            console.error("Error checking chat existence:", error);
+            return false;
+        }
+    }
+    
+    
 
     async getUserChats(userId: mongoose.Types.ObjectId, role: string): Promise<any[]> {
         try {
