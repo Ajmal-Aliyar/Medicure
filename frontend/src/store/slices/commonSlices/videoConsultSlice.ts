@@ -4,6 +4,7 @@ interface IInitialState {
     roomId: string | null
     candidates: ICandidate[]
     patientId: string | null
+    recordId: string | null
 }
 
 export interface ICandidate {
@@ -15,7 +16,8 @@ export interface ICandidate {
 const initialState: IInitialState = {
     roomId: null,
     candidates: [],
-    patientId: null
+    patientId: null,
+    recordId: null
 }
 
 const videoConsultSlice = createSlice({
@@ -31,8 +33,11 @@ const videoConsultSlice = createSlice({
         setPatientId: (state, action: PayloadAction<string>) => {
             state.patientId = action.payload
         },
+        setRecordId: (state, action: PayloadAction<string>) => {
+            state.recordId = action.payload
+        },
     }
 })
 
-export const { setRoomId, setCanditates, setPatientId } = videoConsultSlice.actions
+export const { setRoomId, setCanditates, setPatientId, setRecordId } = videoConsultSlice.actions
 export default videoConsultSlice.reducer 

@@ -11,7 +11,6 @@ import { useState } from 'react';
 function DoctorLayout() {
     const img = useSelector((state: RootState) => state.doctor.profileImage)
     const [editProfile, setEditProfile] = useState<string>('')
-    const [loading, setLoading] = useState(false)
     return (
         <div className='w-[100%] h-[100vh] bg-[#F5F5F5] relative  flex flex-col lg:flex-row overflow-'>
 
@@ -34,7 +33,7 @@ function DoctorLayout() {
             </div>
             {editProfile === 'editSlot' && (
                 <ModalAnimation onClose={setEditProfile}>
-                    <AppointmentSetUp handleModal={setEditProfile} setLoading={setLoading} />
+                    <AppointmentSetUp handleModal={setEditProfile}/>
                 </ModalAnimation>
             )}
 

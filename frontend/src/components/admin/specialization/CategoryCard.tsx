@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Img from '../../../assets/ology/heart-cardiology.png';
 import { fetchAllSpecializationApi } from '../../../sevices/admin/specializationRepository';
 import { ISpecialization } from '../../../types/specialization/specialization';
 import { setError, setLoading } from '../../../store/slices/commonSlices/notificationSlice';

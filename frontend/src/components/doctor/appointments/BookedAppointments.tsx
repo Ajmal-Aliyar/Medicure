@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { fetchBookedPatients, fetchBookedPatientsResponse } from '../../../sevices/appointments/fetchBookedPatients';
 import { ChevronLeft } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import { setPatientId, setRoomId } from '../../../store/slices/commonSlices/videoConsultSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPatientId, setRecordId, setRoomId } from '../../../store/slices/commonSlices/videoConsultSlice';
 import { useNavigate } from 'react-router-dom';
+import { MedicalRecordProvider } from '../../../context/MedicalReportProvider';
+import { MedicalRecordForm } from '../../../pages/doctor/MedicalReport';
 
 interface BookedAppointmentsProps {
   selectedSlot: null | string;
@@ -11,13 +13,16 @@ interface BookedAppointmentsProps {
 }
 const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, setSelectedSlot }) => {
   const [patientDetails, setPatientDetails] = useState<fetchBookedPatientsResponse[] | null>(null)
+  const [medicalReport, setMedicalReport] = useState<boolean>(false)
+  const [reportId, setReportId] = useState<string>('')
+
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPatients = async () => {
       if (selectedSlot) {
-        const {bookedPatientsData} = await fetchBookedPatients(selectedSlot)
+        const { bookedPatientsData } = await fetchBookedPatients(selectedSlot)
         console.log(bookedPatientsData)
         setPatientDetails(bookedPatientsData)
       }
@@ -25,12 +30,20 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
     fetchPatients()
   }, [selectedSlot])
 
-  const createRoomHandler = (roomId: string, appointmentId: string, patientId: string) => {
+  const handleReport = (id: string) => {
+    setReportId(id)
+  }
+
+  const createRoomHandler = (roomId: string, appointmentId: string, patientId: string, recordId: string) => {
     dispatch(setPatientId(patientId))
     dispatch(setRoomId(roomId))
+    dispatch(setRecordId(recordId))
     navigate(`/consult/meeting/${roomId}?appointment=${appointmentId}&slot=${selectedSlot}`)
   }
 
+  const handleMedicalReportUpload = () => {
+    console.log('hello world')
+  }
   return (
     <div>
       <div className='p-2  border-b'>
@@ -51,12 +64,16 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
 
             <div className='flex gap-2'>
               <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300'>profile</button>
-              <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300' >cancel</button>
-              <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'Scheduled' ? '' : 'hidden'}`} onClick={() => createRoomHandler(patient.roomId, patient.appointmentId, patient.patientDetails._id)}>join</button>
+              <button className={`px-2 text-white  ${patient.recordId?.isCompleted ? 'bg-green-300' : 'bg-orange-300'} rounded-md active:scale-90 duration-300 ${patient.status === 'Completed' ? '' : 'hidden'}`} 
+              onClick={() => handleReport(patient.recordId?._id)}>report</button>
+              <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'Scheduled' ? '' : 'hidden'}`} onClick={() => createRoomHandler(patient.roomId, patient.appointmentId, patient.patientDetails._id, patient.recordId._id)}>join</button>
             </div>
           </div>
         ))}
       </div>
+
+      <MedicalRecordProvider recordId={reportId}>{medicalReport && <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={true} />}</MedicalRecordProvider>
+
     </div>
 
   )

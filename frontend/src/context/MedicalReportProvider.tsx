@@ -1,56 +1,67 @@
-import { createContext, Dispatch, ReactNode, useContext, useReducer } from "react";
+import { createContext, Dispatch, ReactNode, useContext, useReducer, useEffect } from "react";
+import { IMedicalRecord } from "../types/record/record";
+import { getMedicalRecordById } from "../sevices/medicalRecords/medicalRecord";
 
-interface MedicalRecordState {
-    patientID: string;
-    doctorID: string;
-    diagnosis: string;
-    prescription: string;
-    allergy: string;
-    dateOfExamination: Date | null;
-  }
 
-const initialState: MedicalRecordState = {
-    patientID: "",
-    doctorID: "",
-    diagnosis: "",
-    prescription: "",
-    allergy: "",
-    dateOfExamination: null,
-  };
-  
-  const medicalRecordReducer = (state: MedicalRecordState, action: MedicalRecordAction): MedicalRecordState => {
-    switch (action.type) {
-      case "SET_FIELD":
-        return { ...state, [action.field]: action.value };
-      case "SET_DATE":
-        return { ...state, dateOfExamination: action.date };
-      case "RESET":
-        return initialState;
-      default:
-        return state;
-    }
-  };
-  
-  type MedicalRecordAction =
-  | { type: "SET_FIELD"; field: keyof MedicalRecordState; value: string }
+const initialState: IMedicalRecord = {
+  diagnosis: "",
+  prescription: "",
+  allergy: "",
+  dateOfExamination: null,
+  isCompleted: false
+};
+
+type MedicalRecordAction =
+  | { type: "SET_FIELD"; field: keyof IMedicalRecord; value: string }
   | { type: "SET_DATE"; date: Date | null }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "SET_RECORD"; record: IMedicalRecord }; 
 
-
-
-  const MedicalRecordContext = createContext<MedicalRecordContextType | undefined>(undefined);
-
-  interface MedicalRecordContextType {
-    state: MedicalRecordState;
-    dispatch: Dispatch<MedicalRecordAction>; 
+const medicalRecordReducer = (state: IMedicalRecord, action: MedicalRecordAction): IMedicalRecord => {
+  switch (action.type) {
+    case "SET_FIELD":
+      return { ...state, [action.field]: action.value };
+    case "SET_DATE":
+      return { ...state, dateOfExamination: action.date };
+    case "SET_RECORD":
+      return action.record; 
+    case "RESET":
+      return initialState;
+    default:
+      return state;
   }
+};
+
+const MedicalRecordContext = createContext<MedicalRecordContextType | undefined>(undefined);
+
+interface MedicalRecordContextType {
+  state: IMedicalRecord;
+  dispatch: Dispatch<MedicalRecordAction>;
+}
+
+interface MedicalRecordProviderProps {
+  children: ReactNode;
+  recordId: string;
+}
+
+export function MedicalRecordProvider({ children, recordId }: MedicalRecordProviderProps) {
+  const [state, dispatch] = useReducer(medicalRecordReducer, initialState);
   
-  interface MedicalRecordProviderProps {
-    children: ReactNode;
-  }
-  
-  export function MedicalRecordProvider({ children }: MedicalRecordProviderProps) {
-  const [state, dispatch] =  useReducer(medicalRecordReducer, initialState);
+  useEffect(() => {
+    async function fetchMedicalRecord() {
+      try {
+        const {record}= await getMedicalRecordById(recordId);
+        console.log(record)
+        dispatch({ type: "SET_RECORD", record });
+      } catch (error) {
+        console.error("Error fetching medical record:", error);
+      }
+    }
+
+    if (recordId) {
+      fetchMedicalRecord();
+    }
+  }, [recordId]);
 
   return (
     <MedicalRecordContext.Provider value={{ state, dispatch }}>
@@ -60,9 +71,9 @@ const initialState: MedicalRecordState = {
 }
 
 export function useMedicalRecord() {
-    const context = useContext(MedicalRecordContext);
-    if (!context) {
-      throw new Error("useMedicalRecord must be used within a MedicalRecordProvider");
-    }
-    return context;
+  const context = useContext(MedicalRecordContext);
+  if (!context) {
+    throw new Error("useMedicalRecord must be used within a MedicalRecordProvider");
   }
+  return context;
+}

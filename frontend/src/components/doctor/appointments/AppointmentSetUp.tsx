@@ -12,7 +12,7 @@ export const timeFormat12hr = (time: string) => {
     const hours12 = hours % 12 || 12;
     return `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
 };
-const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLoading }) => {
+const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal }) => {
     const [fees, setFees] = useState<number | undefined>(undefined);
     const [slots, setSlots] = useState<ISlotDetails[]>([]);
     const [startTime, setStartTime] = useState('');
@@ -35,9 +35,7 @@ const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLo
                     console.error('Error fetching verification details:', error);
                 }
             };
-            setLoading(true)
             fetchVerificationDetails();
-            setLoading(false)
         }, []);
 
     const handleAdd = () => {
@@ -80,9 +78,7 @@ const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal, setLo
 
     const handleSubmit = async () => {
         console.log(slots, 'slots')
-        setLoading(true)
         await updateSlotsApi(slots, fees)
-        setLoading(false)
         handleModal('')
         window.location.reload()
     }

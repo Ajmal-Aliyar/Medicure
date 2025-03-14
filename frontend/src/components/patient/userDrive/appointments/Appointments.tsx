@@ -1,12 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { setError, setSuccess } from "../../../../store/slices/commonSlices/notificationSlice";
 import { useEffect, useState } from "react";
 import { fetchAppointmentDetailsApi } from "../../../../sevices/appointments/fetchAppointments";
 import { IFetchAppointmentResponse } from "../../../../types/appointment/fetchAppointments";
 import { convertTo12HourFormat } from "../../../../utils/timeStructure";
 import { connectWithSocketIOServer } from "../../../../utils/wss";
-import { setRoomId } from "../../../../store/slices/commonSlices/videoConsultSlice";
 import FeedbackModal from "./FeedbackModal";
 import { RootState } from "../../../../store/store";
 
@@ -16,7 +15,6 @@ const Appointments = () => {
     const [historyAppointments, setHistoryAppointments] = useState<IFetchAppointmentResponse[]>([])
     const [feedback, setFeedback] = useState<string>('')
     const location = useLocation();
-    const navigate = useNavigate()
     const queryParams = new URLSearchParams(location.search)
     const session = queryParams.get('session_id')
     const clientId = useSelector((state: RootState) => state.auth._id)
@@ -62,14 +60,6 @@ const Appointments = () => {
         fetchUserAppointmentDetails()
         connectWithSocketIOServer(clientId)
     }, [])
-
-
-
-    const createRoomHandler = (roomId: string, appointmentId: string, slotId: string) => {
-        dispatch(setRoomId(roomId))
-
-        navigate(`/consult/meeting/${roomId}?appointment=${appointmentId}&slot=${slotId}`)
-    }
 
 
     return (

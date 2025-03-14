@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { producer } from "../utils/kafkaUtil";
-import { IMessageRepository } from "../repositories/interfaces/IMessageRepository";
 import { IMessageServices } from "../services/interfaces/IMessageServices";
 import mongoose from "mongoose";
 

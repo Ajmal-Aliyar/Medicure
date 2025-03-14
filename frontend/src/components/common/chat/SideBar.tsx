@@ -19,6 +19,7 @@ const SideBar = () => {
             const { data } = await fetchChatsApi(userId)
             console.log(data)
             dispatch(setChats(data || []))
+            console.log('sidebar fetching')
         }
 
         fetchChats()

@@ -62,7 +62,7 @@ const ProfileDetailsForm: React.FC<IProfileDetailsFormProps> = ({ handleModal, s
 
     const validateSlide2 = () => {
         let valid = true;
-        let newErrors: { [key: string]: string } = {};
+        const newErrors: { [key: string]: string } = {};
         if (!formData.degree) {
             newErrors.degree = 'degree is required';
             valid = false;

@@ -6,7 +6,6 @@ import { FeedbackService } from '../services/implementations/feedbackServices';
 import { FeedbackController } from '../controllers/feedbackController';
 import { DoctorRepository } from '../repositories/implementations/doctorRepository';
 import { isDoctor } from '../middleware/isDoctor';
-import { isAdmin } from '../middleware/isAdmin';
 
 const router = Router();
 

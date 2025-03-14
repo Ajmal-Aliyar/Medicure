@@ -1,21 +1,20 @@
 
-import { format } from "date-fns"
 import { useMedicalRecord } from "../../context/MedicalReportProvider";
 import { FC } from "react";
 
 interface MedicalRecordFormProps {
   endCall: boolean; 
-  setEndCall: (endCall: boolean) => void
-  handleEndCall: () => void
+  handleMedicalReportUpload: (val: boolean) => void
 }
 
-export const MedicalRecordForm:FC<MedicalRecordFormProps> = ({ endCall, setEndCall, handleEndCall }) => {
+export const MedicalRecordForm:FC<MedicalRecordFormProps> = ({ endCall, handleMedicalReportUpload }) => {
   const { state, dispatch } = useMedicalRecord();
-  const handleMedicalReportUpload = () => {
-    setEndCall(false)
-    handleEndCall()
-  }
 
+
+
+  
+
+  
   return (
     <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 pb-10 fixed md:bottom-10 md:right-10 bottom-0 right-0">
       <div className="border-b mb-4">
@@ -23,15 +22,6 @@ export const MedicalRecordForm:FC<MedicalRecordFormProps> = ({ endCall, setEndCa
         <p className="text-gray-600">Enter patient examination details</p>
       </div>
       <form  className="space-y-4 text-black">
-      <div>
-          <label className="block text-gray-700 font-medium">Date of Examination</label>
-          <input
-            type="date"
-            value={state.dateOfExamination ? format(state.dateOfExamination, "yyyy-MM-dd") : ""}
-            onChange={(e) => dispatch({ type: "SET_FIELD", field: 'dateOfExamination', value: e.target.value })}
-            className="w-full p-2 border rounded focus:ring focus:ring-blue-200"
-          />
-        </div>
         <div>
           <label className="block text-gray-700 font-medium">Diagnosis</label>
           <textarea
@@ -68,8 +58,8 @@ export const MedicalRecordForm:FC<MedicalRecordFormProps> = ({ endCall, setEndCa
         </div>
 
         {endCall && <div className="w-full flex justify-center gap-4">
-          <button onClick={handleMedicalReportUpload}>Update Later</button>
-          <button onClick={handleMedicalReportUpload}>Confirm</button>
+          <div onClick={() => handleMedicalReportUpload(false)} className="px-3 py-1 border rounded-md border-gray-300">Update Later</div>
+          <div onClick={() => handleMedicalReportUpload(true)} className="px-3 py-1 border rounded-md border-gray-300">Confirm</div>
         </div> }
 
        

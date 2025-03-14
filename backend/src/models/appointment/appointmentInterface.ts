@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import  { Document, Types } from "mongoose";
 
 export interface IAppointment extends Document {
     doctorId: string;
@@ -6,8 +6,8 @@ export interface IAppointment extends Document {
     slotId: string;
     roomId: string;
     appointmentDate: Date;
-    status: 'Scheduled' | 'Completed' | 'Cancelled';
+    status: "Scheduled" | "Completed" | "Cancelled";
     transactionId: string;
+    recordId: Types.ObjectId;
     createdAt: Date;
-  }
-  
+}

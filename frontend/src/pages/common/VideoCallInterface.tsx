@@ -6,10 +6,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { stopStreaming } from '../../utils/webrtc';
-import { clearWarning, setExtra, setWarning } from "../../store/slices/commonSlices/notificationSlice";
+import { clearWarning, setError, setExtra, setWarning } from "../../store/slices/commonSlices/notificationSlice";
 import { changeAppointmentStatusApi } from "../../sevices/appointments/changeAppointmentStatus";
-import { MedicalRecordProvider } from "../../context/MedicalReportProvider";
+import { MedicalRecordProvider, useMedicalRecord } from "../../context/MedicalReportProvider";
 import { MedicalRecordForm } from "../doctor/MedicalReport";
+import { updateMedicalRecordApi } from "../../sevices/medicalRecords/medicalRecord";
 
 const VideoCallInterface = () => {
   const [callStarted, setCallStarted] = useState<boolean>(false);
@@ -24,9 +25,12 @@ const VideoCallInterface = () => {
   const slotId = searchParams.get('slot')
   const [medicalReport, setMedicalReport] = useState<boolean>(false)
   const [endCall, setEndCall] = useState<boolean>(false)
+    const { state } = useMedicalRecord();
+  
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const client = useSelector((state: RootState) => state.auth)
+  const { recordId } = useSelector((state: RootState) => state.videoConsult)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -128,6 +132,22 @@ const VideoCallInterface = () => {
     setMedicalReport(true)
     setEndCall(true)
   }
+
+  const handleMedicalReportUpload = async (isCompleted: boolean) => {
+      try {
+          if (recordId) {
+              await updateMedicalRecordApi(recordId, { ...state, isCompleted});
+          }
+          setEndCall(false);
+          handleEndCall();
+      } catch (error) {
+          console.error("Error updating medical record:", error);
+          dispatch(setError("Error updating medical record"))
+      }
+  };
+  
+  
+  
   return (
     <div className="fixed top-0 w-screen h-screen bg-[#1d1d1d] p-4 text-white flex justify-center items-center">
       {!callStarted && <ConsultLanding localVideoRef={localVideoRef} setCallStarted={setCallStarted} />}
@@ -187,7 +207,7 @@ const VideoCallInterface = () => {
             onClick={() => setMedicalReport(p => !p)}>
             <FilePlus className="text-white" strokeWidth={3} size={36} />
           </div>}
-          <MedicalRecordProvider>{medicalReport &&  <MedicalRecordForm endCall={endCall} setEndCall={setEndCall} handleEndCall={handleEndCall} />}</MedicalRecordProvider>
+          <MedicalRecordProvider recordId={recordId ? recordId : ''}>{medicalReport &&  <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={endCall}/>}</MedicalRecordProvider>
 
         </>
       )}
