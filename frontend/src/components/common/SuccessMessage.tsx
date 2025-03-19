@@ -35,11 +35,6 @@ const SuccessMessage: React.FC<ErrorMessageProps> = ({ message, handleModal }) =
 
         showMessage();
     })
-
-    const CloseError = () => {
-        handleModal()
-
-    }
     return (
         <div
             role="alert"

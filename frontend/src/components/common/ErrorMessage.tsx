@@ -1,6 +1,6 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { Ban, ShieldAlert, X } from 'lucide-react'
+import { ShieldAlert, X } from 'lucide-react'
 import React from 'react'
 
 interface ErrorMessageProps {

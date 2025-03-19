@@ -8,7 +8,8 @@ export interface UserDetailsPartial {
   }
 
   export interface fetchBookedPatientsResponse {
-    appointmentId: string
+    recordId: {_id: string, isCompleted: boolean};
+    appointmentId: string;
     patientDetails: UserDetailsPartial;
     roomId: string;
     status: string;
@@ -17,6 +18,7 @@ export interface UserDetailsPartial {
   export const fetchBookedPatients = async (slotId: string): Promise<{bookedPatientsData: fetchBookedPatientsResponse[]}> => {
     try {
       const response = await api.get<{bookedPatientsData: fetchBookedPatientsResponse[]}>(`/api/appointment/bookedPatients/${slotId}`);
+      console.log(response)
       return response.data;
     } catch (error) {
       console.error("Error fetching booked patients:", error);

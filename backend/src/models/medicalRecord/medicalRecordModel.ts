@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { IMedicalReport } from "./medicalRecordInterface";
+import { IMedicalRecord } from "./medicalRecordInterface";
 import { MedicalReport } from "./medicalRecordSchema";
 
 
-export const MedicalRecordModel = mongoose.model<IMedicalReport>('MedicalRecord', MedicalReport);
+export const MedicalRecordModel = mongoose.model<IMedicalRecord>('MedicalRecord', MedicalReport);

@@ -1,11 +1,12 @@
-import { UpdateResult } from "mongoose";
+import mongoose, { UpdateResult } from "mongoose";
 import { AppointmentModel } from "../../models/appointment/appointmentModel";
 import { IAppointmentDocument, IAppointmentRepository } from "../interfaces/IAppointmentRepository";
+import { IMedicalRecord } from "../../models/medicalRecord/medicalRecordInterface";
 
 export class AppointmentRepository implements IAppointmentRepository {
 
-  async createAppointment(doctorId: string, patientId: string, slotId: string, appointmentDate: Date, status: string, transactionId: string): Promise<IAppointmentDocument> {
-    const appointment = new AppointmentModel({ doctorId, patientId, slotId, appointmentDate, status, transactionId });
+  async createAppointment(doctorId: string, patientId: string, slotId: string, appointmentDate: Date, status: string, transactionId: string, recordId: mongoose.Types.ObjectId): Promise<IAppointmentDocument> {
+    const appointment = new AppointmentModel({ doctorId, patientId, slotId, appointmentDate, status, transactionId, recordId });
     return await appointment.save();
   }
 
@@ -101,19 +102,23 @@ export class AppointmentRepository implements IAppointmentRepository {
   }
 
   async cancelAppointmentByTransactionId(transactionId: string): Promise<void> {
-    await AppointmentModel.updateOne({transactionId},{$set:{status: 'Cancelled'}})
+    await AppointmentModel.updateOne({ transactionId }, { $set: { status: 'Cancelled' } })
   }
 
-  async getAppointmentsBySlotId(slotId: string): Promise<{ patientId: string, roomId: string, status: string, _id: string, doctorId: string}[]> {
-    return await AppointmentModel.find({ slotId }, { patientId: 1, roomId: 1, status: 1,doctorId: 1 });
+  async getAppointmentsBySlotId(slotId: string): Promise<any> {
+    return await AppointmentModel.find(
+      { slotId },
+      { patientId: 1, roomId: 1, status: 1, doctorId: 1, recordId: 1 }
+    ).populate("recordId","isCompleted"); 
   }
+
 
   async consultingCompleted(_id: string): Promise<UpdateResult> {
     return await AppointmentModel.updateOne({ _id }, { $set: { status: 'Completed' } });
   }
 
-  async getConsultents(_id: string): Promise<{patientId:string, doctorId: string}> {
-    return await AppointmentModel.findById(_id,{doctorId: 1, patientId: 1}).lean() ?? null;
+  async getConsultents(_id: string): Promise<{ patientId: string, doctorId: string }> {
+    return await AppointmentModel.findById(_id, { doctorId: 1, patientId: 1 }).lean() ?? null;
   }
 
 }

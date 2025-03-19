@@ -8,7 +8,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { stopStreaming } from '../../utils/webrtc';
 import { clearWarning, setExtra, setWarning } from "../../store/slices/commonSlices/notificationSlice";
 import { changeAppointmentStatusApi } from "../../sevices/appointments/changeAppointmentStatus";
-import MedicalRecordForm from "../doctor/MedicalReport";
+import { MedicalRecordProvider } from "../../context/MedicalReportProvider";
+import { MedicalRecordForm } from "../doctor/MedicalReport";
+import { updateMedicalRecordApi } from "../../sevices/medicalRecords/medicalRecord";
+import { IMedicalRecord } from "../../types/record/record";
 
 const VideoCallInterface = () => {
   const [callStarted, setCallStarted] = useState<boolean>(false);
@@ -22,6 +25,8 @@ const VideoCallInterface = () => {
   const appointmentId = searchParams.get("appointment");
   const slotId = searchParams.get('slot')
   const [medicalReport, setMedicalReport] = useState<boolean>(false)
+  const [endCall, setEndCall] = useState<boolean>(false)
+  const { recordId } = useSelector((state: RootState) => state.videoConsult)
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const client = useSelector((state: RootState) => state.auth)
@@ -86,24 +91,25 @@ const VideoCallInterface = () => {
       }
     }
   };
-  
+
   const stopTrackingStream = async () => {
     console.log(appointmentId, slotId)
-    
+
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
       setLocalStream(null);
     }
-    
+
     if (localVideoRef.current) {
       localVideoRef.current.srcObject = null;
     }
     if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
     }
-    
+
     stopStreaming();
-    
+
+
     if (client.role === "user") {
       navigate("/user/drive/appointments");
     } else if (client.role === "doctor") {
@@ -116,10 +122,23 @@ const VideoCallInterface = () => {
     dispatch(clearWarning())
   }
 
-  const handleEndCall = (): void => {
+  const handleEndCall = () => {
+    setMedicalReport(false);
     dispatch(setWarning('Are you do you finish the consultation'))
     dispatch(setExtra(stopTrackingStream))
   };
+
+  const handleMedicalReportUpload =  async (isCompleted: boolean, state: IMedicalRecord) => {
+    if (recordId) {
+      await updateMedicalRecordApi(recordId, { ...state, isCompleted });
+    }
+    handleEndCall()
+  }
+
+  const confirmMedicalReport = () => {
+    setEndCall(true)
+    setMedicalReport(true)
+  }
   return (
     <div className="fixed top-0 w-screen h-screen bg-[#1d1d1d] p-4 text-white flex justify-center items-center">
       {!callStarted && <ConsultLanding localVideoRef={localVideoRef} setCallStarted={setCallStarted} />}
@@ -166,7 +185,7 @@ const VideoCallInterface = () => {
               {micOn ? <Mic size={32} strokeWidth={2.25} /> : <MicOff size={32} strokeWidth={2.25} />}
             </button>
 
-            <button onClick={handleEndCall} className="px-5 py-2 bg-red-500 h-fit w-fit rounded-md">
+            <button onClick={client.role === 'doctor' ? confirmMedicalReport : handleEndCall} className="px-5 py-2 bg-red-500 h-fit w-fit rounded-md">
               <Phone size={32} strokeWidth={2.25} className="rotate-[135deg]" />
             </button>
 
@@ -174,12 +193,12 @@ const VideoCallInterface = () => {
               {videoOn ? <Video size={32} strokeWidth={2.25} /> : <VideoOff size={32} strokeWidth={2.25} />}
             </button>
           </div>
-          <div className='fixed bottom-8 right-8 w-16 h-16 bg-[#98c8ed] rounded-full z-50 flex justify-center items-center'
-          onClick={() => setMedicalReport(p => !p)}>
+          {client.role === 'doctor' &&
+            <div className='fixed bottom-8 right-8 w-16 h-16 bg-[#98c8ed] rounded-full z-50 flex justify-center items-center'
+              onClick={() => setMedicalReport(p => !p)}>
               <FilePlus className="text-white" strokeWidth={3} size={36} />
-          </div>
-          { medicalReport && <MedicalRecordForm />}
-
+            </div>}
+          <MedicalRecordProvider recordId={recordId ? recordId : ''}>{medicalReport && <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={endCall} />}</MedicalRecordProvider>
         </>
       )}
     </div>

@@ -14,7 +14,6 @@ export interface IContentProps  {
 
 export interface IAppointmentSetUpProps  {
     handleModal: (val: string) => void
-    setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface IFileUploaderProps  {

@@ -1,3 +1,4 @@
+import medicalRecordRouter from './routes/medicalRecordRoutes';
 import doctorVerifications from './routes/verificationRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
 import specialization from './routes/specializationRoutes';
@@ -56,6 +57,7 @@ app.use('/api/admin', adminRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/slot', slotRouter)
 app.use('/api/chat', chatRouter)
+app.use('/api/record', medicalRecordRouter)
 app.use(errorHandler);
 
 

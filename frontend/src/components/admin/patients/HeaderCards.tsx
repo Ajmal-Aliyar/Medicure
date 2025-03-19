@@ -1,4 +1,4 @@
-import { faCalendarAlt, faUserDoctor, faUserAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { UserCheck, Users, UserX } from 'lucide-react'
 

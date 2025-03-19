@@ -4,6 +4,7 @@ import { IChatRepository } from "../../repositories/interfaces/IChatRepository";
 import { IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
 import { IAppointmentServices, ICreateAppointment } from "../interfaces/IAppointmentServices";
+import { IMedicalRecordRepository } from "../../repositories/interfaces/IMedicatlRepository";
 
 
 export class AppointmentServices implements IAppointmentServices {
@@ -11,12 +12,16 @@ export class AppointmentServices implements IAppointmentServices {
     private patientRepository: IPatientRepository;
     private slotRepository: ISlotRepository;
     private chatRepository: IChatRepository;
+    private medicalRecordRepository: IMedicalRecordRepository;
 
-    constructor(appointmentRepository: IAppointmentRepository, patientRepository: IPatientRepository, slotRepository: ISlotRepository, chatRepository: IChatRepository) {
-        this.appointmentRepository = appointmentRepository
-        this.patientRepository = patientRepository
-        this.slotRepository = slotRepository
+    constructor(appointmentRepository: IAppointmentRepository, 
+        patientRepository: IPatientRepository, slotRepository: ISlotRepository, 
+        chatRepository: IChatRepository, medicalRecordRepository: IMedicalRecordRepository) {
+        this.appointmentRepository = appointmentRepository;
+        this.patientRepository = patientRepository;
+        this.slotRepository = slotRepository;
         this.chatRepository = chatRepository;
+        this.medicalRecordRepository = medicalRecordRepository;
     }
 
     async createAppointment({ doctorId, patientId, slotId, appointmentDate, status, transactionId }: ICreateAppointment): Promise<IAppointmentDocument> {
@@ -25,13 +30,15 @@ export class AppointmentServices implements IAppointmentServices {
                 console.log(doctorId, patientId, slotId, 'dl', appointmentDate, status, 'st', transactionId)
                 throw new Error("All appointment fields are required.");
             }
+            const medicalRecord = await this.medicalRecordRepository.createRecord({doctorId, patientId})
             const response = await this.appointmentRepository.createAppointment(
                 doctorId,
                 patientId,
                 slotId,
                 appointmentDate,
                 status,
-                transactionId
+                transactionId,
+                medicalRecord._id
             );
             if (!response) {
                 throw new Error("Failed to create appointment.");
@@ -96,7 +103,7 @@ export class AppointmentServices implements IAppointmentServices {
                 appointments.map(async (appointment) => {
                     const patientDetails = await this.patientRepository.getProfileData(appointment.patientId);
                     console.log(appointment.roomId)
-                    return { patientDetails, roomId: appointment.roomId, status: appointment.status, appointmentId: appointment._id }
+                    return { patientDetails, roomId: appointment.roomId, status: appointment.status, appointmentId: appointment._id, recordId: appointment.recordId }
                 })
             );
             return userDetails;

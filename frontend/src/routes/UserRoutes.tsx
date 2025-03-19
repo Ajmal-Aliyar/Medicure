@@ -47,6 +47,11 @@ function UserRoutes() {
 
 
         </Route>
+        <Route path='/' element={<UserLayout />}>
+        <Route index element={<PublicRoutes><Home /></PublicRoutes>} />
+
+        </Route>
+
         <Route path="*" element={<PageNotFound />} />
       </Routes>
 
