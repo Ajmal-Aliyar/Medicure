@@ -44,7 +44,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                     if (role === 'doctor') {
                         navigate('/doctor/dashboard')
                     } else {
-                        navigate('/user')
+                        navigate('/')
                     }
                 } catch (error: any) {
                     setLoading(false);

@@ -53,7 +53,7 @@ const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => 
             case 'admin':
                 return <Navigate to="/admin/dashboard" />;
             case 'user':
-                return <Navigate to="/user/" />;
+                return <Navigate to="/" />;
             default:
                 return <Navigate to="/" />;
         }

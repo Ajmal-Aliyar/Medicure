@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import img from '../../../assets//ology/neurolory.png'
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../../store/slices/commonSlices/notificationSlice';

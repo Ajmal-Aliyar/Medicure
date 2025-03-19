@@ -111,13 +111,13 @@ const VideoCallInterface = () => {
 
 
     if (client.role === "user") {
-      navigate("/user/drive/appointments");
+      navigate("/drive/appointments");
     } else if (client.role === "doctor") {
       await changeAppointmentStatusApi(appointmentId as string, slotId as string)
       navigate("/doctor/appointments");
       window.location.reload();
     } else {
-      navigate("/user");
+      navigate("/");
     }
     dispatch(clearWarning())
   }

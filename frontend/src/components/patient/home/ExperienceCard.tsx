@@ -13,8 +13,6 @@ function ExperienceCard() {
                 trigger:'.exp-card p',
                 scroller:'body',
                 start:'top 70%',
-                // end : 'top 60%',
-                // scrub:true
                 toggleActions : 'play reverse play reverse'
             }
         })

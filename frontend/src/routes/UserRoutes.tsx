@@ -22,7 +22,7 @@ function UserRoutes() {
   return (
     <>
       <Routes>
-        <Route path='/user' element={<UserLayout />}>
+        <Route path='/' element={<UserLayout />}>
 
 
           <Route index element={<PublicRoutes><Home /></PublicRoutes>} />
@@ -45,10 +45,6 @@ function UserRoutes() {
             <Route path='payments' element={<AuthorizedRoute allowedRole={'user'}><Finance /></AuthorizedRoute>} />
           </Route>
 
-
-        </Route>
-        <Route path='/' element={<UserLayout />}>
-        <Route index element={<PublicRoutes><Home /></PublicRoutes>} />
 
         </Route>
 

@@ -2,10 +2,10 @@ import { NavLink, Outlet } from "react-router-dom";
 
 const UserDriveLayout = () => {
     const menuItems = [
-        { name: "Medical Records", path: "/user/drive/medical-records" },
-        { name: "Appointments", path: "/user/drive/appointments" },
-        { name: "Feedbacks", path: "/user/drive/feedbacks" },
-        { name: "Payments", path: "/user/drive/payments" },
+        { name: "Medical Records", path: "/drive/medical-records" },
+        { name: "Appointments", path: "/drive/appointments" },
+        { name: "Feedbacks", path: "/drive/feedbacks" },
+        { name: "Payments", path: "/drive/payments" },
     ];
 
     return (

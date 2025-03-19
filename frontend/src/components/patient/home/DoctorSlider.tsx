@@ -101,5 +101,5 @@ function DoctorSlider() {
         </div>
     )
 }
-{/* <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[40%] h-[30%] bg-gradient-to-t from-[#f6f6f6]"></div> */}
+
 export default DoctorSlider
