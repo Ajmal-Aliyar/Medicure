@@ -3,7 +3,7 @@ import { IMedicalRecord } from "../types/record/record";
 import { getMedicalRecordById } from "../sevices/medicalRecords/medicalRecord";
 
 
-const initialState: IMedicalRecord = {
+export const initialState: IMedicalRecord = {
   diagnosis: "",
   prescription: "",
   allergy: "",

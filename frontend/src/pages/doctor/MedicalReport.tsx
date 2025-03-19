@@ -1,10 +1,11 @@
 
 import { useMedicalRecord } from "../../context/MedicalReportProvider";
 import { FC } from "react";
+import { IMedicalRecord } from "../../types/record/record";
 
 interface MedicalRecordFormProps {
   endCall: boolean; 
-  handleMedicalReportUpload: (val: boolean) => void
+  handleMedicalReportUpload: (val: boolean, state: IMedicalRecord) => void
 }
 
 export const MedicalRecordForm:FC<MedicalRecordFormProps> = ({ endCall, handleMedicalReportUpload }) => {
@@ -58,8 +59,8 @@ export const MedicalRecordForm:FC<MedicalRecordFormProps> = ({ endCall, handleMe
         </div>
 
         {endCall && <div className="w-full flex justify-center gap-4">
-          <div onClick={() => handleMedicalReportUpload(false)} className="px-3 py-1 border rounded-md border-gray-300">Update Later</div>
-          <div onClick={() => handleMedicalReportUpload(true)} className="px-3 py-1 border rounded-md border-gray-300">Confirm</div>
+          <div onClick={() => handleMedicalReportUpload(false, state)} className="px-3 py-1 border rounded-md border-gray-300">Update Later</div>
+          <div onClick={() => handleMedicalReportUpload(true, state)} className="px-3 py-1 border rounded-md border-gray-300">Confirm</div>
         </div> }
 
        

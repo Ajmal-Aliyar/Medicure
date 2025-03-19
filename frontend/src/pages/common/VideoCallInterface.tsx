@@ -6,11 +6,12 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { stopStreaming } from '../../utils/webrtc';
-import { clearWarning, setError, setExtra, setWarning } from "../../store/slices/commonSlices/notificationSlice";
+import { clearWarning, setExtra, setWarning } from "../../store/slices/commonSlices/notificationSlice";
 import { changeAppointmentStatusApi } from "../../sevices/appointments/changeAppointmentStatus";
-import { MedicalRecordProvider, useMedicalRecord } from "../../context/MedicalReportProvider";
+import { MedicalRecordProvider } from "../../context/MedicalReportProvider";
 import { MedicalRecordForm } from "../doctor/MedicalReport";
 import { updateMedicalRecordApi } from "../../sevices/medicalRecords/medicalRecord";
+import { IMedicalRecord } from "../../types/record/record";
 
 const VideoCallInterface = () => {
   const [callStarted, setCallStarted] = useState<boolean>(false);
@@ -25,12 +26,10 @@ const VideoCallInterface = () => {
   const slotId = searchParams.get('slot')
   const [medicalReport, setMedicalReport] = useState<boolean>(false)
   const [endCall, setEndCall] = useState<boolean>(false)
-    const { state } = useMedicalRecord();
-  
+  const { recordId } = useSelector((state: RootState) => state.videoConsult)
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const client = useSelector((state: RootState) => state.auth)
-  const { recordId } = useSelector((state: RootState) => state.videoConsult)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -123,31 +122,23 @@ const VideoCallInterface = () => {
     dispatch(clearWarning())
   }
 
-  const handleEndCall = (): void => {
+  const handleEndCall = () => {
+    setMedicalReport(false);
     dispatch(setWarning('Are you do you finish the consultation'))
     dispatch(setExtra(stopTrackingStream))
   };
 
-  const confirmMedicalReport = () => {
-    setMedicalReport(true)
-    setEndCall(true)
+  const handleMedicalReportUpload =  async (isCompleted: boolean, state: IMedicalRecord) => {
+    if (recordId) {
+      await updateMedicalRecordApi(recordId, { ...state, isCompleted });
+    }
+    handleEndCall()
   }
 
-  const handleMedicalReportUpload = async (isCompleted: boolean) => {
-      try {
-          if (recordId) {
-              await updateMedicalRecordApi(recordId, { ...state, isCompleted});
-          }
-          setEndCall(false);
-          handleEndCall();
-      } catch (error) {
-          console.error("Error updating medical record:", error);
-          dispatch(setError("Error updating medical record"))
-      }
-  };
-  
-  
-  
+  const confirmMedicalReport = () => {
+    setEndCall(true)
+    setMedicalReport(true)
+  }
   return (
     <div className="fixed top-0 w-screen h-screen bg-[#1d1d1d] p-4 text-white flex justify-center items-center">
       {!callStarted && <ConsultLanding localVideoRef={localVideoRef} setCallStarted={setCallStarted} />}
@@ -202,13 +193,12 @@ const VideoCallInterface = () => {
               {videoOn ? <Video size={32} strokeWidth={2.25} /> : <VideoOff size={32} strokeWidth={2.25} />}
             </button>
           </div>
-          {client.role === 'doctor' && 
-          <div className='fixed bottom-8 right-8 w-16 h-16 bg-[#98c8ed] rounded-full z-50 flex justify-center items-center'
-            onClick={() => setMedicalReport(p => !p)}>
-            <FilePlus className="text-white" strokeWidth={3} size={36} />
-          </div>}
-          <MedicalRecordProvider recordId={recordId ? recordId : ''}>{medicalReport &&  <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={endCall}/>}</MedicalRecordProvider>
-
+          {client.role === 'doctor' &&
+            <div className='fixed bottom-8 right-8 w-16 h-16 bg-[#98c8ed] rounded-full z-50 flex justify-center items-center'
+              onClick={() => setMedicalReport(p => !p)}>
+              <FilePlus className="text-white" strokeWidth={3} size={36} />
+            </div>}
+          <MedicalRecordProvider recordId={recordId ? recordId : ''}>{medicalReport && <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={endCall} />}</MedicalRecordProvider>
         </>
       )}
     </div>
