@@ -6,9 +6,11 @@ import { IFetchTopDoctors } from '../../../types/patient/findDoctors';
 import { useParams } from 'react-router-dom';
 import SelectedDoctor from './SelectedDoctor';
 import { X } from 'lucide-react';
+import { useFilter } from '../../../context/FilterContext';
 
 
 const TopSpecialists: React.FC = () => {
+    const { searchParams } = useFilter()
     const [doctors, setDoctors] = useState<IFetchTopDoctors[]>([]);
     const [showMore, setShowMore] = useState<boolean>(false)
     const [selectedDoctor, setSelectedDoctor] = useState<null | IFetchTopDoctors>(null)
@@ -22,19 +24,20 @@ const TopSpecialists: React.FC = () => {
             try {
                 let response: { data: IFetchTopDoctors[], hasMore: boolean };
                 if (specialization) {
-                    response = await fetchTopDoctorsApi(skip, limit, specialization);
+                    response = await fetchTopDoctorsApi(skip, limit, searchParams.toString(), specialization);
                 } else {
-                    response = await fetchTopDoctorsApi(skip, limit);
+                    response = await fetchTopDoctorsApi(skip, limit, searchParams.toString());
                 }
                 setShowMore(response.hasMore)
-                setDoctors((prevDoctors) => [...prevDoctors, ...response.data]);
+                setDoctors(response.data);
             } catch (error: any) {
                 dispatch(setError(error.message));
             }
         };
         getDoctors();
+        console.log(searchParams.toString(),'dssdfds')
 
-    }, [skip, limit, dispatch, specialization]);
+    }, [skip, limit, dispatch, specialization, searchParams]);
 
     const handleSetDoctor = (doctor: IFetchTopDoctors) => {
         setSelectedDoctor(doctor)
@@ -50,10 +53,9 @@ const TopSpecialists: React.FC = () => {
         setSkip(prevSkip => prevSkip + limit);
     };
     return (
-        <div className='w-full my-10 pb-48 '>
-            <div className='flex justify-between'>
+        <div className='w-full  pb-48 '>
+            <div className=''>
                 <p className='text-xl font-bold text-[#0c0b3eb5]'>Top Specialists</p>
-                <input type="text" className='py-1 px-4 border-2 border-blue-400 rounded-full' placeholder='Search for doctors.. ' />
             </div>
             <div className='flex flex-col md:flex-row w-full mt-10'>
                 <div

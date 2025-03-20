@@ -87,9 +87,11 @@ export class PatientServices implements IPatientServices {
         }
     }
 
-   async getTopDoctors(skip: number, limit: number, specialization: string | null): Promise<{ data: IDoctor[], hasMore: boolean }> {
+   async getTopDoctors(skip: number, limit: number, specialization: string | null, search: string, sort: string,
+    sortOrder: number, languageSpoken: string, yearsOfExperience: number | null
+   ): Promise<{ data: IDoctor[], hasMore: boolean }> {
            try {
-               const approvedDoctors = await this.doctorRepository.getTopDoctors(skip, limit, specialization);
+               const approvedDoctors = await this.doctorRepository.getTopDoctors(skip, limit, specialization, search, sort, sortOrder, languageSpoken, yearsOfExperience);
                return approvedDoctors;
            } catch (error: any) {
                console.error('Error fetching approved doctors:', error);

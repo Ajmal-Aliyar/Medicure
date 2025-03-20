@@ -16,50 +16,54 @@ export class DoctorRepository implements IDoctorRepository {
             throw new Error('User with this email already exists');
         }
         const doctor = new DoctorModel({ fullName, email, phone, password });
-        console.log('Doctor details : ',doctor);
+        console.log('Doctor details : ', doctor);
         return await doctor.save();
     }
 
     async updateDoctor(
-        _id: string, 
+        _id: string,
         { fullName, headline, about, address, gender,
             specialization,
-            languageSpoken, 
+            languageSpoken,
             dob, }): Promise<void> {
 
-        const result = await DoctorModel.updateOne({ _id },{$set: { fullName, headline, about, address,gender,
-            specialization,
-            languageSpoken, 
-            dob, }})
-        console.log(result,'res')
+        const result = await DoctorModel.updateOne({ _id }, {
+            $set: {
+                fullName, headline, about, address, gender,
+                specialization,
+                languageSpoken,
+                dob,
+            }
+        })
+        console.log(result, 'res')
     }
 
     async fetchAllApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], hasMore: boolean }> {
         try {
             const query: any = { isApproved: true };
-    
+
             if (searchQuery) {
                 query.$or = [
                     { fullName: { $regex: searchQuery, $options: "i" } },
                     { specialization: { $regex: searchQuery, $options: "i" } }
                 ];
             }
-    
+
             const doctors = await DoctorModel.find(query)
                 .skip(skip)
                 .limit(limit)
                 .select('rating profileImage fullName specialization reviewCount')
                 .lean();
-    
+
             const hasMore = doctors.length === limit;
-    
+
             return { data: doctors, hasMore };
         } catch (error) {
             console.error("Error fetching doctors:", error);
             throw new Error("Unable to fetch doctors");
         }
     }
-    
+
 
     async fetchAllRequestedDoctors(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean }> {
         try {
@@ -68,9 +72,9 @@ export class DoctorRepository implements IDoctorRepository {
                 .limit(limit)
                 .select('rating profileImage fullName specialization')
                 .lean();
-    
+
             const hasMore = doctors.length === limit;
-    
+
             return { data: doctors, hasMore };
         } catch (error) {
             console.error("Error fetching doctors:", error);
@@ -78,13 +82,13 @@ export class DoctorRepository implements IDoctorRepository {
         }
     }
 
-    async getMinDetails(_id: mongoose.Types.ObjectId): Promise<{ _id:mongoose.Types.ObjectId, fullName: string, profileImage: string }> {
-            try {
-                return await DoctorModel.findOne({_id}, {fullName: 1, profileImage: 1 })
-            } catch (error) {
-                throw ('Error fetching details: ' + error.message);
-            }
+    async getMinDetails(_id: mongoose.Types.ObjectId): Promise<{ _id: mongoose.Types.ObjectId, fullName: string, profileImage: string }> {
+        try {
+            return await DoctorModel.findOne({ _id }, { fullName: 1, profileImage: 1 })
+        } catch (error) {
+            throw ('Error fetching details: ' + error.message);
         }
+    }
 
 
     async findByEmail(email: string): Promise<IDoctor> {
@@ -98,8 +102,8 @@ export class DoctorRepository implements IDoctorRepository {
     async getProfileImage(_id: string): Promise<{ profileImage: string | null }> {
         const doctor = await DoctorModel.findOne({ _id }, { profileImage: 1 }).lean();
         return doctor ? { profileImage: doctor.profileImage } : { profileImage: null };
-      }
-      
+    }
+
     async profileImage({ _id, profileImage }: { _id: string, profileImage: string }): Promise<any> {
         try {
             return await DoctorModel.updateOne({ _id }, { $set: { profileImage } });
@@ -107,7 +111,7 @@ export class DoctorRepository implements IDoctorRepository {
             throw new Error('Error updating profile image: ' + error.message);
         }
     }
-    
+
 
     async updateProfileData({
         _id,
@@ -164,19 +168,19 @@ export class DoctorRepository implements IDoctorRepository {
             } else {
                 throw new Error('No data to update');
             }
-            
+
         } catch (error: any) {
             console.error(`Error updating proof verification data: ${error.message}`);
             throw new Error('Error updating proof verification data, please try again.');
         }
     }
 
-    async updatekProfileComplete (_id: string): Promise<UpdateResult> {
-        return await DoctorModel.updateOne({_id},{$set:{isProfileCompleted:true}})
+    async updatekProfileComplete(_id: string): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({ _id }, { $set: { isProfileCompleted: true } })
     }
 
     async updateFees(_id: string, fees: number): Promise<UpdateResult> {
-        return await DoctorModel.updateMany({_id},{$set:{fees}})
+        return await DoctorModel.updateMany({ _id }, { $set: { fees } })
     }
 
     async getFees(doctorId: string): Promise<number | null> {
@@ -192,49 +196,100 @@ export class DoctorRepository implements IDoctorRepository {
         );
     }
 
-    async approveDoctor (_id: string): Promise<UpdateResult> {
-        return await DoctorModel.updateOne({_id},{$set:{isApproved:true}})
+    async approveDoctor(_id: string): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({ _id }, { $set: { isApproved: true } })
     }
 
-    async deleteDoctor (_id: string): Promise<DeleteResult> {
-        return await DoctorModel.deleteOne({_id})
+    async deleteDoctor(_id: string): Promise<DeleteResult> {
+        return await DoctorModel.deleteOne({ _id })
     }
 
-    async block (_id:string): Promise<UpdateResult> {
-        return await DoctorModel.updateOne({_id},{$set:{isBlocked: true}})
+    async block(_id: string): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({ _id }, { $set: { isBlocked: true } })
     }
 
-    async unblock (_id:string): Promise<UpdateResult> {
-        return await DoctorModel.updateOne({_id},{$set:{isBlocked: false}})
+    async unblock(_id: string): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({ _id }, { $set: { isBlocked: false } })
     }
 
-    async getTopDoctors(skip: number, limit: number, specialization: string | null): Promise<{ data: IDoctor[], hasMore: boolean }> {
+    async getTopDoctors(
+        skip: number,
+        limit: number,
+        specialization: string | null,
+        search: string,
+        sort: string,
+        sortOrder: number,
+        languageSpoken: string,
+        yearsOfExperience: number | null
+      ): Promise<{ data: IDoctor[]; hasMore: boolean }> {
         try {
-            const query: any = { isApproved: true };
-    
-            if (specialization) {
-                query.specialization = { $regex: new RegExp(specialization, 'i') };
+          const query: any = { isApproved: true };
+      
+          if (specialization) {
+            query.specialization = { $regex: new RegExp(specialization, 'i') };
+          }
+      
+          if (search) {
+            query.$or = [
+              { fullName: { $regex: new RegExp(search, 'i') } },
+              { specialization: { $regex: new RegExp(search, 'i') } }
+            ];
+          }
+      
+          if (languageSpoken) {
+            query.languageSpoken = { $regex: new RegExp(languageSpoken, 'i') };
+          }
+      
+          if (yearsOfExperience) {
+            const experience = yearsOfExperience;
+            if (!isNaN(experience)) {
+              query.yearsOfExperience = { $gte: experience };
             }
-    
-            const doctors = await DoctorModel.find(query)
-                .sort({ rating: -1 })
-                .skip(skip)
-                .limit(limit)
-                .select('profileImage fullName specialization languageSpoken yearsOfExperience rating reviewCount fees')
-                .lean();
-    
-            const hasMore = doctors.length === limit;
-    
-            return { data: doctors, hasMore };
+          }
+      
+          const sortOptions: any = {};
+          console.log(sort,'sd')
+          switch (sort) {
+            case 'rating':
+              sortOptions.rating = sortOrder;
+              break;
+            case 'yearsOfExperience':
+              sortOptions.yearsOfExperience = sortOrder;
+              break;
+            case 'reviewCount':
+              sortOptions.reviewCount = sortOrder;
+              break;
+            case 'fees':
+              sortOptions.fees = sortOrder;
+              break;
+            case 'name':
+              sortOptions.fullName = sortOrder;
+              break;
+            default:
+              sortOptions.rating = sortOrder;
+          }
+
+          console.log(query,'sdf')
+          const doctors = await DoctorModel.find(query)
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(limit)
+            .select('profileImage fullName specialization languageSpoken yearsOfExperience rating reviewCount fees')
+            .lean();
+      
+          const hasMore = doctors.length === limit;
+      
+          return { data: doctors, hasMore };
         } catch (error) {
-            console.error("Error fetching doctors:", error);
-            throw new Error("Unable to fetch doctors");
+          console.error("Error fetching doctors:", error);
+          throw new Error("Unable to fetch doctors");
         }
+      }
+      
+
+    async updateReview(_id: string, rating: number, reviewCount: number): Promise<UpdateResult> {
+        return await DoctorModel.updateOne({ _id }, { $set: { rating, reviewCount } })
     }
 
-    async updateReview( _id: string, rating: number, reviewCount: number): Promise<UpdateResult> {
-        return await DoctorModel.updateOne({_id},{$set:{rating, reviewCount}})
-    }
-    
 
 }
