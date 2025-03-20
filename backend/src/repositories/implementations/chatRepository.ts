@@ -22,7 +22,11 @@ export class ChatRepository implements IChatRepository {
 
     async isChatExists({ patientId, doctorId }: IIsChatExists): Promise<boolean> {
         try {
-            return !!(await Chat.exists({ participants: [patientId, doctorId] }));
+            return !!(await Chat.exists({
+                isGroup: false,
+                participants: { $all: [patientId, doctorId], $size: 2 }
+              }));
+            
         } catch (error) {
             console.error("Error checking chat existence:", error);
             return false;
