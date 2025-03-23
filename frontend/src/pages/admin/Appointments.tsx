@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { CalendarCheck, Clock } from "lucide-react";
+import { CalendarCheck, ChevronLeft, ChevronRight, Clock, Undo2 } from "lucide-react";
 import { fetchAllAppointmentDetailsApi } from "../../sevices/appointments/fetchAppointments";
 import { IFetchAllAppointmentResponse } from "../../types/appointment/fetchAppointments";
 import { useDispatch } from "react-redux";
-import { setError, setLoading } from "../../store/slices/commonSlices/notificationSlice";
+import { setError, setExtra, setLoading, setWarning } from "../../store/slices/commonSlices/notificationSlice";
 import { refundApi } from "../../sevices/payment/payment";
 
 const isExpired = (createdAt: string) => {
@@ -19,7 +19,8 @@ const Appointments = () => {
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-    
+    const [transactionId, setTransactionId] = useState('')
+
     const appointmentsPerPage = 5;
     const dispatch = useDispatch();
 
@@ -29,7 +30,7 @@ const Appointments = () => {
                 dispatch(setLoading(true));
                 const response = await fetchAllAppointmentDetailsApi();
                 if (response) {
-                    setAppointments(response.userAppointmentsList);
+                    setAppointments(response.userAppointmentsList.reverse());
                 } else {
                     setError("No appointments found.");
                 }
@@ -69,7 +70,7 @@ const Appointments = () => {
         }
     };
 
-    const refundHandler = async (transactionId: string) => {
+    const refundHandlerApi = async () => {
         try {
             const { message } = await refundApi(transactionId);
             console.log(message);
@@ -77,6 +78,12 @@ const Appointments = () => {
             dispatch(setError(error.message));
         }
     };
+
+    const refundHandler = async (transactionId: string) => {
+        setTransactionId(transactionId)
+        dispatch(setWarning("Do you want to refund these payment?"))
+        dispatch(setExtra(refundHandlerApi))
+    }
 
     return (
         <div className="w-full mx-auto p-6 rounded-lg shadow-lg flex flex-col">
@@ -111,10 +118,14 @@ const Appointments = () => {
                     className="border p-2 rounded-md"
                 >
                     <option value="">All Status</option>
-                    <option value="Scheduled">Scheduled</option>
                     <option value="Completed">Completed</option>
+                    <option value="Scheduled">Scheduled</option>
                     <option value="Cancelled">Cancelled</option>
                 </select>
+                <div className="cursor-pointer ml-auto mt-auto flex gap-2">
+                    <div onClick={prevPage} className="flex font-medium items-center"><ChevronLeft /> prev</div>
+                    <div onClick={nextPage} className="flex font-medium items-center">next <ChevronRight /></div>
+                </div>
             </div>
             
             <div className="flex flex-col justify-between flex-1">
@@ -144,9 +155,14 @@ const Appointments = () => {
                                         <p className="text-sm text-gray-500">Contact: {appointment.patientDetails?.phone || "N/A"}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <span className={`text-sm font-semibold ${appointment.status === "Completed" ? "text-green-600" : isExpired(appointment.createdAt) ? "text-gray-500" : "text-orange-400"}`}>{appointment.status}</span>
-                                </div>
+                                {appointment.status === "Scheduled" && isExpired(appointment.createdAt) ?
+                                <div className="text-center flex flex-col">
+                                     <span className="text-red-500 text-sm ">time out</span>
+                                     <span className="text-gray-500 text-sm font-semibold flex gap-1 items-center cursor-pointer" onClick={() => refundHandler(appointment.transactionId)}><Undo2 size={15} strokeWidth={3} />refund</span>
+                                </div> :
+                                <div className="text-center flex flex-col gap-2">
+                                    <span className={`text-sm font-semibold ${appointment.status === "Completed" ? "text-green-600" : appointment.status === "Cancelled" ? "text-gray-500" : "text-orange-400"}`}>{appointment.status}</span>
+                                </div>}
                             </div>
                         ))
                     ) : (

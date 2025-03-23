@@ -5,18 +5,21 @@ import Stripe from "stripe";
 import { ITransactionServices } from "../interfaces/ITransactionServices";
 import { IAppointmentServices } from "../interfaces/IAppointmentServices";
 import { ISlotService } from "../interfaces/ISlotServices";
+import { IWalletRepository } from "../../repositories/interfaces/IWalletRepository";
 
 export class PaymentServices implements IPaymentServices {
     private stripe: Stripe;
     private transactionServices: ITransactionServices
     private appointmentServices: IAppointmentServices
+    private walletRepository: IWalletRepository
     private slotServices: ISlotService
 
-    constructor(transactionServices: ITransactionServices, appointmentServices: IAppointmentServices, slotServices: ISlotService ) {
+    constructor(transactionServices: ITransactionServices, appointmentServices: IAppointmentServices, slotServices: ISlotService, walletRepository: IWalletRepository ) {
         this.stripe = stripe
         this.transactionServices = transactionServices
         this.appointmentServices = appointmentServices
         this.slotServices = slotServices
+        this.walletRepository = walletRepository
     }
 
     async checkoutSession(data: ICheckoutSession): Promise<any> {
@@ -69,11 +72,10 @@ export class PaymentServices implements IPaymentServices {
             event = stripe.webhooks.constructEvent(bodyData, sig, STRIPE_WEBHOOK_SECRET);
     
             if (event.type === 'checkout.session.completed') {
-                console.log('Checkout session completed');
                 const session = event.data.object as Stripe.Checkout.Session;
                 const metadata = session.metadata || {};
     
-                const paymentIntentId = session.payment_intent as string; // Extract Payment Intent ID
+                const paymentIntentId = session.payment_intent as string; 
     
                 const transaction = await this.transactionServices.createTransaction({
                     transactionId: paymentIntentId,
@@ -82,7 +84,9 @@ export class PaymentServices implements IPaymentServices {
                     amount: (session.amount_total || 0) / 100,
                     status: 'success',
                 });
-    
+
+                await this.walletRepository.increment(metadata.doctorId,(session.amount_total || 0) / 100)
+
                 if (!transaction) {
                     throw new Error('Failed to store transaction');
                 }
@@ -121,17 +125,19 @@ export class PaymentServices implements IPaymentServices {
 
     async processRefund(transactionId: string): Promise<any> {
         try {
-            const transaction = await this.transactionServices.getTransactionById(transactionId,'user');
+            console.log(transactionId)
+            const transaction = await this.transactionServices.getTransactionById(transactionId);
             if (!transaction) {
                 throw new Error('Transaction not found or not refundable.');
             }
-    
+            
             const refund = await this.stripe.refunds.create({
                 payment_intent: transactionId,
             });
     
             if (true) {
                 await this.transactionServices.updateTransactionStatus(transactionId, 'refunded');
+                await this.walletRepository.decrement(transaction.recieverId, transaction.amount)
                 await this.appointmentServices.cancelAppointmentByTransactionId(transactionId);
                 console.log('refund status success')
             }

@@ -38,7 +38,6 @@ export class PaymentController {
     async refundPayment(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { transactionId } = req.body;
-            console.log(transactionId,'asdf')
             const refund = await this.paymentService.processRefund(transactionId);
             res.status(200).json({ success: true, refund });
         } catch (error: any) {

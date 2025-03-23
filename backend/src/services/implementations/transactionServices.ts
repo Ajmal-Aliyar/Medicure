@@ -29,9 +29,17 @@ export class TransactionServices implements ITransactionServices {
         }
     }
 
-    async getTransactionById(_id: string, role: string ): Promise<ITransaction[]> {
+    async getTransactionsByUserId(_id: string, role: string ): Promise<ITransaction[]> {
         try {
             return await this.transactionRepository.getTransactions(_id,role)
+        } catch (error: unknown) {
+            throw error
+        }
+    }
+
+    async getTransactionById(_id: string ): Promise<ITransaction> {
+        try {
+            return await this.transactionRepository.getTransactionById(_id)
         } catch (error: unknown) {
             throw error
         }
