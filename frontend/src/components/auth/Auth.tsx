@@ -260,7 +260,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                     <p className="text-gray-600">Don't have an account? <a onClick={(e) => setLoginFalse(e)} href="" className="text-[#0c0b3e] font-medium">Sign up</a></p> :
                     <p className="text-gray-600">Already have an account? <a onClick={(e) => setLoginTrue(e)} href="" className="text-[#0c0b3e] font-medium">Sign in</a></p>}
 
-                <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={() => navigate(role === 'user' ? '/doctor/auth' : '/user/auth')}>I'm a {role === 'user' ? 'doctor' : 'patient'}</p>
+                <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={() => navigate(role === 'user' ? '/doctor/auth' : '/auth')}>I'm a {role === 'user' ? 'doctor' : 'patient'}</p>
             </div>
 
             {role === 'user' && <GoogleAuth />}

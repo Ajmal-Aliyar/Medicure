@@ -20,7 +20,7 @@ export class TransactionController {
                 throw new Error("Invalid client data")
             }
     
-            const transactions = await this.transactionServices.getTransactionById(_id,role);
+            const transactions = await this.transactionServices.getTransactionsByUserId(_id,role);
     
             if (!transactions) {
                 throw new Error( "Transactions not found")

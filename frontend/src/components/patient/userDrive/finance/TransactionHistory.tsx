@@ -22,6 +22,7 @@ const TransactionHistory: FC = () => {
             try {
                 dispatch(setLoading(true));
                 const { transactions } = await fetchTransactionHistoryApi();
+                console.log(transactions, 'sdf')
                 setTransactions(transactions);
             } catch (error) {
                 dispatch(setError("Failed to load transactions."));
@@ -32,16 +33,35 @@ const TransactionHistory: FC = () => {
         fetchTransactions();
     }, [dispatch]);
     return (
-        <div>
+        <div className="">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">Recent Transactions</h3>
-            <ul className="text-sm text-gray-600 space-y-2">
+            <ul className="text-sm text-gray-600 space-y-2 max-h-[300px] overflow-y-auto pr-5">
                 {transactions.length <= 0 && <p className="text-gray-500 text-sm">No transation history</p>}
                 {(showAll ? transactions : transactions.slice(0, 3)).map((tx, index) => (
                     <li key={index} className="flex justify-between">
-                        <span>{tx.senderFullName ? `Received from ${tx.senderFullName}` : `Paid to ${tx.recieverFullName}`}</span>
-                        <span className={`${tx.senderFullName ? 'text-green-500' : 'text-red-500'}`}>{tx.senderFullName ? '+' : '-'} {tx.amount}</span>
+                        {tx.status === 'success' ? (
+                            <>
+                                <span>
+                                    {tx.senderFullName ? `Received from ${tx.senderFullName}` : `Paid to ${tx.recieverFullName}`}
+                                </span>
+                                <span className={`${tx.senderFullName ? 'text-green-500' : 'text-red-500'}`}>
+                                    {tx.senderFullName ? '+' : '-'} {tx.amount}
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                <span>
+                                   {tx.recieverFullName ? `refund money from ${tx.recieverFullName}` : `refund money to ${tx.senderFullName}`}
+                                </span>
+                                <span className={`${tx.recieverFullName ? 'text-green-500' : 'text-red-500'}`}>
+                                    {tx.recieverFullName ? '+' : '-'} {tx.amount}
+                                </span>
+                               
+                            </>
+                        )}
                     </li>
                 ))}
+
             </ul>
             {!showAll && transactions.length > 3 && (
                 <div className="mt-4 text-center">

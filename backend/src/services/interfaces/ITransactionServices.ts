@@ -3,7 +3,8 @@ import { ITransactionDocument } from "../../repositories/interfaces/ITransaction
 
 export interface ITransactionServices {
     createTransaction ({ transactionId, senderId, recieverId, amount, status}: ICreateTransaction): Promise<ITransactionDocument>
-    getTransactionById (_id: string, role: string ): Promise<ITransaction[]>
+    getTransactionsByUserId (_id: string, role: string ): Promise<ITransaction[]>
+    getTransactionById(_id: string ): Promise<ITransaction>
     updateTransactionStatus( transactionId: string, status: string ): Promise<void>
 }
 

@@ -12,6 +12,7 @@ import { SlotRepository } from '../repositories/implementations/slotRepository';
 import { PatientRepository } from '../repositories/implementations/patientRepository';
 import { ChatRepository } from '../repositories/implementations/chatRepository';
 import { MedicalRecordRepository } from '../repositories/implementations/medicalRecordRepository';
+import { WalletRepository } from '../repositories/implementations/walletRepository';
 
 const transactionRepository = new TransactionRepository();
 const transactionServices = new TransactionServices(transactionRepository);
@@ -23,7 +24,8 @@ const medicalRecordRepository = new MedicalRecordRepository()
 const appointmentServices = new AppointmentServices(appointmentRepository, patientRepository, slotRepository, chatRepository, medicalRecordRepository);
 const doctorRepository = new DoctorRepository()
 const slotServices = new SlotService(slotRepository, doctorRepository)
-const paymentService = new PaymentServices(transactionServices, appointmentServices, slotServices)
+const walletRepository = new WalletRepository()
+const paymentService = new PaymentServices(transactionServices, appointmentServices, slotServices, walletRepository)
 const paymentController = new PaymentController(paymentService)
 
 

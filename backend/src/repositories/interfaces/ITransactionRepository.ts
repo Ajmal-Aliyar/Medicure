@@ -9,4 +9,5 @@ export interface ITransactionRepository {
     createTransaction ( transactionId: string, senderId: string, recieverId: string, amount: number, status: string): Promise<ITransactionDocument>
     getTransactions( id: string, role: string ): Promise<ITransaction[]>
     updateTransactionStatus(transactionId: string, status: string): Promise<void>
+    getTransactionById (transactionId: string): Promise<ITransaction> 
 }
