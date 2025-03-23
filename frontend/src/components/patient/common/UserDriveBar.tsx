@@ -17,10 +17,10 @@ function UserDriveBar() {
     };
 
     const menuItems = [
-        { name: "Medical Records", path: "/user/drive/medical-records", icon: <Library size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
-        { name: "Appointments", path: "/user/drive/appointments", icon: <BookText size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
-        { name: "Feedback", path: "/user/drive/feedbacks", icon: <MessageSquareText size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
-        { name: "Payments", path: "/user/drive/payments", icon: <Wallet size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
+        { name: "Medical Records", path: "/drive/medical-records", icon: <Library size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
+        { name: "Appointments", path: "/drive/appointments", icon: <BookText size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
+        { name: "Feedback", path: "/drive/feedbacks", icon: <MessageSquareText size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
+        { name: "Payments", path: "/drive/payments", icon: <Wallet size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
     ];
 
     return (

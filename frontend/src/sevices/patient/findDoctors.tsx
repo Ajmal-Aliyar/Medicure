@@ -2,8 +2,8 @@ import { IDoctorSotDetails, IFetchTopDoctors } from "../../types/patient/findDoc
 import { api } from "../../utils/axiosInstance";
 
 
-export const fetchTopDoctorsApi = async (skip: number, limit: number, specialization?: string): Promise<{data: IFetchTopDoctors[],hasMore:boolean}> => {
-    const response = await api.get<{data: IFetchTopDoctors[],hasMore:boolean}>(`/api/patient/getTopDoctors?skip=${skip}&limit=${limit}${specialization ? `&specialization=${encodeURIComponent(specialization)}` : ''}`);
+export const fetchTopDoctorsApi = async (skip: number, limit: number, searchParams: string, specialization?: string): Promise<{data: IFetchTopDoctors[],hasMore:boolean}> => {
+    const response = await api.get<{data: IFetchTopDoctors[],hasMore:boolean}>(`/api/patient/getTopDoctors?skip=${skip}&limit=${limit}&${searchParams}${specialization ? `&specialization=${encodeURIComponent(specialization)}` : ''}`);
     if (!response.data.data || response.data.data.length === 0) {
         return { data: [] , hasMore: false}; 
     }

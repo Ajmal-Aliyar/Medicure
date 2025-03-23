@@ -39,7 +39,7 @@ function Menu() {
                 <p className="text-[2rem] lg:text-[2.5rem] font-black">MEDI CURE</p>
                 <nav className="lg:flex flex-col hidden lg:flex-row items-center justify-center gap-5 lg:gap-20">
                     <NavLink
-                        to="/user"
+                        to="/"
                         end
                         className={({ isActive }) =>
                             isActive
@@ -50,7 +50,7 @@ function Menu() {
                         Home
                     </NavLink>
                     <NavLink
-                        to="/user/find-doctors"
+                        to="/find-doctors"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer hover:scale-105 transition-all duration-300"
@@ -60,7 +60,7 @@ function Menu() {
                         Find Doctors
                     </NavLink>
                     <NavLink
-                        to="/user/chat"
+                        to="/chat"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer hover:scale-105 transition-all duration-300"
@@ -70,7 +70,7 @@ function Menu() {
                         Connection
                     </NavLink>
                     <NavLink
-                        to="/user/contact"
+                        to="/contact"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer hover:scale-105 transition-all duration-300"
@@ -87,9 +87,9 @@ function Menu() {
                         className={`group/button overflow-hidden border-2 border-[#0c0b3eb5] rounded-lg px-5 lg:py-1 lg:px-7 lg:font-medium cursor-pointer transition-all transform  duration-300 active:scale-95 `}
                         onClick={() => {
                             if (isAuthenticated && role === 'user') {
-                                navigate('/user/profile');
+                                navigate('/profile');
                             } else {
-                                navigate('/user/auth');
+                                navigate('/auth');
                             }
                         }}
                     >
@@ -116,7 +116,7 @@ function Menu() {
 
                 <span className='flex flex-col gap-4'>
                 <NavLink
-                        to="/user"
+                        to="/"
                         end
                         className={({ isActive }) =>
                             isActive
@@ -127,7 +127,7 @@ function Menu() {
                         Home
                     </NavLink>
                     <NavLink
-                        to="/user/find-doctors"
+                        to="/find-doctors"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer "
@@ -137,7 +137,7 @@ function Menu() {
                         Find Doctors
                     </NavLink>
                     <NavLink
-                        to="/user/chat"
+                        to="/chat"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer "
@@ -147,7 +147,7 @@ function Menu() {
                         Connection
                     </NavLink>
                     <NavLink
-                        to="/user/contact"
+                        to="/contact"
                         className={({ isActive }) =>
                             isActive
                                 ? "font-bold cursor-pointer"

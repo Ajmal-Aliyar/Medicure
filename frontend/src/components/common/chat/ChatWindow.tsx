@@ -5,6 +5,7 @@ import { RootState } from '../../../store/store';
 import { addMessage } from '../../../store/slices/commonSlices/chatSlice';
 import { sendMessageApi } from '../../../sevices/chat/fetchMessage';
 import { IMessage } from '../../../types/chat/ChatType';
+import { markAsReadApi } from '../../../sevices/chat/fetchChats';
 
 const ChatWindow = () => {
     const [message, setMessage] = useState('');
@@ -16,6 +17,10 @@ const ChatWindow = () => {
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        const MarkAsRead = async (chatId: string) => {
+            await markAsReadApi(chatId)
+        }
+        selectedChat?.chatId && MarkAsRead(selectedChat.chatId)
     }, [selectedChat]);
 
     if (!selectedChat)

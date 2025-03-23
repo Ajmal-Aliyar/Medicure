@@ -7,6 +7,8 @@ export interface IChatServices {
     getUserChats({ userId, role }: IGetUserChats): Promise<(IChatListResponse|IChat)[]>
     updateLastMessage({ chatId, messageId }: IUpdateLastMessage): Promise<IChat>
     deleteChat({ chatId }: IChatId): Promise<void>
+    handleUnreadMessage(chatId: string, senderId: string): Promise<void>
+    markAsRead(chatId: string, userId: string): Promise<void>
 }
 
 export interface ICreateChat {

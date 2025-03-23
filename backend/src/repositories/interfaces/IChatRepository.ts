@@ -9,6 +9,8 @@ export interface IChatRepository {
     updateLastMessage(chatId: mongoose.Types.ObjectId, messageId: mongoose.Types.ObjectId): Promise<IChat | null>;
     deleteChat(chatId: mongoose.Types.ObjectId): Promise<void>;
     isChatExists({ patientId, doctorId }: IIsChatExists): Promise<boolean>
+    incrementUnreadCount(chatId: mongoose.Types.ObjectId, recipientId: mongoose.Types.ObjectId): Promise<void>
+    markMessagesAsRead(chatId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId): Promise<void>
 }
 
 export interface IIsChatExists {

@@ -13,8 +13,7 @@ const BookedAppointments: React.FC = () => {
   useEffect(() => {
     const fetchPatients = async () => {
         const {bookedPatientsData} = await fetchAllAppointmentsApi()
-        console.log(bookedPatientsData)
-        setPatientDetails(bookedPatientsData)
+        setPatientDetails(bookedPatientsData.reverse())
     }
     fetchPatients()
   }, [])
@@ -29,11 +28,11 @@ const BookedAppointments: React.FC = () => {
       <div className='p-2  border-b'>
         <p>Appointments</p>
       </div>
-      <div className='overflow-auto'>
+      <div className='overflow-y-auto max-h-96'>
         {patientDetails && patientDetails.map((patient) => (
           <div key={patient.patientDetails._id} className="flex justify-between p-2 items-center border-b relative mb-2  duration-300" >
             <div className='flex'>
-              <div className="w-14 h-14 bg-blue-200 rounded-full">
+              <div className="w-14 h-14 rounded-full">
                 <img src={patient.patientDetails.profileImage} alt={patient.patientDetails.fullName} className="w-full h-full object-cover rounded-full" />
               </div>
               <div className="ml-2">
@@ -43,8 +42,6 @@ const BookedAppointments: React.FC = () => {
             </div>
 
             <div className='flex gap-2'>
-              <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300'>profile</button>
-              <button className='px-2 text-white bg-gray-300 rounded-md active:scale-90 duration-300' >cancel</button>
               <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'Scheduled' ? '' : 'hidden'}`} onClick={() =>createRoomHandler(patient.roomId, patient.appointmentId)}>join</button>
             </div>
           </div>

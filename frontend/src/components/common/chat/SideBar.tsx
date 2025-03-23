@@ -17,9 +17,8 @@ const SideBar = () => {
     useEffect(() => {
         const fetchChats = async () => {
             const { data } = await fetchChatsApi(userId)
-            console.log(data)
+            console.log(data,'sds')
             dispatch(setChats(data || []))
-            console.log('sidebar fetching')
         }
 
         fetchChats()
@@ -31,7 +30,20 @@ const SideBar = () => {
             joinChat(chatId)
             const messages = await fetchMessagesApi(chatId)
             dispatch(setSelectedChat({ chatId, messages, profileImage, name }));
-            console.log('selected chat', chatId, name)
+
+            const updatedChats = chats.map((chat) =>
+                chatId === chat._id
+                  ? {
+                      ...chat,
+                      unreadMessages: {
+                        ...chat.unreadMessages,
+                        [userId]: 0,
+                      },
+                    }
+                  : chat
+              );
+              dispatch(setChats(updatedChats))
+              
         } catch (error) {
             console.error("Error fetching messages:", error);
         }
@@ -84,10 +96,10 @@ const SideBar = () => {
                                         <span className="text-xs text-gray-400">12:30 PM</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <p className="text-sm text-gray-600 truncate">{chat?.lastMessage}</p>
-                                        {chat?.unreadCount >= 0 && (
+                                        <p className="text-sm text-gray-600 truncate">{chat?.lastMessage?.content}</p>
+                                        {chat?.unreadMessages[userId] !== 0 && chat.unreadMessages[userId] && (
                                             <span className="bg-green-500 text-white rounded-full px-2 py-0.5 text-xs">
-                                                {chat?.unreadCount}
+                                                {chat?.unreadMessages[userId]} 
                                             </span>
                                         )}
                                     </div>

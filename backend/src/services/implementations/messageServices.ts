@@ -1,4 +1,5 @@
 import { IMessage } from "../../models/message/messageInterface";
+import { IChatRepository } from "../../repositories/interfaces/IChatRepository";
 import { IMessageRepository } from "../../repositories/interfaces/IMessageRepository";
 import { producer } from "../../utils/kafkaUtil";
 import { IChatId } from "../interfaces/IChatServices";
@@ -6,14 +7,17 @@ import { IMessageServices } from "../interfaces/IMessageServices";
 
 export class MessageServices implements IMessageServices {
     private messageRepository: IMessageRepository;
+    private chatRepository: IChatRepository;
 
-    constructor (messageRepository: IMessageRepository) {
+    constructor (messageRepository: IMessageRepository, chatRepository: IChatRepository) {
         this.messageRepository = messageRepository
+        this.chatRepository = chatRepository;
     }
 
      async createMessage(data): Promise<void> {
             try {
                 await producer.send({ topic: "chat-messages", messages: [{ value: JSON.stringify(data) }] });
+                await this.chatRepository.incrementUnreadCount(data.chatId,data.senderId)
             } catch (error) {
                 console.error(error)
                 throw error

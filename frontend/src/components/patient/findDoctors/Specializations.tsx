@@ -33,7 +33,7 @@ const Specializations: React.FC = () => {
                     {specializations.map((specialization, index) => (
                         <div
                             key={index}
-                            onClick={() => navigate(`/user/find-doctors/${specialization.name}`)}
+                            onClick={() => navigate(`/find-doctors/${specialization.name}`)}
                             className='cursor-pointer duration-300 w-[100px]  md:max-w-[120px] aspect-square rounded-full bg-[#51aff6ce] p-2 md:p-3 relative flex justify-center items-center'
                         >
                             <div className='absolute w-[40px] md:w-[90px] h-20 bg-[#c3d6e4] blur-lg rounded-full'></div>

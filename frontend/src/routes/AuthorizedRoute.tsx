@@ -58,9 +58,9 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
         );
     }
 
-    if (!isAuthenticated) return <Navigate to={`/${allowedRole}/auth`} replace />;
+    if (!isAuthenticated) return <Navigate to={allowedRole === 'user' ? `/auth` : `/${allowedRole}/auth`} replace />;
     if (role === 'doctor' && isApproved === false) return <Navigate to='/doctor/verify-details' replace />;
-    if (allowedRole !== role) return <Navigate to={`/${allowedRole}/auth`} replace />;
+    if (allowedRole !== role) return <Navigate to={allowedRole === 'user' ? `/auth` : `/${allowedRole}/auth`} replace />;
 
     return children;
 };

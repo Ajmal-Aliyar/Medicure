@@ -30,5 +30,7 @@ export interface IDoctorRepository {
     deleteDoctor (_id: string): Promise<DeleteResult>
     block (_id:string): Promise<UpdateResult>
     unblock (_id:string): Promise<UpdateResult>
-    getTopDoctors(skip: number, limit: number, specialization: string | null): Promise<{ data: IDoctor[], hasMore: boolean }>
+    getTopDoctors(skip: number, limit: number, specialization: string | null, search: string, sort: string,
+        sortOrder: number, languageSpoken: string, yearsOfExperience: number | null
+    ): Promise<{ data: IDoctor[], hasMore: boolean }>
 }

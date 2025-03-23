@@ -8,6 +8,12 @@ export const ChatSchema = new Schema({
     }],
     groupName: { type: String, default: null },
     groupIcon: { type: String, default: null },
+    unreadMessages: {
+        type: Map,
+        of: Number,
+        default: {},
+      },
     createdAt: { type: Date, default: Date.now },
     lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message", default: null },
 });
+

@@ -43,8 +43,8 @@ export class PaymentServices implements IPaymentServices {
                     },
                     quantity: 1,
                 }],
-                success_url: `${FRONTEND_BASE_URL}/user/drive/appointments?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${FRONTEND_BASE_URL}/user/find-doctors?cancelled=true`,
+                success_url: `${FRONTEND_BASE_URL}/drive/appointments?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${FRONTEND_BASE_URL}/find-doctors?cancelled=true`,
                 metadata: {
                     doctorId: data.doctorId,
                     patientId: data.patientId,

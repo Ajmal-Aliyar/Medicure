@@ -6,6 +6,8 @@ import TopSpecialists from '../../components/patient/findDoctors/TopSpecialists'
 import { useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setError } from '../../store/slices/commonSlices/notificationSlice'
+import { FilterProvider } from '../../context/FilterContext'
+import FilterTopDoctor from '../../components/patient/specialization/FilterTopDoctor'
 
 
 const FindDoctors:React.FC = () => {
@@ -22,7 +24,9 @@ const FindDoctors:React.FC = () => {
     <div className='w-full pt-[74px] px-2 lg:px-28'>
       <HeaderContent />
       <Specializations />
-      <TopSpecialists />
+      <FilterProvider><FilterTopDoctor /></FilterProvider> 
+
+      <FilterProvider><TopSpecialists /></FilterProvider>
 
 
       <FindDoctorAnimation />

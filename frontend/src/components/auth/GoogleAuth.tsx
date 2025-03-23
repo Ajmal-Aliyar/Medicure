@@ -21,7 +21,7 @@ const GoogleAuth: React.FC = () => {
       email: decodedUser.email,
       profileImage: decodedUser.picture,
     })
-    .then(() => navigate("/user")) 
+    .then(() => navigate("/")) 
     .catch((error) => console.error("Google Auth API Error:", error)); 
   };
 

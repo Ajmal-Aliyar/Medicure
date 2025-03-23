@@ -53,22 +53,41 @@ export class PatientController {
 
     async getTopDoctors(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const skip = parseInt(req.query.skip as string) || 0;
-            const limit = parseInt(req.query.limit as string) || 5;
-            const specialization = req.query?.specialization ? req.query.specialization as string : null;
-            
-            const approvedDoctors = await this.patientServices.getTopDoctors(skip, limit, specialization);
-
-            res.status(200).json({
-                success: true,
-                data: approvedDoctors.data,
-                hasMore: approvedDoctors.hasMore
-            });
+          // Parsing query parameters with proper defaults
+          const skip = parseInt(req.query.skip as string) || 0;
+          const limit = parseInt(req.query.limit as string) || 5;
+          const specialization = req.query.specialization as string || null;
+          const search = req.query.search as string || null;
+          const sort = req.query.sort as string || 'rating';
+          const sortOrder = req.query.sortOrder === 'asc' ? 1 : -1; 
+          const languageSpoken = req.query.languageSpoken as string || null;
+          const yearsOfExperience = req.query.yearsOfExperience ? parseInt(req.query.yearsOfExperience as string) : null;
+      
+          console.log('Query Params:', { skip, limit, specialization, search, sort, sortOrder, languageSpoken, yearsOfExperience });
+      
+          const approvedDoctors = await this.patientServices.getTopDoctors(
+            skip,
+            limit,
+            specialization,
+            search,
+            sort,
+            sortOrder,
+            languageSpoken,
+            yearsOfExperience
+          );
+      
+          res.status(200).json({
+            success: true,
+            data: approvedDoctors.data,
+            hasMore: approvedDoctors.hasMore,
+          });
+      
         } catch (error: any) {
-            console.error('Error fetching approved doctors:', error.message);
-            next(error);
+          console.error('Error fetching approved doctors:', error.message);
+          next(error);
         }
-    }
+      }
+      
 
 
 }
