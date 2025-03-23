@@ -3,6 +3,7 @@ import { IChatId, IChatListResponse, IChatServices, ICreateChat, IGetUserChats, 
 import { IChat } from "../../models/chat/chatInterface";
 import { IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { IDoctorRepository } from "../../repositories/interfaces/IDoctorRepostory";
+import mongoose from "mongoose";
 
 
 export class ChatServices implements IChatServices {
@@ -39,36 +40,43 @@ export class ChatServices implements IChatServices {
         }
     }
 
-    async getUserChats({ userId, role }: IGetUserChats): Promise<(IChatListResponse|IChat)[]> {
+    async getUserChats({ userId, role }: IGetUserChats): Promise<(any | IChat)[]> {
         try {
-            const chats = await this.chatRepository.getChatByUserId(userId)
-            console.log(chats)
-
-            const client = (role === 'doctor' ? this.patientRepository : this.doctorRepository)
-
-            const populatedChats = await Promise.all(
-                chats.map(async (chat) => {
-                    if (chat.isGroup) {
-                        return chat
-                    } else {
-                        const populatedParticipants = await Promise.all(
-                            chat.participants.map(async (_id) => {
-                                const user = await client.getMinDetails(_id)
-                                return user || null;
-                            })
-                        );
-
-                        return { ...chat, participants: populatedParticipants.filter(Boolean) };
-                    }
-
-                })
-            );
-
-            return populatedChats
+          const chats = await this.chatRepository.getChatByUserId(userId);
+          console.log(chats, 'chats');
+      
+          const client = role === 'doctor' ? this.patientRepository : this.doctorRepository;
+      
+          const populatedChats = await Promise.all(
+            chats.map(async (chat) => {
+              // Convert Map to Object for easier access on frontend
+              const unreadMessagesObject = Object.fromEntries(chat.unreadMessages || []);
+      
+              if (chat.isGroup) {
+                return { ...chat, unreadMessages: unreadMessagesObject };
+              } else {
+                const populatedParticipants = await Promise.all(
+                  chat.participants.map(async (_id) => {
+                    const user = await client.getMinDetails(_id);
+                    return user || null;
+                  })
+                );
+      
+                return {
+                  ...chat,
+                  participants: populatedParticipants.filter(Boolean),
+                  unreadMessages: unreadMessagesObject,
+                };
+              }
+            })
+          );
+      
+          return populatedChats;
         } catch (error) {
-            throw error
+          throw error;
         }
-    }
+      }
+      
 
     async updateLastMessage({ chatId, messageId }: IUpdateLastMessage): Promise<IChat> {
         try {
@@ -90,6 +98,20 @@ export class ChatServices implements IChatServices {
         } catch (error) {
             throw error
         }
+    }
+
+    async handleUnreadMessage(chatId: string, senderId: string) {
+        const chat = await this.chatRepository.getChatById(new mongoose.Types.ObjectId(chatId));
+        if (!chat) throw new Error('Chat not found');
+
+        const recipientId = chat.participants.find(id => id.toString() !== senderId);
+        if (recipientId) {
+            await this.chatRepository.incrementUnreadCount(new mongoose.Types.ObjectId(chatId), recipientId);
+        }
+    }
+
+    async markAsRead(chatId: string, userId: string) {
+        await this.chatRepository.markMessagesAsRead(new mongoose.Types.ObjectId(chatId), new mongoose.Types.ObjectId(userId));
     }
 
 

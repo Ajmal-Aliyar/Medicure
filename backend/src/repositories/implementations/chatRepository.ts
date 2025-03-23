@@ -17,9 +17,15 @@ export class ChatRepository implements IChatRepository {
     }
 
     async getChatByUserId(userId: mongoose.Types.ObjectId): Promise<IChat[] | null> {
-        return await Chat.find({ participants: userId }).lean();
-    }
-
+        const chats = await Chat.find({ participants: userId }).populate("lastMessage").lean();
+        
+        if (!chats) return null;
+      
+        return chats.map(chat => ({
+          ...chat,
+          unreadMessages: new Map(Object.entries(chat.unreadMessages || {})),
+        }));
+      }
     async isChatExists({ patientId, doctorId }: IIsChatExists): Promise<boolean> {
         try {
             return !!(await Chat.exists({
@@ -93,6 +99,27 @@ export class ChatRepository implements IChatRepository {
     async deleteChat(chatId: mongoose.Types.ObjectId): Promise<void> {
         await Chat.findByIdAndDelete(chatId);
     }
+
+    async incrementUnreadCount(chatId: mongoose.Types.ObjectId, senderId: mongoose.Types.ObjectId): Promise<void> {
+        const chat = await Chat.findById(chatId);
+        if (!chat) throw new Error('Chat not found');
+      
+        const recipientId = chat.participants.find(id => !id.equals(senderId));
+        if (!recipientId) throw new Error('Recipient not found');
+      
+        await Chat.updateOne(
+          { _id: chatId },
+          { $inc: { [`unreadMessages.${recipientId}`]: 1 } }
+        );
+      }
+      
+    
+      async markMessagesAsRead(chatId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId): Promise<void> {
+        await Chat.updateOne(
+          { _id: chatId },
+          { $set: { [`unreadMessages.${userId}`]: 0 } }
+        );
+      }
 }
 
 

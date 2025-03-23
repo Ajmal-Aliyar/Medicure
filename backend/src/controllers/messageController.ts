@@ -18,7 +18,7 @@ export class MessageController {
 
     async createMessage(req: Request, res: Response): Promise<void> {
         try {
-            await producer.send({ topic: "chat-messages", messages: [{ value: JSON.stringify(req.body) }] });
+            await this.messageServices.createMessage(req.body)
             res.send("Message sent!");
         } catch (error) {
             console.error(error)

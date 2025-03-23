@@ -19,5 +19,6 @@ router.get("/:chatId", tokenMiddleware, chatController.getChatById);
 router.get("/user/:userId", tokenMiddleware, chatController.getUserChats);
 router.put("/update-last-message", tokenMiddleware, chatController.updateLastMessage);
 router.delete("/:chatId", tokenMiddleware, chatController.deleteChat);
+router.get("/markAsRead/:chatId", tokenMiddleware, chatController.markAsRead)
 
 export default router;

@@ -3,11 +3,13 @@ import { MessageRepository } from "../repositories/implementations/messageReposi
 import { MessageController } from "../controllers/messageController";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
 import { MessageServices } from "../services/implementations/messageServices";
+import { ChatRepository } from "../repositories/implementations/chatRepository";
 
 const router = Router();
 
 const messageRepository = new MessageRepository();
-const messageServices = new MessageServices(messageRepository)
+const chatRepository = new ChatRepository();
+const messageServices = new MessageServices( messageRepository, chatRepository)
 const messageController = new MessageController(messageServices);
 
 router.post("/messages", tokenMiddleware, messageController.createMessage);

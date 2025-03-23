@@ -12,7 +12,7 @@ export interface IChat {
     name: string;
     avatar: string;
     lastMessage: string | null;
-    unreadCount: number;
+    unreadMessages: { content: number };
     messages: Message[]
 }
 

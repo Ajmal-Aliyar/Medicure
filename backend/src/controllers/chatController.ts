@@ -13,6 +13,7 @@ export class ChatController {
         this.getUserChats = this.getUserChats.bind(this)
         this.updateLastMessage = this.updateLastMessage.bind(this)
         this.deleteChat = this.deleteChat.bind(this)
+        this.markAsRead = this.markAsRead.bind(this)
     }
 
     async createChat(req: Request, res: Response): Promise<void> {
@@ -67,6 +68,18 @@ export class ChatController {
             res.status(200).json(updatedChat);
         } catch (error) {
             res.status(500).json({ message: "Error updating last message", error });
+        }
+    }
+
+    async markAsRead(req: Request, res: Response): Promise<void> {
+        try {
+            const { chatId } = req.params
+            const { _id } = req.client
+            
+            await this.chatRepository.markAsRead( chatId, _id )
+            res.status(200).json({ message: "Chat mark as read." });
+        } catch (error) {
+            res.status(500).json({ message: "Error marking chat as read", error });
         }
     }
 
