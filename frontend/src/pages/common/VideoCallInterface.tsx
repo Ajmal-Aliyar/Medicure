@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ConsultLanding from "./ConsultLanding";
 import { getLocalPreviewAndInitRoomConnection, streamEvents } from "../../utils/webrtc";
-import { FilePlus, Mic, MicOff, Phone, Pin, Video, VideoOff } from 'lucide-react';
+import { FilePlus, Mic, MicOff, Microscope, Phone, Pin, Video, VideoOff } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import { MedicalRecordProvider } from "../../context/MedicalReportProvider";
 import { MedicalRecordForm } from "../doctor/MedicalReport";
 import { updateMedicalRecordApi } from "../../sevices/medicalRecords/medicalRecord";
 import { IMedicalRecord } from "../../types/record/record";
+import ListRecords from "../../components/patient/userDrive/medicalRecords/ListRecords";
 
 const VideoCallInterface = () => {
   const [callStarted, setCallStarted] = useState<boolean>(false);
@@ -24,9 +25,9 @@ const VideoCallInterface = () => {
   const [searchParams] = useSearchParams();
   const appointmentId = searchParams.get("appointment");
   const slotId = searchParams.get('slot')
-  const [medicalReport, setMedicalReport] = useState<boolean>(false)
+  const [report, setReport] = useState<string>('')
   const [endCall, setEndCall] = useState<boolean>(false)
-  const { recordId } = useSelector((state: RootState) => state.videoConsult)
+  const { recordId, patientId } = useSelector((state: RootState) => state.videoConsult)
 
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const client = useSelector((state: RootState) => state.auth)
@@ -123,7 +124,7 @@ const VideoCallInterface = () => {
   }
 
   const handleEndCall = () => {
-    setMedicalReport(false);
+    setReport('prescription');
     dispatch(setWarning('Are you do you finish the consultation'))
     dispatch(setExtra(stopTrackingStream))
   };
@@ -137,7 +138,7 @@ const VideoCallInterface = () => {
 
   const confirmMedicalReport = () => {
     setEndCall(true)
-    setMedicalReport(true)
+    setReport('prescription')
   }
   return (
     <div className="fixed top-0 w-screen h-screen bg-[#1d1d1d] p-4 text-white flex justify-center items-center">
@@ -194,11 +195,15 @@ const VideoCallInterface = () => {
             </button>
           </div>
           {client.role === 'doctor' &&
-            <div className='fixed bottom-8 right-8 w-16 h-16 bg-[#98c8ed] rounded-full z-50 flex justify-center items-center'
-              onClick={() => setMedicalReport(p => !p)}>
-              <FilePlus className="text-white" strokeWidth={3} size={36} />
+            <div className='fixed bottom-8 right-8 p-4 bg-white rounded-md z-50'>
+              <Microscope onClick={() => setReport(p => p === 'test' ? '' : 'test')} className="text-black mb-2" strokeWidth={2} size={20}/>
+              <FilePlus  onClick={() => setReport(p => p === 'prescription' ? '' : 'prescription')} className="text-black" strokeWidth={2} size={20} />
             </div>}
-          <MedicalRecordProvider recordId={recordId ? recordId : ''}>{medicalReport && <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={endCall} />}</MedicalRecordProvider>
+          <MedicalRecordProvider recordId={recordId ? recordId : ''}>{report === 'prescription' && <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={endCall} />}</MedicalRecordProvider>
+          {report === 'test' && 
+          <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 pb-10 fixed md:bottom-10 md:right-10 bottom-0 right-0">
+            {patientId ? <ListRecords _id={patientId} /> : <p>patient id not found</p>}
+          </div> }
         </>
       )}
     </div>
