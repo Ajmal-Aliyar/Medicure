@@ -1,3 +1,4 @@
+
 export const convertTo12HourFormat = (time: string) => {
     const [hours, minutes] = time.split(':').map(Number);
     const period = hours >= 12 ? 'PM' : 'AM';
@@ -11,3 +12,13 @@ export const convertTimeStringToDate = (timeString: string) => {
     currentDate.setHours(hours, minutes, 0, 0);
     return currentDate;
 };
+
+export const convertTimestampToDate = (timeStamp: string) => {
+    const date = new Date(timeStamp);
+
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}

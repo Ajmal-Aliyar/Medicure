@@ -4,6 +4,7 @@ import { errorHandler } from './middleware/errorMiddleware';
 import specialization from './routes/specializationRoutes';
 import appointmentRouter from './routes/appointmentRoutes';
 import transactionRouter from './routes/transactionRoutes';
+import testReportRouter from './routes/testReportRoutes';
 import feedbackRouter from './routes/feedbackRoutes';
 import patientRouter from './routes/patientRoutes';
 import paymentRouter from './routes/paymentRoutes';
@@ -47,6 +48,8 @@ app.use('/api/doctor/verification', doctorVerifications)
 app.use('/api/specialization', specialization)
 app.use('/api/appointment', appointmentRouter)
 app.use('/api/transaction', transactionRouter)
+app.use('/api/record', medicalRecordRouter)
+app.use('/api/report', testReportRouter)
 app.use('/api/feedback', feedbackRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/patient', patientRouter)
@@ -57,7 +60,6 @@ app.use('/api/admin', adminRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/slot', slotRouter)
 app.use('/api/chat', chatRouter)
-app.use('/api/record', medicalRecordRouter)
 app.use(errorHandler);
 
 

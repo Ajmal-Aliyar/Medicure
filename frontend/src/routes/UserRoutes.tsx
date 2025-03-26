@@ -15,6 +15,7 @@ import Finance from '../components/patient/userDrive/finance/Finance';
 import PageNotFound from '../pages/common/PageNotFound';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ChatLayout from '../pages/patient/ChatLayout';
+import MedicalRecord from '../components/patient/userDrive/medicalRecords/MedicalRecord';
 
 const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com";
 
@@ -39,7 +40,7 @@ function UserRoutes() {
 
 
           <Route path='drive' element={<UserDriveLayout />}>
-            <Route path='medical-records' element={<AuthorizedRoute allowedRole={'user'}><div>medical record</div></AuthorizedRoute>} />
+            <Route path='medical-records' element={<AuthorizedRoute allowedRole={'user'}><MedicalRecord /></AuthorizedRoute>} />
             <Route path='appointments' element={<AuthorizedRoute allowedRole={'user'}><Appointments /></AuthorizedRoute>} />
             <Route path='feedbacks' element={<AuthorizedRoute allowedRole={'user'}><Feedback /></AuthorizedRoute>} />
             <Route path='payments' element={<AuthorizedRoute allowedRole={'user'}><Finance /></AuthorizedRoute>} />
