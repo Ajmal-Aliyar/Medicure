@@ -26,7 +26,7 @@ export class AdminServices implements IAdminServices {
 
     async signIn(email: string, password: string, role: string): Promise<authorizedUserResponse> {
         try {
-            await checkBruteForce(email, 5, 600)
+            // await checkBruteForce(email, 5, 600)
             if (role !== 'admin') {
                 console.log(role, 'rl')
                 throw new Error('This is only for admin');
@@ -39,7 +39,7 @@ export class AdminServices implements IAdminServices {
             if (!isPasswordValid) {
                 throw new Error('Invalid email or password');
             }
-            await deleteBruteForce(email);
+            // await deleteBruteForce(email);
             const payload = {
                 _id: admin._id.toString(),
                 role,

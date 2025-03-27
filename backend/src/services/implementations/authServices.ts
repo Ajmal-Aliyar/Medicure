@@ -78,23 +78,26 @@ export class AuthService {
 
     async signIn(email: string, password: string, role: string): Promise<authorizedUserResponse> {
         try {
-            await checkBruteForce(email, 5, 600)
+            // await checkBruteForce(email, 5, 600)
+            console.log('hai')
             const repository = role === 'doctor' ? doctorRepository : patientRepository;
             const user = await repository.findByEmail(email);
             if (!user) {
                 throw new Error('Invalid email or password');
             }
+            console.log('hai2')
             const isPasswordValid = await verifyPassword(password, user.password);
             if (!isPasswordValid) {
                 throw new Error('Invalid email or password');
             }
-            await deleteBruteForce(email);
+            // await deleteBruteForce(email);
             const payload = {
                 _id: user._id.toString(),
                 role,
                 ...(role === 'doctor' && 'isApproved' in user ? { isApproved: user.isApproved } : {})
             };
-
+            
+            console.log('hai3')
             const accessToken = generateAccessToken(payload);
             const refreshToken = generateRefreshToken(payload);
             return { accessToken, refreshToken, _id: user._id.toString() };

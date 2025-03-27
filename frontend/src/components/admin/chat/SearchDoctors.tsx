@@ -1,11 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, FC } from "react";
 import { fetchAllApprovedDoctorsApi } from "../../../sevices/admin/doctorRepository";
 import { Plus, X } from "lucide-react";
 
-const SearchDoctors = () => {
+
+interface SearchDoctorsProps {
+    candidates: any;
+    setCandidates: React.Dispatch<React.SetStateAction<any>>;
+}
+const SearchDoctors:FC<SearchDoctorsProps> = ({ candidates, setCandidates}) => {
     const [query, setQuery] = useState<string>("");
     const [searchDoctors, setSearchDoctors] = useState<any[]>([]);
-    const [candidates, setCandidates] = useState<any[]>([]);
+
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -33,16 +38,16 @@ const SearchDoctors = () => {
 
     // Add doctor to selected list
     const addDoctor = useCallback((doctor: any) => {
-        setCandidates((prev) => (prev.some((d) => d._id === doctor._id) ? prev : [...prev, doctor]));
+        setCandidates((prev: any) => (prev.some((d:any) => d._id === doctor._id) ? prev : [...prev, doctor]));
     }, []);
 
     // Remove doctor from selected list
     const removeDoctor = useCallback((doctorId: string) => {
-        setCandidates((prev) => prev.filter((d) => d.id !== doctorId));
+        setCandidates((prev:any) => prev.filter((d:any) => d._id !== doctorId));
     }, []);
 
     return (
-        <div className="max-w-md mx-auto p-4">
+        <div className="max-w-md mx-auto">
             <input
                 type="text"
                 placeholder="Search doctors..."
@@ -54,7 +59,7 @@ const SearchDoctors = () => {
             {/* Scrollable List */}
             <div className="h-[300px] overflow-y-auto mt-3 space-y-3">
                 {/* Selected Candidates */}
-                {candidates.map((doctor) => (
+                {candidates.map((doctor:any) => (
                     <div key={doctor.id} className="flex items-center gap-4 p-3 transition hover:bg-gray-50">
                         <img src={doctor.profileImage} className="w-12 h-12 rounded-full" alt="Doctor" />
                         <div className="flex-1">
@@ -63,7 +68,7 @@ const SearchDoctors = () => {
                         </div>
                         <button
                             className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition"
-                            onClick={() => removeDoctor(doctor.id)}
+                            onClick={() => removeDoctor(doctor._id)}
                         >
                             <X size={16} />
                         </button>
@@ -82,7 +87,7 @@ const SearchDoctors = () => {
                                 <p className="font-semibold text-gray-800">{doctor.fullName}</p>
                                 <p className="text-sm text-gray-600">{doctor.specialization}</p>
                             </div>
-                            {!candidates.some((d) => d._id === doctor._id) && (
+                            {!candidates.some((d:any) => d._id === doctor._id) && (
                                 <button
                                     className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition"
                                     onClick={() => addDoctor(doctor)}

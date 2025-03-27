@@ -8,12 +8,15 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import GoogleAuth from './components/auth/GoogleAuth';
 import { connectWithSocketIOServer } from './utils/wss';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
 
 const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com"; 
 
 const App = () => {
+  const _id = useSelector((state: RootState) => state.auth._id)
   useEffect(() => {
-    connectWithSocketIOServer(clientId)
+    connectWithSocketIOServer(_id)
 }, [])
 
   return (

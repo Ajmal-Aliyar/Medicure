@@ -28,7 +28,10 @@ export class AuthController {
     async signIn(req: Request, res: Response) {
         const { email, password, role } = req.body
         try {
+            console.log('signing in');
+            
             const { accessToken, refreshToken, _id } = await authService.signIn(email, password, role)
+            console.log('hello')
             if (accessToken) {
                 res.cookie('accessToken', accessToken, {
                     httpOnly: false,

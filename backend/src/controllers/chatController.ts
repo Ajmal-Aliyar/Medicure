@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { IChatServices } from "../services/interfaces/IChatServices";
 
@@ -16,9 +16,13 @@ export class ChatController {
         this.markAsRead = this.markAsRead.bind(this)
     }
 
-    async createChat(req: Request, res: Response): Promise<void> {
+    async createChat(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
+            console.log('hello');
+            
             const { participants, isGroup, groupName, groupIcon } = req.body;
+            console.log(req.body);
+            
             if (!participants || participants.length < 2) {
                 res.status(400).json({ message: "At least two participants are required." });
             }
@@ -26,11 +30,11 @@ export class ChatController {
             const newChat = await this.chatRepository.createChat({participants, isGroup, groupName, groupIcon});
             res.status(201).json(newChat);
         } catch (error) {
-            res.status(500).json({ message: "Error creating chat", error });
+            next(error)
         }
     }
 
-    async getChatById(req: Request, res: Response): Promise<void> {
+    async getChatById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const chatId = new mongoose.Types.ObjectId(req.params.chatId);
             const chat = await this.chatRepository.getChatById({chatId});
@@ -41,37 +45,37 @@ export class ChatController {
 
             res.status(200).json(chat);
         } catch (error) {
-            res.status(500).json({ message: "Error fetching chat", error });
+            next(error)
         }
     }
 
-    async getUserChats(req: Request, res: Response): Promise<void> {
+    async getUserChats(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = new mongoose.Types.ObjectId(req.params.userId);
             const { role } = req.client
             const chats = await this.chatRepository.getUserChats({userId, role});
             res.status(200).json({data: chats});
         } catch (error) {
-            res.status(500).json({ message: "Error fetching user chats", error });
+            next(error)
         }
     }
 
-    async updateLastMessage(req: Request, res: Response): Promise<void> {
+    async updateLastMessage(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { chatId, messageId } = req.body;
             const updatedChat = await this.chatRepository.updateLastMessage({ chatId, messageId });
             
             if (!updatedChat) {
-                res.status(404).json({ message: "Chat not found" });
+                throw new Error('Chat not updated')
             }
 
             res.status(200).json(updatedChat);
         } catch (error) {
-            res.status(500).json({ message: "Error updating last message", error });
+            next(error)
         }
     }
 
-    async markAsRead(req: Request, res: Response): Promise<void> {
+    async markAsRead(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { chatId } = req.params
             const { _id } = req.client
@@ -79,17 +83,17 @@ export class ChatController {
             await this.chatRepository.markAsRead( chatId, _id )
             res.status(200).json({ message: "Chat mark as read." });
         } catch (error) {
-            res.status(500).json({ message: "Error marking chat as read", error });
+            next(error)
         }
     }
 
-    async deleteChat(req: Request, res: Response): Promise<void> {
+    async deleteChat(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const chatId = new mongoose.Types.ObjectId(req.params.chatId);
             await this.chatRepository.deleteChat({chatId});
             res.status(200).json({ message: "Chat deleted successfully" });
         } catch (error) {
-            res.status(500).json({ message: "Error deleting chat", error });
+            next(error)
         }
     }
 }
