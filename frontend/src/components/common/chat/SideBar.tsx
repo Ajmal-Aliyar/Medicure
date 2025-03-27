@@ -90,7 +90,7 @@ const SideBar = () => {
                                         <span className="font-semibold">
                                             {chat.isGroup
                                                 ? chat.groupName
-                                                : `${chat.participants[0].fullName}`}
+                                                : `${chat?.participants[0]?.fullName}`}
 
                                  </span>
                                         <span className="text-xs text-gray-400">12:30 PM</span>

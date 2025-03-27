@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { api } from "../../../utils/axiosInstance";
-import SearchDoctors from "./searchDoctors";
+import SearchDoctors from "./SearchDoctors";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+
 
 const AddChat = ({ onClose }: { onClose: () => void }) => {
     const [groupName, setGroupName] = useState("");
-    const [groupIcon, setGroupIcon] = useState("");
-    const [candidates, setCandidates] = useState<string[]>([]);
-    const [isGroup, setIsGroup] = useState(false);
+    const [participants, setParticipants] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const { _id } = useSelector((state: RootState) => state.auth)
 
     const handleCreateChat = async () => {
-        if (candidates.length === 0) {
+        if (participants.length === 0) {
             return alert("Please add at least one participant.");
         }
 
@@ -19,16 +21,15 @@ const AddChat = ({ onClose }: { onClose: () => void }) => {
         setError("");
 
         try {
-            const requestData = isGroup
-                ? { groupName, groupIcon, candidates, isGroup: true }
-                : { candidates, isGroup: false };
 
-            const response = await api.post("/chat", requestData);
+            const requestData = { groupName, participants: [...participants, _id], isGroup: true }
+
+            console.log(requestData, 'rqdt');
+            const response = await api.post("/api/chat", requestData);
             console.log(response);
             console.log("Chat created successfully!");
             setGroupName("");
-            setGroupIcon("");
-            setCandidates([]);
+            setParticipants([]);
             onClose();
         } catch (err: any) {
             setError(err.message);
@@ -40,39 +41,21 @@ const AddChat = ({ onClose }: { onClose: () => void }) => {
     return (
         <div className="fixed z-20 inset-0 flex items-center justify-center bg-black/20 bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                <h2 className="text-xl font-semibold text-gray-800">{isGroup ? "Create Group Chat" : "Create Chat"}</h2>
-                
-                <div className="mt-4">
-                    <label className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            checked={isGroup}
-                            onChange={(e) => setIsGroup(e.target.checked)}
-                        />
-                        <span>Group</span>
-                    </label>
-                </div>
+                <h2 className="text-xl font-semibold text-gray-800">{"Create Group Chat"}</h2>
 
-                {isGroup && (
-                    <>
-                        <input
-                            type="text"
-                            placeholder="Enter group name"
-                            value={groupName}
-                            onChange={(e) => setGroupName(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Enter group icon URL"
-                            value={groupIcon}
-                            onChange={(e) => setGroupIcon(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-2"
-                        />
-                    </>
-                )}
 
-                <SearchDoctors /> 
+
+
+                <input
+                    type="text"
+                    placeholder="Enter group name"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md outline-none my-3"
+                />
+
+
+                <SearchDoctors candidates={participants} setCandidates={setParticipants} />
 
                 {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
@@ -85,7 +68,7 @@ const AddChat = ({ onClose }: { onClose: () => void }) => {
                         Cancel
                     </button>
                     <button
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        className="px-4 py-2 bg-[#6A9C89] text-white rounded-md hover:bg-[#5a8574]"
                         onClick={handleCreateChat}
                         disabled={loading}
                     >
