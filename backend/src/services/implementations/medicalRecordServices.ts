@@ -14,9 +14,17 @@ export class MedicalRecordServices implements IMedicalRecordServices {
         this.medicalRecordRepository = medicalRecordRepository;
     }
 
-    async getRecordById(id: string): Promise<IMedicalRecord | null> {
+    async getRecordById(id: string, skip: number, limit: number): Promise<IMedicalRecord | null> {
         try {
-            return await this.medicalRecordRepository.getRecordById(id);
+            return await this.medicalRecordRepository.getRecordById(id, skip, limit);
+        } catch (error: unknown) {
+            throw error
+        }
+    }
+
+    async getUserRecordById( _id: string, skip: number, limit: number): Promise<{ prescriptions: IMedicalRecord[], total: number }> {
+        try {
+            return await this.medicalRecordRepository.getUserRecordById( _id, skip, limit);
         } catch (error: unknown) {
             throw error
         }

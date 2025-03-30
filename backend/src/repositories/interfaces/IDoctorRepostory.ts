@@ -3,6 +3,7 @@ import { IDoctor } from "../../models/doctor/doctorInterface"
 import { ICreateUser, IDoctorDocument, IProfileVerificationInput } from "../../types/IDoctorInterface"
 
 export interface IDoctorRepository {
+    getAllDoctors(): Promise<IDoctorDocument[]>
     updateReview( _id: string, rating: number, reviewCount: number): Promise<UpdateResult>
     createDoctor({ fullName, email, phone, password }: ICreateUser): Promise<IDoctorDocument>
     updateDoctor(_id: string, { fullName, headline, about, address }): Promise<void>
@@ -32,5 +33,5 @@ export interface IDoctorRepository {
     unblock (_id:string): Promise<UpdateResult>
     getTopDoctors(skip: number, limit: number, specialization: string | null, search: string, sort: string,
         sortOrder: number, languageSpoken: string, yearsOfExperience: number | null
-    ): Promise<{ data: IDoctor[], hasMore: boolean }>
+    ): Promise<{ data: IDoctor[], total: number }>
 }

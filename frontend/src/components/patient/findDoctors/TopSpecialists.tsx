@@ -5,14 +5,14 @@ import { fetchTopDoctorsApi } from '../../../sevices/patient/findDoctors';
 import { IFetchTopDoctors } from '../../../types/patient/findDoctors';
 import { useParams } from 'react-router-dom';
 import SelectedDoctor from './SelectedDoctor';
-import { X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useFilter } from '../../../context/FilterContext';
 
 
 const TopSpecialists: React.FC = () => {
     const { searchParams } = useFilter()
     const [doctors, setDoctors] = useState<IFetchTopDoctors[]>([]);
-    const [showMore, setShowMore] = useState<boolean>(false)
+    const [totalDoctors, setTotalDoctors] = useState<number>(0)
     const [selectedDoctor, setSelectedDoctor] = useState<null | IFetchTopDoctors>(null)
     const { specialization } = useParams();
     const dispatch = useDispatch();
@@ -22,20 +22,19 @@ const TopSpecialists: React.FC = () => {
     useEffect(() => {
         const getDoctors = async () => {
             try {
-                let response: { data: IFetchTopDoctors[], hasMore: boolean };
+                let response: { data: IFetchTopDoctors[], total: number };
                 if (specialization) {
                     response = await fetchTopDoctorsApi(skip, limit, searchParams.toString(), specialization);
                 } else {
                     response = await fetchTopDoctorsApi(skip, limit, searchParams.toString());
                 }
-                setShowMore(response.hasMore)
+                setTotalDoctors(response.total)
                 setDoctors(response.data);
             } catch (error: any) {
                 dispatch(setError(error.message));
             }
         };
         getDoctors();
-        console.log(searchParams.toString(),'dssdfds')
 
     }, [skip, limit, dispatch, specialization, searchParams]);
 
@@ -49,8 +48,16 @@ const TopSpecialists: React.FC = () => {
         }, 100);
     };
 
-    const loadMore = () => {
-        setSkip(prevSkip => prevSkip + limit);
+    const handleNext = () => {
+        if (skip + limit < totalDoctors) {
+            setSkip(skip + limit);
+        }
+    };
+
+    const handlePrev = () => {
+        if (skip - limit >= 0) {
+            setSkip(skip - limit);
+        }
     };
     return (
         <div className='w-full  pb-48 '>
@@ -101,7 +108,19 @@ const TopSpecialists: React.FC = () => {
                 </div>
             </div>
 
-            {showMore && <button onClick={loadMore} className="p-1 flex justify-end w-full font-semibold px-3 text-neutral-400">Show More</button>}
+            <div className="flex justify-center mt-4 gap-1 text-white">
+                <button onClick={handlePrev} disabled={skip === 0} className="px-2 py-1 bg-[#51aff666] rounded"><ChevronLeft /></button>
+                {Array.from({ length: Math.ceil(totalDoctors / limit) }, (_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setSkip(index * limit)}
+                        className={`px-3 py-1 rounded ${skip / limit === index ? 'bg-[#51aff6ce] text-white' : 'bg-[#51aff630]'}`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+                <button onClick={handleNext} disabled={skip + limit >= totalDoctors} className="px-2 py-1 bg-[#51aff666] rounded"><ChevronRight /></button>
+            </div>
         </div>
     )
 }

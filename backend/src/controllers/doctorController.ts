@@ -147,5 +147,13 @@ export class DoctorController {
         }
     }
 
+    async getDoctorsDetails(req: Request, res: Response, next: NextFunction) {
+        try {
+            const doctorDetails = await doctorService.getAllDoctors()
+            res.status(200).json(doctorDetails)
+        } catch (error: unknown) {
+            next(error)
+        }
+    }
 
 }

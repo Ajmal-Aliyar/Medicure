@@ -203,6 +203,25 @@ export class DoctorService {
         }
     }
 
+    async getAllDoctors(): Promise<any> {
+        try {
+            const AllDoctors = await doctorRepository.getAllDoctors() 
+            const doctorDetails = AllDoctors.reduce((acc,item) => {
+                if (item.isBlocked) {
+                    return { ...acc, inactive: acc.inactive + 1 }
+                } 
+                if (item.isApproved) {
+                    return { ...acc, active: acc.active + 1 }
+                }
+                return acc
+            },{ active: 0, inactive: 0 })
+            
+            return { ...doctorDetails, total: AllDoctors.length}
+        } catch (error: unknown) {
+            throw error
+        }
+    }
+
     async updateFees({ _id, fees }: { _id: string, fees: number }) {
         try {
             const update = await doctorRepository.updateFees(_id, fees)

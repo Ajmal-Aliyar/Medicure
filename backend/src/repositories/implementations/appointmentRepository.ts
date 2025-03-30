@@ -1,7 +1,6 @@
-import mongoose, { UpdateResult } from "mongoose";
+import mongoose, { FilterQuery, UpdateResult } from "mongoose";
 import { AppointmentModel } from "../../models/appointment/appointmentModel";
 import { IAppointmentDocument, IAppointmentRepository } from "../interfaces/IAppointmentRepository";
-import { IMedicalRecord } from "../../models/medicalRecord/medicalRecordInterface";
 
 export class AppointmentRepository implements IAppointmentRepository {
 
@@ -10,9 +9,10 @@ export class AppointmentRepository implements IAppointmentRepository {
     return await appointment.save();
   }
 
-  async getUserAppointments(patientId: string): Promise<IAppointmentDocument[]> {
-    const result = await AppointmentModel.aggregate([
-      { $match: { patientId } },
+  async getUserAppointments(patientId: string, page: string, skip: number, limit: number): Promise<{ appointments: IAppointmentDocument[], total: number }> {
+    const status = page === 'pending' ? 'Scheduled' : 'Completed'
+    const appointments = await AppointmentModel.aggregate([
+      { $match: { patientId, status } },
 
       {
         $lookup: {
@@ -41,15 +41,33 @@ export class AppointmentRepository implements IAppointmentRepository {
       },
 
       { $unwind: { path: "$doctorDetails", preserveNullAndEmptyArrays: true } },
-      { $unwind: { path: "$slotDetails", preserveNullAndEmptyArrays: true } }
+      { $unwind: { path: "$slotDetails", preserveNullAndEmptyArrays: true } },
+
+      { $skip: skip },
+    { $limit: limit }
     ]);
 
-    return result;
+    const total = await AppointmentModel.countDocuments({ patientId, status });
+
+    return { appointments, total};
   }
 
-  async getAllAppointmentsForAdmin(): Promise<IAppointmentDocument[]> {
-    const result = await AppointmentModel.aggregate([
+  async getAllAppointmentsForAdmin({
+    page = 1,
+    limit = 10,
+    searchTerm = "",
+    selectedDate = "",
+    selectedTime = "",
+    statusFilter = "",
+    sortField = "createdAt",
+    sortOrder = "desc"
+  }): Promise<{ appointments: IAppointmentDocument[], totalAppointments: number }> {
 
+    const skip = (page - 1) * limit;
+    const startOfDay = new Date(selectedDate);
+    const endOfDay = new Date(selectedDate);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+    const result = await AppointmentModel.aggregate([
       {
         $lookup: {
           from: "doctors",
@@ -91,10 +109,128 @@ export class AppointmentRepository implements IAppointmentRepository {
 
       { $unwind: { path: "$doctorDetails", preserveNullAndEmptyArrays: true } },
       { $unwind: { path: "$slotDetails", preserveNullAndEmptyArrays: true } },
-      { $unwind: { path: "$patientDetails", preserveNullAndEmptyArrays: true } }
+      { $unwind: { path: "$patientDetails", preserveNullAndEmptyArrays: true } },
+
+      {
+        $match: {
+          ...(statusFilter ? { status: statusFilter } : {}),
+          ...(selectedDate ? { appointmentDate: { $gte: startOfDay, $lt: endOfDay } } : {}),
+          ...(selectedTime ? { "slotDetails.startTime": selectedTime } : {}),
+        }
+      },
+
+      ...(searchTerm
+        ? [
+          {
+            $match: {
+              $or: [
+                { "doctorDetails.fullName": { $regex: searchTerm, $options: "i" } },
+                { "patientDetails.fullName": { $regex: searchTerm, $options: "i" } }
+              ]
+            }
+          }
+        ]
+        : []
+      ),
+
+      {
+        $sort: { [sortField]: sortOrder === "desc" ? -1 : 1 }
+      },
+
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
     ]);
 
-    return result;
+    const totalAppointments = await AppointmentModel.aggregate([
+      {
+        $lookup: {
+          from: "doctors",
+          let: { doctorIdStr: "$doctorId" },
+          pipeline: [
+            { $addFields: { doctorIdAsString: { $toString: "$_id" } } },
+            { $match: { $expr: { $eq: ["$doctorIdAsString", "$$doctorIdStr"] } } },
+            { $project: { fullName: 1, profileImage: 1, specialization: 1 } }
+          ],
+          as: "doctorDetails"
+        }
+      },
+      {
+        $lookup: {
+          from: "patients",
+          let: { patientIdStr: "$patientId" },
+          pipeline: [
+            { $addFields: { patientIdAsString: { $toString: "$_id" } } },
+            { $match: { $expr: { $eq: ["$patientIdAsString", "$$patientIdStr"] } } },
+            { $project: { fullName: 1, profileImage: 1, phone: 1 } }
+          ],
+          as: "patientDetails"
+        }
+      },
+
+      { $unwind: { path: "$doctorDetails", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$patientDetails", preserveNullAndEmptyArrays: true } },
+
+      {
+        $match: {
+          ...(statusFilter ? { status: statusFilter } : {}),
+          ...(selectedDate ? { appointmentDate: { $regex: `^${selectedDate}` } } : {}),
+          ...(selectedTime ? { "slotDetails.startTime": selectedTime } : {}),
+        }
+      },
+
+      ...(searchTerm
+        ? [
+          {
+            $match: {
+              $or: [
+                { "doctorDetails.fullName": { $regex: searchTerm, $options: "i" } },
+                { "patientDetails.fullName": { $regex: searchTerm, $options: "i" } }
+              ]
+            }
+          }
+        ]
+        : []
+      ),
+
+      {
+        $count: "totalAppointments"
+      }
+    ]);
+
+    return {
+      appointments: result,
+      totalAppointments: totalAppointments.length > 0 ? totalAppointments[0].totalAppointments : 0
+    };
+  }
+
+
+  async appointmentDetails(): Promise<any> {
+    const result = await AppointmentModel.aggregate([
+      {
+        $lookup: {
+          from: "doctors",
+          let: { doctorIdStr: "$doctorId" },
+          pipeline: [
+            { $addFields: { doctorIdAsString: { $toString: "$_id" } } },
+            { $match: { $expr: { $eq: ["$doctorIdAsString", "$$doctorIdStr"] } } },
+            { $project: { fees: 1, _id: 0 } }
+          ],
+          as: "fees"
+        }
+      },
+      { $unwind: { path: "$fees", preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          status: 1,
+          fees: 1
+        }
+      }
+    ])
+    return result
   }
 
   async getAllAppointmentsOfDoctor(doctorId: string): Promise<{ patientId: string, roomId: string, status: string, _id: string }[]> {
@@ -109,7 +245,7 @@ export class AppointmentRepository implements IAppointmentRepository {
     return await AppointmentModel.find(
       { slotId },
       { patientId: 1, roomId: 1, status: 1, doctorId: 1, recordId: 1 }
-    ).populate("recordId","isCompleted"); 
+    ).populate("recordId", "isCompleted");
   }
 
 

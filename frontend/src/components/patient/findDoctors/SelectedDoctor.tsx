@@ -34,9 +34,9 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
 
     const doesAppointmentExist = async () => {
         try {
-            const data = await fetchAppointmentDetailsApi();
+            const data = await fetchAppointmentDetailsApi('pending', 0, Infinity);
             
-            const hasScheduledAppointment = data.userAppointmentsList.some(item => item.status === 'Scheduled');
+            const hasScheduledAppointment = data.appointments.some(item => item.status === 'Scheduled');
     
             if (hasScheduledAppointment) {
                 dispatch(setWarning('You already have a pending appointment. Are you sure you want to take another one?'));
@@ -126,7 +126,7 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
                         <div
                             key={index}
                             className={`p-4 bg-white border border-gray-300 rounded-lg min-w-[200px]   relative
-        ${selectedSlot && selectedSlot._id === slot._id ? 'outline outline-2 outline-[#51aff6ce]' : ''} 
+        ${selectedSlot && selectedSlot._id === slot._id ? 'outline outline-[#51aff6ce]' : ''} 
         ${((slot.slotLimit <= slot.bookedSlot) || (convertTimeStringToDate(slot.endTime).getTime() < Date.now() + (10 * 60 * 1000))) ? 'pointer-events-none ' : 'shadow-md'}`}
                             onClick={() => (slot.slotLimit > slot.bookedSlot && convertTimeStringToDate(slot.endTime).getTime() > Date.now() + (10 * 60 * 1000)) && setSelectedSlot(slot)}
                         >

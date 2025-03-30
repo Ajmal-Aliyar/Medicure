@@ -130,7 +130,7 @@ export class AdminController {
             res.status(200).json({
                 success: true,
                 data: patientsData.data,
-                hasMore: patientsData.hasMore
+                total: patientsData.total
             });
         } catch (error: any) {
             console.error('Error fetching approved doctors:', error.message);

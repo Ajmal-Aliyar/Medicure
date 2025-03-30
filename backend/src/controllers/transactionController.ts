@@ -10,6 +10,7 @@ export class TransactionController {
         this.transactionServices = transactionServices
 
         this.getTransactionById = this.getTransactionById.bind(this)
+        this.getTransactionDetails = this.getTransactionDetails.bind(this)
     }
 
     async getTransactionById(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -27,6 +28,18 @@ export class TransactionController {
             }
 
             res.status(200).json({ transactions });
+        } catch (error) {
+            console.error(error)
+            next(error);
+        }
+    }
+
+    async getTransactionDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            
+            const data = await this.transactionServices.getTransactionDetails()
+
+            res.status(200).json(data);
         } catch (error) {
             console.error(error)
             next(error);

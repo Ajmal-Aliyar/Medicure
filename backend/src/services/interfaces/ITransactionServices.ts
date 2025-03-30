@@ -6,6 +6,7 @@ export interface ITransactionServices {
     getTransactionsByUserId (_id: string, role: string ): Promise<ITransaction[]>
     getTransactionById(_id: string ): Promise<ITransaction>
     updateTransactionStatus( transactionId: string, status: string ): Promise<void>
+    getTransactionDetails(): Promise<{revenue: number, refund: number}>
 }
 
 export interface ICreateTransaction {

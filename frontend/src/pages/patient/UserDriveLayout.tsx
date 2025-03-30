@@ -33,7 +33,7 @@ const UserDriveLayout = () => {
                     </div>
                     <div className="flex flex-col flex-grow overflow-hidden">
                         <div className="p-2 w-full flex flex-col gap-4">
-                            <div className="flex-grow overflow-y-auto  p-2">
+                            <div className="flex-grow overflow-y-auto ">
                                 <Outlet />
                             </div>
                         </div>

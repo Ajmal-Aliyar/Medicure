@@ -30,5 +30,6 @@ router.post('/create-appointment', tokenMiddleware, appointmentController.create
 router.get('/bookedPatients/:slotId', tokenMiddleware, appointmentController.getBookedPatients)
 router.get('/finish-consulting/:appointmentId/:slotId', tokenMiddleware, isDoctor, appointmentController.finishedConsulting)
 
+router.get('/appointment-details', tokenMiddleware, isAdmin, appointmentController.appointmentDetails)
 
 export default router

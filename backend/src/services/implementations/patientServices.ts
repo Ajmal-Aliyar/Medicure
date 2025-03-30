@@ -89,7 +89,7 @@ export class PatientServices implements IPatientServices {
 
    async getTopDoctors(skip: number, limit: number, specialization: string | null, search: string, sort: string,
     sortOrder: number, languageSpoken: string, yearsOfExperience: number | null
-   ): Promise<{ data: IDoctor[], hasMore: boolean }> {
+   ): Promise<{ data: IDoctor[], total: number }> {
            try {
                const approvedDoctors = await this.doctorRepository.getTopDoctors(skip, limit, specialization, search, sort, sortOrder, languageSpoken, yearsOfExperience);
                return approvedDoctors;

@@ -3,7 +3,7 @@ import { CalendarCheck, ChevronLeft, ChevronRight, Clock, Undo2 } from "lucide-r
 import { fetchAllAppointmentDetailsApi } from "../../sevices/appointments/fetchAppointments";
 import { IFetchAllAppointmentResponse } from "../../types/appointment/fetchAppointments";
 import { useDispatch } from "react-redux";
-import { setError, setExtra, setLoading, setWarning } from "../../store/slices/commonSlices/notificationSlice";
+import { setError, setExtra, setSuccess, setWarning } from "../../store/slices/commonSlices/notificationSlice";
 import { refundApi } from "../../sevices/payment/payment";
 
 const isExpired = (createdAt: string) => {
@@ -19,47 +19,37 @@ const Appointments = () => {
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedTime, setSelectedTime] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-    const [transactionId, setTransactionId] = useState('')
+    const [totalPages, setTotalPages] = useState(1);
+
+    const dispatch = useDispatch()
 
     const appointmentsPerPage = 5;
-    const dispatch = useDispatch();
+
+    const fetchAppointments = async () => {
+        try {
+            const { appointments, totalAppointments } = await fetchAllAppointmentDetailsApi({
+                page: currentPage,
+                limit: appointmentsPerPage,
+                searchTerm,
+                selectedDate,
+                selectedTime,
+                statusFilter,
+            })
+            setAppointments(appointments);
+            setTotalPages(totalAppointments);
+        } catch (err) {
+            dispatch(setError(`Failed to load appointments. ${err}`))
+        }
+    };
 
     useEffect(() => {
-        const fetchAppointments = async () => {
-            try {
-                dispatch(setLoading(true));
-                const response = await fetchAllAppointmentDetailsApi();
-                if (response) {
-                    setAppointments(response.userAppointmentsList.reverse());
-                } else {
-                    setError("No appointments found.");
-                }
-            } catch (err) {
-                setError("Failed to load appointments.");
-            } finally {
-                dispatch(setLoading(false));
-            }
-        };
         fetchAppointments();
-    }, []);
-
-    const filteredAppointments = appointments.filter((appointment) => {
-        const matchesSearch =
-            appointment.doctorDetails?.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            appointment.patientDetails?.fullName.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesDate = selectedDate ? appointment.appointmentDate.startsWith(selectedDate) : true;
-        const matchesTime = selectedTime ? appointment.slotDetails?.startTime === selectedTime : true;
-        const matchesStatus = statusFilter ? appointment.status === statusFilter : true;
-
-        return matchesSearch && matchesDate && matchesTime && matchesStatus;
-    });
-
-    const indexOfLastAppointment = currentPage * appointmentsPerPage;
-    const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
-    const currentAppointments = filteredAppointments.slice(indexOfFirstAppointment, indexOfLastAppointment);
+    }, [currentPage, searchTerm, selectedDate, selectedTime, statusFilter]);
 
     const nextPage = () => {
-        if (indexOfLastAppointment < filteredAppointments.length) {
+        console.log(totalPages, currentPage);
+        
+        if (1 < totalPages/(currentPage*5)) {
             setCurrentPage((prev) => prev + 1);
         }
     };
@@ -70,19 +60,19 @@ const Appointments = () => {
         }
     };
 
-    const refundHandlerApi = async () => {
+    const refundHandlerApi = async (transactionId: string) => {
         try {
-            const { message } = await refundApi(transactionId);
-            console.log(message);
+            await refundApi(transactionId);
+            window.location.reload()
+            setSuccess('Refunded successfully.')
         } catch (error: any) {
             dispatch(setError(error.message));
         }
     };
 
     const refundHandler = async (transactionId: string) => {
-        setTransactionId(transactionId)
         dispatch(setWarning("Do you want to refund these payment?"))
-        dispatch(setExtra(refundHandlerApi))
+        dispatch(setExtra(() => refundHandlerApi(transactionId)))
     }
 
     return (
@@ -91,7 +81,7 @@ const Appointments = () => {
                 <CalendarCheck className="w-6 h-6 text-green-700" />
                 Appointments
             </h2>
-            
+
             <div className="flex flex-wrap gap-4 my-4">
                 <input
                     type="text"
@@ -127,11 +117,11 @@ const Appointments = () => {
                     <div onClick={nextPage} className="flex font-medium items-center">next <ChevronRight /></div>
                 </div>
             </div>
-            
+
             <div className="flex flex-col justify-between flex-1">
                 <div className="mt-4 space-y-2">
-                    {currentAppointments.length > 0 ? (
-                        currentAppointments.map((appointment) => (
+                    {appointments.length > 0 ? (
+                        appointments.map((appointment) => (
                             <div key={appointment._id} className="flex flex-col md:flex-row items-center justify-between bg-gray-100 p-4 rounded-lg shadow-sm border border-gray-200">
                                 <div className="flex items-center gap-4">
                                     <img
@@ -156,13 +146,13 @@ const Appointments = () => {
                                     </div>
                                 </div>
                                 {appointment.status === "Scheduled" && isExpired(appointment.createdAt) ?
-                                <div className="text-center flex flex-col">
-                                     <span className="text-red-500 text-sm ">time out</span>
-                                     <span className="text-gray-500 text-sm font-semibold flex gap-1 items-center cursor-pointer" onClick={() => refundHandler(appointment.transactionId)}><Undo2 size={15} strokeWidth={3} />refund</span>
-                                </div> :
-                                <div className="text-center flex flex-col gap-2">
-                                    <span className={`text-sm font-semibold ${appointment.status === "Completed" ? "text-green-600" : appointment.status === "Cancelled" ? "text-gray-500" : "text-orange-400"}`}>{appointment.status}</span>
-                                </div>}
+                                    <div className="text-center flex flex-col">
+                                        <span className="text-red-500 text-sm ">time out</span>
+                                        <span className="text-gray-500 text-sm font-semibold flex gap-1 items-center cursor-pointer" onClick={() => refundHandler(appointment.transactionId)}><Undo2 size={15} strokeWidth={3} />refund</span>
+                                    </div> :
+                                    <div className="text-center flex flex-col gap-2">
+                                        <span className={`text-sm font-semibold ${appointment.status === "Completed" ? "text-green-600" : appointment.status === "Cancelled" ? "text-gray-500" : "text-orange-400"}`}>{appointment.status}</span>
+                                    </div>}
                             </div>
                         ))
                     ) : (

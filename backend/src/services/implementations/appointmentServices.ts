@@ -50,20 +50,20 @@ export class AppointmentServices implements IAppointmentServices {
         }
     }
 
-    async getUserAppointments(userId: string): Promise<IAppointmentDocument[]> {
+    async getUserAppointments(userId: string, page: string, skip: number, limit: number): Promise<{ appointments: IAppointmentDocument[], total: number }> {
         try {
             if (!userId) {
                 throw new Error('No user ID provided.');
             }
-            return await this.appointmentRepository.getUserAppointments(userId);
+            return await this.appointmentRepository.getUserAppointments(userId, page, skip, limit);
         } catch (error: any) {
             throw error
         }
     }
 
-    async getAllAppointments(): Promise<IAppointmentDocument[]> {
+    async getAllAppointments(page: number, limit: number, searchTerm?: string, selectedDate?: string, selectedTime?: string, statusFilter?: string): Promise<{appointments: IAppointmentDocument[], totalAppointments: number}> {
         try {
-            return await this.appointmentRepository.getAllAppointmentsForAdmin();
+            return this.appointmentRepository.getAllAppointmentsForAdmin({page, limit, searchTerm, selectedDate, selectedTime, statusFilter});
         } catch (error: any) {
             throw error
         }
@@ -151,6 +151,30 @@ export class AppointmentServices implements IAppointmentServices {
         try {
             await this.appointmentRepository.cancelAppointmentByTransactionId(transactionId)
         } catch(error: unknown) {
+            throw error
+        }
+    }
+
+    async appointmentDetails(): Promise<{ pending: number, profit: number }> {
+        try {
+            const appointments =  await this.appointmentRepository.appointmentDetails()
+
+            const pending = appointments.reduce((acc,item) => {
+                if (item.status === 'Scheduled') {
+                    return acc + item.fees.fees
+                } 
+                return acc
+            },0)
+
+            const profit = appointments.reduce((acc,item) => {
+                if (item.status = "Completed") {
+                    return acc + item.fees.fees
+                }
+                return acc
+            },0)
+
+            return { pending, profit: (profit * 10 ) / 100 }
+        } catch (error: unknown) {
             throw error
         }
     }

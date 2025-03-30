@@ -20,3 +20,8 @@ export const fetchWalletBalanceApi = async (): Promise<{walletBalance: number}> 
   const response = await api.get<{walletBalance: number}>('/api/wallet/wallet')
   return response.data
 }
+
+export const fetchRevenueDetailsApi = async (): Promise<{revenue: number, refund: number}> => {
+  const response = await api.get<{revenue: number, refund: number}>('/api/transaction/get-revenue')
+  return response.data
+}

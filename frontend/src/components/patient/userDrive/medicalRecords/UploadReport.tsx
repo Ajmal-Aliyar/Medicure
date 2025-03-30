@@ -43,18 +43,18 @@ const UploadReport = () => {
   };
 
   return (
-    <div className='max-w-[180px]'>
+    <div className='max-w-[180px] mt-1'>
       <label 
         htmlFor="picture" 
-        className="cursor-pointer bg-[#51aff6ce] hover:bg-[#51aff6] text-white font-medium py-2 px-4 rounded-lg transition duration-300">
-        Upload Test Report
+        className="cursor-pointer bg-[#51aff6ce] hover:bg-[#51aff6] text-white font-medium py-1 px-4 rounded-lg transition duration-300">
+        Upload
       </label>
 
       <input
         id="picture"
         type="file"
         onChange={handleSubmit}
-        className='opacity-0'
+        className='opacity-0 absolute top-0'
       />
     </div>
   );

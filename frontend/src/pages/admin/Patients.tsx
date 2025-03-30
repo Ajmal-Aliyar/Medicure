@@ -5,7 +5,7 @@ import PatientsList from "../../components/admin/patients/PatientsList"
 function Patients() {
 
     return (
-        <div className="w-full h-full flex flex-col flex-1 py-6 ">
+        <div className="w-full h-full flex flex-col flex-1 py-6 justify-center">
             <HeaderCards />
             <PatientsList  />
         </div>

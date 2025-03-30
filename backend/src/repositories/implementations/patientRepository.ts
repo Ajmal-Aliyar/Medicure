@@ -69,21 +69,20 @@ export class PatientRepository implements IPatientRepository {
         }
     }
 
-    async getAllPatient(skip: number, limit: number): Promise<{ data: IPatientDocument[], hasMore: boolean }> {
+    async getAllPatient(skip: number, limit: number): Promise<{ data: IPatientDocument[], total: number }> {
         try {
-            const patients = await PatientModel.find()
-                .skip(skip)
-                .limit(limit)
-                .lean();
-
-            const hasMore = patients.length === limit;
-
-            return { data: patients, hasMore };
+            const [patients, total] = await Promise.all([
+                PatientModel.find().skip(skip).limit(limit).lean(),
+                PatientModel.countDocuments()
+            ]);
+    
+            return { data: patients, total };
         } catch (error) {
-            console.error("Error fetching doctors:", error);
-            throw new Error("Unable to fetch doctors");
+            console.error("Error fetching patients:", error);
+            throw new Error("Unable to fetch patients");
         }
     }
+    
 
     async block(_id: string): Promise<UpdateResult> {
         return await PatientModel.updateOne({ _id }, { $set: { isBlocked: true } })

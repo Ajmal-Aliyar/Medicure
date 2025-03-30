@@ -1,24 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { setError, setSuccess } from "../../../../store/slices/commonSlices/notificationSlice";
-import { useEffect, useState } from "react";
-import { fetchAppointmentDetailsApi } from "../../../../sevices/appointments/fetchAppointments";
-import { IFetchAppointmentResponse } from "../../../../types/appointment/fetchAppointments";
-import { convertTo12HourFormat } from "../../../../utils/timeStructure";
-import { connectWithSocketIOServer } from "../../../../utils/wss";
-import FeedbackModal from "./FeedbackModal";
-import { RootState } from "../../../../store/store";
+import { setSuccess } from "../../../../store/slices/commonSlices/notificationSlice";
+import { useState } from "react";
+import AppointmentsList from "./AppointmentsList";
+import { ChevronRight } from "lucide-react";
 
 
 const Appointments = () => {
-    const [pendingAppointments, setPendingAppointments] = useState<IFetchAppointmentResponse[]>([])
-    const [historyAppointments, setHistoryAppointments] = useState<IFetchAppointmentResponse[]>([])
-    const [feedback, setFeedback] = useState<string>('')
+
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search)
     const session = queryParams.get('session_id')
-    const clientId = useSelector((state: RootState) => state.auth._id)
-
+    const [page, setPage] = useState<'pending' | 'history'>('pending')
+   
     const dispatch = useDispatch()
 
     if (session) {
@@ -28,95 +22,16 @@ const Appointments = () => {
     }
 
 
-    useEffect(() => {
-        const fetchUserAppointmentDetails = async () => {
-            try {
-                const data = await fetchAppointmentDetailsApi()
-                const pending: IFetchAppointmentResponse[] = []
-                const history: IFetchAppointmentResponse[] = []
-                console.log(data)
-
-                for (let appointment of data.userAppointmentsList) {
-                    if (appointment.status === 'Scheduled') {
-                        pending.push(appointment)
-                    } else {
-                        history.push(appointment)
-                    }
-                }
-                pending.sort((a, b) => {
-                    const timeA = a.slotDetails.startTime.split(":").map(Number)
-                    const timeB = b.slotDetails.startTime.split(":").map(Number)
-                    return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1])
-                })
-
-                setPendingAppointments(pending)
-                setHistoryAppointments(history)
-                
-            } catch (error: any) {
-                dispatch(setError(error.message))
-            }
-        }
-
-        fetchUserAppointmentDetails()
-        connectWithSocketIOServer(clientId)
-    }, [])
-
-
     return (
-        <div className="p-2 w-full flex flex-col gap-4 h-[560px] overflow-auto">
-            {feedback && <FeedbackModal _id={feedback} setFeedback={setFeedback}/>}
+        <div className="w-full flex flex-col gap-4 h-[560px] overflow-auto">
+            <div className="flex gap-2 font-medium text-md cursor-pointer">
+                <p onClick={() => setPage('pending')} className={`flex justify-center items-center ${page !== 'history' ? 'text-[#2f3c62f8]' : 'text-[#2f3c6294]'}`}>Live <ChevronRight size={20} strokeWidth={2} /></p>
+                <p onClick={() => setPage('history')} className={`flex justify-center items-center ${page !== 'pending' ? 'text-[#2f3c62f8]' : 'text-[#2f3c6294]'}`}>History <ChevronRight size={20} strokeWidth={2} /></p>
+            </div>
             <div className="pr-2">
-                <div className="">
-                    <p className="text-lg text-[#2f3c62d8] font-medium mb-2">Pending</p>
-                    {pendingAppointments.map((appointment) => (
-                        <div key={appointment._id} className="max-w-[600px] mb-2 bg-[#51aff62d] p-2 rounded-md flex justify-between items-center">
-                            <div className="flex gap-4 items-center">
-                                <img src={appointment.doctorDetails.profileImage} className="w-20 rounded-full overflow-hidden" alt="" />
-                                <div>
-                                    <p className="text-md text-[#2f3c62d8] font-medium ">{appointment.doctorDetails.fullName}</p>
-                                    <p className="text-md text-[#51aff6] font-medium ">{appointment.doctorDetails.specialization}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-1 outline h-fit px-2 rounded-md outline-[#51aff6] relative">
-                                <p className="absolute -top-6 left-[50%] -translate-x-[50%] text-[#51aff6]">Today</p>
-                                <p className="text-sm text-gray-400 font-semibold">{convertTo12HourFormat(appointment.slotDetails.startTime)}</p>
-                                <p className="text-[#51aff6]">-</p>
-                                <p className="text-sm text-gray-400 font-semibold">{convertTo12HourFormat(appointment.slotDetails.endTime)}</p>
-                            </div>
-                            <div className="text-center text-sm text-red-400 px-3 font-semibold" >
-                                waiting...
-                            </div>
-                        </div>
-                    ))}
-                    {pendingAppointments.length <= 0 && <p className="text-sm text-gray-400">No pending appointments !</p>}
-                </div>
-
-                <div className="">
-                    <p className="text-lg text-[#2f3c62d8] font-medium mb-2">History</p>
-                    {historyAppointments.map((appointment) => (
-                        <div key={appointment._id} className="max-w-[600px] mb-2 bg-gray-200 p-2 rounded-md flex justify-between items-center">
-                            <div className="flex gap-4 items-center">
-                                <img src={appointment.doctorDetails.profileImage} className="w-20 rounded-full overflow-hidden" alt="" />
-                                <div>
-                                    <p className="text-md text-[#2f3c62d8] font-medium ">{appointment.doctorDetails.fullName}</p>
-                                    <p className="text-md text-[#51aff6] font-medium ">{appointment.doctorDetails.specialization}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-1 outline h-fit px-2 rounded-md outline-[#7879795f] relative">
-                                <p className="text-sm text-gray-400 font-semibold">{convertTo12HourFormat(appointment.slotDetails.startTime)}</p>
-                                <p className="text-[#787979ad]">-</p>
-                                <p className="text-sm text-gray-400 font-semibold">{convertTo12HourFormat(appointment.slotDetails.endTime)}</p>
-                            </div>
-                            <div className="text-center text-sm text-blue-300 opacity-80 hover:opacity-100 hover:text-blue-400 duration-300 active:scale-95 px-3 font-semibold cursor-pointer underline"
-                            onClick={() => setFeedback(appointment.doctorId)}>
-                                give feedback
-                            </div>
-                        </div>
-                    ))}
-                    {historyAppointments.length <= 0 && <p className="text-sm text-gray-400">No appointments yet !</p>}
-                </div>
+                {page === 'pending' ? <AppointmentsList page={page} />
+                    : <AppointmentsList page={page} />}
+                
             </div>
         </div>
 

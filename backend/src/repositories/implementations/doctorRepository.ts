@@ -20,6 +20,10 @@ export class DoctorRepository implements IDoctorRepository {
         return await doctor.save();
     }
 
+    async getAllDoctors(): Promise<IDoctorDocument[]> {
+        return await DoctorModel.find({})
+    }
+
     async updateDoctor(
         _id: string,
         { fullName, headline, about, address, gender,
@@ -221,7 +225,7 @@ export class DoctorRepository implements IDoctorRepository {
         sortOrder: number,
         languageSpoken: string,
         yearsOfExperience: number | null
-      ): Promise<{ data: IDoctor[]; hasMore: boolean }> {
+      ): Promise<{ data: IDoctor[]; total: number }> {
         try {
           const query: any = { isApproved: true };
       
@@ -277,9 +281,9 @@ export class DoctorRepository implements IDoctorRepository {
             .select('profileImage fullName specialization languageSpoken yearsOfExperience rating reviewCount fees')
             .lean();
       
-          const hasMore = doctors.length === limit;
+            const total = await DoctorModel.countDocuments(query);
       
-          return { data: doctors, hasMore };
+          return { data: doctors, total };
         } catch (error) {
           console.error("Error fetching doctors:", error);
           throw new Error("Unable to fetch doctors");

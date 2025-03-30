@@ -16,6 +16,7 @@ export class AppointmentController {
         this.finishedConsulting = this.finishedConsulting.bind(this)
         this.getAllAppointments = this.getAllAppointments.bind(this)
         this.getAllAppointmentsOfDoctor = this.getAllAppointmentsOfDoctor.bind(this)
+        this.appointmentDetails = this.appointmentDetails.bind(this)
     }
 
     async createAppointment(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -37,22 +38,33 @@ export class AppointmentController {
     async getUserAppointments(req: Request, res: Response, next: NextFunction) {
         try {
             const { _id } = req.client
+            const page = req.query.page as string || 'pending';
+            const skip = parseInt(req.query.skip as string) || 0;
+            const limit = parseInt(req.query.limit as string) || 5;
             
-            const userAppointmentsList = await this.appointmentServices.getUserAppointments(_id)
-            res.status(201).json({userAppointmentsList})
+            const userAppointmentsList = await this.appointmentServices.getUserAppointments(_id, page, skip, limit)
+            res.status(201).json(userAppointmentsList)
         } catch(error: any) {
             next(error)
         }
     }
 
-    async getAllAppointments(req: Request, res: Response, next: NextFunction) {
-        try {
-            const userAppointmentsList = await this.appointmentServices.getAllAppointments()
-            res.status(201).json({userAppointmentsList})
-        } catch(error: any) {
-            next(error)
-        }
+ async getAllAppointments(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { page = 1, limit = 5, searchTerm, selectedDate, selectedTime, statusFilter } = req.query;
+      const userAppointmentsList = await this.appointmentServices.getAllAppointments(
+        Number(page), 
+        Number(limit), 
+        searchTerm as string, 
+        selectedDate as string, 
+        selectedTime as string, 
+        statusFilter as string
+      );
+      res.status(200).json(userAppointmentsList);
+    } catch (error) {
+      next(error);
     }
+  }
 
     async getAllAppointmentsOfDoctor(req: Request, res: Response, next: NextFunction) {
         try {
@@ -85,5 +97,16 @@ export class AppointmentController {
             next(error)
         }
     }
+
+    async appointmentDetails(req: Request, res: Response, next: NextFunction) {
+        try {
+            const data = await this.appointmentServices.appointmentDetails()
+            res.status(200).json(data)
+        } catch (error: any) {
+            next(error)
+        }
+    }
+
+
     
 }

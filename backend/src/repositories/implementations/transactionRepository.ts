@@ -15,6 +15,10 @@ export class TransactionRepository implements ITransactionRepository {
         return await TransactionModel.findOne({transactionId})
     }
 
+    async getAllTransactions(): Promise<ITransaction[]> {
+        return await TransactionModel.find({})
+    }
+
     async getTransactions(id: string, role: string): Promise<ITransaction[]> {
         const collection = role === "user" ? "doctors" : "patients";
     

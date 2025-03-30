@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { TestReportService } from '../services/implementations/testReportServices';
+import { skip } from 'node:test';
 
 const testReportService = new TestReportService()
 
@@ -31,7 +32,11 @@ export class TestReportController {
 
     async getReportsByPatientId(req: Request, res: Response) {
         try {
-            const reports = await testReportService.getReportsByPatientId(req.params.patientId);
+            const skip = parseInt(req.query.skip as string) || 0;
+            const limit = parseInt(req.query.limit as string) || 5;
+            console.log('hrloosd')
+
+            const reports = await testReportService.getReportsByPatientId(req.params.patientId, skip, limit);
             res.status(200).json(reports);
         } catch (error) {
             res.status(500).json({ message: error.message });

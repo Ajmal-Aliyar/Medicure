@@ -10,4 +10,5 @@ export interface ITransactionRepository {
     getTransactions( id: string, role: string ): Promise<ITransaction[]>
     updateTransactionStatus(transactionId: string, status: string): Promise<void>
     getTransactionById (transactionId: string): Promise<ITransaction> 
+    getAllTransactions(): Promise<ITransaction[]>
 }

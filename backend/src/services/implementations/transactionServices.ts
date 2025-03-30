@@ -37,6 +37,36 @@ export class TransactionServices implements ITransactionServices {
         }
     }
 
+    async getTransactionDetails(): Promise<{ revenue: number; refund: number; }> {
+        try {
+            console.log('haii   ');
+            const transactionHistory = await this.transactionRepository.getAllTransactions()
+            console.log('haii');
+            
+
+            const revenue = transactionHistory.reduce((acc,item) => {
+                if (item.status !== 'refunded') {
+                    return acc + item.amount
+                } else {
+                    return acc
+                }
+            },0)
+
+            const refund = transactionHistory.reduce((acc,item) => {
+                if (item.status === 'refunded') {
+                    return acc + item.amount
+                } else {
+                    return acc
+                }
+            },0)
+
+            return { revenue, refund }
+
+        } catch(error: unknown) {
+            throw error
+        }
+    }
+
     async getTransactionById(_id: string ): Promise<ITransaction> {
         try {
             return await this.transactionRepository.getTransactionById(_id)

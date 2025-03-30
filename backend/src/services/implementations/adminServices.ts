@@ -159,7 +159,7 @@ export class AdminServices implements IAdminServices {
         }
     }
 
-    async getAllPatients(skip: number, limit: number): Promise<{ data: IPatientDocument[], hasMore: boolean }> {
+    async getAllPatients(skip: number, limit: number): Promise<{ data: IPatientDocument[], total: number }> {
         try {
 
             const patientData = await this.patientRepository.getAllPatient(skip, limit);

@@ -11,7 +11,7 @@ export interface IAdminServices {
     getDoctorAppointmentDetails(_id: string): Promise<ISlot[]> 
     approveDoctor (_id: string): Promise<void> 
     rejectDoctor(_id: string): Promise<void>
-    getAllPatients(skip: number, limit: number): Promise<{ data: IPatientDocument   [], hasMore: boolean }>
+    getAllPatients(skip: number, limit: number): Promise<{ data: IPatientDocument[], total: number }>
     block (_id: string, role: string): Promise<void>
     unblock (_id: string, role: string): Promise<void>
 }

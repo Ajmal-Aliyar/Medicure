@@ -53,7 +53,6 @@ export class PatientController {
 
     async getTopDoctors(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-          // Parsing query parameters with proper defaults
           const skip = parseInt(req.query.skip as string) || 0;
           const limit = parseInt(req.query.limit as string) || 5;
           const specialization = req.query.specialization as string || null;
@@ -63,9 +62,7 @@ export class PatientController {
           const languageSpoken = req.query.languageSpoken as string || null;
           const yearsOfExperience = req.query.yearsOfExperience ? parseInt(req.query.yearsOfExperience as string) : null;
       
-          console.log('Query Params:', { skip, limit, specialization, search, sort, sortOrder, languageSpoken, yearsOfExperience });
-      
-          const approvedDoctors = await this.patientServices.getTopDoctors(
+          const { data, total } = await this.patientServices.getTopDoctors(
             skip,
             limit,
             specialization,
@@ -78,8 +75,8 @@ export class PatientController {
       
           res.status(200).json({
             success: true,
-            data: approvedDoctors.data,
-            hasMore: approvedDoctors.hasMore,
+            data,
+            total
           });
       
         } catch (error: any) {
