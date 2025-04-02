@@ -13,6 +13,7 @@ import { MedicalRecordForm } from "../doctor/MedicalReport";
 import { updateMedicalRecordApi } from "../../sevices/medicalRecords/medicalRecord";
 import { IMedicalRecord } from "../../types/record/record";
 import ListRecords from "../../components/patient/userDrive/medicalRecords/ListRecords";
+import { socket } from "../../utils/wss";
 
 const VideoCallInterface = () => {
   const [callStarted, setCallStarted] = useState<boolean>(false);
@@ -28,14 +29,16 @@ const VideoCallInterface = () => {
   const [report, setReport] = useState<string>('')
   const [endCall, setEndCall] = useState<boolean>(false)
   const { recordId, patientId } = useSelector((state: RootState) => state.videoConsult)
+  const { roomId } = useSelector((state: RootState) => state.videoConsult)
 
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage] = useState<string | null>(null);
   const client = useSelector((state: RootState) => state.auth)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
 
   useEffect(() => {
+
     const initLocalStream = async () => {
       try {
         const stream = await getLocalPreviewAndInitRoomConnection();
@@ -57,10 +60,13 @@ const VideoCallInterface = () => {
     };
 
     streamEvents.on("new-remote-stream", handleNewStream);
+    socket.on("candidate-left", () => {
+      if (remoteVideoRef.current?.srcObject) {
+        remoteVideoRef.current.srcObject = null;
+      }
+    });
 
     return () => {
-
-
       if (localStream) {
         localStream.getTracks().forEach((track) => track.stop());
       }
@@ -94,7 +100,6 @@ const VideoCallInterface = () => {
   };
 
   const stopTrackingStream = async () => {
-    console.log(appointmentId, slotId)
 
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
@@ -108,7 +113,7 @@ const VideoCallInterface = () => {
       remoteVideoRef.current.srcObject = null;
     }
 
-    stopStreaming();
+    stopStreaming(roomId as string);
 
 
     if (client.role === "user") {
@@ -124,12 +129,14 @@ const VideoCallInterface = () => {
   }
 
   const handleEndCall = () => {
-    setReport('prescription');
+    if (client.role === 'doctor') {
+      setReport('prescription');
+    }
     dispatch(setWarning('Are you do you finish the consultation'))
     dispatch(setExtra(stopTrackingStream))
   };
 
-  const handleMedicalReportUpload =  async (isCompleted: boolean, state: IMedicalRecord) => {
+  const handleMedicalReportUpload = async (isCompleted: boolean, state: IMedicalRecord) => {
     if (recordId) {
       await updateMedicalRecordApi(recordId, { ...state, isCompleted });
     }
@@ -165,6 +172,9 @@ const VideoCallInterface = () => {
               </div>
             </div>
 
+
+
+            {/* remote video  */}
             {remoteVideoRef && (
               <div
                 className={`flex flex-col gap-2 items-center justify-center overflow-hidden group ${pinned === "B" ? "bg-neutral-900 w-full h-full" : "bg-neutral-900 w-[30%] md:w-[300px] md:aspect-video aspect-[2/3] m-2 z-10"
@@ -196,14 +206,14 @@ const VideoCallInterface = () => {
           </div>
           {client.role === 'doctor' &&
             <div className='fixed bottom-8 right-8 p-4 bg-white rounded-md z-50'>
-              <Microscope onClick={() => setReport(p => p === 'test' ? '' : 'test')} className="text-black mb-2" strokeWidth={2} size={20}/>
-              <FilePlus  onClick={() => setReport(p => p === 'prescription' ? '' : 'prescription')} className="text-black" strokeWidth={2} size={20} />
+              <Microscope onClick={() => setReport(p => p === 'test' ? '' : 'test')} className="text-black mb-2" strokeWidth={2} size={20} />
+              <FilePlus onClick={() => setReport(p => p === 'prescription' ? '' : 'prescription')} className="text-black" strokeWidth={2} size={20} />
             </div>}
           <MedicalRecordProvider recordId={recordId ? recordId : ''}>{report === 'prescription' && <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={endCall} />}</MedicalRecordProvider>
-          {report === 'test' && 
-          <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 pb-10 fixed md:bottom-10 md:right-10 bottom-0 right-0">
-            {patientId ? <ListRecords _id={patientId} /> : <p>patient id not found</p>}
-          </div> }
+          {report === 'test' &&
+            <div className="w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 pb-10 fixed md:bottom-10 md:right-10 bottom-0 right-0">
+              {patientId ? <ListRecords _id={patientId} /> : <p>patient id not found</p>}
+            </div>}
         </>
       )}
     </div>

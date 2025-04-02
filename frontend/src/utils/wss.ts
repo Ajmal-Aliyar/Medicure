@@ -8,7 +8,7 @@ import { Socket } from "socket.io-client";
 import { addMessage, trigger } from "../store/slices/commonSlices/chatSlice";
 
 const SERVER: string = 'http://localhost:3000';
-let socket: any = null;
+export let socket: any = null;
 
 
 export const connectWithSocketIOServer = (candidateId: string) => {
@@ -39,6 +39,7 @@ export const connectWithSocketIOServer = (candidateId: string) => {
     socket.on('conn-signal', (data: { socketId: string, signal: any }) => {
         handleSignalData(data)
     })
+    
 
     socket.on('notification', ({ slotId, _id, roomId }: ConsultingData) => {
         console.log({ slotId, _id, roomId })

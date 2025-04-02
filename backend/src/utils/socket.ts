@@ -23,6 +23,11 @@ export const socketHandler = (server) => {
     socket.on('conn-init', (data: { socketId: string }) => initializeConnectionHandler(data, socket))
     socket.on('conn-signal', (data) => signalingHandler(data, socket))
     socket.on("joinChat", (chatId) => joinChat(chatId, socket));
+    socket.on('candidate-left', ({ roomId })  => {
+      console.log(roomId, 'dfsfasdjdfs sdjklfhaklsd');
+      
+      io.to(roomId).emit("candidate-left", { userId: socket.id });
+      })
 
     socket.on('register-user', async (data: { candidateId: string }) => {
       const { candidateId } = data;

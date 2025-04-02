@@ -1,9 +1,8 @@
 import { setError, setSuccess } from "../store/slices/commonSlices/notificationSlice";
 import store from "../store/store";
-import { signalPeerData } from "./wss";
+import { signalPeerData, socket } from "./wss";
 import EventEmitter from 'eventemitter3';
 export const streamEvents = new EventEmitter();
-
 
 
 const getConfiguration = () => ({
@@ -36,7 +35,7 @@ export const getLocalPreviewAndInitRoomConnection = async (): Promise<any> => {
 };
 
 
-export const stopStreaming = () => {
+export const stopStreaming = (roomId: string) => {
   try {
     for (const socketId in peerConnections) {
       if (peerConnections.hasOwnProperty(socketId)) {
@@ -52,6 +51,11 @@ export const stopStreaming = () => {
       localStream = null;
     }
     streams = [];
+
+    console.log('emmitted');
+    socket.emit('candidate-left', { roomId });
+    console.log('emmitted');
+    
 
     store.dispatch(setSuccess('Consulting finished successfully.'));
   } catch (error) {
@@ -134,5 +138,6 @@ export const handleSignalData = (data: { socketId: string, signal: any }) => {
     store.dispatch(setError(`Invalid signal data`))
   }
 };
+
 
 
