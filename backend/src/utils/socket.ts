@@ -43,7 +43,6 @@ export const socketHandler = (server) => {
     });
 
     socket.on('send-notification', async ({ patientId, consultingData }) => {
-      console.log('socket id got sent notification')
       const socketId = await getRedisData(`user:${patientId}`);
       if (socketId && socketId !== 'disconnected') {
         io.to(socketId).emit('notification', { slotId: consultingData.slotId, doctorId: consultingData.doctorId, roomId: consultingData.roomId });
@@ -51,6 +50,12 @@ export const socketHandler = (server) => {
         console.log(`User ${patientId} is offline. Store the message.`);
       }
     });
+
+    socket.on('inc-count', async ({ patientId, chatId, message }) => {
+      console.log('inc count')
+      const socketId = await getRedisData(`user:${patientId}`);
+      io.to(socketId).emit('inc-count', { chatId, message })
+    })
   });
 
   const createRoom = (data: { candidateId: string, roomId: string }, socket: Socket) => {
@@ -112,4 +117,15 @@ export const getSocketInstance = () => {
 const joinChat = (chatId: string, socket: Socket) => {
   socket.join(chatId);
   console.log(`User ${socket.id} joined chat ${chatId}`);
+}
+
+export const incrementUnreadCount = (_id, participants) => {
+  participants.forEach(async (userId) => {
+    if (userId != _id) {
+      console.log(userId, _id);
+      
+      const socketId = await getRedisData(`user:${userId}`);
+      io.to(socketId).emit('inc-count')
+    } 
+  })
 }

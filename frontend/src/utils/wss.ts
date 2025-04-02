@@ -5,7 +5,7 @@ import { ICandidate } from '../store/slices/commonSlices/videoConsultSlice'
 import { handleSignalData, prepareNewPeerConnection } from './webrtc';
 import { ConsultingData, setConsultRinging, setError } from '../store/slices/commonSlices/notificationSlice';
 import { Socket } from "socket.io-client";
-import { addMessage } from "../store/slices/commonSlices/chatSlice";
+import { addMessage, trigger } from "../store/slices/commonSlices/chatSlice";
 
 const SERVER: string = 'http://localhost:3000';
 let socket: any = null;
@@ -50,6 +50,11 @@ export const connectWithSocketIOServer = (candidateId: string) => {
         console.log("📩 New message received:", message);
         userId !== message.senderId && store.dispatch(addMessage(message))
     });
+
+    socket.on('inc-count', (()  => {
+        store.dispatch(trigger())
+    }))
+
 
     // socket.on("userTyping", (data) => {
     //     console.log("✍️ User is typing:", data);

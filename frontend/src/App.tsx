@@ -1,4 +1,4 @@
-import { Route, BrowserRouter as Router, Routes} from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserRoutes from './routes/UserRoutes';
 import DoctorRoutes from './routes/DoctorRoutes';
 import AdminRoutes from './routes/AdminRoutes';
@@ -11,13 +11,15 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 
-const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com"; 
+const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com";
 
 const App = () => {
   const _id = useSelector((state: RootState) => state.auth._id)
   useEffect(() => {
     connectWithSocketIOServer(_id)
-}, [])
+    console.log('connected to socket', _id );
+    
+  }, [_id])
 
   return (
     <Router>
@@ -28,8 +30,8 @@ const App = () => {
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="/consult/*" element={<VideoCallRoute />} />
         <Route path='/checkAuth' element={<GoogleOAuthProvider clientId={clientId}>
-      <GoogleAuth />
-    </GoogleOAuthProvider>} />
+          <GoogleAuth />
+        </GoogleOAuthProvider>} />
       </Routes>
     </Router>
   );

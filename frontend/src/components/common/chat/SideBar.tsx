@@ -11,18 +11,17 @@ import defaultUser from '../../../assets/external/defaultUserImage.jpg'
 
 const SideBar = () => {
     const userId = useSelector((state: RootState) => state.auth._id);
-    const { chats, selectedChat } = useSelector((state: RootState) => state.chat);
+    const { chats, selectedChat, trigger } = useSelector((state: RootState) => state.chat);
     const dispatch = useDispatch()
 
     useEffect(() => {
         const fetchChats = async () => {
             const { data } = await fetchChatsApi(userId)
-            console.log(data,'sds')
             dispatch(setChats(data || []))
         }
 
         fetchChats()
-    }, [])
+    }, [trigger])
 
 
     const selectChat = async (chatId: string, profileImage: string, name: string) => {

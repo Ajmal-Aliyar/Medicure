@@ -18,7 +18,8 @@ export class MessageController {
 
     async createMessage(req: Request, res: Response): Promise<void> {
         try {
-            await this.messageServices.createMessage(req.body)
+            const {_id} = req.client
+            await this.messageServices.createMessage(req.body, _id)
             res.send("Message sent!");
         } catch (error) {
             console.error(error)

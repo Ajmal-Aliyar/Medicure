@@ -4,11 +4,13 @@ import { IChat } from "../../../types/chat/ChatType";
 interface ChatState {
   chats: IChat[];
   selectedChat: { chatId: string; messages: any, profileImage: string, name: string } | null;
+  trigger: boolean
 }
 
 const initialState: ChatState = {
   chats: [],
   selectedChat: null,
+  trigger: false
 };
 
 
@@ -27,8 +29,11 @@ const chatSlice = createSlice({
         state.selectedChat.messages.push(action.payload);
       }
     },
+    trigger: (state) => {
+      state.trigger = !state.trigger
+    }
   }
 });
 
-export const { setSelectedChat, addMessage, setChats } = chatSlice.actions;
+export const { setSelectedChat, addMessage, setChats, trigger } = chatSlice.actions;
 export default chatSlice.reducer;
