@@ -1,19 +1,22 @@
 import { FC, useEffect, useState } from "react";
-import { fetchTransactionHistoryApi } from "../../../../sevices/finance/transaction";
-import { useDispatch } from "react-redux";
+import { fetchTransactionHistoryApi } from "../../sevices/finance/transaction";
+import { useDispatch, useSelector } from "react-redux";
 import { History } from "lucide-react";
-import { setError, setLoading } from "../../../../store/slices/commonSlices/notificationSlice";
+import { setError, setLoading } from "../../store/slices/commonSlices/notificationSlice";
+import { RootState } from "../../store/store";
+import { convertTo12HourFormat } from "../../utils/timeStructure";
 
 export interface Transaction {
     _id: string;
-    senderFullName: string;
-    recieverFullName: string;
+    senderId: string;
+    recieverId: string;
     amount: number;
     status: string;
     transactionDate: string;
 }
 const TransactionHistory: FC = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const { _id } = useSelector((state: RootState) => state.auth)
     const [showAll, setShowAll] = useState(false);
     const dispatch = useDispatch();
 
@@ -22,7 +25,7 @@ const TransactionHistory: FC = () => {
             try {
                 dispatch(setLoading(true));
                 const { transactions } = await fetchTransactionHistoryApi();
-                console.log(transactions, 'sdf')
+                
                 setTransactions(transactions);
             } catch (error) {
                 dispatch(setError("Failed to load transactions."));
@@ -33,7 +36,7 @@ const TransactionHistory: FC = () => {
         fetchTransactions();
     }, [dispatch]);
     return (
-        <div className="">
+        <div className="row-span-3 p-4 rounded-md  outline outline-gray-300">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">Recent Transactions</h3>
             <ul className="text-sm text-gray-600 space-y-2 max-h-[300px] overflow-y-auto pr-5">
                 {transactions.length <= 0 && <p className="text-gray-500 text-sm">No transation history</p>}
@@ -41,20 +44,21 @@ const TransactionHistory: FC = () => {
                     <li key={index} className="flex justify-between">
                         {tx.status === 'success' ? (
                             <>
-                                <span>
-                                    {tx.senderFullName ? `Received from ${tx.senderFullName}` : `Paid to ${tx.recieverFullName}`}
-                                </span>
-                                <span className={`${tx.senderFullName ? 'text-green-500' : 'text-red-500'}`}>
-                                    {tx.senderFullName ? '+' : '-'} {tx.amount}
-                                </span>
-                            </>
+                            <span>
+                               {tx.recieverId === _id ? `debited at ${convertTo12HourFormat(tx.transactionDate)}` : `credited at ${convertTo12HourFormat(tx.transactionDate)}`}
+                            </span>
+                            <span className={`${tx.recieverId === _id ? 'text-green-500' : 'text-red-500'}`}>
+                                {tx.recieverId === _id ? '+' : '-'} {tx.amount}
+                            </span>
+                           
+                        </>
                         ) : (
                             <>
                                 <span>
-                                   {tx.recieverFullName ? `refund money from ${tx.recieverFullName}` : `refund money to ${tx.senderFullName}`}
+                                   {tx.senderId !== _id ? `credited at ${convertTo12HourFormat(tx.transactionDate)}` : `debited at ${convertTo12HourFormat(tx.transactionDate)}`}
                                 </span>
-                                <span className={`${tx.recieverFullName ? 'text-green-500' : 'text-red-500'}`}>
-                                    {tx.recieverFullName ? '+' : '-'} {tx.amount}
+                                <span className={`${tx.senderId === _id ? 'text-green-500' : 'text-red-500'}`}>
+                                    {tx.senderId === _id ? '+' : '-'} {tx.amount}
                                 </span>
                                
                             </>

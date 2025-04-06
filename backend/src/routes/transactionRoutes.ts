@@ -12,7 +12,6 @@ const transactionServices = new TransactionServices(transactionRepository)
 const transactionController = new TransactionController(transactionServices)
 
 router.get('/get-transaction', tokenMiddleware, transactionController.getTransactionById)
-
 router.get('/get-revenue', tokenMiddleware, isAdmin, transactionController.getTransactionDetails)
 
 

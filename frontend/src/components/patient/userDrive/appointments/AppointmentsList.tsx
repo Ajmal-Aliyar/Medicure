@@ -14,7 +14,7 @@ const AppointmentsList: FC<AppointmentsListProps> = ({ page }) => {
     const [limit] = useState<number>(5);
     const [total, setTotal] = useState<number>(0);
 
-    
+
 
     const [totalAppointments, setTotalAppointments] = useState<IFetchAppointmentResponse[] | null>(null)
 
@@ -26,7 +26,7 @@ const AppointmentsList: FC<AppointmentsListProps> = ({ page }) => {
         }
 
         fetchUserAppointmentDetails()
-    },[page, skip])
+    }, [page, skip])
 
     const handleNext = () => {
         if (skip + limit < total) {
@@ -75,19 +75,19 @@ const AppointmentsList: FC<AppointmentsListProps> = ({ page }) => {
                 {feedback && <FeedbackModal _id={feedback} setFeedback={setFeedback} />}
             </div>
             <div className="flex justify-center mt-4 gap-1 text-white">
-                    <button onClick={handlePrev} disabled={skip === 0} className="px-2 py-1 bg-[#51aff666] rounded"><ChevronLeft /></button>
-                    {Array.from({ length: Math.ceil(total / limit) }, (_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setSkip(index * limit)}
-                            className={`px-3 py-1 rounded ${skip / limit === index ? 'bg-[#51aff6ce] text-white' : 'bg-[#51aff630]'}`}
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
-                    <button onClick={handleNext} disabled={skip + limit >= total} className="px-2 py-1 bg-[#51aff666] rounded"><ChevronRight /></button>
-                </div>
-            
+                <button onClick={handlePrev} disabled={skip === 0} className="px-2 py-1 bg-[#51aff666] rounded"><ChevronLeft /></button>
+                {Array.from({ length: Math.ceil(total / limit) }, (_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setSkip(index * limit)}
+                        className={`px-3 py-1 rounded ${skip / limit === index ? 'bg-[#51aff6ce] text-white' : 'bg-[#51aff630]'}`}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+                <button onClick={handleNext} disabled={skip + limit >= total} className="px-2 py-1 bg-[#51aff666] rounded"><ChevronRight /></button>
+            </div>
+
         </>
     )
 }

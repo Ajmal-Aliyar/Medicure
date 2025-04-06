@@ -26,3 +26,10 @@ export const sendOtpToEmail = async (email: string): Promise<number> => {
         throw new Error('Failed to send OTP. Please try again later.');
     }
 }
+
+export function generateId(): string {
+    const prefix = 'txn';
+    const timestamp = Date.now(); // current timestamp in ms
+    const randomPart = Math.floor(1000 + Math.random() * 9000); // random 4-digit number
+    return `${prefix}-${timestamp}-${randomPart}`;
+  }

@@ -13,6 +13,7 @@ import { PatientRepository } from '../repositories/implementations/patientReposi
 import { ChatRepository } from '../repositories/implementations/chatRepository';
 import { MedicalRecordRepository } from '../repositories/implementations/medicalRecordRepository';
 import { WalletRepository } from '../repositories/implementations/walletRepository';
+import { isAdmin } from '../middleware/isAdmin';
 
 const transactionRepository = new TransactionRepository();
 const transactionServices = new TransactionServices(transactionRepository);
@@ -34,5 +35,8 @@ const router = Router();
 router.post('/create-checkout-session', tokenMiddleware, paymentController.checkoutSession);
 router.post('/webhook', express.raw({ type: 'application/json' }), paymentController.webhookHandler);
 router.post('/refund', tokenMiddleware, paymentController.refundPayment);
+router.get('/approve-withdraw', tokenMiddleware, isAdmin, paymentController.approveWithdrawRequest)
+
+router.post('/test', paymentController.addUserBankAccount)
 
 export default router;

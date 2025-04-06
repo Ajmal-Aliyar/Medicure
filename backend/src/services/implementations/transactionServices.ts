@@ -39,11 +39,7 @@ export class TransactionServices implements ITransactionServices {
 
     async getTransactionDetails(): Promise<{ revenue: number; refund: number; }> {
         try {
-            console.log('haii   ');
             const transactionHistory = await this.transactionRepository.getAllTransactions()
-            console.log('haii');
-            
-
             const revenue = transactionHistory.reduce((acc,item) => {
                 if (item.status !== 'refunded') {
                     return acc + item.amount
@@ -78,5 +74,4 @@ export class TransactionServices implements ITransactionServices {
     async updateTransactionStatus( transactionId: string, status: string ): Promise<void> {
          await this.transactionRepository.updateTransactionStatus(transactionId, status)
     }
-    
 }

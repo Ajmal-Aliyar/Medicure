@@ -1,15 +1,16 @@
-
-import TransactionHistory from '../../components/patient/userDrive/finance/TransactionHistory'
-import Wallet from '../../components/patient/userDrive/finance/Wallet'
+import TransactionHistory from '../../components/common/TransactionHistory'
+import Wallet from '../../components/common/Wallet'
+import WithdrawRequestsList from '../../components/admin/Finance/WithdrawRequestsList'
 
 const Finance = () => {
+ 
   return (
     <div className='h-screen w-full p-4 flex rounded-md gap-3'>
-            <div className="w-full bg-white shadow-lg rounded-2xl p-6">
+      <div className="grid grid-cols-2 grid-rows-4 gap-2 w-full">
         <Wallet />
+        <WithdrawRequestsList />
         <TransactionHistory />
-      
-    </div>
+      </div>
     </div>
   )
 }

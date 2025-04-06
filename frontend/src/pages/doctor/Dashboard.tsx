@@ -2,8 +2,8 @@ import { useState } from 'react';
 import ListedSlots from '../../components/doctor/appointments/ListedSlots';
 import RightBar from '../../components/doctor/dashboard/RightBar'
 import AllAppointments from '../../components/doctor/dashboard/AllAppointments';
-import TransactionHistory from '../../components/patient/userDrive/finance/TransactionHistory';
-import Wallet from '../../components/patient/userDrive/finance/Wallet';
+import TransactionHistory from '../../components/common/TransactionHistory';
+import Wallet from '../../components/common/Wallet';
 
 
 function Dashboard() {

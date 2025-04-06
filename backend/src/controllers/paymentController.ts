@@ -12,6 +12,8 @@ export class PaymentController {
         this.checkoutSession = this.checkoutSession.bind(this)
         this.webhookHandler = this.webhookHandler.bind(this)
         this.refundPayment = this.refundPayment.bind(this)
+        this.approveWithdrawRequest = this.approveWithdrawRequest.bind(this)
+        this.addUserBankAccount = this.addUserBankAccount.bind(this)
     }
 
     async checkoutSession(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -40,6 +42,38 @@ export class PaymentController {
             const { transactionId } = req.body;
             const refund = await this.paymentService.processRefund(transactionId);
             res.status(200).json({ success: true, refund });
+        } catch (error: any) {
+            next(error);
+        }
+    }
+
+    async approveWithdrawRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const transactionId  = req.query.transactionId as string || ''
+            console.log(transactionId);
+            
+            
+            if (!transactionId) {
+                res.status(400).json({ error: "Transaction ID is required." });
+            }
+    
+            const response = await this.paymentService.approveWithdrawal(transactionId)
+
+            res.status(200).json(response)
+        } catch (error: unknown) {
+            console.log(error);
+            
+            next(error)
+        }
+    }
+
+    async addUserBankAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { email } = req.body
+            console.log(email, 'worked');
+            
+            const response = await this.paymentService.createConnectedAccountAndPayout(email)
+            res.json(response);
         } catch (error: any) {
             next(error);
         }

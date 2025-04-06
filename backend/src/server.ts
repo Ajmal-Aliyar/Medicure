@@ -6,11 +6,12 @@ import appointmentRouter from './routes/appointmentRoutes';
 import transactionRouter from './routes/transactionRoutes';
 import testReportRouter from './routes/testReportRoutes';
 import feedbackRouter from './routes/feedbackRoutes';
+import withdrawRouter from './routes/withdrawRoutes';
 import patientRouter from './routes/patientRoutes';
 import paymentRouter from './routes/paymentRoutes';
 import messageRouter from './routes/messageRoutes';
 import doctorRouter from './routes/doctorRoutes';
-import walletRouter from './routes/walletRoutes'
+import walletRouter from './routes/walletRoutes';
 import adminRouter from './routes/adminRoutes';
 import { socketHandler } from './utils/socket';
 import authRouter from './routes/authRoutes';
@@ -51,6 +52,7 @@ app.use('/api/transaction', transactionRouter)
 app.use('/api/record', medicalRecordRouter)
 app.use('/api/report', testReportRouter)
 app.use('/api/feedback', feedbackRouter)
+app.use('/api/withdraw', withdrawRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/patient', patientRouter)
 app.use('/api/message', messageRouter)

@@ -1,14 +1,16 @@
 import { api } from "../../utils/axiosInstance";
 
 
-interface TransactionDetails {
+export interface TransactionDetails {
     _id: string;
-    senderFullName: string;
-    recieverFullName: string;
+    senderId: string;
+    recieverId: string;
     amount: number;
     status: string;
     transactionDate: string;
   }
+
+
 export const fetchTransactionHistoryApi = async ( ): Promise<{transactions: TransactionDetails[]}> => {  
       const response = await api.get<{transactions: TransactionDetails[]}>(
         `/api/transaction/get-transaction`
@@ -25,3 +27,4 @@ export const fetchRevenueDetailsApi = async (): Promise<{revenue: number, refund
   const response = await api.get<{revenue: number, refund: number}>('/api/transaction/get-revenue')
   return response.data
 }
+

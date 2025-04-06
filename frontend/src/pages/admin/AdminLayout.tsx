@@ -9,7 +9,7 @@ const AdminLayout = () => {
         <div className="w-full h-full flex">
             <SlideMenu />
             <div className="w-full flex-col relative">
-                <div
+                {/* <div
                     className={`${
                         miniBar ? 'w-[97%] lg:w-[98%]' : 'w-[150px]'
                     } transition-all duration-1000 h-[8vh] z-40 flex justify-between items-center bg-white shadow-lg rounded-md m-2 mx-4 absolute top-0 right-0 p-2 px-4 overflow-hidden`}>
@@ -24,7 +24,7 @@ const AdminLayout = () => {
                             className="bg-[#C4DAD2] w-10 aspect-square rounded-full cursor-pointer"
                         ></div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="w-full flex p-2 h-screen overflow-x-hidden overflow-y-auto bg-[#E9EFEC]">
                     <Outlet />

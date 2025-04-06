@@ -1,3 +1,4 @@
+import { response } from "express";
 import { ITransaction } from "../../models/transaction/transactionInterface";
 import { TransactionModel } from "../../models/transaction/transactionModel";
 import { ITransactionDocument, ITransactionRepository } from "../interfaces/ITransactionRepository";
@@ -6,13 +7,13 @@ import { ITransactionDocument, ITransactionRepository } from "../interfaces/ITra
 
 export class TransactionRepository implements ITransactionRepository {
 
-    async createTransaction( transactionId: string, senderId: string, recieverId: string, amount: number, status: string): Promise<ITransactionDocument> {
+    async createTransaction(transactionId: string, senderId: string, recieverId: string, amount: number, status: string): Promise<ITransactionDocument> {
         const transaction = new TransactionModel({ transactionId, senderId, recieverId, amount, status })
         return await transaction.save()
     }
 
-    async getTransactionById (transactionId: string): Promise<ITransaction> {
-        return await TransactionModel.findOne({transactionId})
+    async getTransactionById(transactionId: string): Promise<ITransaction> {
+        return await TransactionModel.findOne({ transactionId })
     }
 
     async getAllTransactions(): Promise<ITransaction[]> {
@@ -20,58 +21,17 @@ export class TransactionRepository implements ITransactionRepository {
     }
 
     async getTransactions(id: string, role: string): Promise<ITransaction[]> {
-        const collection = role === "user" ? "doctors" : "patients";
-    
+
         return await TransactionModel.aggregate([
             {
                 $match: {
-                    $or: [{ senderId: id }, { recieverId: id }]
+                    $or: [{ senderId: id }, { recieverId: id }],
                 }
-            },
-            {
-                $lookup: {
-                    from: collection, 
-                    let: { senderIdStr: "$senderId" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$_id", { $toObjectId: "$$senderIdStr" }] }
-                            }
-                        },
-                        {
-                            $project: { fullName: 1, _id: 0 }
-                        }
-                    ],
-                    as: "senderDetails"
-                }
-            },
-            {
-                $lookup: {
-                    from: collection,
-                    let: { recieverStr: "$recieverId" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$_id", { $toObjectId: "$$recieverStr" }] }
-                            }
-                        },
-                        {
-                            $project: { fullName: 1, _id: 0 }
-                        }
-                    ],
-                    as: "recieverDetails"
-                }
-            },
-            {
-                $unwind: { path: "$senderDetails", preserveNullAndEmptyArrays: true }
-            },
-            {
-                $unwind: { path: "$recieverDetails", preserveNullAndEmptyArrays: true }
             },
             {
                 $project: {
-                    senderFullName: "$senderDetails.fullName",
-                    recieverFullName: "$recieverDetails.fullName",
+                    senderId: 1,
+                    recieverId: 1,
                     transactionDate: 1,
                     amount: 1,
                     status: 1
@@ -84,10 +44,9 @@ export class TransactionRepository implements ITransactionRepository {
     }
 
     async updateTransactionStatus(transactionId: string, status: string): Promise<void> {
-        await TransactionModel.updateOne({transactionId},{$set:{status}})
+        await TransactionModel.updateOne({ transactionId }, { $set: { status } })
     }
-    
-        
 
+   
 
 }   

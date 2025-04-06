@@ -1,4 +1,4 @@
-import TransactionHistory from "./TransactionHistory";
+import TransactionHistory from "../../../common/TransactionHistory";
 
 
 

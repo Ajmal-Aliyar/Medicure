@@ -34,4 +34,12 @@ export const refundApi =  async (transactionId: string): Promise<{message:string
     return response.data
 }
 
+export const requestWithdrawalApi =  async (doctorId: string, amount: number): Promise<{message:string}> => {
+    const response = await api.post<{message: string}>('/api/payment/request-withdraw', {doctorId, amount})
+    return response.data
+}
 
+export const approveWithdrawalApi =  async (transactionId: string): Promise<{message:string}> => {
+    const response = await api.get<{message: string}>('/api/payment/approve-withdraw', { params: { transactionId }})
+    return response.data
+}

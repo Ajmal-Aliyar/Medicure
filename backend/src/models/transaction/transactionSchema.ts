@@ -22,7 +22,7 @@ export const transactionSchema = new Schema<ITransaction>({
   },
   status: {
     type: String,
-    enum: ['success', 'failed', 'pending'],
+    enum: ['success', 'failed', 'pending', 'withdraw'],
     required: true,
   },
   transactionDate: {

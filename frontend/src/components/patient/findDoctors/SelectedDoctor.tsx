@@ -5,10 +5,11 @@ import gsap from 'gsap'
 import { fetchSlotDetailsApi } from '../../../sevices/patient/findDoctors'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../store/store'
-import { setError, setExtra, setLoading, setWarning } from '../../../store/slices/commonSlices/notificationSlice'
+import { clearWarning, setError, setExtra, setLoading, setWarning } from '../../../store/slices/commonSlices/notificationSlice'
 import { createCheckoutSessionApi } from '../../../sevices/payment/payment'
 import { convertTimeStringToDate, convertTo12HourFormat } from '../../../utils/timeStructure'
 import { fetchAppointmentDetailsApi } from '../../../sevices/appointments/fetchAppointments'
+import { useNavigate } from 'react-router-dom'
 
 interface SelectedDoctorProps {
     doctor: IFetchTopDoctors
@@ -17,6 +18,7 @@ interface SelectedDoctorProps {
 const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
     const [slots, setSlots] = useState<IDoctorSotDetails[]>([])
     const [selectedSlot, setSelectedSlot] = useState<IDoctorSotDetails | null>(null)
+    const navigate = useNavigate()
 
     const user = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch()
@@ -34,6 +36,7 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
 
     const doesAppointmentExist = async () => {
         try {
+            if (!user._id) return navigate('/auth') 
             const data = await fetchAppointmentDetailsApi('pending', 0, Infinity);
             
             const hasScheduledAppointment = data.appointments.some(item => item.status === 'Scheduled');
@@ -55,7 +58,8 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
     
     const handleAppointment = async () => {
         try {
-          dispatch(setLoading(true));
+            dispatch(setLoading(true));
+            dispatch(clearWarning())
           if (user.role === 'user' && user.isAuthenticated && selectedSlot) {
             const response = await createCheckoutSessionApi({
               doctorName: doctor.fullName,
@@ -70,7 +74,6 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
               appointmentDate: ''
             });
     
-            dispatch(setLoading(false));
             const { sessionUrl } = response;
     
             if (sessionUrl) {

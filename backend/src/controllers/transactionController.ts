@@ -36,7 +36,6 @@ export class TransactionController {
 
     async getTransactionDetails(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            
             const data = await this.transactionServices.getTransactionDetails()
 
             res.status(200).json(data);
