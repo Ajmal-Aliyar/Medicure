@@ -20,9 +20,9 @@ export class TransactionRepository implements ITransactionRepository {
         return await TransactionModel.find({})
     }
 
-    async getTransactions(id: string, role: string): Promise<ITransaction[]> {
+    async getTransactions(id: string, role: string, skip: number, limit: number): Promise<{ transactions: ITransaction[], total: number}> {
 
-        return await TransactionModel.aggregate([
+        const transactions = await TransactionModel.aggregate([
             {
                 $match: {
                     $or: [{ senderId: id }, { recieverId: id }],
@@ -39,8 +39,20 @@ export class TransactionRepository implements ITransactionRepository {
             },
             {
                 $sort: { transactionDate: -1 }
+            },
+            {
+                $skip: skip
+            }, 
+            {
+                $limit: limit
             }
         ]);
+
+        const total = await TransactionModel.countDocuments({
+            $or: [{ senderId: id }, { recieverId: id }]
+          });
+          
+          return { transactions, total }
     }
 
     async updateTransactionStatus(transactionId: string, status: string): Promise<void> {

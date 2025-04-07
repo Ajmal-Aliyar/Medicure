@@ -60,13 +60,13 @@ export class AdminController {
             const searchQuery: string = (req.query.searchQuery as string) || "";
             const skip = parseInt(req.query.skip as string) || 0;
             const limit = parseInt(req.query.limit as string) || 5;
-            console.log(searchQuery,'ds')
+
             const approvedDoctors = await this.adminServices.getApprovedDoctors(skip, limit, searchQuery);
 
             res.status(200).json({
                 success: true,
                 data: approvedDoctors.data,
-                hasMore: approvedDoctors.hasMore
+                total: approvedDoctors.total
             });
         } catch (error: any) {
             console.error('Error fetching approved doctors:', error.message);

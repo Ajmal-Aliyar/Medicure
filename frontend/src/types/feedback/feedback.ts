@@ -1,6 +1,7 @@
 
 
 export interface IFetchFeedbacks {
+    createdAt: string;
     _id: string;
     details: IFeedbackDetails;
     patientId: string;

@@ -14,8 +14,9 @@ export class FeedbackController {
 
     async handleFeedbackSubmission( req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
-            const { patientId, doctorId, rating, comments } = req.body
-            const response = await this.feedbackService.createFeedback({ patientId, doctorId, rating, comments })
+            const { doctorId, patientId, appointmentId, rating, comments } = req.body
+
+            const response = await this.feedbackService.createFeedback({ doctorId, patientId, appointmentId, rating, comments })
             res.status(201).json({response})
         } catch (error: any) {
             console.error(error)
@@ -26,14 +27,11 @@ export class FeedbackController {
     async getFeedbackByUser( req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
             const { _id } = req.client
-            const { page = 1, limit = 10 } = req.query;
+            const skip = parseInt(req.query.skip as string) || 0
+            const limit = parseInt(req.query.limit as string) || 5
 
-            const pageNumber = parseInt(page as string) || 1;
-            const limitNumber = parseInt(limit as string) || 10;
-            const skip = (pageNumber - 1) * limitNumber;
-    
-            const feedbackData = await this.feedbackService.getFeedbackByUser( _id, skip, limitNumber);
-            res.status(201).json({feedbackData})
+            const feedbackData = await this.feedbackService.getFeedbackByUser( _id, skip, limit);
+            res.status(201).json(feedbackData)
         } catch (error: any) {
             console.error(error)
             next(error)
@@ -43,13 +41,11 @@ export class FeedbackController {
     async getFeedbackForDoctor( req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
             const { _id } = req.client
-            const { page = 1, limit = 10 } = req.query;
-            const pageNumber = parseInt(page as string) || 1;
-            const limitNumber = parseInt(limit as string) || 10;
-            const skip = (pageNumber - 1) * limitNumber;
+            const skip = parseInt(req.query.skip as string) || 0
+            const limit = parseInt(req.query.limit as string) || 5
     
-            const feedbackData = await this.feedbackService.getFeedbackForDoctor( _id, skip, limitNumber);
-            res.status(201).json({feedbackData})
+            const feedbackData = await this.feedbackService.getFeedbackForDoctor( _id, skip, limit);
+            res.status(201).json(feedbackData)
         } catch (error: any) {
             console.error(error)
             next(error)

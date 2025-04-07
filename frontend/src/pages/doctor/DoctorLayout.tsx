@@ -20,7 +20,7 @@ function DoctorLayout() {
                     <div className='bg-gray-300 h-full w-80 rounded-full'></div>
                     <div className='flex justify-center items-center gap-3'>
                         <div className='px-3 py-1    text-blue-300 border-2 border-blue-300 rounded-full font-semibold transition-all active:scale-95 cursor-pointer'
-                        onClick={() => setEditProfile('editSlot')}>+ Add Slot</div>
+                        onClick={() => setEditProfile('editSlot')}>add slot</div>
                         <div className='bg-gray-300 h-full aspect-square rounded-full overflow-hidden'>
                             <img src={img} alt="" />
                         </div>

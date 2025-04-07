@@ -6,7 +6,7 @@ import { authorizedUserResponse } from "../implementations/authServices";
 export interface IAdminServices {
     signIn(email: string, password: string, role: string): Promise<authorizedUserResponse> 
     getDoctorDetails(_id: string): Promise<IDoctor>
-    getApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], hasMore: boolean}> 
+    getApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], total: number}> 
     getDoctorApprovalRequests(skip: number, limit: number): Promise<{ data: IDoctor[], hasMore: boolean}> 
     getDoctorAppointmentDetails(_id: string): Promise<ISlot[]> 
     approveDoctor (_id: string): Promise<void> 

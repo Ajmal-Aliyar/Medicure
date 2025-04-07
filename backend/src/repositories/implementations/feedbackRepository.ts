@@ -8,11 +8,13 @@ export class FeedbackRepository implements IFeedbackRepository {
         return feedback.save();
     }
 
-    async getFeedbackByUser(patientId: string, page: number = 1, limit: number = 10): Promise<IFeedbackDocument[]> {
-        const skip = (page - 1) * limit;
+    async getFeedbackByUser(patientId: string, skip: number, limit: number): Promise<{ feedbacks: IFeedbackDocument[], total: number }> {
     
-        return await FeedbackModel.aggregate([
+        const feedbacks =  await FeedbackModel.aggregate([
             { $match: { patientId } }, 
+            { $sort: { createdAt: -1 }},
+            { $skip: skip }, 
+            { $limit: limit },
             {
                 $lookup: {
                     from: "doctors",
@@ -36,19 +38,24 @@ export class FeedbackRepository implements IFeedbackRepository {
                     doctorId: 1,
                     "details.fullName": 1,
                     "details.specialization": 1,
-                    "details.profileImage": 1
+                    "details.profileImage": 1,
+                    createdAt: 1
                 }
             },
-            { $skip: skip }, 
-            { $limit: limit }
         ]);
+
+        const total = await FeedbackModel.countDocuments({ patientId })
+
+        return { feedbacks, total}
     }
 
-    async getFeedbackForDoctor(doctorId: string, page: number = 1, limit: number = 10): Promise<IFeedbackDocument[]> {
-        const skip = (page - 1) * limit;
+    async getFeedbackForDoctor(doctorId: string, skip: number, limit: number ): Promise<{ feedbacks: IFeedbackDocument[], total: number }> {
     
-        return await FeedbackModel.aggregate([
+        const feedbacks = await FeedbackModel.aggregate([
             { $match: { doctorId } }, 
+            { $sort: { createdAt: -1 } },
+            { $skip: skip }, 
+            { $limit: limit },
             {
                 $lookup: {
                     from: "patients",
@@ -71,12 +78,16 @@ export class FeedbackRepository implements IFeedbackRepository {
                     comments: 1,
                     doctorId: 1,
                     "details.fullName": 1,
-                    "details.profileImage": 1
+                    "details.profileImage": 1,
+                    createdAt: 1
                 }
             },
-            { $skip: skip }, 
-            { $limit: limit }
         ]);
+
+        const total = await FeedbackModel.countDocuments({ doctorId })
+
+        return { feedbacks, total }
+
     }
 
 }

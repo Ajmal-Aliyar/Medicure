@@ -72,7 +72,7 @@ export class AdminServices implements IAdminServices {
     }
 
 
-    async getApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], hasMore: boolean }> {
+    async getApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], total: number }> {
         try {
 
             const approvedDoctors = await this.doctorRepository.fetchAllApprovedDoctors(skip, limit, searchQuery);

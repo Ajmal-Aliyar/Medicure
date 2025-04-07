@@ -76,7 +76,7 @@ function Profile() {
 
             {editProfile === 'editSlot' && (
                 <ModalAnimation onClose={setEditProfile}>
-                    <AppointmentSetUp handleModal={setEditProfile} setLoading={setLoading} />
+                    <AppointmentSetUp handleModal={setEditProfile}  />
                 </ModalAnimation>
             )}
             <ProfileAnimation />

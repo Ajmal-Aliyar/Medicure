@@ -3,6 +3,6 @@ import { ICreateFeedbackInput } from "../../repositories/interfaces/IFeedbackRep
 
 export interface IFeedbackService {
     createFeedback(feedbackData: ICreateFeedbackInput): Promise<string>;
-    getFeedbackByUser( _id: string, skip: number, limitNumber: number ): Promise<IFeedbackDocument[]>
-    getFeedbackForDoctor( _id: string, skip: number, limitNumber: number ): Promise<IFeedbackDocument[]>
+    getFeedbackByUser( _id: string, skip: number, limit: number ): Promise<{ feedbacks: IFeedbackDocument[], total: number }>
+    getFeedbackForDoctor( _id: string, skip: number, limit: number ): Promise<{ feedbacks: IFeedbackDocument[], total: number }>
 }

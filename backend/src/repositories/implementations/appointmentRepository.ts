@@ -10,6 +10,7 @@ export class AppointmentRepository implements IAppointmentRepository {
   }
 
   async getUserAppointments(patientId: string, page: string, skip: number, limit: number): Promise<{ appointments: IAppointmentDocument[], total: number }> {
+    
     const status = page === 'pending' ? 'Scheduled' : 'Completed'
     const appointments = await AppointmentModel.aggregate([
       { $match: { patientId, status } },
@@ -40,8 +41,24 @@ export class AppointmentRepository implements IAppointmentRepository {
         }
       },
 
+      {
+        $addFields: {
+          appointmentIdStr: { $toString: "$_id" }
+        }
+      },
+      {
+        $lookup: {
+          from: "feedbacks",
+          localField: "appointmentIdStr",
+          foreignField: "appointmentId",
+          as: "feedbackDetails"
+        }
+      },
+
       { $unwind: { path: "$doctorDetails", preserveNullAndEmptyArrays: true } },
       { $unwind: { path: "$slotDetails", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$feedbackDetails", preserveNullAndEmptyArrays: true } },
+      { $project: { "appointmentIdStr": 0}},
 
       { $skip: skip },
     { $limit: limit }

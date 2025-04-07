@@ -42,7 +42,7 @@ export class DoctorRepository implements IDoctorRepository {
         console.log(result, 'res')
     }
 
-    async fetchAllApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], hasMore: boolean }> {
+    async fetchAllApprovedDoctors(skip: number, limit: number, searchQuery: string): Promise<{ data: IDoctor[], total: number }> {
         try {
             const query: any = { isApproved: true };
 
@@ -59,9 +59,9 @@ export class DoctorRepository implements IDoctorRepository {
                 .select('rating profileImage fullName specialization reviewCount')
                 .lean();
 
-            const hasMore = doctors.length === limit;
+            const total = await DoctorModel.countDocuments(query)
 
-            return { data: doctors, hasMore };
+            return { data: doctors, total };
         } catch (error) {
             console.error("Error fetching doctors:", error);
             throw new Error("Unable to fetch doctors");

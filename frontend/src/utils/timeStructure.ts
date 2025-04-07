@@ -22,3 +22,17 @@ export const convertTimestampToDate = (timeStamp: string) => {
         day: 'numeric'
     });
 }
+
+export const convertToDateAndTime = (isoString: string) => {
+    const date = new Date(isoString);
+  
+    return date.toLocaleString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      });
+  };
+  

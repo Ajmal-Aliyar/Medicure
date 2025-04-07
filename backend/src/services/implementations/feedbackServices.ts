@@ -14,19 +14,19 @@ export class FeedbackService implements IFeedbackService {
         this.doctorRepository = doctorRepository;
     }
 
-    async createFeedback({ doctorId, patientId, rating, comments }: ICreateFeedbackInput): Promise<string> {
+    async createFeedback({ doctorId, appointmentId, patientId, rating, comments }: ICreateFeedbackInput): Promise<string> {
         try {
             const doctorData = await this.doctorRepository.findByID(doctorId);
             if (!doctorData) throw new Error("Doctor does not exist.");
     
-            const feedback = await this.feedbackRepository.createFeedback({ doctorId, patientId, rating, comments });
+            const feedback = await this.feedbackRepository.createFeedback({ doctorId, appointmentId, patientId, rating, comments });
             if (!feedback) throw new Error("Failed to create feedback.");
 
             const totalRating = (doctorData.rating * doctorData.reviewCount) + (rating * 20);
             const newReviewCount = doctorData.reviewCount + 1;
             const updatedRating = Math.round((totalRating / (newReviewCount * 100)) * 100);
 
-            const result = await this.doctorRepository.updateReview(doctorId, updatedRating, newReviewCount);
+            const result = await this.doctorRepository.updateReview( doctorId, updatedRating, newReviewCount);
             if (!result || result.modifiedCount <= 0) {
                 throw new Error("Failed to update doctor rating.");
             }
@@ -37,17 +37,17 @@ export class FeedbackService implements IFeedbackService {
         }
     }
     
-    async getFeedbackByUser( _id: string, skip: number, limitNumber: number ): Promise<IFeedbackDocument[]> {
+    async getFeedbackByUser( _id: string, skip: number, limit: number ): Promise<{ feedbacks: IFeedbackDocument[], total: number }> {
         try {
-            return await this.feedbackRepository.getFeedbackByUser(_id)
+            return await this.feedbackRepository.getFeedbackByUser(_id, skip, limit)
         } catch (error: any) {
             throw error
         }
     }
 
-    async getFeedbackForDoctor( _id: string, skip: number, limitNumber: number ): Promise<IFeedbackDocument[]> {
+    async getFeedbackForDoctor( _id: string, skip: number, limit: number ): Promise<{ feedbacks: IFeedbackDocument[], total: number }> {
         try {
-            return await this.feedbackRepository.getFeedbackForDoctor(_id)
+            return await this.feedbackRepository.getFeedbackForDoctor(_id, skip, limit)
         } catch (error: any) {
             throw error
         }

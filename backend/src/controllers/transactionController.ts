@@ -16,18 +16,21 @@ export class TransactionController {
     async getTransactionById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { _id, role } = req.client 
+            const skip = parseInt(req.query.skip as string) || 0;
+            const limit = parseInt(req.query.limit as string) || 5;
+            
     
             if (!_id) {
                 throw new Error("Invalid client data")
             }
     
-            const transactions = await this.transactionServices.getTransactionsByUserId(_id,role);
+            const response = await this.transactionServices.getTransactionsByUserId( _id, role, skip, limit);
     
-            if (!transactions) {
+            if (!response) {
                 throw new Error( "Transactions not found")
             }
 
-            res.status(200).json({ transactions });
+            res.status(200).json(response);
         } catch (error) {
             console.error(error)
             next(error);

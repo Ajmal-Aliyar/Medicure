@@ -3,12 +3,12 @@ import { IDoctorType } from "../../types/doctor/doctorType";
 import { IFetchAllApprovedDoctors, ISlotDetails } from "../../types/doctor/verifyDetailsType"
 import { api } from "../../utils/axiosInstance"
 
-export const fetchAllApprovedDoctorsApi = async (skip: number, limit: number, searchQuery: string): Promise<{data: IFetchAllApprovedDoctors[],hasMore:boolean}> => {
-    const response = await api.get<{data: IFetchAllApprovedDoctors[],hasMore:boolean}>(`/api/admin/getApprovedDoctors?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`);
+export const fetchAllApprovedDoctorsApi = async (skip: number, limit: number, searchQuery: string): Promise<{data: IFetchAllApprovedDoctors[], total: number}> => {
+    const response = await api.get<{data: IFetchAllApprovedDoctors[], total: number}>(`/api/admin/getApprovedDoctors?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`);
     if (!response.data.data || response.data.data.length === 0) {
-        return { data: [] , hasMore: false}; 
+        return { data: [] , total: 0}; 
     }
-    return { data: response.data.data, hasMore: response.data.hasMore };
+    return { data: response.data.data, total: response.data.total };
 }
 
 export const fetchAllRequestedDoctorsApi = async (skip: number, limit: number): Promise<{data: IFetchAllApprovedDoctors[],hasMore:boolean}> => {

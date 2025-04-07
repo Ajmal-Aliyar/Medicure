@@ -11,9 +11,11 @@ export interface TransactionDetails {
   }
 
 
-export const fetchTransactionHistoryApi = async ( ): Promise<{transactions: TransactionDetails[]}> => {  
-      const response = await api.get<{transactions: TransactionDetails[]}>(
-        `/api/transaction/get-transaction`
+export const fetchTransactionHistoryApi = async ( skip: number, limit: number ): Promise<{ transactions: TransactionDetails[], total: number}> => {  
+      const response = await api.get<{transactions: TransactionDetails[], total: number}>(
+        `/api/transaction/get-transaction`, {
+          params: { skip, limit }
+        }
       );
       return response.data;
   };

@@ -11,6 +11,10 @@ export const FeedbackSchema = new Schema<IFeedback>({
         type: String,
         required: true
     },
+    appointmentId: {
+        type: String,
+        required: true
+    },
     rating: {
         type: Number,
         required: true
@@ -18,7 +22,8 @@ export const FeedbackSchema = new Schema<IFeedback>({
     comments: {
         type: String,
         required: true
-    }
+    },
+    createdAt: { type: Date, default: Date.now },
 })
 
 export type IFeedbackDocument = InferSchemaType<typeof FeedbackSchema>;

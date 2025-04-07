@@ -1,3 +1,5 @@
+import { IFetchFeedbacks } from "../feedback/feedback";
+
 export interface IFetchAppointmentResponse {
     _id: string;
     doctorId: string;
@@ -10,6 +12,7 @@ export interface IFetchAppointmentResponse {
     createdAt: string
     doctorDetails: IDoctorDetails
     slotDetails: ISlotDetails
+    feedbackDetails: IFetchFeedbacks
 }
 
 export interface IFetchAllAppointmentResponse {

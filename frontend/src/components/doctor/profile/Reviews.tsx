@@ -1,38 +1,39 @@
 import { useDispatch } from "react-redux";
 import { setError, setLoading } from "../../../store/slices/commonSlices/notificationSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IFetchFeedbacks } from "../../../types/feedback/feedback";
 import { fetchFeedbacksApi } from "../../../sevices/feedback/feedback";
-import { StarIcon } from "lucide-react";
+
+import StarRating from "../../patient/common/StarRating";
+import { convertToDateAndTime } from "../../../utils/timeStructure";
+import { History } from "lucide-react";
 
 function Reviews() {
-  const [feedback, setFeedback] = useState<IFetchFeedbacks[]>([]);
-  const [page, setPage] = useState(1);
-  const [limit] = useState(5);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoadingState] = useState(false);
-  const dispatch = useDispatch();
-
-  const loadFeedbacks = async () => {
-    if (!hasMore || loading) return;
-
-    setLoadingState(true);
-    dispatch(setLoading(true));
-
-    try {
-      const response = await fetchFeedbacksApi("doctor", page, limit);
-      if (response && response.feedbackData) {
-        setFeedback((prev) => [...prev, ...response.feedbackData]);
-        if (response.feedbackData.length < limit) setHasMore(false);
-        setPage((prev) => prev + 1);
+  const [feedback, setFeedback] = useState<IFetchFeedbacks[]>([])
+    const [showMore, setShowMore] = useState<number>(0)
+    const [total, setTotal] = useState<number>(0)
+    const dispatch = useDispatch()
+  
+    useEffect(() => {
+      fetchFeedbacks()
+    }, [showMore])
+  
+    const fetchFeedbacks = async () => {
+      try {
+        dispatch(setLoading(true));
+        const { feedbacks, total } = await fetchFeedbacksApi('doctor', showMore,  3)
+  
+        console.log(feedbacks, total);
+        
+        setFeedback((prevFeedback) => [...prevFeedback, ...feedbacks])
+        setTotal(total)
+      } catch (error) {
+        dispatch(setError("Failed to load transactions."));
+      } finally {
+        dispatch(setLoading(false));
       }
-    } catch (error) {
-      dispatch(setError("Failed to load reviews"));
-    } finally {
-      dispatch(setLoading(false));
-      setLoadingState(false);
+  
     }
-  };
 
   return (
     <div className="firstCard col-span-12 bg-white p-4 rounded-lg shadow-lg ">
@@ -47,37 +48,30 @@ function Reviews() {
         {
           <div className="space-y-4">
             {feedback.map((review) => (
-              <div key={review._id} className="p-4 border rounded-lg shadow-sm hover:shadow-md transition">
-                <div className="flex items-center gap-2 mb-2">
-                  <img
-                    src={review.details.profileImage}
-                    alt="User Avatar"
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div>
-                    <p className="font-medium text-gray-800">{review.details.fullName}</p>
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <StarIcon key={i} className={`w-4 h-4 ${i < (review.rating || 4) ? "text-yellow-500" : "text-gray-300"}`} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-700">{review.comments}</p>
-              </div>
-            ))}
+          <div key={review._id} className="max-w-[600px] mb-2 shadow-sm outline outline-gray-300 p-2 rounded-md flex gap-2 ">
+            <img src={review.details.profileImage} className='w-20 h-20 rounded-md' alt="" />
+            <div className='flex flex-col leading-4 '>
+              <p className='font-semibold text-lg text-[#2f3c62d8] '>{review.details.fullName}</p>
+              <p className='text-xs font-normal text-[#51aff6]'>{review.details.specialization}</p>
+              <StarRating rating={review.rating} />
+              <p className='text-[10px] font-medium text-gray-400 mt-2'>{convertToDateAndTime(review.createdAt)}</p>
+              <p className='text-sm text-gray-400'>{review.comments}</p>
+            </div>
+          </div>
+        ))}
+        {feedback.length === 0 && <p className="text-sm text-gray-400">No pending reviews!</p>}
+
           </div>
          }
       </div>
 
-      {hasMore && (
-        <p
-          className="text-end underline text-sm text-gray-500 mt-2 cursor-pointer"
-          onClick={loadFeedbacks}
-        >
-          {loading ? "Loading..." : "Show more"}
-        </p>
-      )}
+      { total > showMore + 3 &&  (
+                <div className="mt-4 text-center">
+                    <button onClick={() => setShowMore(p => p + 3)} className="text-blue-400 hover:underline flex items-center gap-1">
+                        <History size={16} /> Show More
+                    </button>
+                </div>
+            )}
     </div>
   );
 }

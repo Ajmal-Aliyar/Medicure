@@ -7,11 +7,15 @@ import { createFeedbackApi } from '../../../../sevices/feedback/feedback';
 import { RootState } from '../../../../store/store';
 
 interface FeedbackModalProps {
-    _id: string;
-    setFeedback: (feedback:string) => void
+    feedback: { appointmentId: string, doctorId: string, open: boolean };
+    setFeedback: React.Dispatch<React.SetStateAction<{
+      appointmentId: string;
+      doctorId: string;
+      open: boolean;
+  }>>
 }
 
-const FeedbackModal: React.FC <FeedbackModalProps> = ({_id, setFeedback}) => {
+const FeedbackModal: React.FC <FeedbackModalProps> = ({ feedback, setFeedback}) => {
     const [rating, setRating] = useState<number>(1)
     const [feedbackText, setFeedbackText] = useState("");
     const [isEditing, setIsEditing] = useState(false);
@@ -20,20 +24,20 @@ const FeedbackModal: React.FC <FeedbackModalProps> = ({_id, setFeedback}) => {
 
     const handleFeedbackSubmit = async () => {
       try {
-        const message = await createFeedbackApi(_id, clientId, rating, feedbackText)
+        const message = await createFeedbackApi( feedback.doctorId, feedback.appointmentId, clientId, rating, feedbackText)
         dispatch(setSuccess(message.response))
-        setFeedback('')
+        setFeedback({appointmentId: '', doctorId: '', open: false})
       } catch (error: any) {
         dispatch(setError(error))
       }
     }
 
   return (
-    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-30">
+    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/20">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 flex flex-col gap-4">
-        <div className="flex justify-between border-b pb-2">
+        <div className="flex justify-between pb-2">
           <p className="text-lg font-semibold text-[#2f3c62d8]">Give Feedback</p>
-          <button onClick={() => setFeedback("")}> <X className="text-gray-500 hover:text-gray-700" /> </button>
+          <button onClick={() => setFeedback({appointmentId: '', doctorId: '', open: false})}> <X className="text-gray-500 hover:text-gray-700" /> </button>
         </div>
         
         <div className="flex flex-col items-center gap-4">
