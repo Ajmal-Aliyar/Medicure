@@ -10,7 +10,7 @@ import {
 import { IChat } from "../../models/chat/chatInterface";
 import { IPatientRepository } from "../../repositories/interfaces/IPatientRepository";
 import { IDoctorRepository } from "../../repositories/interfaces/IDoctorRepostory";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 export class ChatServices implements IChatServices {
   private chatRepository: IChatRepository;
@@ -63,7 +63,21 @@ export class ChatServices implements IChatServices {
   async getUserChats({
     userId,
     role,
-  }: IGetUserChats): Promise<(IChat)[]> {
+  }: IGetUserChats): Promise<
+    (
+      | {
+          unreadMessages: { [k: string]: number };
+          participants: ObjectId[];
+          isGroup: boolean;
+          groupName: string;
+          groupIcon: string;
+          createdAt: NativeDate;
+          lastMessage: ObjectId;
+          _id: ObjectId;
+        }
+      | {}
+    )[]
+  > {
     try {
       const chats = await this.chatRepository.getChatByUserId(userId);
       const client =
