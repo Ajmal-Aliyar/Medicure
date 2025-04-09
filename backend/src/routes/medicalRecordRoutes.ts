@@ -4,13 +4,19 @@ import { MedicalRecordServices } from "../services/implementations/medicalRecord
 import { MedicalRecordController } from "../controllers/medicalRecordControllers";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
 
-const router = Router()
+const router = Router();
 
 const medicalRecordRepository = new MedicalRecordRepository();
 const medicalRecordService = new MedicalRecordServices(medicalRecordRepository);
-const medicalRecordController = new MedicalRecordController(medicalRecordService);
+const medicalRecordController = new MedicalRecordController(
+  medicalRecordService
+);
 
-router.get("/prescription", tokenMiddleware, medicalRecordController.getUserRecordById)
+router.get(
+  "/prescription",
+  tokenMiddleware,
+  medicalRecordController.getUserRecordById
+);
 router.get("/:id", tokenMiddleware, medicalRecordController.getRecordById);
 router.get("/", tokenMiddleware, medicalRecordController.getAllRecords);
 router.put("/:id", tokenMiddleware, medicalRecordController.updateRecord);

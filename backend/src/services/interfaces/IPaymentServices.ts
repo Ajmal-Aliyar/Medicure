@@ -1,10 +1,10 @@
 import { ITransaction } from "../../models/transaction/transactionInterface"
 
 export interface IPaymentServices {
-    checkoutSession (data: ICheckoutSession): Promise<any>
-    webhookHandler(bodyData: any, sig: string): Promise<void>
-    processRefund(transactionId: string): Promise<any>
-    approveWithdrawal(transactionId: string): Promise<any>
+    checkoutSession (data: ICheckoutSession)
+    webhookHandler(bodyData: string, sig: string): Promise<void>
+    processRefund(transactionId: string)
+    approveWithdrawal(transactionId: string)
     createConnectedAccountAndPayout({
         email,
         accountHolderName,

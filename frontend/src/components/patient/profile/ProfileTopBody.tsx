@@ -43,7 +43,7 @@ const ProfileTopBody: React.FC = () => {
                 dispatch(setSuccess(response.data.message));
                 dispatch(setPatientProfileData({ profileImage: imageId }))
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error);
             const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again later.';
             dispatch(setError(errorMessage));

@@ -1,7 +1,10 @@
 import React from 'react';
 import { api } from '../../../../utils/axiosInstance';
+import { useDispatch } from 'react-redux';
+import { setError, setLoading, setSuccess } from '../../../../store/slices/commonSlices/notificationSlice';
 
 const UploadReport = () => {
+  const dispatch = useDispatch()
 
   const getFileType = (fileName: string): string => {
     const extension = fileName.split('.').pop()?.toLowerCase();
@@ -20,7 +23,8 @@ const UploadReport = () => {
   };
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handle submit')
+    try {
+      dispatch(setLoading(true))
     const file = e.target.files?.[0];
     if (!file) return alert('Please upload a valid file');
 
@@ -30,15 +34,16 @@ const UploadReport = () => {
     formData.append('file', file);
     formData.append('testType', testType);
 
-    console.log('Uploading:', { fileName: file.name, testType });
 
-    try {
+
       await api.post('/api/report/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      alert('Report uploaded successfully');
+      dispatch(setSuccess('Report uploaded successfully'))
     } catch (error) {
-      alert('Error uploading report');
+      dispatch(setError('Upload report failed'))
+    } finally {
+      dispatch(setLoading(false))
     }
   };
 

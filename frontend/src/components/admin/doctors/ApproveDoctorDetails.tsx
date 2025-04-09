@@ -27,7 +27,7 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
                     dispatch(setSuccess(response.message));
                     setOpenPage('AllDoctors')
                 }
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.log(error);
                 const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again later.';
                 dispatch(setError(errorMessage));
@@ -48,7 +48,7 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
                     dispatch(setSuccess(response.message));
                     setOpenPage('AllDoctors')
                 }
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.log(error);
                 const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again later.';
                 dispatch(setError(errorMessage));

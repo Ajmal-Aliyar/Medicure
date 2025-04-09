@@ -5,7 +5,7 @@ export interface IChatRepository {
     createChat(participants: mongoose.Types.ObjectId[], isGroup?: boolean, groupName?: string | null, groupIcon?: string | null): Promise<IChat>;
     getChatById(chatId: mongoose.Types.ObjectId): Promise<IChat | null>;
     getChatByUserId(userId: mongoose.Types.ObjectId): Promise<IChat[] | null>
-    getUserChats(userId: mongoose.Types.ObjectId, role: string): Promise<IChat[]>;
+    getUserChats(userId: mongoose.Types.ObjectId, role: string): Promise<{ participants: { fullName: string, profileImage: string}[]}[]>
     updateLastMessage(chatId: mongoose.Types.ObjectId, messageId: mongoose.Types.ObjectId): Promise<IChat | null>;
     deleteChat(chatId: mongoose.Types.ObjectId): Promise<void>;
     isChatExists({ patientId, doctorId }: IIsChatExists): Promise<boolean>

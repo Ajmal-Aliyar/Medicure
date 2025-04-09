@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config(); // Load environment variables
+dotenv.config(); 
 
 import mongoose from 'mongoose';
 

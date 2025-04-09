@@ -16,7 +16,7 @@ export const fetchSlotDetails = async (): Promise<ISlotSlice> => {
 
 const handleApiError = (error: unknown) => {
     if (error instanceof Error) {
-        console.error('API Error:', error.message);
+        console.error('API Error:', error);
     } else if (error instanceof Response) {
         console.error('API Response Error:', error.statusText);
     } else {

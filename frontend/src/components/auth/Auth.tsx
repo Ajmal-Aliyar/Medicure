@@ -46,10 +46,10 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                     } else {
                         navigate('/')
                     }
-                } catch (error: any) {
+                } catch (error: unknown) {
                     setLoading(false);
                     setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                    console.error('Signup error:', error.response?.data || error.message);
+                    console.error('Signup error:', error.response?.data || error);
                 }
             } else {
                 handleErrorMessage('email', email);
@@ -64,10 +64,10 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                     setLoading(false);
                     dispatch(setData({ email, role }))
                     handleAuth(false);
-                } catch (error: any) {
+                } catch (error: unknown) {
                     setLoading(false);
                     setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                    console.error('Signup error:', error.response?.data || error.message);
+                    console.error('Signup error:', error.response?.data || error);
                 }
             } else {
                 handleErrorMessage('name', name);
@@ -127,10 +127,10 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                 console.log('Signup successful:', response.data);
                 handleForgotPassword(true)
                 dispatch(setData({ email, role }))
-            } catch (error: any) {
+            } catch (error: unknown) {
                 setLoading(false);
                 setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                console.error('Signup error:', error.response?.data || error.message);
+                console.error('Signup error:', error.response?.data || error);
             }
         } else {
             handleErrorMessage('email', email);

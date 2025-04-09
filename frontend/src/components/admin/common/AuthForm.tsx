@@ -54,10 +54,10 @@ const AuthForm:React.FC<IAuthForm> = ({ role }: { role: string }) => {
                 dispatch(setData({ _id: response.data._id, email, role }))
                 setLoading(false);
                 navigate('/admin/dashboard')
-            } catch (error: any) {
+            } catch (error: unknown) {
                 setLoading(false);
                 dispatch(setError(error?.response?.data?.error || 'Something went wrong! Please try again later.'))
-                console.error('Signup error:', error.response?.data || error.message);
+                console.error('Signup error:', error.response?.data || error);
             }
         } else {
             handleErrorMessage('email', email);

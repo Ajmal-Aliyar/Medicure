@@ -18,8 +18,8 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ mount }) => {
         const { specializations } = await fetchAllSpecializationApi()
         console.log(specializations)
         setSpecializations(specializations)
-      } catch (error: any) {
-        dispatch(setError(error.message));
+      } catch (error: unknown) {
+        dispatch(setError(error));
       } finally {
         dispatch(setLoading(false))
       }

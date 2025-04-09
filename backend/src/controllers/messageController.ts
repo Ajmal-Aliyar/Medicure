@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction  } from "express";
 import { producer } from "../utils/kafkaUtil";
 import { IMessageServices } from "../services/interfaces/IMessageServices";
 import mongoose from "mongoose";
@@ -16,28 +16,27 @@ export class MessageController {
         this.markMessageAsSeen = this.markMessageAsSeen.bind(this)
     }
 
-    async createMessage(req: Request, res: Response): Promise<void> {
+    async createMessage(req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
             const {_id} = req.client
             await this.messageServices.createMessage(req.body, _id)
             res.send("Message sent!");
-        } catch (error) {
-            console.error(error)
-            throw error
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async getMessagesByChatId(req: Request, res: Response): Promise<void> {
+    async getMessagesByChatId(req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
             const { chatId } = req.params;
             const messages = await this.messageServices.getMessagesByChatId({ chatId: new mongoose.Types.ObjectId(chatId) });
             res.status(200).json(messages);
         } catch (error) {
-            throw error
+            next(error)
         }
     }
 
-    async updateMessage(req: Request, res: Response): Promise<void> {
+    async updateMessage(req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
             const { messageId } = req.params;
             const updatedMessage = await this.messageServices.updateMessage({messageId, data: req.body});
@@ -46,22 +45,22 @@ export class MessageController {
                 return;
             }
             res.status(200).json(updatedMessage);
-        } catch (error) {
-            throw error
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async deleteMessage(req: Request, res: Response): Promise<void> {
+    async deleteMessage(req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
             const { messageId } = req.params;
             await this.messageServices.deleteMessage({ messageId });
             res.status(200).json({ message: "Message deleted successfully" });
-        } catch (error) {
-            throw error
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async markMessageAsSeen(req: Request, res: Response): Promise<void> {
+    async markMessageAsSeen(req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
             const { messageId } = req.params;
             const { userId } = req.body;
@@ -71,8 +70,8 @@ export class MessageController {
                 return;
             }
             res.status(200).json(updatedMessage);
-        } catch (error) {
-            throw error;
+        } catch (error: unknown) {
+            next(error)
         }
     }
 }

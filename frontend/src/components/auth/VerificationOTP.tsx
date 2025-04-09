@@ -58,10 +58,10 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
     setIsResendDisabled(true);
     try {
       await sendOTPApi(email)
-    } catch(error: any) {
+    } catch(error: unknown) {
       setIsResendDisabled(false)
       setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-      console.error('Login error:', error.response?.data || error.message);
+      console.error('Login error:', error.response?.data || error);
     }
   };
 
@@ -104,7 +104,7 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
       } catch(error: any ) {
         setLoading(false);
         setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-        console.error('OTP verification error:', error.response?.data || error.message);
+        console.error('OTP verification error:', error.response?.data || error);
       }
     } else {
       try {
@@ -112,10 +112,10 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
         setLoading(false);
           console.log('Login successful:', response.data);
           setMessage('Thank you for registering! Your account has been created successfully.')
-      } catch(error: any) {
+      } catch(error: unknown) {
         setLoading(false);
           setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-          console.error('Login error:', error.response?.data || error.message);
+          console.error('Login error:', error.response?.data || error);
       }
     }
   }

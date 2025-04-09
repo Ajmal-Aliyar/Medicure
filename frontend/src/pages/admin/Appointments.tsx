@@ -65,8 +65,8 @@ const Appointments = () => {
             await refundApi(transactionId);
             window.location.reload()
             setSuccess('Refunded successfully.')
-        } catch (error: any) {
-            dispatch(setError(error.message));
+        } catch (error: unknown) {
+            dispatch(setError(error));
         }
     };
 

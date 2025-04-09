@@ -34,7 +34,7 @@ const SelectedDoctorDetails: React.FC = () => {
                     dispatch(setSuccess(response.message));
                     window.location.reload()
                 }
-            } catch (error: any) {
+            } catch (error: unknown) {
                 console.error("Error in handleAction:", error);
                 const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again later.';
                 dispatch(setError(errorMessage));

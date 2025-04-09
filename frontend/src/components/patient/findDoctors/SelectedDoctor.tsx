@@ -49,7 +49,7 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
             }
         } catch (error) {
             if (error instanceof Error) {
-                dispatch(setError(error.message));
+                dispatch(setError(error));
             } else {
                 dispatch(setError('An unknown error occurred'));
             }
@@ -84,8 +84,8 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
             } else {
                 dispatch(setError('You need to log in to book an appointment.'));
             }
-        } catch (error: any) {
-            dispatch(setError(error.message));
+        } catch (error: unknown) {
+            dispatch(setError(error));
         } finally {
             dispatch(setLoading(false));
         }

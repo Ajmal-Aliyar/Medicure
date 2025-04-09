@@ -1,35 +1,37 @@
-export const deleteCloudinaryImages = async (publicIds: string[]): Promise<void> => {
-    const cloudName = process.env.CLOUDINARY_API_NAME;
-    const apiKey = process.env.CLOUDINARY_API_KEY;
-    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+export const deleteCloudinaryImages = async (
+  publicIds: string[]
+): Promise<void> => {
+  const cloudName = process.env.CLOUDINARY_API_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-    const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image/upload`;
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image/upload`;
 
-    const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-            "Authorization": "Basic " + btoa(`${apiKey}:${apiSecret}`),
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ public_ids: publicIds })  
-    });
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Basic " + btoa(`${apiKey}:${apiSecret}`),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ public_ids: publicIds }),
+  });
 
-    const result = await response.json();
+  const result = await response.json();
 
-    if (!response.ok) {
-        throw new Error(`Failed to delete image: ${result.error?.message}`);
-    }
+  if (!response.ok) {
+    throw new Error(`Failed to delete image: ${result.error?.message}`);
+  }
 
-    console.log("Deletion Result:", result);
-}
+  console.log("Deletion Result:", result);
+};
 
 export const extractPublicId = (url: string): string => {
-    try {
-        const urlParts = url.split('/');
-        const filename = urlParts[urlParts.length - 1];
-        const publicId = filename.split('.')[0];
-        return publicId;
-    } catch (error) {
-        throw new Error('Invalid Cloudinary URL provided.');
-    }
-}
+  try {
+    const urlParts = url.split("/");
+    const filename = urlParts[urlParts.length - 1];
+    const publicId = filename.split(".")[0];
+    return publicId;
+  } catch (error) {
+    throw new Error("Invalid Cloudinary URL provided.");
+  }
+};

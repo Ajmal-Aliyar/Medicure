@@ -19,8 +19,8 @@ function PatientsList() {
                 const response = await fetchAllPatientsApi(skip, limit);
                 setPatients(response.data);
                 setTotalPatients(response.total);
-            } catch (error: any) {
-                dispatch(setError(error.message));
+            } catch (error: unknown) {
+                dispatch(setError(error));
             }
         };
 
@@ -37,7 +37,7 @@ function PatientsList() {
                     dispatch(setSuccess(response.message));
                     window.location.reload();
                 }
-            } catch (error: any) {
+            } catch (error: unknown) {
                 const errorMessage = error.response?.data?.message || "Something went wrong. Please try again later.";
                 dispatch(setError(errorMessage));
             } finally {

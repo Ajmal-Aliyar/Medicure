@@ -30,8 +30,8 @@ const TopSpecialists: React.FC = () => {
                 }
                 setTotalDoctors(response.total)
                 setDoctors(response.data);
-            } catch (error: any) {
-                dispatch(setError(error.message));
+            } catch (error: unknown) {
+                dispatch(setError(error));
             }
         };
         getDoctors();

@@ -20,7 +20,7 @@ function ProfileCard() {
             } catch (error: unknown) {
                 let message = 'Something went wrong'
                 if (error instanceof Error) {
-                    message = error.message
+                    message = error
                 }
                 dispatch(setError(message))
             }finally {

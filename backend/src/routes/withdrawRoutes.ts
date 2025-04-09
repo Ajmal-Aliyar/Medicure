@@ -7,19 +7,40 @@ import { isAdmin } from "../middleware/isAdmin";
 import { WalletRepository } from "../repositories/implementations/walletRepository";
 import { TransactionRepository } from "../repositories/implementations/transactionRepository";
 
-const router = Router()
+const router = Router();
 
-const withdrawRepository = new WithdrawRepository()
-const walletRepository = new WalletRepository()
-const transactionRepository = new TransactionRepository()
-const withdrawService = new WithdrawService( withdrawRepository, walletRepository, transactionRepository )
-const withdrawController = new WithdrawController( withdrawService )
+const withdrawRepository = new WithdrawRepository();
+const walletRepository = new WalletRepository();
+const transactionRepository = new TransactionRepository();
+const withdrawService = new WithdrawService(
+  withdrawRepository,
+  walletRepository,
+  transactionRepository
+);
+const withdrawController = new WithdrawController(withdrawService);
 
+router.post("/", tokenMiddleware, withdrawController.createWithdrawRequest);
+router.get(
+  "/",
+  tokenMiddleware,
+  isAdmin,
+  withdrawController.getWithdrawRequests
+);
+router.get(
+  "/user",
+  tokenMiddleware,
+  withdrawController.getWithdrawRequestsByUser
+);
+router.patch(
+  "/approve",
+  tokenMiddleware,
+  isAdmin,
+  withdrawController.approveWithdrawRequest
+);
+router.patch(
+  "/cancel",
+  tokenMiddleware,
+  withdrawController.cancelWithdrawRequest
+);
 
-router.post('/', tokenMiddleware, withdrawController.createWithdrawRequest)
-router.get('/', tokenMiddleware, isAdmin, withdrawController.getWithdrawRequests)
-router.get('/user', tokenMiddleware, withdrawController.getWithdrawRequestsByUser)
-router.patch('/approve', tokenMiddleware, isAdmin, withdrawController.approveWithdrawRequest)
-router.patch('/cancel', tokenMiddleware, withdrawController.cancelWithdrawRequest)
-
-export default router
+export default router;

@@ -27,7 +27,7 @@ const FeedbackModal: React.FC <FeedbackModalProps> = ({ feedback, setFeedback}) 
         const message = await createFeedbackApi( feedback.doctorId, feedback.appointmentId, clientId, rating, feedbackText)
         dispatch(setSuccess(message.response))
         setFeedback({appointmentId: '', doctorId: '', open: false})
-      } catch (error: any) {
+      } catch (error: unknown) {
         dispatch(setError(error))
       }
     }

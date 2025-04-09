@@ -27,8 +27,8 @@ const ApprovalCard: React.FC<ApprovalCardProps> = ({ setOpenPage }) => {
                 console.log(response)
                 setShowMore(response.hasMore)
                 setDoctors((prevDoctors) => [...prevDoctors, ...response.data]);
-            } catch (error: any) {
-                dispatch(setError(error.message));
+            } catch (error: unknown) {
+                dispatch(setError(error));
             }
         };
 

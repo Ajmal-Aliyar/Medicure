@@ -23,7 +23,7 @@ export const logOutUser = createAsyncThunk(
     try {
       await api.get('/api/auth/logout');
       return true; 
-    } catch (error: any) {
+    } catch (error: unknown) {
       return rejectWithValue(error?.message );
     }
   }

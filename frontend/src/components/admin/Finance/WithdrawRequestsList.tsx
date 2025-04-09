@@ -58,8 +58,8 @@ const WithdrawRequestsList: FC = () => {
       setStatus(status === 'cancel' ? 'rejected' : 'approved')
       dispatch(setSuccess(response.message))
 
-    } catch (error: any) {
-      dispatch(setError(error.message))
+    } catch (error: unknown) {
+      dispatch(setError(error))
     } finally {
       dispatch(setLoading(false))
     }

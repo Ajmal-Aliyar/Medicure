@@ -1,10 +1,11 @@
 import dotenv from 'dotenv'; 
 dotenv.config() 
 import AWS from 'aws-sdk';
+import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } from './env';
 
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  accessKeyId: AWS_ACCESS_KEY_ID!,
+  secretAccessKey: AWS_SECRET_ACCESS_KEY!,
   region: 'eu-north-1',
 });
 

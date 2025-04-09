@@ -57,8 +57,8 @@ function Profile() {
                     bloodGroup,
                     ...address, 
                 }))
-            } catch (error: any) {
-                dispatch(setError(error.message));
+            } catch (error: unknown) {
+                dispatch(setError(error));
                 navigate('/user');
             }
         };

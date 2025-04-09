@@ -27,8 +27,8 @@ const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
                 console.log(response)
                 setTotal(response.total)
                 setDoctors(response.data);
-            } catch (error: any) {
-                dispatch(setError(error.message));
+            } catch (error: unknown) {
+                dispatch(setError(error));
             }
         };
 

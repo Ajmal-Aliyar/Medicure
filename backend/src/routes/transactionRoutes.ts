@@ -5,14 +5,22 @@ import { TransactionServices } from "../services/implementations/transactionServ
 import { TransactionController } from "../controllers/transactionController";
 import { isAdmin } from "../middleware/isAdmin";
 
-const router = Router()
+const router = Router();
 
-const transactionRepository = new TransactionRepository()
-const transactionServices = new TransactionServices(transactionRepository)
-const transactionController = new TransactionController(transactionServices)
+const transactionRepository = new TransactionRepository();
+const transactionServices = new TransactionServices(transactionRepository);
+const transactionController = new TransactionController(transactionServices);
 
-router.get('/get-transaction', tokenMiddleware, transactionController.getTransactionById)
-router.get('/get-revenue', tokenMiddleware, isAdmin, transactionController.getTransactionDetails)
+router.get(
+  "/get-transaction",
+  tokenMiddleware,
+  transactionController.getTransactionById
+);
+router.get(
+  "/get-revenue",
+  tokenMiddleware,
+  isAdmin,
+  transactionController.getTransactionDetails
+);
 
-
-export default router
+export default router;

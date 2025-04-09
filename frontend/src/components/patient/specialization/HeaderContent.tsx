@@ -16,8 +16,8 @@ const HeaderContent: React.FC = () => {
           const data = await fetchSpecializationApi(specialization);
           setData(data.specialization)
         }
-      } catch (error: any) {
-        dispatch(setError(error.message || "An error occurred while fetching specialization."));
+      } catch (error: unknown) {
+        dispatch(setError(error || "An error occurred while fetching specialization."));
       }
     };
   
