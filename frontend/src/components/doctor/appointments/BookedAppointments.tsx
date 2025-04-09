@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { fetchBookedPatients, fetchBookedPatientsResponse } from '../../../sevices/appointments/fetchBookedPatients';
-import { ChevronLeft } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { setPatientId, setRecordId, setRoomId } from '../../../store/slices/commonSlices/videoConsultSlice';
 import { useNavigate } from 'react-router-dom';
-import { MedicalRecordProvider, useMedicalRecord } from '../../../context/MedicalReportProvider';
+import { MedicalRecordProvider } from '../../../context/MedicalReportProvider';
 import { MedicalRecordForm } from '../../../pages/doctor/MedicalReport';
 import { updateMedicalRecordApi } from '../../../sevices/medicalRecords/medicalRecord';
 import { setError } from '../../../store/slices/commonSlices/notificationSlice';
@@ -28,6 +27,8 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
         const { bookedPatientsData } = await fetchBookedPatients(selectedSlot)
         console.log(bookedPatientsData)
         setPatientDetails(bookedPatientsData)
+      } else {
+        setPatientDetails(null)
       }
     }
     fetchPatients()
@@ -45,7 +46,7 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
     navigate(`/consult/meeting/${roomId}?appointment=${appointmentId}&slot=${selectedSlot}`)
   }
 
-  const handleMedicalReportUpload =  async (isCompleted: boolean, state: IMedicalRecord) => {
+  const handleMedicalReportUpload = async (isCompleted: boolean, state: IMedicalRecord) => {
     try {
       if (reportId) {
         await updateMedicalRecordApi(reportId, { ...state, isCompleted });
@@ -57,13 +58,10 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
     }
   }
   return (
-    <div>
-      <div className='p-2  border-b'>
-        <p className='font-medium text-sm text-gray-700 flex items-center cursor-pointer' onClick={() => setSelectedSlot(null)}><ChevronLeft size={16} />Patients</p>
-      </div>
-      <div className='h-[610px] overflow-auto'>
-        {patientDetails && patientDetails.map((patient) => (
-          <div key={patient.patientDetails._id} className="flex justify-between p-2 items-center border-b relative mb-2  duration-300" >
+   <>
+      <div className='p-2 h-full'>
+        {patientDetails  ? patientDetails.length > 0 ?  patientDetails.map((patient) => (
+          <div key={patient.patientDetails._id} className="flex justify-between p-2 items-center border-b border-gray-300 relative mb-2  duration-300" >
             <div className='flex'>
               <div className="w-14 h-14 bg-blue-200 rounded-full">
                 <img src={patient.patientDetails.profileImage} alt={patient.patientDetails.fullName} className="w-full h-full object-cover rounded-full" />
@@ -81,12 +79,12 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, s
               <button className={`px-3 text-white bg-blue-400 rounded-md active:scale-90 duration-300 ${patient.status === 'Scheduled' ? '' : 'hidden'}`} onClick={() => createRoomHandler(patient.roomId, patient.appointmentId, patient.patientDetails._id, patient.recordId._id)}>join</button>
             </div>
           </div>
-        ))}
+        )) : <p className='text-gray-600 text-md'>No appointments booked in these slot !</p>  :  <p className='text-gray-600 text-md'>Select a slot !</p> }
       </div>
 
       <MedicalRecordProvider recordId={reportId}>{medicalReport && <MedicalRecordForm handleMedicalReportUpload={handleMedicalReportUpload} endCall={true} />}</MedicalRecordProvider>
+      </>
 
-    </div>
 
   )
 }

@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { IAppointmentServices } from "../services/interfaces/IAppointmentServices";
 
-
-
-
 export class AppointmentController {
     private appointmentServices: IAppointmentServices
 
@@ -29,7 +26,7 @@ export class AppointmentController {
             await this.appointmentServices.createAppointment({ doctorId, patientId, slotId, appointmentDate, status, transactionId });
     
             res.status(201).json({ message: "Appointment created successfully." });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Error creating appointment:", error);
             next(error); 
         }
@@ -37,14 +34,14 @@ export class AppointmentController {
 
     async getUserAppointments(req: Request, res: Response, next: NextFunction) {
         try {
-            const { _id } = req.client
+            const _id = req.client ? req.client._id : ''
             const page = req.query.page as string || 'pending';
             const skip = parseInt(req.query.skip as string) || 0;
             const limit = parseInt(req.query.limit as string) || 5;
             
             const userAppointmentsList = await this.appointmentServices.getUserAppointments(_id, page, skip, limit)
             res.status(201).json(userAppointmentsList)
-        } catch(error: any) {
+        } catch(error: unknown) {
             next(error)
         }
     }
@@ -71,7 +68,7 @@ export class AppointmentController {
             const { _id } = req.client
             const bookedPatientsData = await this.appointmentServices.getAllAppointmentsOfDoctor(_id)
             res.status(201).json({bookedPatientsData})
-        } catch(error: any) {
+        } catch(error: unknown) {
             next(error)
         }
     }
@@ -83,7 +80,7 @@ export class AppointmentController {
             const bookedPatientsData = await this.appointmentServices.getBookedPatients(slotId)
             res.status(200).json({bookedPatientsData})
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error)
         }
     }
@@ -93,7 +90,7 @@ export class AppointmentController {
             const { appointmentId, slotId } = req.params
             const status = await this.appointmentServices.consultingCompleted(appointmentId, slotId)
             res.status(200).json({status})
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error)
         }
     }

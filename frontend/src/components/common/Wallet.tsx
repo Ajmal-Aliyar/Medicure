@@ -23,7 +23,7 @@ const Wallet: FC = () => {
     // await requestWithdrawalApi( _id, 2000)
   }
   return (
-    <div className='p-4 rounded-md outline outline-gray-300'>
+    <>
       <h2 className="text-xl text-[#1b1962cd] font-bold mb-4">My Wallet</h2>
       <div className="flex items-center mb-4 max-w-md gap-3">
         <span className="text-[#0c0b3eb5] font-semibold text-lg">Balance</span>
@@ -37,7 +37,7 @@ const Wallet: FC = () => {
       </div>}
 
       {withdraw && <BankAccountDetails setWithdraw={setWithdraw} wallet={wallet}/>}
-    </div>
+      </>
   )
 }
 

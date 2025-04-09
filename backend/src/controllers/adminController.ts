@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { IAdminServices } from "../services/interfaces/IAdminServices";
 
-
-
-
 export class AdminController {
     private adminServices: IAdminServices;
 
@@ -40,7 +37,7 @@ export class AdminController {
                 });
             }
             res.status(200).json({ message: 'Sign in successfully.', _id });
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error)
         }
     }
@@ -50,7 +47,7 @@ export class AdminController {
             const { _id } = req.params
             const DoctorData = await this.adminServices.getDoctorDetails(_id)
             res.status(200).json({data: DoctorData}) 
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error)
         }
     }
@@ -68,8 +65,8 @@ export class AdminController {
                 data: approvedDoctors.data,
                 total: approvedDoctors.total
             });
-        } catch (error: any) {
-            console.error('Error fetching approved doctors:', error.message);
+        } catch (error: unknown) {
+            console.error('Error fetching approved doctors:', error);
             next(error);
         }
     }
@@ -85,8 +82,8 @@ export class AdminController {
                 data: approvedDoctors.data,
                 hasMore: approvedDoctors.hasMore
             });
-        } catch (error: any) {
-            console.error('Error fetching approved doctors:', error.message);
+        } catch (error: unknown) {
+            console.error('Error fetching approved doctors:', error);
             next(error);
         }
     }
@@ -96,7 +93,7 @@ export class AdminController {
             const { _id } = req.params
             const DoctorSlots = await this.adminServices.getDoctorAppointmentDetails(_id)
             res.status(200).json({data: DoctorSlots}) 
-        } catch (error: any) {
+        } catch (error: unknown) {
             next(error)
         }
     }
@@ -106,7 +103,7 @@ export class AdminController {
             const { _id } = req.params
             await this.adminServices.approveDoctor(_id)
             res.status(200).json({message: 'Approved doctor successfully.'}) 
-        } catch( error: any) {
+        } catch( error: unknown) {
             next(error)
         }
     }
@@ -116,7 +113,7 @@ export class AdminController {
             const { _id } = req.params
             await this.adminServices.rejectDoctor(_id)
             res.status(200).json({message: 'Rejected doctor successfully.'}) 
-        } catch( error: any) {
+        } catch( error: unknown) {
             next(error)
         }
     }
@@ -132,8 +129,8 @@ export class AdminController {
                 data: patientsData.data,
                 total: patientsData.total
             });
-        } catch (error: any) {
-            console.error('Error fetching approved doctors:', error.message);
+        } catch (error: unknown) {
+            console.error('Error fetching approved doctors:', error);
             next(error);
         }
     }
@@ -144,7 +141,7 @@ export class AdminController {
             const role = req.query.role as string
             await this.adminServices.block( _id, role)
             res.status(200).json({message: `Blocked ${role} successfully`}) 
-        } catch( error: any) {
+        } catch( error: unknown) {
             next(error)
         }
     }
@@ -155,7 +152,7 @@ export class AdminController {
             const role = req.query.role as string
             await this.adminServices.unblock( _id, role)
             res.status(200).json({message: `Unblocked ${role} successfully`}) 
-        } catch( error: any) {
+        } catch( error: unknown) {
             next(error)
         }
     }

@@ -17,13 +17,13 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../store/store"
 import { useEffect, useState } from "react"
 import ProfileAnimation from "../../components/doctor/profile/ProfileAnimation"
+import { setLoading } from "../../store/slices/commonSlices/notificationSlice"
 
 
 
 function Profile() {
     let doctor = useSelector((state: RootState) => state.doctor)
     const [editProfile, setEditProfile] = useState<string>('')
-    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
 
     
@@ -32,11 +32,11 @@ function Profile() {
     useEffect(() => {
         const getDoctorAndSlotData = async () => {
             try {
-                const [doctorResponse, slotResponse] = await Promise.all([
+                dispatch(setLoading(true))
+                const [ doctorData, slotResponse] = await Promise.all([
                     getProfileDetails(),
                     fetchSlotDetails()
                 ]);
-                const { doctorData }:any = doctorResponse.data;
                 const slotData: ISlotSlice = slotResponse
                 dispatch(setProfileData(doctorData))
                 dispatch(setSlotData(slotData.slots))
@@ -44,6 +44,8 @@ function Profile() {
                 console.log(doctorData, slotData);
             } catch (error) {
                 console.error('Error fetching data:', error);
+            } finally {
+                dispatch(setLoading(false))
             }
         };
         getDoctorAndSlotData();

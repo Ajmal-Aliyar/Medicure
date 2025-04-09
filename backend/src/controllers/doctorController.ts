@@ -23,7 +23,7 @@ export class DoctorController {
         try {
             const { _id } = req.client;
             const doctorData = await doctorService.getProfileDetails(_id)
-            res.status(200).json({ doctorData })
+            res.status(200).json( doctorData )
         } catch (error) {
             next(error);
         }

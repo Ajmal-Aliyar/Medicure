@@ -36,11 +36,11 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
 
     const doesAppointmentExist = async () => {
         try {
-            if (!user._id) return navigate('/auth') 
+            if (!user._id) return navigate('/auth')
             const data = await fetchAppointmentDetailsApi('pending', 0, Infinity);
-            
+
             const hasScheduledAppointment = data.appointments.some(item => item.status === 'Scheduled');
-    
+
             if (hasScheduledAppointment) {
                 dispatch(setWarning('You already have a pending appointment. Are you sure you want to take another one?'));
                 dispatch(setExtra(handleAppointment));
@@ -55,41 +55,41 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
             }
         }
     };
-    
+
     const handleAppointment = async () => {
         try {
             dispatch(setLoading(true));
             dispatch(clearWarning())
-          if (user.role === 'user' && user.isAuthenticated && selectedSlot) {
-            const response = await createCheckoutSessionApi({
-              doctorName: doctor.fullName,
-              specialization: doctor.specialization,
-              startTime: convertTo12HourFormat(selectedSlot.startTime),
-              endTime: convertTo12HourFormat(selectedSlot.endTime),
-              duration: selectedSlot.avgConsultTime,
-              fees: doctor.fees,
-              doctorId: doctor._id,
-              patientId: user._id,
-              slotId: selectedSlot._id || '',
-              appointmentDate: ''
-            });
-    
-            const { sessionUrl } = response;
-    
-            if (sessionUrl) {
-              window.location.href = sessionUrl;
+            if (user.role === 'user' && user.isAuthenticated && selectedSlot) {
+                const response = await createCheckoutSessionApi({
+                    doctorName: doctor.fullName,
+                    specialization: doctor.specialization,
+                    startTime: convertTo12HourFormat(selectedSlot.startTime),
+                    endTime: convertTo12HourFormat(selectedSlot.endTime),
+                    duration: selectedSlot.avgConsultTime,
+                    fees: doctor.fees,
+                    doctorId: doctor._id,
+                    patientId: user._id,
+                    slotId: selectedSlot._id || '',
+                    appointmentDate: ''
+                });
+
+                const { sessionUrl } = response;
+
+                if (sessionUrl) {
+                    window.location.href = sessionUrl;
+                } else {
+                    dispatch(setError('Unable to process payment. Please try again.'));
+                }
             } else {
-              dispatch(setError('Unable to process payment. Please try again.'));
+                dispatch(setError('You need to log in to book an appointment.'));
             }
-          } else {
-            dispatch(setError('You need to log in to book an appointment.'));
-          }
         } catch (error: any) {
-          dispatch(setError(error.message));
+            dispatch(setError(error.message));
         } finally {
-          dispatch(setLoading(false));
+            dispatch(setLoading(false));
         }
-      };
+    };
 
     useGSAP(() => {
         gsap.from('.xcard', {

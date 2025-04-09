@@ -67,7 +67,7 @@ const WithdrawRequestsList: FC = () => {
 
 
   return (
-    <div className='row-span-4 rounded-md outline outline-gray-300 p-4'>
+    <div className='box row-span-4 rounded-md bg-white shadow-md p-4'>
       <h3 className="text-lg font-semibold text-gray-700 mb-2">Withdraw Requests</h3>
       <div className='flex flex-wrap gap-2 justify-between mb-4 items-center'>
         <div className='flex flex-wrap gap-1 text-white text-sm'>

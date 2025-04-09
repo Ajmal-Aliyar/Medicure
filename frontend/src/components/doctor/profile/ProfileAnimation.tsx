@@ -5,20 +5,20 @@ const ProfileAnimation = () => {
     useGSAP(() => {
             const tl = gsap.timeline()
             tl.from('.firstCard', {
-                x:100,
+                x:50,
                 opacity:0,
-                duration:1
+                duration:'0.5'
             })
             tl.from('.secondCard', {
-                x:100,
+                x:50,
                 opacity:0,
-                duration:1
-            },'-=0.8')
+                duration:'0.5'
+            },'-=0.4')
             tl.from('.thirdCard', {
-                x:100,
+                x:50,
                 opacity:0,
-                duration:1
-            },'-=0.9')
+                duration:'0.5'
+            },'-=0.45')
         })
   return null
 }

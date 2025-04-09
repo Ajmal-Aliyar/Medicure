@@ -40,7 +40,7 @@ const TransactionHistory: FC = () => {
     }, [dispatch, showMore]);
 
     return (
-        <div className="row-span-3 p-4 rounded-md  outline outline-gray-300">
+        <div className="box row-span-3 p-4 rounded-md  h-full bg-white shadow-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">Recent Transactions</h3>
             <ul className="text-sm text-gray-600 space-y-2 max-h-[300px] overflow-y-auto pr-5">
                 {transactions.length <= 0 && <p className="text-gray-500 text-sm">No transation history</p>}

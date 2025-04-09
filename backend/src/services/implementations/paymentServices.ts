@@ -231,7 +231,7 @@ export class PaymentServices implements IPaymentServices {
                 const metadata = session.metadata || {};
 
                 const paymentIntentId = session.payment_intent as string;
-                const amount =  Math.round(((session.amount_total || 0) / 100) * 10 / 100)
+                const amount =  Math.round(((session.amount_total || 0) / 100) * 90 / 100)
 
                 const transaction = await this.transactionServices.createTransaction({
                     transactionId: paymentIntentId,
