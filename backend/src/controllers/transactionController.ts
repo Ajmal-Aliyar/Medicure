@@ -26,7 +26,7 @@ export class TransactionController {
       }
 
       const response = await this.transactionServices.getTransactionsByUserId(
-        _id,
+        role === 'admin' ? 'Company' : _id,
         role,
         skip,
         limit

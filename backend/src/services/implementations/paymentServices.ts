@@ -249,7 +249,7 @@ export class PaymentServices implements IPaymentServices {
 
         await this.walletRepository.increment(metadata.doctorId, amount);
         await this.walletRepository.increment(
-          "Comp",
+          "Company",
           (session.amount_total || 0) / 100
         );
 
@@ -308,7 +308,7 @@ export class PaymentServices implements IPaymentServices {
           transaction.recieverId,
           transaction.amount
         );
-        await this.walletRepository.decrement("Comp", transaction.amount);
+        await this.walletRepository.decrement("Company", transaction.amount);
         await this.appointmentServices.cancelAppointmentByTransactionId(
           transactionId
         );

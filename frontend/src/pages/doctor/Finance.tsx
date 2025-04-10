@@ -20,7 +20,7 @@ const Finance: FC = () => {
     return (
         <div className='h-full w-full px-2 flex rounded-md gap-3 flex-1'>
             <div className="p-4 rounded-md grid grid-cols-2 grid-rows-4 gap-2 w-full">
-                <div className='box p-4 rounded-md bg-white shadow-md'>
+                <div className=' p-4 rounded-md bg-white shadow-md'>
                     <Wallet />
                 </div>
                 <WithdrawRequestsList />

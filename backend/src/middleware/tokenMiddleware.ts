@@ -24,6 +24,7 @@ export const tokenMiddleware = (
   try {
     const accessToken = req?.cookies?.accessToken ?? null;
     const refreshToken = req?.cookies?.refreshToken ?? null;
+    
     if (!accessToken && !refreshToken) {
       res.status(401).send("Access denied, no token provided");
     }
@@ -32,7 +33,10 @@ export const tokenMiddleware = (
       try {
         const decoded = verifyAccessToken(accessToken);
         req.client = decoded;
+        console.log('next called');
+        
         next();
+        return
       } catch (error) {
         console.error("Invalid access token:", error);
         res.status(403).send("Invalid access token");
@@ -51,12 +55,15 @@ export const tokenMiddleware = (
         });
         req.client = refreshDecoded;
         next();
+        return
       } catch (error) {
         console.error("Refresh token error:", error);
         res.status(403).send("Invalid or expired refresh token");
       }
     }
-    res.status(200).send("User not ined");
+
+    res.status(200).send("User not logined");
+    return 
   } catch (error) {
     console.error("Unexpected error in tokenMiddleware:", error);
     res.status(500).send("Internal server error");
