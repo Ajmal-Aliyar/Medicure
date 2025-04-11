@@ -2,6 +2,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
 
 interface ErrorMessageProps {
     message: string,
@@ -19,16 +20,11 @@ const WarningMessage: React.FC<ErrorMessageProps> = ({ message, handleModal }) =
         })
     })
 
-    const extraFunction = useSelector((state: any) => state.notification.extra);
+    const extraFunction = useSelector((state: RootState) => state.notification.extra);
 
     const handleButtonClick = () => {
         if (extraFunction) {
-            const result = extraFunction();
-            if (result) {
-                console.log('Function returned true');
-            } else {
-                console.log('Function returned false');
-            }
+            extraFunction() 
         }
     };
 

@@ -2,12 +2,12 @@ import { IMedicalRecord } from "../../types/record/record";
 import { api } from "../../utils/axiosInstance";
 
 
-export const getMedicalRecords = async (): Promise<any> => {
+export const getMedicalRecords = async () => {
     const response = await api.get(`/api/record`);
     return response.data;
 };
 
-export const getMedicalRecordById = async (recordId: string): Promise<any> => {
+export const getMedicalRecordById = async (recordId: string) => {
     const response = await api.get(`/api/record/${recordId}`);
     return response.data;
 };
@@ -26,6 +26,7 @@ export const deleteMedicalRecord = async (recordId: string): Promise<{ response:
 };
 
 export interface IPrescription {
+    _id: string;
     allergy: string;
     diagnosis: string;
     prescription: string;

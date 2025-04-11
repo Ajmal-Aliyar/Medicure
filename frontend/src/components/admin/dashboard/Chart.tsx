@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid } from "recharts";
 
-const dataSets:any = {
+type DataPoint = {
+  date: string;
+  sales: number;
+  revenue: number;
+};
+type RangeKey = "Last 7 Days" | "Last 30 Days";
+
+const dataSets: Record<RangeKey, DataPoint[]> = {
   "Last 7 Days": [
     { date: "Day 1", sales: 400, revenue: 200 },
     { date: "Day 2", sales: 700, revenue: 500 },
@@ -19,7 +26,7 @@ const dataSets:any = {
 };
 
 export default function AdvancedChart() {
-  const [selectedRange, setSelectedRange] = useState("Last 7 Days");
+  const [selectedRange, setSelectedRange] = useState<RangeKey>("Last 7 Days");
   const filteredData = dataSets[selectedRange];
 
   return (
@@ -27,11 +34,10 @@ export default function AdvancedChart() {
       <div className="flex justify-end items-center mb-4">
         <select 
           className="border rounded-md text-gray-700" 
-          onChange={(e) => setSelectedRange(e.target.value)}
           value={selectedRange}
         >
-          <option value="Last 7 Days">Last 7 Days</option>
-          <option value="Last 30 Days">Last 30 Days</option>
+          <option value="Last 7 Days" onClick={() => setSelectedRange("Last 7 Days")}>Last 7 Days</option>
+          <option value="Last 30 Days" onClick={() => setSelectedRange("Last 30 Days")}>Last 30 Days</option>
         </select>
       </div>
       <div className="w-full h-96">

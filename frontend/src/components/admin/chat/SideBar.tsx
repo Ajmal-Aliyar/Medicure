@@ -8,6 +8,7 @@ import { joinChat } from '../../../utils/wss';
 import Header from './Header';
 import broadcastImg from '../../../assets/external/broadcast.png'
 import defaultUser from '../../../assets/external/defaultUserImage.jpg'
+import { IChat } from '../../../types/chat/ChatType';
 
 const SideBar = () => {
     const userId = useSelector((state: RootState) => state.auth._id);
@@ -17,7 +18,6 @@ const SideBar = () => {
     useEffect(() => {
         const fetchChats = async () => {
             const { data } = await fetchChatsApi(userId)
-            console.log(data,'data')
             dispatch(setChats(data || []))
         }
 
@@ -29,6 +29,7 @@ const SideBar = () => {
         try {
             joinChat(chatId)
             const messages = await fetchMessagesApi(chatId)
+        
             dispatch(setSelectedChat({ chatId, messages, profileImage, name }));
             console.log('selected chat', chatId, name)
         } catch (error) {
@@ -45,11 +46,11 @@ const SideBar = () => {
                     <p className='p-3'>No chats available</p>
                 ) : (
                     <ul>
-                        {chats.map((chat: any) => (
+                        {chats.map((chat: IChat) => (
                             <div
                                 key={chat._id}
                                 className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer ${selectedChat?.chatId === chat._id ? 'bg-gray-200' : ''}`}
-                                onClick={() => selectChat(chat._id, chat?.participants[0].profileImage, chat.participants[0].fullName)}
+                                onClick={() => selectChat(chat._id, chat?.participants?.[0]?.profileImage || defaultUser, chat.groupName)}
                             >
                                 <div className="mr-4">
                                     <img

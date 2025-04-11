@@ -5,7 +5,7 @@ import { convertTo12HourFormat } from "../../../../utils/timeStructure";
 
 
 const ListPrescription: FC = () => {
-    const [prescriptions, setPrescriptions] = useState<any[]>([]);
+    const [prescriptions, setPrescriptions] = useState<IPrescription[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [skip, setSkip] = useState<number>(0);

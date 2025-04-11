@@ -6,6 +6,7 @@ import { handleSignalData, prepareNewPeerConnection } from './webrtc';
 import { ConsultingData, setConsultRinging, setError } from '../store/slices/commonSlices/notificationSlice';
 import { Socket } from "socket.io-client";
 import { addMessage, trigger } from "../store/slices/commonSlices/chatSlice";
+import { IMessage } from "../types/chat/ChatType";
 
 const SERVER: string = 'http://localhost:3000';
 export let socket: any = null;
@@ -46,7 +47,7 @@ export const connectWithSocketIOServer = (candidateId: string) => {
         store.dispatch(setConsultRinging({ slotId, _id, roomId }))
     })
 
-    socket.on("newMessage", (message: any) => {
+    socket.on("newMessage", (message: IMessage) => {
         const userId = store.getState().auth._id;
         console.log("📩 New message received:", message);
         userId !== message.senderId && store.dispatch(addMessage(message))

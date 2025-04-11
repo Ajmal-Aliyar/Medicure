@@ -5,27 +5,27 @@ const authService = new AuthService();
 
 export class AuthController {
 
-    async checkRequest (req: Request, res: Response) {
+    async checkRequest (req: Request, res: Response, next: NextFunction) {
         try {
             console.log('success', req.body)
             res.status(201)
-        } catch (error: any) {
-            res.status(400).json({ error: error.message });
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async signUp(req: Request, res: Response) {
+    async signUp(req: Request, res: Response, next: NextFunction ) {
         const { name, email, mobile, password, role } = req.body;
         try {
             const message = await authService.signUp(name, email, mobile, password, role);
             console.log('success', message)
             res.status(201).json({ message })
-        } catch (error: any) {
-            res.status(400).json({ error: error.message });
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async signIn(req: Request, res: Response) {
+    async signIn(req: Request, res: Response, next: NextFunction ) {
         const { email, password, role } = req.body
         try {
             console.log('signing in');
@@ -47,12 +47,12 @@ export class AuthController {
                 });
             }
             res.status(200).json({_id});
-        } catch (error: any) {
-            res.status(400).json({ error: error.message })
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async googleAuth (req: Request, res: Response) {
+    async googleAuth (req: Request, res: Response, next: NextFunction ) {
         const { email, profileImage, fullName } = req.body
         try {
             const { accessToken, refreshToken, _id } = await authService.googleAuth({ fullName, email, profileImage, })
@@ -71,12 +71,12 @@ export class AuthController {
                 });
             }
             res.status(200).json({_id});
-        } catch (error: any) {
-            res.status(400).json({ error: error.message })
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async changePassword(req: Request, res: Response) {
+    async changePassword(req: Request, res: Response, next: NextFunction ) {
         try {
             const { email, password, role } = req.body
             if (!email || !password ) {
@@ -88,8 +88,8 @@ export class AuthController {
             } else {
                 res.status(404).json({ error: 'User not found or unable to change password.' });
             }
-        } catch (error: any) {
-            res.status(400).json({ error: error.message })
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
@@ -106,18 +106,18 @@ export class AuthController {
     }
 
 
-    async sendOTP(req: Request, res: Response) {
+    async sendOTP(req: Request, res: Response, next: NextFunction ) {
         const { email } = req.body;
         try {
             console.log(email, 'email')
             await authService.sendOTP(email);
             res.status(200).json({ message: 'OTP sended successfully' });
-        } catch (error: any) {
-            res.status(400).json({ error: error.message });
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async verifyOTPAndRegister(req: Request, res: Response) {
+    async verifyOTPAndRegister(req: Request, res: Response, next: NextFunction ) {
         try {
             console.log('Received OTP request:', req.body);
             const { email, otp } = req.body;
@@ -139,15 +139,12 @@ export class AuthController {
             res.status(200).json({
                 message: 'OTP verified successfully. Tokens issued.',
             });
-        } catch (error: any) {
-            console.error('Error verifying OTP:', error.message);
-            res.status(400).json({
-                error: error.message || 'An unexpected error occurred. Please try again later.',
-            });
+        } catch (error: unknown) {
+            next(error)
         }
     }
 
-    async verifyOTP(req: Request, res: Response) {
+    async verifyOTP(req: Request, res: Response, next: NextFunction ) {
         try {
             console.log('Received OTP request:', req.body);
             const { email, otp } = req.body;
@@ -158,11 +155,8 @@ export class AuthController {
                 });
             }
 
-        } catch (error: any) {
-            console.error('Error verifying OTP:', error.message);
-            res.status(400).json({
-                error: error.message || 'An unexpected error occurred. Please try again later.',
-            });
+        } catch (error: unknown) {
+            next(error)
         }
     }
 

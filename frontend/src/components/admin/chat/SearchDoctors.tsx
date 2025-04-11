@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback, FC } from "react";
 import { fetchAllApprovedDoctorsApi } from "../../../sevices/admin/doctorRepository";
 import { Plus, X } from "lucide-react";
+import { IFetchAllApprovedDoctors } from "../../../types/doctor/verifyDetailsType";
 
 
 interface SearchDoctorsProps {
-    candidates: any;
-    setCandidates: React.Dispatch<React.SetStateAction<any>>;
+    candidates: IFetchAllApprovedDoctors[];
+    setCandidates: React.Dispatch<React.SetStateAction<IFetchAllApprovedDoctors[]>>;
 }
 const SearchDoctors:FC<SearchDoctorsProps> = ({ candidates, setCandidates}) => {
     const [query, setQuery] = useState<string>("");
-    const [searchDoctors, setSearchDoctors] = useState<any[]>([]);
+    const [searchDoctors, setSearchDoctors] = useState<IFetchAllApprovedDoctors[]>([]);
 
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -36,14 +37,13 @@ const SearchDoctors:FC<SearchDoctorsProps> = ({ candidates, setCandidates}) => {
         return () => clearTimeout(debounceTimeout);
     }, [query]);
 
-    // Add doctor to selected list
-    const addDoctor = useCallback((doctor: any) => {
-        setCandidates((prev: any) => (prev.some((d:any) => d._id === doctor._id) ? prev : [...prev, doctor]));
+    const addDoctor = useCallback((doctor: IFetchAllApprovedDoctors) => {
+        setCandidates((prev: IFetchAllApprovedDoctors[]) => (prev.some((d) => d._id === doctor._id) ? prev : [...prev, doctor]));
     }, []);
 
     // Remove doctor from selected list
     const removeDoctor = useCallback((doctorId: string) => {
-        setCandidates((prev:any) => prev.filter((d:any) => d._id !== doctorId));
+        setCandidates((prev: IFetchAllApprovedDoctors[]) => prev.filter((d) => d._id !== doctorId));
     }, []);
 
     return (
@@ -59,7 +59,7 @@ const SearchDoctors:FC<SearchDoctorsProps> = ({ candidates, setCandidates}) => {
             {/* Scrollable List */}
             <div className="h-[300px] overflow-y-auto mt-3 space-y-3">
                 {/* Selected Candidates */}
-                {candidates.map((doctor:any) => (
+                {candidates.map((doctor: IFetchAllApprovedDoctors) => (
                     <div key={doctor.id} className="flex items-center gap-4 p-3 transition hover:bg-gray-50">
                         <img src={doctor.profileImage} className="w-12 h-12 rounded-full" alt="Doctor" />
                         <div className="flex-1">
@@ -87,7 +87,7 @@ const SearchDoctors:FC<SearchDoctorsProps> = ({ candidates, setCandidates}) => {
                                 <p className="font-semibold text-gray-800">{doctor.fullName}</p>
                                 <p className="text-sm text-gray-600">{doctor.specialization}</p>
                             </div>
-                            {!candidates.some((d:any) => d._id === doctor._id) && (
+                            {!candidates.some((d:IFetchAllApprovedDoctors) => d._id === doctor._id) && (
                                 <button
                                     className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition"
                                     onClick={() => addDoctor(doctor)}

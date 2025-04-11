@@ -8,6 +8,7 @@ import { fetchChatsApi } from '../../../sevices/chat/fetchChats';
 import { joinChat } from '../../../utils/wss';
 import broadcastImg from '../../../assets/external/broadcast.png'
 import defaultUser from '../../../assets/external/defaultUserImage.jpg'
+import { IChat } from '../../../types/chat/ChatType';
 
 const SideBar = () => {
     const userId = useSelector((state: RootState) => state.auth._id);
@@ -28,6 +29,8 @@ const SideBar = () => {
         try {
             joinChat(chatId)
             const messages = await fetchMessagesApi(chatId)
+            console.log(messages);
+            
             dispatch(setSelectedChat({ chatId, messages, profileImage, name }));
 
             const updatedChats = chats.map((chat) =>
@@ -66,7 +69,7 @@ const SideBar = () => {
                     <p>No chats available</p>
                 ) : (
                     <ul>
-                        {chats.map((chat: any) => (
+                        {chats.map((chat: IChat) => (
                             <div
                                 key={chat._id}
                                 className={`p-4 flex items-center hover:bg-gray-200 cursor-pointer ${selectedChat?.chatId === chat._id ? 'bg-gray-200' : ''}`}

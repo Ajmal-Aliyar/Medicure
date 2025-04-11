@@ -7,13 +7,13 @@ export interface Message {
 }
 
 export interface IChat {
-    participants: { _id: string }[],
+    participants: { _id: string, profileImage: string, fullName: string }[],
     _id: string,
-    name: string;
-    avatar: string;
-    lastMessage: string | null;
-    unreadMessages: { content: number };
+    groupName: string;
+    lastMessage: { content: string };
+    unreadMessages: Record<string, number>;
     messages: Message[]
+    isGroup: boolean;
 }
 
 export interface ChatContextType {

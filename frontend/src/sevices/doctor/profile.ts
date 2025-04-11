@@ -1,4 +1,5 @@
 import { IDoctorData } from "../../components/doctor/profile/validationProfile"
+import { ProfileState } from "../../store/slices/doctorSlices/profileSlice";
 import { api } from "../../utils/axiosInstance"
 
 export interface IProfile {
@@ -6,8 +7,8 @@ export interface IProfile {
     profileImage: string;
 }
 
-export const getProfileDetails = async (): Promise<IProfile>=> {
-    const response = await api.get<IProfile>('/api/doctor/profile-details')   
+export const getProfileDetails = async (): Promise<ProfileState>=> {
+    const response = await api.get<ProfileState>('/api/doctor/profile-details')   
     return response.data
 }
 

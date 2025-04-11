@@ -64,6 +64,7 @@ export interface IVerficationDetails {
 
 export interface IFetchAllApprovedDoctors {
     _id: string;
+    id: string;
     profileImage: string;
     fullName: string;
     specialization: string;

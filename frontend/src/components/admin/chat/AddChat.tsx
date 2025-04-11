@@ -3,11 +3,12 @@ import { api } from "../../../utils/axiosInstance";
 import SearchDoctors from "./SearchDoctors";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
+import { IFetchAllApprovedDoctors } from "../../../types/doctor/verifyDetailsType";
 
 
 const AddChat = ({ onClose }: { onClose: () => void }) => {
     const [groupName, setGroupName] = useState("");
-    const [participants, setParticipants] = useState<string[]>([]);
+    const [participants, setParticipants] = useState<IFetchAllApprovedDoctors[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const { _id } = useSelector((state: RootState) => state.auth)
@@ -21,18 +22,17 @@ const AddChat = ({ onClose }: { onClose: () => void }) => {
         setError("");
 
         try {
-
             const requestData = { groupName, participants: [...participants, _id], isGroup: true }
-
-            console.log(requestData, 'rqdt');
-            const response = await api.post("/api/chat", requestData);
-            console.log(response);
-            console.log("Chat created successfully!");
+            await api.post("/api/chat", requestData);
             setGroupName("");
             setParticipants([]);
             onClose();
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unexpected error occurred");
+            }
         } finally {
             setLoading(false);
         }

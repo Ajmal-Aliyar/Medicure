@@ -37,12 +37,11 @@ function VerifyDetails() {
                     getProfileDetails(),
                     fetchSlotDetails()
                 ]);
-                const { doctorData }: any = doctorResponse.data;
+                
                 const slotData: ISlotSlice = slotResponse
-                dispatch(setProfileData(doctorData))
+                dispatch(setProfileData(doctorResponse))
                 dispatch(setSlotData(slotData.slots))
                 dispatch(setFees(slotData.fees))
-                console.log(doctorData, slotData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -80,7 +79,7 @@ function VerifyDetails() {
             )}
             {isModalOpen === 'Appointments Setup' && (
                 <ModalAnimation onClose={handleModal}>
-                    <AppointmentSetUp handleModal={handleModal} setLoading={setLoading} />
+                    <AppointmentSetUp handleModal={handleModal} />
                 </ModalAnimation>
             )}
 

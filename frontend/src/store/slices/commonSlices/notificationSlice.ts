@@ -51,7 +51,7 @@ const notificationSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
-        setExtra: (state, action: PayloadAction<((...args: any[]) => void) | null>) => {
+        setExtra: (state, action: PayloadAction<((...args: string[]) => void) | null>) => {
             state.extra = action.payload;
         },
         setConsultRinging: (state, action: PayloadAction<ConsultingData | null>) => {

@@ -15,7 +15,7 @@ export const getPatientProfileData = async () => {
 
 export const updatePatientProfileData = async ({dob, bloodGroup, gender, houseName, street, state, city, country, pincode}:IPatientProfilePayload) => {
     try {
-        return await api.patch<any>('/api/patient/profile-details',{ dob, bloodGroup, gender, houseName, street, state, city, country, pincode})
+        return await api.patch('/api/patient/profile-details',{ dob, bloodGroup, gender, houseName, street, state, city, country, pincode})
     } catch (error) {
         const errorMessage = handleAxiosError(error); 
         throw new Error(errorMessage); 
@@ -24,7 +24,7 @@ export const updatePatientProfileData = async ({dob, bloodGroup, gender, houseNa
 
 export const updateProfileImageApi = async (profileImage: string) => {
     try {
-        return await api.patch<any>('/api/patient/update-profile-image',{profileImage})
+        return await api.patch('/api/patient/update-profile-image',{profileImage})
     }  catch (error) {
         const errorMessage = handleAxiosError(error); 
         throw new Error(errorMessage); 

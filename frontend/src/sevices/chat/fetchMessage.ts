@@ -1,8 +1,9 @@
+import { IMessage } from "../../types/chat/ChatType";
 import { api } from "../../utils/axiosInstance";
 
 
-export const fetchMessagesApi = async (chatId: string): Promise<{ chatId: string, messages: any[] }> => {
-  const response = await api.get<{ chatId: string, messages: any[] }>(`/api/message/messages/${chatId}`);
+export const fetchMessagesApi = async (chatId: string): Promise<IMessage[]> => {
+  const response = await api.get<IMessage[]>(`/api/message/messages/${chatId}`);
   return response.data;
 };
 

@@ -21,7 +21,7 @@ export interface IAddress {
     pincode: string;
 }
 
-interface ProfileState {
+export interface ProfileState {
     fullName: string;
     email: string;
     phone: string;
