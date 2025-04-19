@@ -109,16 +109,11 @@ export class SlotService implements ISlotService {
       const { _id, startTime, endTime, slotLimit, avgConsultTime } = slot;
 
       if (_id && existingSlotIds.has(_id)) {
-        throw new Error("Slot already exists");
-      } else {
-        await this.slotRepository.createSlot({
-          doctorId,
-          startTime,
-          endTime,
-          slotLimit,
-          avgConsultTime,
-        });
-      }
+        console.log("update id",_id)
+    } else {
+        console.log({ doctorId, startTime, endTime, slotLimit, avgConsultTime })
+        await this.slotRepository.createSlot({ doctorId, startTime, endTime, slotLimit, avgConsultTime });
+    }
     }
   }
 }

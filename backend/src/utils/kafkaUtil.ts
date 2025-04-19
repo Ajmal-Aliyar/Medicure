@@ -4,7 +4,7 @@ import { MessageRepository } from "../repositories/implementations/messageReposi
 import { ChatRepository } from "../repositories/implementations/chatRepository";
 import mongoose from "mongoose";
 
-const kafka = new Kafka({ clientId: "chat-app", brokers: ["localhost:9092"] });
+const kafka = new Kafka({ clientId: "chat-app", brokers: ["kafka:9091"] });
 export const producer = kafka.producer();
 export const consumer = kafka.consumer({ groupId: "chat-group" });
 const messageRepository = new MessageRepository();
@@ -12,7 +12,7 @@ const chatRepository = new ChatRepository();
 
 export const initKafka = async () => {
   try {
-    await producer.connect();
+    producer.connect().then(() => console.log("Kafka connected"));
   } catch (error) {
     console.error("Kafka Producer connection failed:", error);
   }
