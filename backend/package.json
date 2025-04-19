@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"redis-server\" \"nodemon ./src/server.ts\"",
+    "start": "tsc && node dist/server.js",
+    "build": "tsc",
     "dev": "concurrently \"redis-server\" \"nodemon --exec ts-node ./src/server.ts\""
   },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -32,6 +34,7 @@
     "stripe": "^17.6.0",
     "uuidv4": "^6.2.13"
   },
+
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
