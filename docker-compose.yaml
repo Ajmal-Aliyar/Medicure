@@ -57,6 +57,7 @@ services:
     ports:
       - "9091:9091"
     environment:
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms256M" 
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2182
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9091
@@ -64,6 +65,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - medicure-network
+
 
 volumes:
   redis-data:
