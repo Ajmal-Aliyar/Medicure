@@ -26,7 +26,8 @@ export const tokenMiddleware = (
     const refreshToken = req?.cookies?.refreshToken ?? null;
     
     if (!accessToken && !refreshToken) {
-      res.status(401).send("Access denied, no token provided");
+      res.status(401).json("Access denied, no token provided");
+      return
     }
 
     if (accessToken) {
