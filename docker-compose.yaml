@@ -1,3 +1,4 @@
+
 services:
   express:
     build:
@@ -10,62 +11,52 @@ services:
     command: sh -c "npm install && npm run dev"
     depends_on:
       - redis
+      - kafka
     networks:
       - medicure-network
     ports:
       - "3000:3000"
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: react-container
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    command: sh -c "npm install && npm run dev"
-    depends_on:
-      - express
-    networks:
-      - medicure-network
-    ports:
-      - "5173:5173"
-      
   redis:
     container_name: medicure-redis
-    image: "redis:7.4"
+    image: redis:alpine
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
     networks:
       - medicure-network
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2182
-    ports:
-      - "2182:2182"
-    networks:
-      - medicure-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
 
   kafka:
     image: bitnami/kafka:latest
-    depends_on:
-      - zookeeper
     ports:
-      - "9091:9092"
+      - "9091:9091"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2182
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: "broker,controller"
+      KAFKA_CFG_LISTENERS: PLAINTEXT://0.0.0.0:9091,CONTROLLER://0.0.0.0:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_KRAFT_CLUSTER_ID: "my-cluster-id"
       ALLOW_PLAINTEXT_LISTENER: "yes"
-      KAFKA_HEAP_OPTS: "-Xmx512M -Xms256M"
     networks:
-    - medicure-network
+      - medicure-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
 
 
 volumes:

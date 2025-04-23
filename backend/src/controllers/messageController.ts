@@ -20,7 +20,7 @@ export class MessageController {
         try {
             const {_id} = req.client
             await this.messageServices.createMessage(req.body, _id)
-            res.send("Message sent!");
+            res.status(200).json({message: "Message sent!"});
         } catch (error: unknown) {
             next(error)
         }
