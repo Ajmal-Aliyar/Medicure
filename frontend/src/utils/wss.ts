@@ -8,7 +8,7 @@ import { Socket } from "socket.io-client";
 import { addMessage, trigger } from "../store/slices/commonSlices/chatSlice";
 import { IMessage } from "../types/chat/ChatType";
 
-const SERVER: string = 'http://localhost:3000';
+const SERVER: string = 'http://35.202.81.114:3000';
 export let socket: any = null;
 
 
