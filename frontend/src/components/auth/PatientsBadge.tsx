@@ -5,15 +5,15 @@ import dummyDoctor3 from "../../assets/patients/patient1.jpg"
 function PatientsBadge() {
     return (
         <>
-            <div className="relative w-[50%] h-full flex justify-center items-center">
-                <img className="rounded-full lg:w-[40px] md:w-[30px] w-[25px] absolute left-0" src={dummyDoctor1} alt="" />
-                <img className="rounded-full lg:w-[40px] md:w-[30px] w-[25px] absolute left-[40px] lg:left-[80px]" src={dummyDoctor3} alt="" />
-                <img className="mid-img rounded-full lg:w-[40px] md:w-[30px] w-[25px] absolute left-[20px] lg:left-[40px]" src={dummyDoctor2} alt="" />
+            <div className="relative h-full flex justify-center items-center">
+                <img className="rounded-full w-[15px] md:w-[20px] lg:w-[35px]" src={dummyDoctor1} alt="" />
+                <img className="mid-img rounded-full w-[15px] md:w-[20px] lg:w-[35px]" src={dummyDoctor2} alt="" />
+                <img className="rounded-full w-[15px] md:w-[20px] lg:w-[35px]" src={dummyDoctor3} alt="" />
             </div>
             
-            <p className="text-center p-2 text-[#0c0b3eb5]  mr-2" style={{ lineHeight: '1' }}>
-                <span className="font-semibold">340K+</span> <br />
-                <span className="text-xs ">Patients</span>
+            <p className="flex justify-center items-center gap-1 p-2 text-[#0c0b3eb5]" style={{ lineHeight: '1' }}>
+                <span className="font-semibold text-sm lg:text-xl">340K+</span> <br />
+                <span className="text-xs font-medium">Patients</span>
             </p>
         </>
     )

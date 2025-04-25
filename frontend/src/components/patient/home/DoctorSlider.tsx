@@ -11,9 +11,7 @@ const data = [
     { name: 'Dr. John Doe', img: doctor2 },
     { name: 'Dr. William Mehta', img: doctor3 },                    
     { name: 'Dr. Jane Smith', img: doctor1 },
-    { name: 'Dr. William Mehta', img: doctor3 },                    
-
-    
+    { name: 'Dr. William Mehta', img: doctor3 },                     
 ];
 function DoctorSlider() {
     const [settings, setSettings] = useState({

@@ -7,8 +7,9 @@ import { ConsultingData, setConsultRinging, setError } from '../store/slices/com
 import { Socket } from "socket.io-client";
 import { addMessage, trigger } from "../store/slices/commonSlices/chatSlice";
 import { IMessage } from "../types/chat/ChatType";
+import { ENV } from "../constants/env";
 
-const SERVER: string = 'http://35.202.81.114:3000';
+const SERVER: string = ENV.API_URL;
 export let socket: any = null;
 
 

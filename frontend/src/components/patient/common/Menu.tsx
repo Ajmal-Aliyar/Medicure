@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import UserDriveBar from './UserDriveBar';
+import { ENV } from '../../../constants/env';
 
 function Menu() {
     const { isAuthenticated, role } = useSelector((state: RootState) => state?.auth);
@@ -34,9 +35,9 @@ function Menu() {
     }, []);
 
     return (
-        <div className="navbar w-full px-6 lg:px-28 py-1 md:py-3 flex-col lg:flex-row justify-end opacity-100 text-[#0c0b3eb5] absolute z-30 bg-white lg:bg-transparent">
+        <div className="navbar w-full px-6 lg:px-28 py-1 md:py-3 flex-col lg:flex-row justify-end opacity-100 text-[#0c0b3eb5] sticky lg:absolute top-0 z-30 bg-transparent">
             <div className='w-full flex justify-between items-center'>
-                <p className="text-[2rem] lg:text-[2.5rem] font-black">MEDI CURE</p>
+                <p className="text-[2rem] lg:text-[2.5rem] font-black">{ENV.APP_NAME}</p>
                 <nav className="lg:flex flex-col hidden lg:flex-row items-center justify-center gap-5 lg:gap-20">
                     <NavLink
                         to="/"
