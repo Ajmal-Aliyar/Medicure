@@ -17,7 +17,7 @@ const HeaderContent: React.FC = () => {
           setData(data.specialization)
         }
       } catch (error: unknown) {
-        dispatch(setError(error || "An error occurred while fetching specialization."));
+        dispatch(setError( "An error occurred while fetching specialization."));
       }
     };
   

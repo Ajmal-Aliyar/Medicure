@@ -1,5 +1,5 @@
 import { faRightFromBracket, faBars, faCalendarAlt, faMessage, faThLarge, faUser, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { faNewspaper, faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
+import { faMoneyBill1 } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';

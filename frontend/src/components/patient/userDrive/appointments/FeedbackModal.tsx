@@ -28,7 +28,7 @@ const FeedbackModal: React.FC <FeedbackModalProps> = ({ feedback, setFeedback}) 
         dispatch(setSuccess(message.response))
         setFeedback({appointmentId: '', doctorId: '', open: false})
       } catch (error: unknown) {
-        dispatch(setError(error))
+        dispatch(setError('Error occured while creating feedback'))
       }
     }
 

@@ -24,7 +24,7 @@ export const logOutUser = createAsyncThunk(
       await api.get('/api/auth/logout');
       return true; 
     } catch (error: unknown) {
-      return rejectWithValue(error?.message );
+      return rejectWithValue('Error occured while logout' );
     }
   }
 );
@@ -53,7 +53,7 @@ const authSlice = createSlice({
       .addCase(logOutUser.fulfilled, (state) => {
         Object.assign(state, initialState);
       })
-      .addCase(logOutUser.rejected, (state, action) => {
+      .addCase(logOutUser.rejected, (_state, action) => {
         console.error('Logout failed:', action.payload);
       });
   },

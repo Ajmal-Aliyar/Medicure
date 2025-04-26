@@ -17,7 +17,7 @@ const AuthForm:React.FC<IAuthForm> = ({ role }: { role: string }) => {
     const [loading, setLoading] = useState(false);
     const [emailFocused, setemailFocused] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
-    const [isForgotPassword, setIsForgotPassword] = useState(false)
+    const [isForgotPassword] = useState(false)
     const [errorMessage, setErrorMessage] = useState<IErrorType>({
         name: '',
         email: '',
@@ -56,8 +56,7 @@ const AuthForm:React.FC<IAuthForm> = ({ role }: { role: string }) => {
                 navigate('/admin/dashboard')
             } catch (error: unknown) {
                 setLoading(false);
-                dispatch(setError(error?.response?.data?.error || 'Something went wrong! Please try again later.'))
-                console.error('Signup error:', error.response?.data || error);
+                dispatch(setError('Something went wrong! Please try again later.'))
             }
         } else {
             handleErrorMessage('email', email);

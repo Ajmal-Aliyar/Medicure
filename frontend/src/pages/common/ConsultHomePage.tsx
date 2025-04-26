@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { createNewRoom, joinRoom } from '../../utils/wss'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/store'
@@ -14,14 +14,10 @@ const ConsultHomePage = () => {
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
       useEffect(() => {
-          // if (user.role === 'doctor') {
-          //     createNewRoom(user._id)
-          // }
           const initLocalStream = async () => {
               const localStream = await getLocalPreviewAndInitRoomConnection();
         
               if (localStream && localVideoRef.current) {
-                // Assign the local stream to the video element
                 localVideoRef.current.srcObject = localStream;
               }
             };

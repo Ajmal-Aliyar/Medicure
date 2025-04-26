@@ -48,8 +48,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                     }
                 } catch (error: unknown) {
                     setLoading(false);
-                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                    console.error('Signup error:', error.response?.data || error);
+                    setServerError('Something went wrong! Please try again later.');
                 }
             } else {
                 handleErrorMessage('email', email);
@@ -62,12 +61,11 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                 try {
                     await signUpApi(name, email, mobile, password, role)
                     setLoading(false);
-                    dispatch(setData({ email, role }))
+                    dispatch(setData({ _id: '', email, role }))
                     handleAuth(false);
                 } catch (error: unknown) {
                     setLoading(false);
-                    setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                    console.error('Signup error:', error.response?.data || error);
+                    setServerError( 'Something went wrong! Please try again later.');
                 }
             } else {
                 handleErrorMessage('name', name);
@@ -126,11 +124,10 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                 setLoading(false);
                 console.log('Signup successful:', response.data);
                 handleForgotPassword(true)
-                dispatch(setData({ email, role }))
+                dispatch(setData({ _id: '', email, role }))
             } catch (error: unknown) {
                 setLoading(false);
-                setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-                console.error('Signup error:', error.response?.data || error);
+                setServerError('Something went wrong! Please try again later.');
             }
         } else {
             handleErrorMessage('email', email);

@@ -57,8 +57,7 @@ const ForgotPassword: React.FC<IForgotPasswordProps> = ({ handleAuth, handleChan
           handleAuth(true)
       } catch (error: unknown) {
         setLoading(false);
-        setServerError(error?.response?.data?.error || 'Something went wrong! Please try again later.');
-        console.error('Password change error:', error.response?.data || error);
+        setServerError( 'Something went wrong! Please try again later.');
       }
     } else {
       handleErrorMessage('new-password', newPassword);

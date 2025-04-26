@@ -40,12 +40,12 @@ const ProfileTopBody: React.FC = () => {
         try {
             const response = await updateProfileImageApi(imageId);
             if (response?.data) {
-                dispatch(setSuccess(response.data.message));
+                dispatch(setSuccess('update profile image'));
                 dispatch(setPatientProfileData({ profileImage: imageId }))
             }
         } catch (error: unknown) {
             console.log(error);
-            const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again later.';
+            const errorMessage =  'Something went wrong. Please try again later.';
             dispatch(setError(errorMessage));
         }
     };

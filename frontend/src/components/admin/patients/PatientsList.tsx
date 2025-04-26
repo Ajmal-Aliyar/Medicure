@@ -20,7 +20,7 @@ function PatientsList() {
                 setPatients(response.data);
                 setTotalPatients(response.total);
             } catch (error: unknown) {
-                dispatch(setError(error));
+                dispatch(setError('Error occured while fetching patients.'));
             }
         };
 
@@ -38,7 +38,7 @@ function PatientsList() {
                     window.location.reload();
                 }
             } catch (error: unknown) {
-                const errorMessage = error.response?.data?.message || "Something went wrong. Please try again later.";
+                const errorMessage = "Something went wrong. Please try again later.";
                 dispatch(setError(errorMessage));
             } finally {
                 dispatch(clearWarning());

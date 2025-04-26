@@ -11,7 +11,7 @@ export interface IFetchTopDoctors {
 }
 
 export interface IDoctorSotDetails {
-    consulted: ReactNode;
+    consulted: boolean;
     _id: string | null;
     startTime: string;
     endTime: string;

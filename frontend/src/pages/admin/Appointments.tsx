@@ -66,7 +66,7 @@ const Appointments = () => {
             window.location.reload()
             setSuccess('Refunded successfully.')
         } catch (error: unknown) {
-            dispatch(setError(error));
+            dispatch(setError('Error while refund'));
         }
     };
 

@@ -11,9 +11,8 @@ import { IMedicalRecord } from '../../../types/record/record';
 
 interface BookedAppointmentsProps {
   selectedSlot: null | string;
-  setSelectedSlot: React.Dispatch<React.SetStateAction<string | null>>
 }
-const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot, setSelectedSlot }) => {
+const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot }) => {
   const [patientDetails, setPatientDetails] = useState<fetchBookedPatientsResponse[] | null>(null)
   const [medicalReport, setMedicalReport] = useState<boolean>(false)
   const [reportId, setReportId] = useState<string>('')

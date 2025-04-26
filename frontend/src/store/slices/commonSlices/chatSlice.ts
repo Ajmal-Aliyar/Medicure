@@ -7,6 +7,7 @@ interface ChatState {
   trigger: boolean
 }
 export interface IMessage {
+    _id: string;
   content: string, senderId: string, chatId: string
 }
 const initialState: ChatState = {

@@ -19,9 +19,6 @@ function ProfileCard() {
                 dispatch(setProfileData(profile))
             } catch (error: unknown) {
                 let message = 'Something went wrong'
-                if (error instanceof Error) {
-                    message = error
-                }
                 dispatch(setError(message))
             }finally {
                 setLoading(false)

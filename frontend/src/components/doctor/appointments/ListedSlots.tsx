@@ -3,7 +3,7 @@ import { fetchSlotDetailsApi } from '../../../sevices/patient/findDoctors';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { IDoctorSotDetails } from '../../../types/patient/findDoctors';
-import { convertTimeStringToDate, convertTo12HourFormat } from '../../../utils/timeStructure';
+import { convertTo12HourFormat } from '../../../utils/timeStructure';
 
 interface ListedSlotsProps {
     selectedSlot: null | string;

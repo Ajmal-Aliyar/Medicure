@@ -30,7 +30,7 @@ const Appointments = () => {
           <div className='h-full rounded-md'>
             <p className='p-3 flex items-center border-b border-gray-300 text-[#343462] font-medium cursor-pointer' onClick={() => setSelectedSlot(null)}><ChevronLeft size={16} />Patients</p>
 
-            <BookedAppointments selectedSlot={selectedSlot} setSelectedSlot={setSelectedSlot} />
+            <BookedAppointments selectedSlot={selectedSlot} />
           </div>
         </div>
       </div>

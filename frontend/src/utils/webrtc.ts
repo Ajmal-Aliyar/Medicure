@@ -122,16 +122,16 @@ export const handleSignalData = (data: { socketId: string, signal: any }) => {
               peerConnection.setLocalDescription(answer);
               signalPeerData({ signal: answer, socketId });
             })
-            .catch(error => store.dispatch(setError(`Error creating answer`)) );
+            .catch(() => store.dispatch(setError(`Error creating answer`)) );
         }
       })
-      .catch(error => store.dispatch(setError(`Error setting remote description`)) );
+      .catch(() => store.dispatch(setError(`Error setting remote description`)) );
   }
 
   else if (signal.candidate) {
     const iceCandidate = new RTCIceCandidate(signal);
     peerConnection.addIceCandidate(iceCandidate)
-      .catch(error => store.dispatch(setError(`Error adding ICE candidate`)) );
+      .catch(() => store.dispatch(setError(`Error adding ICE candidate`)) );
   }
 
   else {

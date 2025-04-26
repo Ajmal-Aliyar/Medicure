@@ -58,7 +58,7 @@ function Profile() {
                     ...address, 
                 }))
             } catch (error: unknown) {
-                dispatch(setError(error));
+                dispatch(setError('Error fetching profile'));
                 navigate('/user');
             }
         };
@@ -83,7 +83,7 @@ function Profile() {
         }
         const response = await updatePatientProfileData(patientData)
         if (response?.data) {
-            dispatch(setSuccess(response.data.message));
+            dispatch(setSuccess('updated profile'));
         }
     }
 

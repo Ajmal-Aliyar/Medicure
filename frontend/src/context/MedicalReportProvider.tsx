@@ -51,7 +51,6 @@ export function MedicalRecordProvider({ children, recordId }: MedicalRecordProvi
     async function fetchMedicalRecord() {
       try {
         const {record}= await getMedicalRecordById(recordId);
-        console.log(record)
         dispatch({ type: "SET_RECORD", record });
       } catch (error) {
         console.error("Error fetching medical record:", error);

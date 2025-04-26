@@ -59,7 +59,7 @@ const WithdrawRequestsList: FC = () => {
       dispatch(setSuccess(response.message))
 
     } catch (error: unknown) {
-      dispatch(setError(error))
+      dispatch(setError(`Error occured while ${status} withdraw`))
     } finally {
       dispatch(setLoading(false))
     }

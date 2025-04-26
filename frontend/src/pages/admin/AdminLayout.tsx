@@ -1,10 +1,7 @@
-import { useState } from 'react';
 import SlideMenu from '../../components/admin/common/SlideMenu';
 import { Outlet } from 'react-router-dom';
 
 const AdminLayout = () => {
-    const [miniBar, setMiniBar] = useState(false);
-
     return (
         <div className="w-full h-full flex">
             <SlideMenu />

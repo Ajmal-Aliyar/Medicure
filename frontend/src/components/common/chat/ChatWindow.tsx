@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { addMessage } from '../../../store/slices/commonSlices/chatSlice';
 import { sendMessageApi } from '../../../sevices/chat/fetchMessage';
-import { IMessage } from '../../../types/chat/ChatType';
 import { markAsReadApi } from '../../../sevices/chat/fetchChats';
 
 const ChatWindow = () => {
@@ -13,7 +12,7 @@ const ChatWindow = () => {
     const userId = useSelector((state: RootState) => state.auth._id)
     const dispatch = useDispatch()
 
-     const bottomRef = useRef<HTMLDivElement | null>(null);
+    const bottomRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -34,12 +33,12 @@ const ChatWindow = () => {
                 </div>
             </div>
         );
-    
+
 
     const sendMessage = async () => {
         if (message.trim()) {
             await sendMessageApi(message, userId, selectedChat.chatId);
-            dispatch(addMessage({ content: message, senderId: userId, chatId: selectedChat.chatId }));
+            dispatch(addMessage({ _id: '', content: message, senderId: userId, chatId: selectedChat.chatId }));
             setMessage('');
         }
     };
@@ -59,25 +58,24 @@ const ChatWindow = () => {
             </div>
 
             <div className="flex-grow bg-gray-100 p-4 overflow-y-auto">
-            {selectedChat.messages.map((msg: IMessage) => (
-                <div
-                    key={msg._id}
-                    className={`flex mb-4 ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
-                >
-                    {msg.senderId !== userId && (
-                        <img src={selectedChat.profileImage} className="max-w-[30px] rounded-full mr-2" alt="" />
-                    )}
+                {selectedChat.messages.map((msg) => (
                     <div
-                        className={`px-3 py-1  rounded-xl max-w-md h-fit ${
-                            msg.senderId === userId ? "bg-[#93cdf990] text-right rounded-br-none" : "bg-white text-left rounded-bl-none "
-                        }`}
+                        key={msg._id}
+                        className={`flex mb-4 ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
                     >
-                        {msg.content}
+                        {msg.senderId !== userId && (
+                            <img src={selectedChat.profileImage} className="max-w-[30px] rounded-full mr-2" alt="" />
+                        )}
+                        <div
+                            className={`px-3 py-1  rounded-xl max-w-md h-fit ${msg.senderId === userId ? "bg-[#93cdf990] text-right rounded-br-none" : "bg-white text-left rounded-bl-none "
+                                }`}
+                        >
+                            {msg.content}
+                        </div>
                     </div>
-                </div>
-            ))}
-            <div ref={bottomRef} />
-        </div>
+                ))}
+                <div ref={bottomRef} />
+            </div>
 
             <div className="p-4 bg-white flex items-center space-x-4">
                 <input

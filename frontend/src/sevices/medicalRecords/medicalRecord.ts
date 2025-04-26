@@ -7,8 +7,8 @@ export const getMedicalRecords = async () => {
     return response.data;
 };
 
-export const getMedicalRecordById = async (recordId: string) => {
-    const response = await api.get(`/api/record/${recordId}`);
+export const getMedicalRecordById = async (recordId: string): Promise<{record: IMedicalRecord}> => {
+    const response = await api.get<{record: IMedicalRecord}>(`/api/record/${recordId}`);
     return response.data;
 };
 

@@ -28,7 +28,7 @@ const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
                 setTotal(response.total)
                 setDoctors(response.data);
             } catch (error: unknown) {
-                dispatch(setError(error));
+                dispatch(setError('error occured while listing doctors'));
             }
         };
 

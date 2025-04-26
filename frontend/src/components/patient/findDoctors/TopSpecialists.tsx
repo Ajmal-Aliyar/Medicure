@@ -31,7 +31,7 @@ const TopSpecialists: React.FC = () => {
                 setTotalDoctors(response.total)
                 setDoctors(response.data);
             } catch (error: unknown) {
-                dispatch(setError(error));
+                dispatch(setError('Error occured while fetching doctors'));
             }
         };
         getDoctors();

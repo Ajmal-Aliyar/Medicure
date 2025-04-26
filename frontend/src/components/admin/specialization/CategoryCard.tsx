@@ -19,7 +19,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ mount }) => {
         console.log(specializations)
         setSpecializations(specializations)
       } catch (error: unknown) {
-        dispatch(setError(error));
+        dispatch(setError('Error occured while fetching specialization.'));
       } finally {
         dispatch(setLoading(false))
       }

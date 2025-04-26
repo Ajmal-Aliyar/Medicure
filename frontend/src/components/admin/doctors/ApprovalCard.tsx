@@ -1,4 +1,4 @@
-import { faArrowRight, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { IFetchAllApprovedDoctors } from '../../../types/doctor/verifyDetailsType';
@@ -28,7 +28,7 @@ const ApprovalCard: React.FC<ApprovalCardProps> = ({ setOpenPage }) => {
                 setShowMore(response.hasMore)
                 setDoctors((prevDoctors) => [...prevDoctors, ...response.data]);
             } catch (error: unknown) {
-                dispatch(setError(error));
+                dispatch(setError('Error occured while fetching doctors'));
             }
         };
 

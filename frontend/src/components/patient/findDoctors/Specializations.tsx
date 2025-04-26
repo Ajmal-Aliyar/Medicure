@@ -18,7 +18,7 @@ const Specializations: React.FC = () => {
             const { specializations } = await fetchAllSpecializationApi()
             setSpecializations(specializations)
           } catch (error: unknown) {
-            dispatch(setError(error));
+            dispatch(setError('Error occured while fetching specializations'));
           } finally {
             dispatch(setLoading(false))
           }
