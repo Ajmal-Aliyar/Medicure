@@ -7,7 +7,7 @@ import { validatePassword } from "../../utils/validate/authValidate";
 import { changePasswordApi } from "../../sevices/authRepository";
 import {  IErrorTypeChangepassword, IForgotPasswordProps } from "../../types/authType";
 
-const ForgotPassword: React.FC<IForgotPasswordProps> = ({ handleAuth, handleChangePassword , role}) => {
+const ForgotPassword: React.FC<IForgotPasswordProps> = ({ setAuthStatus, role}) => {
   const [loading, setLoading] = useState(false);
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -53,8 +53,7 @@ const ForgotPassword: React.FC<IForgotPasswordProps> = ({ handleAuth, handleChan
       try {
         await changePasswordApi(email, confirmPassword, role)
          setLoading(false);
-          handleChangePassword(false)
-          handleAuth(true)
+          setAuthStatus('auth')
       } catch (error: unknown) {
         setLoading(false);
         setServerError( 'Something went wrong! Please try again later.');

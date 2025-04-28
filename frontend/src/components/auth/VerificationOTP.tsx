@@ -8,7 +8,7 @@ import { IVerificationOTPProp } from "../../types/authType";
 import { sendOTPApi, verifyOtpAndRegisterApi, verifyOtpApi } from "../../sevices/authRepository";
 import RegisteredModal from "./RegisteredModal";
 
-const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPassword, handleChangePassword }) => {
+const VerificationOTP: React.FC<IVerificationOTPProp> = ({ isChangePassword, setAuthStatus }) => {
   const [timer, setTimer] = useState(30);
   const [message,setMessage] = useState('');
   const [loading, setLoading] = useState(false)
@@ -92,14 +92,13 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
     setLoading(true)
     const OTP2Send = otp.join('')
     setOtp(Array(6).fill(""))
-    if (forgotPassword) {
-      console.log('forgot passowrd')
+    if (isChangePassword) {
       try {
         const response = await verifyOtpApi(OTP2Send, email)
         setLoading(false);
         console.log('OTP verified successfully:', response.data);
         setMessage('OTP verified successfully. Please set your new password.')
-        handleChangePassword(true)
+        setAuthStatus('change-password')
       } catch(error: unknown ) {
         setLoading(false);
         setServerError('Something went wrong! Please try again later.');
@@ -123,13 +122,10 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
 
   const handleModal = () => {
     setMessage('')
-    if (forgotPassword) {
-      handleAuth(true)
-      handleChangePassword(true)
-    } else {
+    if (!isChangePassword) {
       dispatch(login())
-      handleAuth(true)
     }
+    setAuthStatus('auth')
   }
 
   return (
@@ -175,9 +171,9 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ handleAuth, forgotPas
         {serverError === '' || loading ? <HoneyComb /> : ''}
       </div>
 
-      <div className={`${message !== ''? "" :"hidden"} fixed top-0 left-0  flex justify-center items-center w-screen h-screen`}>
+      {message !== '' && <div className={` fixed top-0 left-0  flex justify-center items-center w-screen h-screen`}>
         <RegisteredModal handleModal={handleModal} message={message}/>
-      </div>
+      </div>}
     </form>
 
   );

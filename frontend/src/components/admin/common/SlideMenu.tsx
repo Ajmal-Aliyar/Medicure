@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice';
 import { logOutUser } from '../../../store/slices/commonSlices/AuthSlice';
 import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../store/store';
 
 
 
@@ -14,7 +15,7 @@ function SlideMenu() {
     const [selected, setSelected] = useState('');
     const location = useLocation(); 
     const navigate = useNavigate();  
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
             const currentPath = location.pathname;
@@ -51,7 +52,6 @@ function SlideMenu() {
                 }));
         };
     
-
     return (
         <div
             className={`lg:h-screen bg-gradient-to-r from-[#266256] to-[#16423C] fixed lg:relative flex flex-col z-40 overflow-hidden transition-all duration-500 ease-in-out w-full  ${isOpen ? 'lg:w-[280px] h-[460px]' : 'lg:w-[100px] h-[68px]'}`}

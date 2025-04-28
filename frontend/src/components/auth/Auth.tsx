@@ -10,7 +10,7 @@ import { validateName, validateEmail, validateMobile, validatePassword } from ".
 import GoogleAuth from "./GoogleAuth";
 
 
-const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role }) => {
+const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, role }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [mobile, setMobile] = useState('');
@@ -62,7 +62,7 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                     await signUpApi(name, email, mobile, password, role)
                     setLoading(false);
                     dispatch(setData({ _id: '', email, role }))
-                    handleAuth(false);
+                    setAuthStatus('otp-verification')
                 } catch (error: unknown) {
                     setLoading(false);
                     setServerError( 'Something went wrong! Please try again later.');
@@ -123,8 +123,9 @@ const Auth: React.FC<IAuthPageProps> = ({ handleAuth, handleForgotPassword, role
                 const response = await sendOTPApi(email)
                 setLoading(false);
                 console.log('Signup successful:', response.data);
-                handleForgotPassword(true)
+                setAuthStatus('otp-verification')
                 dispatch(setData({ _id: '', email, role }))
+                setIsChangePassword(true)
             } catch (error: unknown) {
                 setLoading(false);
                 setServerError('Something went wrong! Please try again later.');

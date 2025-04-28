@@ -10,22 +10,9 @@ interface AuthProps {
 }
 
 const Auth:React.FC<AuthProps> = ({role}) => {
-  const [forgotPassword, setForgorPassword] = useState(false)
-  const [changePassword, setChangePassword] = useState(false)
-  const [ auth, setAuth] = useState(true)
+  const [authStatus, setAuthStatus] = useState('auth')
+  const [isChangePassword, setIsChangePassword] = useState(false)
   
-  const handleAuth = (value:boolean) => {
-    setAuth(value)
-  }
-
-  const handleForgotPassword = (value: boolean) => {
-    setForgorPassword(value)
-    setAuth(false)
-  } 
-  const handleChangePassword = (value: boolean) => {
-    setChangePassword(value)
-  }
-
   return (
     <div className="w-[100%] h-[100vh] flex justify-center items-center pt-24">
       <div className="lg:w-[80%] w-[100%] relative flex">
@@ -35,9 +22,9 @@ const Auth:React.FC<AuthProps> = ({role}) => {
           <SideAuthComponent />
         </div>
         <div className="w-[100%] lg:w-[50%] flex justify-center items-center">
-            {changePassword ? <ChangePassword handleChangePassword={handleChangePassword} handleAuth={handleAuth} role={role}/> : 
-             auth ? <AuthPage handleAuth={handleAuth} handleForgotPassword={handleForgotPassword} role={role}/> : 
-             <VerificationForm handleAuth={handleAuth} forgotPassword={forgotPassword} handleChangePassword={handleChangePassword}/> }
+            { authStatus === 'auth' && <AuthPage setAuthStatus={setAuthStatus} setIsChangePassword={setIsChangePassword} role={role}/> }
+            { authStatus === 'otp-verification' && <VerificationForm isChangePassword={isChangePassword} setAuthStatus={setAuthStatus}/> }
+            { authStatus === 'change-password' && <ChangePassword setAuthStatus={setAuthStatus} role={role}/> }
         </div>
       </div>
       <AuthAnimations />

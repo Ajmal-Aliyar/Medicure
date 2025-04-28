@@ -6,8 +6,8 @@ export interface IErrorType {
 }
 
 export interface IAuthPageProps {
-    handleAuth: (value: boolean) => void;
-    handleForgotPassword: (value: boolean) => void;
+    setAuthStatus:  React.Dispatch<React.SetStateAction<string>>
+    setIsChangePassword: React.Dispatch<React.SetStateAction<boolean>>
     role: string
 };
 
@@ -21,9 +21,8 @@ export interface ISignInResponse {
 };
 
 export interface IVerificationOTPProp {
-  handleAuth: (value: boolean) => void;
-  forgotPassword: boolean;
-  handleChangePassword:(value: boolean) => void
+  isChangePassword: boolean;
+  setAuthStatus:  React.Dispatch<React.SetStateAction<string>>
 }
 
 export interface IErrorTypeChangepassword {
@@ -31,7 +30,6 @@ export interface IErrorTypeChangepassword {
   confirmPassword: string;
 }
 export interface IForgotPasswordProps {
-  handleAuth: (value: boolean) => void;
-  handleChangePassword: (value: boolean) => void;
+  setAuthStatus:  React.Dispatch<React.SetStateAction<string>>
   role:string;
 }
