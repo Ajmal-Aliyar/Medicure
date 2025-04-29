@@ -58,15 +58,15 @@ services:
         reservations:
           memory: 512M
 
-    nginx:
-        container_name: mt-nginx
-        image: nginx:alpine
-        ports:
-          - "80:80"
-        depends_on:
-          - express
-        volumes:
-          - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  nginx:
+    container_name: mt-nginx
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    depends_on:
+      - express
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
 volumes:
   redis-data:
