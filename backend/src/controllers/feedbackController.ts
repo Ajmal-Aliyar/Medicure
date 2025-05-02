@@ -40,12 +40,12 @@ export class FeedbackController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { _id } = req.client;
+      const { _id: patientId } = req.client;
       const skip = parseInt(req.query.skip as string) || 0;
       const limit = parseInt(req.query.limit as string) || 5;
 
       const feedbackData = await this.feedbackService.getFeedbackByUser(
-        _id,
+        patientId,
         skip,
         limit
       );
@@ -62,12 +62,12 @@ export class FeedbackController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { _id } = req.client;
+      const { _id: doctorId } = req.client;
       const skip = parseInt(req.query.skip as string) || 0;
       const limit = parseInt(req.query.limit as string) || 5;
 
       const feedbackData = await this.feedbackService.getFeedbackForDoctor(
-        _id,
+        doctorId,
         skip,
         limit
       );

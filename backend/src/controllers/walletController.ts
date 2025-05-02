@@ -16,9 +16,9 @@ export class WalletController {
     next: NextFunction
   ): Promise<void> {
     try {
-      let { _id, role } = req.client;
-      _id = role === "admin" ? "Company" : _id;
-      const wallet = await this.walletServices.getWallet(_id);
+      let { _id: clientId, role } = req.client;
+      clientId = role === "admin" ? "Company" : clientId;
+      const wallet = await this.walletServices.getWallet(clientId);
       res.status(200).json({ walletBalance: wallet });
     } catch (error: unknown) {
       console.error(error);

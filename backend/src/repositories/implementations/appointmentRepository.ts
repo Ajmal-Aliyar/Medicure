@@ -1,4 +1,4 @@
-import mongoose, { FilterQuery, UpdateResult } from "mongoose";
+import mongoose, { UpdateResult } from "mongoose";
 import { AppointmentModel } from "../../models/appointment/appointmentModel";
 import {
   IAppointmentDocument,

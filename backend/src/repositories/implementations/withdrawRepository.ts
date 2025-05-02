@@ -18,7 +18,7 @@ export class WithdrawRepository implements IWithdrawRepository {
     status: string,
     skip: number,
     limit: number,
-    _id?: string
+    clientId?: string
   ): Promise<{ withdrawRequests: IWithdrawRequests[]; total: number }> {
     try {
       const filterQuery: {
@@ -30,8 +30,8 @@ export class WithdrawRepository implements IWithdrawRepository {
         filterQuery.status = status;
       }
 
-      if (_id) {
-        filterQuery.recieverId = _id;
+      if (clientId) {
+        filterQuery.recieverId = clientId;
       }
 
       const withdrawRequests = await WithdrawModel.aggregate([
@@ -70,14 +70,14 @@ export class WithdrawRepository implements IWithdrawRepository {
     }
   }
 
-  async getWithdrawRequestById(_id: string): Promise<IWithdrawSchema> {
-    return await WithdrawModel.findById({ _id });
+  async getWithdrawRequestById(clientId: string): Promise<IWithdrawSchema> {
+    return await WithdrawModel.findById({ clientId });
   }
 
   async updateWithdrawRequest(
-    _id: string,
+    clientId: string,
     status: string
   ): Promise<UpdateResult> {
-    return await WithdrawModel.updateOne({ _id }, { status });
+    return await WithdrawModel.updateOne({ _id: clientId }, { status });
   }
 }

@@ -21,7 +21,7 @@ export class AdminController {
   async signIn(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { email, password, role } = req.body;
     try {
-      const { accessToken, refreshToken, _id } =
+      const { accessToken, refreshToken, id } =
         await this.adminServices.signIn(email, password, role);
       if (accessToken) {
         res.cookie("accessToken", accessToken, {
@@ -37,7 +37,7 @@ export class AdminController {
           secure: process.env.NODE_ENV === "production",
         });
       }
-      res.status(200).json({ message: "Sign in successfully.", _id });
+      res.status(200).json({ message: "Sign in successfully.", id });
     } catch (error: unknown) {
       next(error);
     }
@@ -49,8 +49,8 @@ export class AdminController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { _id } = req.params;
-      const DoctorData = await this.adminServices.getDoctorDetails(_id);
+      const { _id: doctorId } = req.params;
+      const DoctorData = await this.adminServices.getDoctorDetails(doctorId);
       res.status(200).json({ data: DoctorData });
     } catch (error: unknown) {
       next(error);

@@ -61,9 +61,9 @@ export class ChatRepository implements IChatRepository {
       const populatedChats = await Promise.all(
         chats.map(async (chat) => {
           const populatedParticipants = await Promise.all(
-            chat.participants.map(async (_id) => {
+            chat.participants.map(async (clientId) => {
               const user = await client
-                .findById(_id, { fullName: 1, profileImage: 1 })
+                .findById(clientId, { fullName: 1, profileImage: 1 })
                 .lean();
               return user || null;
             })
@@ -92,8 +92,8 @@ export class ChatRepository implements IChatRepository {
       const populatedChats = await Promise.all(
         chats.map(async (chat) => {
           const populatedParticipants = await Promise.all(
-            chat.participants.map(async (_id) => {
-              const user = await DoctorModel.findById(_id, {
+            chat.participants.map(async (docterId) => {
+              const user = await DoctorModel.findById(docterId, {
                 fullName: 1,
                 profileImage: 1,
               }).lean();

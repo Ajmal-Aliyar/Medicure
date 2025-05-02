@@ -7,7 +7,7 @@ export class AdminRepository implements IAdminRepository {
     return await AdminModel.findOne({ email });
   }
 
-  async findByID(_id: string): Promise<IAdmin> {
-    return await AdminModel.findById(_id);
+  async findByID(id: string): Promise<IAdmin> {
+    return await AdminModel.findById(id);
   }
 }

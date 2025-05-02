@@ -12,17 +12,17 @@ import { IAddress } from "../../models/doctor/doctorInterface";
 const doctorRepository = new DoctorRepository();
 
 export class DoctorService {
-  async getProfileDetails(_id: string) {
+  async getProfileDetails(doctorId: string) {
     try {
-      return await doctorRepository.findByID(_id);
+      return await doctorRepository.findByID(doctorId);
     } catch (error) {
       throw error;
     }
   }
 
-  async getProfileImage(_id: string) {
+  async getProfileImage(doctorId: string) {
     try {
-      return await doctorRepository.getProfileImage(_id);
+      return await doctorRepository.getProfileImage(doctorId);
     } catch (error) {
       throw error;
     }
@@ -41,7 +41,7 @@ export class DoctorService {
       }
 
       await doctorRepository.profileImage({
-        _id: doctorId,
+        doctorId,
         profileImage: newProfileImage,
       });
     } catch (error) {
@@ -51,7 +51,7 @@ export class DoctorService {
   }
 
   async updateDoctor(
-    _id: string,
+    doctorId: string,
     {
       addressLine,
       streetAddress,
@@ -78,7 +78,7 @@ export class DoctorService {
         pincode,
       };
 
-      await doctorRepository.updateDoctor(_id, {
+      await doctorRepository.updateDoctor(doctorId, {
         fullName,
         headline,
         about,
@@ -93,12 +93,12 @@ export class DoctorService {
     }
   }
 
-  async getProfileVerificationDetailsByID(_id: string) {
+  async getProfileVerificationDetailsByID(doctorId: string) {
     try {
-      const doctorData = await doctorRepository.findByID(_id);
+      const doctorData = await doctorRepository.findByID(doctorId);
 
       if (!doctorData) {
-        throw new Error(`Doctor with id ${_id} does not exist`);
+        throw new Error(`Doctor with id ${doctorId} does not exist`);
       }
 
       const {
@@ -121,18 +121,18 @@ export class DoctorService {
       };
     } catch (error: unknown) {
       console.error(
-        `Error fetching doctor profile verification details for ${_id}: ${error}`
+        `Error fetching doctor profile verification details for ${doctorId}: ${error}`
       );
       return error;
     }
   }
 
-  async getProofVerificationDetailsByID(_id: string) {
+  async getProofVerificationDetailsByID(doctorId: string) {
     try {
-      const doctorData = await doctorRepository.findByID(_id);
+      const doctorData = await doctorRepository.findByID(doctorId);
 
       if (!doctorData) {
-        throw new Error(`Doctor with email ${_id} does not exist`);
+        throw new Error(`Doctor with email ${doctorId} does not exist`);
       }
 
       const { identityProof, medicalRegistration, establishmentProof } =
@@ -141,7 +141,7 @@ export class DoctorService {
       return { identityProof, medicalRegistration, establishmentProof };
     } catch (error: unknown) {
       console.error(
-        `Error fetching doctor profile verification details for ${_id}: ${error}`
+        `Error fetching doctor profile verification details for ${doctorId}: ${error}`
       );
       return error;
     }
@@ -178,17 +178,17 @@ export class DoctorService {
   }
 
   async verificationProofs(
-    _id: string,
+    doctorId: string,
     establishmentProof: string | null,
     identityProof: string | null,
     medicalRegistration: string | null
   ): Promise<void> {
     try {
-      if (!_id) {
+      if (!doctorId) {
         throw new Error("Email is required for verification update.");
       }
 
-      const doctorData = await doctorRepository.findByID(_id);
+      const doctorData = await doctorRepository.findByID(doctorId);
       if (!doctorData) {
         throw new Error("Doctor not found with the provided email.");
       }
@@ -209,7 +209,7 @@ export class DoctorService {
       }
 
       await doctorRepository.updateVerficationProofs(
-        _id,
+        doctorId,
         establishmentProof,
         identityProof,
         medicalRegistration
@@ -280,9 +280,9 @@ export class DoctorService {
     }
   }
 
-  async updateFees({ _id, fees }: { _id: string; fees: number }) {
+  async updateFees({ doctorId, fees }: { doctorId: string; fees: number }) {
     try {
-      const update = await doctorRepository.updateFees(_id, fees);
+      const update = await doctorRepository.updateFees(doctorId, fees);
       if (!update) {
         throw new Error("Fees not updated");
       }

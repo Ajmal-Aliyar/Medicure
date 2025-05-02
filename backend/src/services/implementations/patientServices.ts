@@ -21,8 +21,8 @@ export class PatientServices implements IPatientServices {
     this.doctorRepository = doctorRepository;
   }
 
-  async getProfile(_id: string): Promise<Partial<IPatient> | null> {
-    if (!_id || typeof _id !== "string") {
+  async getProfile(patientId: string): Promise<Partial<IPatient> | null> {
+    if (!patientId || typeof patientId !== "string") {
       throw {
         message:
           "The patient ID provided is invalid. Please ensure it is a valid string.",
@@ -30,15 +30,15 @@ export class PatientServices implements IPatientServices {
     }
     try {
       const patientData: Partial<IPatient> | null =
-        await this.patientRepository.getProfileData(_id);
+        await this.patientRepository.getProfileData(patientId);
       if (!patientData) {
         throw {
-          message: `No patient found with the ID: ${_id}. Please verify the ID and try again.`,
+          message: `No patient found with the ID: ${patientId}. Please verify the ID and try again.`,
         };
       }
       return patientData;
     } catch (error) {
-      console.error(`Error fetching profile for ID ${_id}:`, error);
+      console.error(`Error fetching profile for ID ${patientId}:`, error);
       throw {
         message:
           "An error occurred while fetching the patient profile. Please try again later.",
@@ -48,7 +48,7 @@ export class PatientServices implements IPatientServices {
   }
 
   async updateProfile({
-    _id,
+    patientId,
     dob,
     gender,
     bloodGroup,
@@ -69,7 +69,7 @@ export class PatientServices implements IPatientServices {
         pincode,
       };
       const updateResult = await this.patientRepository.updateProfile({
-        _id,
+        patientId,
         dob,
         gender,
         bloodGroup,
@@ -85,11 +85,11 @@ export class PatientServices implements IPatientServices {
   }
 
   async updateProfileImg(
-    doctorId: string,
+    patientId: string,
     newProfileImage: string
   ): Promise<void> {
     try {
-      const existingDoctor = await this.patientRepository.findByID(doctorId);
+      const existingDoctor = await this.patientRepository.findByID(patientId);
       if (!existingDoctor) {
         throw { message: "Doctor not found.", statusCode: 404 };
       }
@@ -105,7 +105,7 @@ export class PatientServices implements IPatientServices {
         }
       }
       const result = await this.patientRepository.profileImage({
-        _id: doctorId,
+        patientId,
         profileImage: newProfileImage,
       });
 

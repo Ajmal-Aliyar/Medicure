@@ -44,14 +44,14 @@ export class TransactionServices implements ITransactionServices {
   }
 
   async getTransactionsByUserId(
-    _id: string,
+    clientId: string,
     role: string,
     skip: number,
     limit: number
   ): Promise<{ transactions: ITransaction[]; total: number }> {
     try {
       return await this.transactionRepository.getTransactions(
-        _id,
+        clientId,
         role,
         skip,
         limit
@@ -87,9 +87,9 @@ export class TransactionServices implements ITransactionServices {
     }
   }
 
-  async getTransactionById(_id: string): Promise<ITransaction> {
+  async getTransactionById(clientId: string): Promise<ITransaction> {
     try {
-      return await this.transactionRepository.getTransactionById(_id);
+      return await this.transactionRepository.getTransactionById(clientId);
     } catch (error: unknown) {
       throw error;
     }

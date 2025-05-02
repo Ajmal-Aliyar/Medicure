@@ -19,8 +19,8 @@ export class SlotController implements ISlotController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { _id } = req.client;
-      const slots = await this.slotService.getSlots(_id);
+      const { _id: clientId } = req.client;
+      const slots = await this.slotService.getSlots(clientId);
       res.status(200).json(slots);
     } catch (error) {
       next(error);
@@ -30,8 +30,8 @@ export class SlotController implements ISlotController {
   async manageSlots(req: Request, res: Response): Promise<void> {
     try {
       const { slots, fees } = req.body;
-      const { _id } = req.client;
-      await this.slotService.manageSlots(_id, slots, fees);
+      const { _id: clientId } = req.client;
+      await this.slotService.manageSlots(clientId, slots, fees);
       res.status(200).json({ message: "Slots managed successfully" });
     } catch (error) {
       res.status(500).json({ message: error });

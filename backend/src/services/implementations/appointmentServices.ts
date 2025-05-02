@@ -123,7 +123,7 @@ export class AppointmentServices implements IAppointmentServices {
   }
 
   async getAllAppointmentsOfDoctor(
-    _id: string
+    id: string
   ): Promise<
     {
       patientDetails: Partial<IPatient> | null;
@@ -134,7 +134,7 @@ export class AppointmentServices implements IAppointmentServices {
   > {
     try {
       const appointments =
-        await this.appointmentRepository.getAllAppointmentsOfDoctor(_id);
+        await this.appointmentRepository.getAllAppointmentsOfDoctor(id);
 
       if (appointments.length === 0) {
         return [];

@@ -19,11 +19,11 @@ export class MedicalRecordRepository implements IMedicalRecordRepository {
   }
 
   async getRecordById(
-    id: string,
+    recordId: string,
     skip: number,
     limit: number
   ): Promise<IMedicalRecord | null> {
-    return await MedicalRecordModel.findById(id).skip(skip).limit(limit);
+    return await MedicalRecordModel.findById(recordId).skip(skip).limit(limit);
   }
 
   async getUserRecordById(
@@ -80,14 +80,14 @@ export class MedicalRecordRepository implements IMedicalRecordRepository {
   }
 
   async updateRecord(
-    id: string,
+    recordId: string,
     data: Partial<IMedicalRecord>
   ): Promise<IMedicalRecord | null> {
-    return await MedicalRecordModel.findByIdAndUpdate(id, data, { new: true });
+    return await MedicalRecordModel.findByIdAndUpdate(recordId, data, { new: true });
   }
 
-  async deleteRecord(id: string): Promise<IMedicalRecord | null> {
-    return await MedicalRecordModel.findByIdAndDelete(id);
+  async deleteRecord(recordId: string): Promise<IMedicalRecord | null> {
+    return await MedicalRecordModel.findByIdAndDelete(recordId);
   }
 }
 

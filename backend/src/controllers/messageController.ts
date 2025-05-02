@@ -18,8 +18,8 @@ export class MessageController {
 
     async createMessage(req: Request, res: Response, next: NextFunction ): Promise<void> {
         try {
-            const {_id} = req.client
-            await this.messageServices.createMessage(req.body, _id)
+            const {_id: userId} = req.client
+            await this.messageServices.createMessage(req.body, userId)
             res.status(200).json({message: "Message sent!"});
         } catch (error: unknown) {
             next(error)

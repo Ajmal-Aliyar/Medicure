@@ -1,5 +1,5 @@
 export interface IUpdateProfilePayload {
-  _id: string;
+  patientId: string;
   dob: string;
   gender: string;
   bloodGroup: string;
@@ -30,7 +30,7 @@ export interface IGetProfilePayload {
 }
 
 export interface IUpdateProfile {
-  _id: string;
+  patientId: string;
   dob: string;
   gender: string;
   bloodGroup: string;

@@ -39,9 +39,9 @@ export class SlotRepository implements ISlotRepository {
     }
   }
 
-  async deleteSlot(_id: string): Promise<void> {
+  async deleteSlot(slotId: string): Promise<void> {
     try {
-      const result = await SlotModel.deleteOne({ _id });
+      const result = await SlotModel.deleteOne({ _id: slotId });
       if (result.deletedCount === 0) {
         throw new Error("Slot not found or already deleted");
       }
@@ -51,11 +51,11 @@ export class SlotRepository implements ISlotRepository {
     }
   }
 
-  async getById(_id: string): Promise<ISlotSchema> {
-    return await SlotModel.findById(_id);
+  async getById(slotId: string): Promise<ISlotSchema> {
+    return await SlotModel.findById(slotId);
   }
-  async incBooked(_id: string): Promise<UpdateResult> {
-    return await SlotModel.updateOne({ _id }, { $inc: { bookedSlot: 1 } });
+  async incBooked(slotId: string): Promise<UpdateResult> {
+    return await SlotModel.updateOne({ _id: slotId }, { $inc: { bookedSlot: 1 } });
   }
 
   async createSlot(slotData: ISlot): Promise<void> {
@@ -68,7 +68,7 @@ export class SlotRepository implements ISlotRepository {
     }
   }
 
-  async consultingCompleted(_id: string): Promise<UpdateResult> {
-    return await SlotModel.updateOne({ _id }, { $inc: { consulted: 1 } });
+  async consultingCompleted(slotId: string): Promise<UpdateResult> {
+    return await SlotModel.updateOne({ _id: slotId }, { $inc: { consulted: 1 } });
   }
 }

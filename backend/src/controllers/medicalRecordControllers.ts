@@ -17,12 +17,12 @@ export class MedicalRecordController {
 
   async getUserRecordById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { _id } = req.client;
+      const { _id: userId } = req.client;
       const skip = parseInt(req.query.skip as string) || 0;
       const limit = parseInt(req.query.limit as string) || 5;
 
       const response = await this.medicalRecordService.getUserRecordById(
-        _id,
+        userId,
         skip,
         limit
       );
@@ -38,12 +38,12 @@ export class MedicalRecordController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id: recordId } = req.params;
       const skip = parseInt(req.query.skip as string) || 0;
       const limit = parseInt(req.query.limit as string) || 5;
 
       const record = await this.medicalRecordService.getRecordById(
-        id,
+        recordId,
         skip,
         limit
       );
@@ -78,10 +78,10 @@ export class MedicalRecordController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id: recordId } = req.params;
       const data: Partial<IMedicalRecord> = req.body;
       const updatedRecord = await this.medicalRecordService.updateRecord(
-        id,
+        recordId,
         data
       );
 
@@ -102,8 +102,8 @@ export class MedicalRecordController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { id } = req.params;
-      const deleted = await this.medicalRecordService.deleteRecord(id);
+      const { id: recordId } = req.params;
+      const deleted = await this.medicalRecordService.deleteRecord(recordId);
 
       if (!deleted) {
         res

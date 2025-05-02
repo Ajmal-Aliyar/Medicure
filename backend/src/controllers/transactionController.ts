@@ -17,16 +17,16 @@ export class TransactionController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { _id, role } = req.client;
+      const { _id: clientId, role } = req.client;
       const skip = parseInt(req.query.skip as string) || 0;
       const limit = parseInt(req.query.limit as string) || 5;
 
-      if (!_id) {
+      if (!clientId) {
         throw new Error("Invalid client data");
       }
 
       const response = await this.transactionServices.getTransactionsByUserId(
-        role === 'admin' ? 'Company' : _id,
+        role === 'admin' ? 'Company' : clientId,
         role,
         skip,
         limit

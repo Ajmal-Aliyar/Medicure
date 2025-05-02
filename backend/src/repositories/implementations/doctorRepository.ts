@@ -31,7 +31,7 @@ export class DoctorRepository implements IDoctorRepository {
   }
 
   async updateDoctor(
-    _id: string,
+    doctorId: string,
     {
       fullName,
       headline,
@@ -44,7 +44,7 @@ export class DoctorRepository implements IDoctorRepository {
     }
   ): Promise<void> {
     const result = await DoctorModel.updateOne(
-      { _id },
+      { _id: doctorId },
       {
         $set: {
           fullName,
@@ -113,14 +113,14 @@ export class DoctorRepository implements IDoctorRepository {
     }
   }
 
-  async getMinDetails(_id: mongoose.Types.ObjectId): Promise<{
+  async getMinDetails(doctorId: mongoose.Types.ObjectId): Promise<{
     _id: mongoose.Types.ObjectId;
     fullName: string;
     profileImage: string;
   }> {
     try {
       return await DoctorModel.findOne(
-        { _id },
+        { _id: doctorId },
         { fullName: 1, profileImage: 1 }
       );
     } catch (error) {
@@ -132,13 +132,13 @@ export class DoctorRepository implements IDoctorRepository {
     return await DoctorModel.findOne({ email });
   }
 
-  async findByID(_id: string): Promise<IDoctor> {
-    return await DoctorModel.findById(_id);
+  async findByID(doctorId: string): Promise<IDoctor> {
+    return await DoctorModel.findById(doctorId);
   }
 
-  async getProfileImage(_id: string): Promise<{ profileImage: string | null }> {
+  async getProfileImage(doctorId: string): Promise<{ profileImage: string | null }> {
     const doctor = await DoctorModel.findOne(
-      { _id },
+      { _id: doctorId },
       { profileImage: 1 }
     ).lean();
     return doctor
@@ -147,14 +147,14 @@ export class DoctorRepository implements IDoctorRepository {
   }
 
   async profileImage({
-    _id,
+    doctorId,
     profileImage,
   }: {
-    _id: string;
-    profileImage: string;
+    doctorId: string;
+    profileImage: string; 
   }): Promise<UpdateResult> {
     try {
-      return await DoctorModel.updateOne({ _id }, { $set: { profileImage } });
+      return await DoctorModel.updateOne({ _id: doctorId }, { $set: { profileImage } });
     } catch (error) {
       throw new Error("Error updating profile image: " + error);
     }
@@ -195,7 +195,7 @@ export class DoctorRepository implements IDoctorRepository {
   }
 
   async updateVerficationProofs(
-    _id: string,
+    doctorId: string,
     establishmentProof: string | null,
     identityProof: string | null,
     medicalRegistration: string | null
@@ -213,7 +213,7 @@ export class DoctorRepository implements IDoctorRepository {
       }
       if (Object.keys(updateData).length > 0) {
         const updateResult = await DoctorModel.updateOne(
-          { _id },
+          { _id: doctorId },
           { $set: updateData }
         );
         return updateResult;

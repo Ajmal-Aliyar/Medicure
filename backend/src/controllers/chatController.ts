@@ -105,9 +105,9 @@ export class ChatController {
   ): Promise<void> {
     try {
       const { chatId } = req.params;
-      const { _id } = req.client;
+      const { _id:clientId } = req.client;
 
-      await this.chatRepository.markAsRead(chatId, _id);
+      await this.chatRepository.markAsRead(chatId, clientId);
       res.status(200).json({ message: "Chat mark as read." });
     } catch (error) {
       next(error);

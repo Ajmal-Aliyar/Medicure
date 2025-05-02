@@ -39,23 +39,23 @@ export class PatientRepository implements IPatientRepository {
     return await PatientModel.findOne({ email });
   }
 
-  async findByID(_id: string): Promise<IPatient> {
-    return await PatientModel.findById(_id);
+  async findByID(patientId: string): Promise<IPatient> {
+    return await PatientModel.findById(patientId);
   }
 
   async changePassword(email: string, password: string): Promise<UpdateResult> {
     return await PatientModel.updateOne({ email }, { $set: { password } });
   }
 
-  async getProfileData(_id: string): Promise<Partial<IPatient> | null> {
-    return await PatientModel.findById(_id)
+  async getProfileData(patientId: string): Promise<Partial<IPatient> | null> {
+    return await PatientModel.findById(patientId)
       .select("profileImage fullName phone email dob bloodGroup gender address")
       .lean()
       .exec();
   }
 
   async updateProfile({
-    _id,
+    patientId,
     dob,
     gender,
     bloodGroup,
@@ -63,7 +63,7 @@ export class PatientRepository implements IPatientRepository {
   }: IUpdateProfile): Promise<UpdateResult> {
     try {
       return await PatientModel.updateOne(
-        { _id },
+        { _id: patientId },
         { dob, gender, bloodGroup, address }
       );
     } catch (error) {
@@ -72,21 +72,21 @@ export class PatientRepository implements IPatientRepository {
   }
 
   async profileImage({
-    _id,
+    patientId,
     profileImage,
   }: {
-    _id: string;
+    patientId: string;
     profileImage: string;
   }): Promise<UpdateResult> {
     try {
-      return await PatientModel.updateOne({ _id }, { $set: { profileImage } });
+      return await PatientModel.updateOne({ _id: patientId }, { $set: { profileImage } });
     } catch (error) {
       throw "Error updating profile image: " + error;
     }
   }
 
   async getMinDetails(
-    _id: mongoose.Types.ObjectId
+    patientId: mongoose.Types.ObjectId
   ): Promise<{
     _id: mongoose.Types.ObjectId;
     fullName: string;
@@ -94,7 +94,7 @@ export class PatientRepository implements IPatientRepository {
   }> {
     try {
       return await PatientModel.findOne(
-        { _id },
+        { _id: patientId },
         { fullName: 1, profileImage: 1 }
       );
     } catch (error) {
@@ -119,13 +119,13 @@ export class PatientRepository implements IPatientRepository {
     }
   }
 
-  async block(_id: string): Promise<UpdateResult> {
-    return await PatientModel.updateOne({ _id }, { $set: { isBlocked: true } });
+  async block(patientId: string): Promise<UpdateResult> {
+    return await PatientModel.updateOne({ _id: patientId }, { $set: { isBlocked: true } });
   }
 
-  async unblock(_id: string): Promise<UpdateResult> {
+  async unblock(patientId: string): Promise<UpdateResult> {
     return await PatientModel.updateOne(
-      { _id },
+      { _id: patientId },
       { $set: { isBlocked: false } }
     );
   }

@@ -1,7 +1,6 @@
 import { IChatRepository } from "../../repositories/interfaces/IChatRepository";
 import {
   IChatId,
-  IChatListResponse,
   IChatServices,
   ICreateChat,
   IGetUserChats,
@@ -94,8 +93,8 @@ export class ChatServices implements IChatServices {
             return { ...chat, unreadMessages: unreadMessagesObject };
           } else {
             const populatedParticipants = await Promise.all(
-              chat.participants.map(async (_id) => {
-                const user = await client.getMinDetails(_id);
+              chat.participants.map(async (clientId) => {
+                const user = await client.getMinDetails(clientId);
                 return user || null;
               })
             );

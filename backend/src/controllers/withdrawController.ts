@@ -58,14 +58,14 @@ export class WithdrawController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { _id } = req.client;
+      const { _id: clientId } = req.client;
 
       const status = (req.query.status as string) || "";
       const skip = parseInt(req.query.skip as string) || 0;
       const limit = parseInt(req.query.limit as string) || 5;
 
       const response = await this.withdrawService.getWithdrawRequestsByUser(
-        _id,
+        clientId,
         status,
         skip,
         limit
@@ -82,9 +82,9 @@ export class WithdrawController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const id = req.query.id as string;
+      const clientId = req.query.id as string;
 
-      const message = await this.withdrawService.approveWithdrawRequest(id);
+      const message = await this.withdrawService.approveWithdrawRequest(clientId);
       res.status(200).json({ message });
     } catch (error: unknown) {
       next(error);
@@ -97,9 +97,9 @@ export class WithdrawController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const id = req.query.id as string;
+      const clientId = req.query.id as string;
 
-      const message = await this.withdrawService.cancelWithdrawRequest(id);
+      const message = await this.withdrawService.cancelWithdrawRequest(clientId);
       res.status(200).json({ message });
     } catch (error: unknown) {
       next(error);

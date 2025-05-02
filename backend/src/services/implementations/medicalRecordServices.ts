@@ -10,25 +10,25 @@ export class MedicalRecordServices implements IMedicalRecordServices {
   }
 
   async getRecordById(
-    id: string,
+    recordId: string,
     skip: number,
     limit: number
   ): Promise<IMedicalRecord | null> {
     try {
-      return await this.medicalRecordRepository.getRecordById(id, skip, limit);
+      return await this.medicalRecordRepository.getRecordById(recordId, skip, limit);
     } catch (error: unknown) {
       throw error;
     }
   }
 
   async getUserRecordById(
-    _id: string,
+    userId: string,
     skip: number,
     limit: number
   ): Promise<{ prescriptions: IMedicalRecord[]; total: number }> {
     try {
       return await this.medicalRecordRepository.getUserRecordById(
-        _id,
+        userId,
         skip,
         limit
       );
@@ -46,19 +46,19 @@ export class MedicalRecordServices implements IMedicalRecordServices {
   }
 
   async updateRecord(
-    id: string,
+    recordId: string,
     data: Partial<IMedicalRecord>
   ): Promise<IMedicalRecord | null> {
     try {
-      return await this.medicalRecordRepository.updateRecord(id, data);
+      return await this.medicalRecordRepository.updateRecord(recordId, data);
     } catch (error: unknown) {
       throw error;
     }
   }
 
-  async deleteRecord(id: string): Promise<boolean> {
+  async deleteRecord(recordId: string): Promise<boolean> {
     try {
-      const deleted = await this.medicalRecordRepository.deleteRecord(id);
+      const deleted = await this.medicalRecordRepository.deleteRecord(recordId);
       return deleted !== null;
     } catch (error: unknown) {
       throw error;

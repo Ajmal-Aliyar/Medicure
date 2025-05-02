@@ -43,7 +43,7 @@ export class SlotService implements ISlotService {
       );
       const newSlotIds = new Set(slots.map((slot) => slot._id).filter(Boolean));
       const slotsToDelete = [...existingSlotIds].filter(
-        (_id) => !newSlotIds.has(_id)
+        (slotId) => !newSlotIds.has(slotId)
       );
       if (slotsToDelete.length) await this.deleteSlots(slotsToDelete);
       await this.updateOrCreateSlots(slots, existingSlotIds, doctorId);
@@ -96,7 +96,7 @@ export class SlotService implements ISlotService {
 
   private async deleteSlots(slotIds: string[]): Promise<void> {
     await Promise.all(
-      slotIds.map((_id) => this.slotRepository.deleteSlot(_id))
+      slotIds.map((slotId) => this.slotRepository.deleteSlot(slotId))
     );
   }
 
@@ -106,10 +106,10 @@ export class SlotService implements ISlotService {
     doctorId: string
   ): Promise<void> {
     for (const slot of slots) {
-      const { _id, startTime, endTime, slotLimit, avgConsultTime } = slot;
+      const { _id: slotId, startTime, endTime, slotLimit, avgConsultTime } = slot;
 
-      if (_id && existingSlotIds.has(_id)) {
-        console.log("update id",_id)
+      if (slotId && existingSlotIds.has(slotId)) {
+        console.log("update id",slotId)
     } else {
         console.log({ doctorId, startTime, endTime, slotLimit, avgConsultTime })
         await this.slotRepository.createSlot({ doctorId, startTime, endTime, slotLimit, avgConsultTime });

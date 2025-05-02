@@ -8,8 +8,8 @@ const doctorService = new DoctorService();
 export class DoctorController {
   async getProfileImage(req: Request, res: Response, next: NextFunction) {
     try {
-      const { _id } = req.client;
-      const profileImage = await doctorService.getProfileImage(_id);
+      const { _id: doctorId } = req.client;
+      const profileImage = await doctorService.getProfileImage(doctorId);
       res.status(200).json({ profileImage: profileImage.profileImage });
     } catch (error) {
       next(error);
@@ -18,8 +18,8 @@ export class DoctorController {
 
   async getProfileDetails(req: Request, res: Response, next: NextFunction) {
     try {
-      const { _id } = req.client;
-      const doctorData = await doctorService.getProfileDetails(_id);
+      const { _id: doctorId } = req.client;
+      const doctorData = await doctorService.getProfileDetails(doctorId);
       res.status(200).json(doctorData);
     } catch (error) {
       next(error);
@@ -31,7 +31,7 @@ export class DoctorController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { _id } = req.client;
+    const { _id: doctorId } = req.client;
     const { profileImage } = req.body;
 
     try {
@@ -39,7 +39,7 @@ export class DoctorController {
         res.status(400).json({ message: "Profile image is required." });
         return;
       }
-      await doctorService.updateProfileImg(_id, profileImage);
+      await doctorService.updateProfileImg(doctorId, profileImage);
       res.status(200).json({ message: "Profile image updated successfully." });
     } catch (error) {
       next(error);
@@ -52,7 +52,7 @@ export class DoctorController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { _id } = req.client;
+      const { _id: doctorId } = req.client;
       const {
         fullName,
         headline,
@@ -68,7 +68,7 @@ export class DoctorController {
         country,
         pincode,
       } = req.body;
-      await doctorService.updateDoctor(_id, {
+      await doctorService.updateDoctor(doctorId, {
         fullName,
         headline,
         about,
@@ -96,9 +96,9 @@ export class DoctorController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const _id = req.client._id;
+      const doctorId = req.client._id;
       const doctorProfile =
-        await doctorService.getProfileVerificationDetailsByID(_id);
+        await doctorService.getProfileVerificationDetailsByID(doctorId);
 
       if (!doctorProfile) {
         res.status(404).json({ error: "Doctor profile not found" });
@@ -116,9 +116,9 @@ export class DoctorController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const _id = req.client._id;
+      const doctorId = req.client._id;
       const doctorProfile = await doctorService.getProofVerificationDetailsByID(
-        _id
+        doctorId
       );
 
       if (!doctorProfile) {
@@ -146,11 +146,11 @@ export class DoctorController {
       yearsOfExperience,
     }: IProfileVerificationRequestBody = req.body;
 
-    const _id: string = req.client._id;
+    const doctorId: string = req.client._id;
 
     try {
       await doctorService.profileVerification({
-        _id,
+        _id: doctorId,
         registrationNumber,
         registrationCouncil,
         registrationYear,
@@ -173,10 +173,10 @@ export class DoctorController {
     next: NextFunction
   ): Promise<void> {
     const { establishmentProof, identityProof, medicalRegistration } = req.body;
-    const _id: string = req.client._id;
+    const doctorId: string = req.client._id;
     try {
       await doctorService.verificationProofs(
-        _id,
+        doctorId,
         establishmentProof,
         identityProof,
         medicalRegistration
@@ -194,17 +194,17 @@ export class DoctorController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { _id }: { _id: string } = req.client;
+    const { _id: doctorId }: { _id: string } = req.client;
 
     try {
-      const status = await doctorService.submitDoctorVerification(_id);
+      const status = await doctorService.submitDoctorVerification(doctorId);
       res.status(200).json({ status });
     } catch (error: unknown) {
       next(error);
     }
   }
 
-  async getDoctorsDetails(req: Request, res: Response, next: NextFunction) {
+  async getDoctorsDetails(_req: Request, res: Response, next: NextFunction) {
     try {
       const doctorDetails = await doctorService.getAllDoctors();
       res.status(200).json(doctorDetails);

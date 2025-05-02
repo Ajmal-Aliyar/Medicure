@@ -22,7 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 export interface authorizedUserResponse {
   accessToken: string;
   refreshToken: string;
-  _id: string;
+  id: string;
 }
 const patientRepository = new PatientRepository();
 const doctorRepository = new DoctorRepository();
@@ -123,7 +123,7 @@ export class AuthService {
 
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
-      return { accessToken, refreshToken, _id: user._id.toString() };
+      return { accessToken, refreshToken, id: user._id.toString() };
     } catch (error) {
       console.error("Error during sign-in:", error);
       throw new Error(
@@ -138,7 +138,7 @@ export class AuthService {
     profileImage,
   }): Promise<authorizedUserResponse> {
     const user = await patientRepository.findByEmail(email);
-    let _id: string = "";
+    let id: string = "";
     if (!user) {
       const patient = await patientRepository.createAuthUser({
         fullName,
@@ -151,19 +151,19 @@ export class AuthService {
           "Registration failed: We encountered an issue while creating your account."
         );
       }
-      _id = patient._id.toString();
+      id = patient._id.toString();
     } else {
-      _id = user._id.toString();
+      id = user._id.toString();
     }
 
     const payload = {
-      _id,
+      _id:id,
       role: "user",
     };
 
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken(payload);
-    return { accessToken, refreshToken, _id };
+    return { accessToken, refreshToken, id };
   }
 
   async changePassword(
@@ -221,7 +221,7 @@ export class AuthService {
 
       const userData = JSON.parse(await getRedisData(email));
 
-      let _id: string;
+      let id: string;
       if (userData.role === "doctor") {
         const doctor = await doctorRepository.createDoctor({
           fullName: userData.fullname,
@@ -234,7 +234,7 @@ export class AuthService {
             "Registration failed: We encountered an issue while creating your account."
           );
         }
-        _id = doctor._id.toString();
+        id = doctor._id.toString();
       } else {
         const patient = await patientRepository.createUser({
           fullName: userData.fullname,
@@ -247,15 +247,15 @@ export class AuthService {
             "Registration failed: We encountered an issue while creating your account."
           );
         }
-        _id = patient._id.toString();
+        id = patient._id.toString();
       }
 
-      const payload = { _id, role: userData.role };
-      const wallet = walletRepository.createWallet(_id, userData.role);
+      const payload = { _id:id, role: userData.role };
+      const wallet = walletRepository.createWallet( id, userData.role);
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
 
-      return { accessToken, refreshToken, _id };
+      return { accessToken, refreshToken, id };
     } catch (error: unknown) {
       throw error;
     }

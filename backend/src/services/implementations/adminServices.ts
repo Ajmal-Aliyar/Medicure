@@ -7,10 +7,10 @@ import {
 } from "../../repositories/interfaces/IPatientRepository";
 import { ISlotRepository } from "../../repositories/interfaces/ISlotRepository";
 import { ISlot } from "../../types/ISlotInterface";
-import {
-  checkBruteForce,
-  deleteBruteForce,
-} from "../../utils/BruteForceHandler";
+// import {
+//   checkBruteForce,
+//   deleteBruteForce,
+// } from "../../utils/BruteForceHandler";
 import { verifyPassword } from "../../utils/passwordUtil";
 import {
   generateAccessToken,
@@ -63,7 +63,7 @@ export class AdminServices implements IAdminServices {
 
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
-      return { accessToken, refreshToken, _id: admin._id.toString() };
+      return { accessToken, refreshToken, id: admin._id.toString() };
     } catch (error) {
       console.error("Error during sign-in:", error);
       throw new Error(

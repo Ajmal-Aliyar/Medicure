@@ -61,25 +61,25 @@ export class FeedbackService implements IFeedbackService {
   }
 
   async getFeedbackByUser(
-    _id: string,
+    patientId: string,
     skip: number,
     limit: number
   ): Promise<{ feedbacks: IFeedbackDocument[]; total: number }> {
     try {
-      return await this.feedbackRepository.getFeedbackByUser(_id, skip, limit);
+      return await this.feedbackRepository.getFeedbackByUser(patientId, skip, limit);
     } catch (error: unknown) {
       throw error;
     }
   }
 
   async getFeedbackForDoctor(
-    _id: string,
+    doctorId: string,
     skip: number,
     limit: number
   ): Promise<{ feedbacks: IFeedbackDocument[]; total: number }> {
     try {
       return await this.feedbackRepository.getFeedbackForDoctor(
-        _id,
+        doctorId,
         skip,
         limit
       );

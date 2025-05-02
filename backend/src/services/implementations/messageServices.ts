@@ -18,7 +18,7 @@ export class MessageServices implements IMessageServices {
     this.chatRepository = chatRepository;
   }
 
-  async createMessage(data, _id: string): Promise<void> {
+  async createMessage(data, userId: string): Promise<void> {
     try {
       await producer.send({
         topic: "chat-messages",
@@ -31,7 +31,7 @@ export class MessageServices implements IMessageServices {
       const { participants } = await this.chatRepository.getChatById(
         data.chatId
       );
-      incrementUnreadCount(_id, participants);
+      incrementUnreadCount(userId, participants);
     } catch (error) {
       console.error(error);
       throw error;

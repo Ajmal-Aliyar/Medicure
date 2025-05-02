@@ -47,7 +47,7 @@ export class WithdrawService implements IWithdrawService {
   }
 
   async getWithdrawRequestsByUser(
-    _id: string,
+    clientId: string,
     status: string,
     skip: number,
     limit: number
@@ -57,7 +57,7 @@ export class WithdrawService implements IWithdrawService {
         status,
         skip,
         limit,
-        _id
+        clientId
       );
     } catch (error: unknown) {
       console.error(error);
@@ -65,19 +65,19 @@ export class WithdrawService implements IWithdrawService {
     }
   }
 
-  async approveWithdrawRequest(_id: string): Promise<string> {
+  async approveWithdrawRequest(clientId: string): Promise<string> {
     try {
       const companyWallet =
         await this.walletRepository.getWalletBalanceByOwnerId("Company");
       const request: IWithdrawSchema =
-        await this.withdrawRepository.getWithdrawRequestById(_id);
+        await this.withdrawRepository.getWithdrawRequestById(clientId);
 
       if (companyWallet < request.amount) {
         throw new Error("Insufficient balance in accound.");
       }
 
       const updateResult = await this.withdrawRepository.updateWithdrawRequest(
-        _id,
+        clientId,
         "approved"
       );
       if (updateResult.modifiedCount <= 0) {
@@ -101,10 +101,10 @@ export class WithdrawService implements IWithdrawService {
     }
   }
 
-  async cancelWithdrawRequest(_id: string): Promise<string> {
+  async cancelWithdrawRequest(clientId: string): Promise<string> {
     try {
       const updateResult = await this.withdrawRepository.updateWithdrawRequest(
-        _id,
+        clientId,
         "rejected"
       );
 

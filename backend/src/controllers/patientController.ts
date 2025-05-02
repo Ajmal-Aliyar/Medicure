@@ -17,9 +17,9 @@ export class PatientController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { _id } = req.client;
+    const { _id: patientId } = req.client;
     try {
-      const patientData = await this.patientServices.getProfile(_id);
+      const patientData = await this.patientServices.getProfile(patientId);
       res.status(200).json({ patientData });
     } catch (error: unknown) {
       next(error);
@@ -31,7 +31,7 @@ export class PatientController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { _id } = req.client;
+    const { _id: patientId } = req.client;
     const {
       dob,
       gender,
@@ -45,7 +45,7 @@ export class PatientController {
     } = req.body;
     try {
       await this.patientServices.updateProfile({
-        _id,
+        patientId,
         dob,
         gender,
         bloodGroup,
@@ -67,7 +67,7 @@ export class PatientController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const { _id } = req.client;
+    const { _id: patientId } = req.client;
     const { profileImage } = req.body;
 
     try {
@@ -75,7 +75,7 @@ export class PatientController {
         res.status(400).json({ message: "Profile image is required." });
         return;
       }
-      await this.patientServices.updateProfileImg(_id, profileImage);
+      await this.patientServices.updateProfileImg(patientId, profileImage);
       res.status(200).json({ message: "Profile image updated successfully." });
     } catch (error) {
       next(error);

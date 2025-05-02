@@ -30,7 +30,7 @@ export class AuthController {
         try {
             console.log('signing in');
             
-            const { accessToken, refreshToken, _id } = await authService.signIn(email, password, role)
+            const { accessToken, refreshToken, id } = await authService.signIn(email, password, role)
             console.log('hello')
             if (accessToken) {
                 res.cookie('accessToken', accessToken, {
@@ -46,7 +46,7 @@ export class AuthController {
                     secure: process.env.NODE_ENV === 'production',
                 });
             }
-            res.status(200).json({_id});
+            res.status(200).json({_id: id});
         } catch (error: unknown) {
             next(error)
         }
@@ -55,7 +55,7 @@ export class AuthController {
     async googleAuth (req: Request, res: Response, next: NextFunction ) {
         const { email, profileImage, fullName } = req.body
         try {
-            const { accessToken, refreshToken, _id } = await authService.googleAuth({ fullName, email, profileImage, })
+            const { accessToken, refreshToken, id } = await authService.googleAuth({ fullName, email, profileImage, })
             if (accessToken) {
                 res.cookie('accessToken', accessToken, {
                     httpOnly: false,
@@ -70,7 +70,7 @@ export class AuthController {
                     secure: process.env.NODE_ENV === 'production',
                 });
             }
-            res.status(200).json({_id});
+            res.status(200).json({_id:id});
         } catch (error: unknown) {
             next(error)
         }
@@ -96,7 +96,7 @@ export class AuthController {
     async userInfo(req: Request, res: Response, next: NextFunction) {
         try {
             const { _id, role } = req.client
-            const userData = await authService.userInfo(_id,role)
+            const userData = await authService.userInfo( _id, role)
             console.log(userData, 'cli')
             const responseData = {...userData}
             res.status(200).json(responseData)
