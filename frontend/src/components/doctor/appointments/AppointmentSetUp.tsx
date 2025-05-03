@@ -77,10 +77,8 @@ const AppointmentSetUp: React.FC<IAppointmentSetUpProps> = ({ handleModal }) => 
     };
 
     const handleSubmit = async () => {
-        console.log(slots, 'slots')
         await updateSlotsApi(slots, fees)
         handleModal('')
-        window.location.reload()
     }
 
     return (
