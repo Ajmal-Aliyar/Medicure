@@ -42,7 +42,7 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot })
     dispatch(setPatientId(patientId))
     dispatch(setRoomId(roomId))
     dispatch(setRecordId(recordId))
-    navigate(`/consult/meeting/${roomId}?appointment=${appointmentId}&slot=${selectedSlot}`)
+    navigate(`/consult/doctor/meeting/${roomId}?appointment=${appointmentId}&slot=${selectedSlot}`)
   }
 
   const handleMedicalReportUpload = async (isCompleted: boolean, state: IMedicalRecord) => {

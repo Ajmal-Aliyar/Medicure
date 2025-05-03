@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import VideoCallInterface from '../pages/common/VideoCallInterface'
+import AuthorizedRoute from './AuthorizedRoute'
 
 
 const VideoCallRoute = () => {
@@ -8,8 +9,12 @@ const VideoCallRoute = () => {
         <Routes>
             
             <Route
+                path="/doctor/meeting/:roomId"
+                element={<AuthorizedRoute allowedRole='doctor'><VideoCallInterface/></AuthorizedRoute> } />
+
+            <Route
                 path="/meeting/:roomId"
-                element={<VideoCallInterface />} />
+                element={<AuthorizedRoute allowedRole='user'><VideoCallInterface/></AuthorizedRoute> } />
         </Routes>
     )
 }
