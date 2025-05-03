@@ -28,6 +28,7 @@
     "eventemitter3": "^5.0.1",
     "font-awesome": "^4.7.0",
     "gsap": "^3.12.5",
+    "html2pdf.js": "^0.10.3",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.474.0",
