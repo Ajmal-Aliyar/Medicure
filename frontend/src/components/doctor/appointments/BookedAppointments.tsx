@@ -46,16 +46,33 @@ const BookedAppointments: React.FC<BookedAppointmentsProps> = ({ selectedSlot })
   }
 
   const handleMedicalReportUpload = async (isCompleted: boolean, state: IMedicalRecord) => {
-    try {
-      if (reportId) {
-        await updateMedicalRecordApi(reportId, { ...state, isCompleted });
-      }
-      setMedicalReport(false);
-    } catch (error) {
-      console.error("Error updating medical record:", error);
-      dispatch(setError("Error updating medical record"))
+  try {
+    if (reportId) {
+      await updateMedicalRecordApi(reportId, { ...state, isCompleted });
+
+      setPatientDetails((prev) => {
+        if (!prev) return null;
+        return prev.map((patient) => {
+          if (patient.recordId?._id === reportId) {
+            return {
+              ...patient,
+              recordId: {
+                ...patient.recordId,
+                isCompleted: true,
+              },
+            };
+          }
+          return patient;
+        });
+    });
     }
+    setMedicalReport(false);
+  } catch (error) {
+    console.error("Error updating medical record:", error);
+    dispatch(setError("Error updating medical record"));
   }
+};
+
   return (
    <>
       <div className='p-2 h-full'>

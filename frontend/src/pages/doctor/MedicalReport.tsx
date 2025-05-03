@@ -59,8 +59,8 @@ export const MedicalRecordForm:FC<MedicalRecordFormProps> = ({ endCall, handleMe
         </div>
 
         {endCall && <div className="w-full flex justify-center gap-4">
-          <div onClick={() => handleMedicalReportUpload(false, state)} className="px-3 py-1 border rounded-md border-gray-300">Update Later</div>
-          <div onClick={() => handleMedicalReportUpload(true, state)} className="px-3 py-1 border rounded-md border-gray-300">Confirm</div>
+          <div onClick={() => handleMedicalReportUpload(false, state)} className="px-3 py-1 border rounded-md border-gray-300 cursor-pointer">Update Later</div>
+          <div onClick={() => handleMedicalReportUpload(true, state)} className="px-3 py-1 border rounded-md border-gray-300 cursor-pointer">Confirm</div>
         </div> }
 
        

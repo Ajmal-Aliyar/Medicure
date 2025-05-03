@@ -32,7 +32,7 @@ const SelectedDoctorDetails: React.FC = () => {
 
                 if (response?.message) {
                     dispatch(setSuccess(response.message));
-                    window.location.reload()
+                    setDoctor(prev => ({ ...prev, isBlocked: !isBlocked }));
                 }
             } catch (error: unknown) {
                 console.error("Error in handleAction:", error);

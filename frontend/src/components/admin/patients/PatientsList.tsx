@@ -35,7 +35,14 @@ function PatientsList() {
 
                 if (response?.message) {
                     dispatch(setSuccess(response.message));
-                    window.location.reload();
+                    setPatients(prev =>
+                        prev.map(patient =>
+                          patient._id === _id
+                            ? { ...patient, isBlocked: !isBlocked }
+                            : patient
+                        )
+                      );
+                      
                 }
             } catch (error: unknown) {
                 const errorMessage = "Something went wrong. Please try again later.";
