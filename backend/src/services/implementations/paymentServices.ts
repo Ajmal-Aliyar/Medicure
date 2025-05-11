@@ -2,7 +2,6 @@ import {
   ICheckoutSession,
   IPaymentServices,
 } from "../interfaces/IPaymentServices";
-import { FRONTEND_BASE_URL, STRIPE_WEBHOOK_SECRET } from "../../config/env";
 import { stripe } from "../../config/stripe";
 import Stripe from "stripe";
 import { ITransactionServices } from "../interfaces/ITransactionServices";
@@ -10,6 +9,7 @@ import { IAppointmentServices } from "../interfaces/IAppointmentServices";
 import { ISlotService } from "../interfaces/ISlotServices";
 import { IWalletRepository } from "../../repositories/interfaces/IWalletRepository";
 import Transfer, { Response } from "aws-sdk/clients/transfer";
+import { env } from "../../config/env";
 
 export class PaymentServices implements IPaymentServices {
   private stripe: Stripe;
@@ -203,8 +203,8 @@ export class PaymentServices implements IPaymentServices {
             quantity: 1,
           },
         ],
-        success_url: `${FRONTEND_BASE_URL}/drive/appointments?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${FRONTEND_BASE_URL}/find-doctors?cancelled=true`,
+        success_url: `${env.FRONTEND_BASE_URL}/drive/appointments?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${env.FRONTEND_BASE_URL}/find-doctors?cancelled=true`,
         metadata: {
           doctorId: data.doctorId,
           patientId: data.patientId,
@@ -227,7 +227,7 @@ export class PaymentServices implements IPaymentServices {
       event = stripe.webhooks.constructEvent(
         bodyData,
         sig,
-        STRIPE_WEBHOOK_SECRET
+        env.STRIPE_WEBHOOK_SECRET
       );
 
       if (event.type === "checkout.session.completed") {

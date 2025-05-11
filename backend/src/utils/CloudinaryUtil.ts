@@ -1,13 +1,13 @@
+import { env } from "../config/env";
+
 export const deleteCloudinaryImages = async (
   publicIds: string[]
 ): Promise<void> => {
-  const cloudName = process.env.CLOUDINARY_API_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  const apiKey = env.CLOUDINARY_API_KEY;
+  const apiSecret = env.CLOUDINARY_API_SECRET;
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image/upload`;
 
-  const response = await fetch(url, {
+  const response = await fetch(env.CLOUDINARY_API_URL, {
     method: "DELETE",
     headers: {
       Authorization: "Basic " + btoa(`${apiKey}:${apiSecret}`),

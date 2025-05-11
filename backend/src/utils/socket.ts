@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { setRedisData, getRedisData } from "./redisUtil";
+import { env } from "../config/env";
 
 const rooms = [];
 const connectedCandidates = [];
@@ -8,7 +9,7 @@ let io: Server;
 export const socketHandler = (server) => {
   io = new Server(server, {
     cors: {
-      origin: process.env.CORS_URL,
+      origin:  env.CORS_URL,
       methods: ["GET", "POST"],
       credentials: true,
     },

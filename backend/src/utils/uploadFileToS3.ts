@@ -1,3 +1,4 @@
+import { env } from "../config/env";
 import s3 from "../config/s3Config";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,7 +10,7 @@ export const uploadFileToS3 = async (
   const fileName = `${folder}/${uuidv4()}.${fileExtension}`;
 
   const params = {
-    Bucket: process.env.AWS_BUCKET_NAME!,
+    Bucket:  env.AWS_BUCKET_NAME!,
     Key: fileName,
     Body: file.buffer,
     ContentType: file.mimetype,

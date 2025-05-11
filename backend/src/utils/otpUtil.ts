@@ -1,10 +1,11 @@
 import nodemailer from "nodemailer";
+import { env } from "../config/env";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user:  env.MAIL_USER,
+    pass:  env.MAIL_PASS,
   },
 });
 
@@ -12,7 +13,7 @@ export const sendOtpToEmail = async (email: string): Promise<number> => {
   const otp = Math.floor(100000 + Math.random() * 900000);
   console.log(otp, "- otp");
   const mailOptions = {
-    from: process.env.MAIL_USER,
+    from:  env.MAIL_USER,
     to: email,
     subject: "Your OTP for Signup",
     text: `Your OTP is ${otp}. It will expire in 5 minutes.`,

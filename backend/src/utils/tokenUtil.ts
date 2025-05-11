@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { env } from "../config/env";
 
 interface Payload {
   _id: string;
@@ -7,21 +8,21 @@ interface Payload {
 }
 
 export const generateAccessToken = (payload: Payload): string => {
-  console.log(process.env.ACCESS_TOKEN_EXPIRY, "extime");
-  return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+  console.log( env.ACCESS_TOKEN_EXPIRY, "extime");
+  return jwt.sign(payload,  env.JWT_ACCESS_SECRET, {
+    expiresIn:  env.ACCESS_TOKEN_EXPIRY,
   });
 };
 
 export const generateRefreshToken = (payload: Payload): string => {
-  return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+  return jwt.sign(payload,  env.JWT_REFRESH_SECRET, {
+    expiresIn:  env.REFRESH_TOKEN_EXPIRY,
   });
 };
 
 export const verifyAccessToken = (token: string): Payload => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as Payload;
+    const decoded = jwt.verify(token,  env.JWT_ACCESS_SECRET) as Payload;
     return decoded;
   } catch (error) {
     throw new Error("Invalid or expired access token");
@@ -32,7 +33,7 @@ export const verifyRefreshToken = (token: string): Payload => {
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_REFRESH_SECRET
+       env.JWT_REFRESH_SECRET
     ) as Payload;
     return decoded;
   } catch (error) {

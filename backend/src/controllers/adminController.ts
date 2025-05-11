@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { IAdminServices } from "../services/interfaces/IAdminServices";
+import { env } from "../config/env";
 
 export class AdminController {
   private adminServices: IAdminServices;
@@ -27,14 +28,14 @@ export class AdminController {
         res.cookie("accessToken", accessToken, {
           httpOnly: false,
           maxAge: 15 * 60 * 1000,
-          secure: process.env.NODE_ENV === "production",
+          secure:  env.NODE_ENV === "production",
         });
       }
       if (refreshToken) {
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
           maxAge: 7 * 24 * 60 * 60 * 1000,
-          secure: process.env.NODE_ENV === "production",
+          secure:  env.NODE_ENV === "production",
         });
       }
       res.status(200).json({ message: "Sign in successfully.", id });

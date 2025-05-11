@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useNavigate } from "react-router-dom"; // Import for navigation
+import { useNavigate } from "react-router-dom"; 
 import Img from "../../assets/external/page-not-foound.png";
 
 const PageNotFound: FC = () => {

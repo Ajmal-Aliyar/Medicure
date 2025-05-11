@@ -172,9 +172,6 @@ const VideoCallInterface = () => {
               </div>
             </div>
 
-
-
-            {/* remote video  */}
             {remoteVideoRef && (
               <div
                 className={`flex flex-col gap-2 items-center justify-center overflow-hidden group ${pinned === "B" ? "bg-neutral-900 w-full h-full" : "bg-neutral-900 w-[30%] md:w-[300px] md:aspect-video aspect-[2/3] m-2 z-10"

@@ -57,31 +57,6 @@ export const connectWithSocketIOServer = (candidateId: string) => {
     socket.on('inc-count', (()  => {
         store.dispatch(trigger())
     }))
-
-
-    // socket.on("userTyping", (data) => {
-    //     console.log("✍️ User is typing:", data);
-    // });
-
-    // socket.on("userStoppedTyping", (data) => {
-    //     console.log("🛑 User stopped typing:", data);
-    // });
-
-    // socket.on("chatRead", (data) => {
-    //     console.log("👀 Chat marked as read:", data);
-    // });
-
-    // socket.on("userOnline", (userId) => {
-    //     console.log("🟢 User online:", userId);
-    // });
-
-    // socket.on("userOffline", (userId) => {
-    //     console.log("🔴 User offline:", userId);
-    // });
-
-    // socket.on("chatJoined", (chatId: string) => {
-    //     console.log("👥 Joined chat:", chatId);
-    // });
 }
 
 export const createNewRoom = (candidateId: string, roomId: string) => {

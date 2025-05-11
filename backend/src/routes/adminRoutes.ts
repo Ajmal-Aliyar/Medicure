@@ -3,10 +3,10 @@ import { AdminRepository } from "../repositories/implementations/adminRepository
 import { AdminController } from "../controllers/adminController";
 import { AdminServices } from "../services/implementations/adminServices";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
-import { isAdmin } from "../middleware/isAdmin";
 import { DoctorRepository } from "../repositories/implementations/doctorRepository";
 import { SlotRepository } from "../repositories/implementations/slotRepository";
 import { PatientRepository } from "../repositories/implementations/patientRepository";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const router = Router();
 
@@ -27,47 +27,47 @@ router.post("/sign-in", adminController.signIn);
 router.get(
   "/getAppointmentdetails/:_id",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   adminController.getDoctorAppointmentDetails
 );
 router.get(
   "/getDoctorApprovalRequests",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   adminController.getDoctorApprovalRequests
 );
 router.get(
   "/getDoctorDetails/:_id",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   adminController.getDoctorDetails
 );
 router.get(
   "/getApprovedDoctors",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   adminController.getApprovedDoctors
 );
 router.get(
   "/approve-doctor/:_id",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   adminController.approveDoctor
 );
 router.get(
   "/reject-doctor/:_id",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   adminController.rejectDoctor
 );
 
-router.get("/block-role", tokenMiddleware, isAdmin, adminController.block);
-router.get("/unblock-role", tokenMiddleware, isAdmin, adminController.unblock);
+router.get("/block-role", tokenMiddleware, authorizeRoles('admin'), adminController.block);
+router.get("/unblock-role", tokenMiddleware, authorizeRoles('admin'), adminController.unblock);
 
 router.get(
   "/getAllPatients",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   adminController.getAllPatients
 );
 

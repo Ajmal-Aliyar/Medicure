@@ -1,3 +1,4 @@
+import { ENV } from "../constants/env";
 import { setError, setSuccess } from "../store/slices/commonSlices/notificationSlice";
 import store from "../store/store";
 import { signalPeerData, socket } from "./wss";
@@ -7,12 +8,7 @@ export const streamEvents = new EventEmitter();
 
 const getConfiguration = () => ({
   iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
-    {
-      urls: 'turn:your.turn.server.com:3478',
-      username: 'yourUsername',
-      credential: 'yourCredential'
-    }
+    { urls: ENV.STUN },
   ]
 });
 

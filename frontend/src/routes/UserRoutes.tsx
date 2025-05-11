@@ -16,8 +16,7 @@ import PageNotFound from '../pages/common/PageNotFound';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ChatLayout from '../pages/patient/ChatLayout';
 import MedicalRecord from '../components/patient/userDrive/medicalRecords/MedicalRecord';
-
-const clientId = "757238086713-cmaic773782cs0qguopsrcmgvgk1jlj7.apps.googleusercontent.com";
+import { ENV } from '../constants/env';
 
 function UserRoutes() {
   return (
@@ -28,7 +27,7 @@ function UserRoutes() {
 
           <Route index element={<PublicRoutes><Home /></PublicRoutes>} />
           <Route path="auth" element={<UnAuthorizedRoute preventedRole={'user'}>
-            <GoogleOAuthProvider clientId={clientId}>
+            <GoogleOAuthProvider clientId={ENV.GOOGLE_CLIENT_ID}>
               <Auth role='user' />
             </GoogleOAuthProvider>
           </UnAuthorizedRoute>} />

@@ -39,7 +39,6 @@ export class AuthService {
           ? doctorRepository
           : patientRepository;
       const userData = await repository.findByID(_id);
-      // const wallet = walletRepository.createWallet(_id, role)
 
       if (!userData) {
         throw new Error(`User with ID: ${_id} not found`);

@@ -34,7 +34,6 @@ export const tokenMiddleware = (
       try {
         const decoded = verifyAccessToken(accessToken);
         req.client = decoded;
-        console.log('next called');
         
         next();
         return
@@ -52,7 +51,7 @@ export const tokenMiddleware = (
         res.cookie("accessToken", newAccessToken, {
           httpOnly: false,
           maxAge: 15 * 60 * 1000,
-          secure: process.env.NODE_ENV === "production",
+          secure: true,
         });
         req.client = refreshDecoded;
         next();
@@ -63,7 +62,7 @@ export const tokenMiddleware = (
       }
     }
 
-    res.status(200).send("User not logined");
+    res.status(303).json({ message: "User not logined"});
     return 
   } catch (error) {
     console.error("Unexpected error in tokenMiddleware:", error);

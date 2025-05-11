@@ -1,4 +1,3 @@
-import { PORT } from './config/env';
 import medicalRecordRouter from './routes/medicalRecordRoutes';
 import doctorVerifications from './routes/verificationRoutes';
 import { errorHandler } from './middleware/errorMiddleware';
@@ -25,6 +24,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import http from 'http';
+import { env } from './config/env';
 
 mongoDB()
 dotenv.config();
@@ -32,7 +32,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: process.env.CORS_URL,
+  origin:  env.CORS_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true
 }));
@@ -69,6 +69,6 @@ app.use(errorHandler);
 const server = http.createServer(app);
 socketHandler(server)
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(env.PORT, () => {
+  console.log(`Server is running on port ${env.PORT}`);
 });

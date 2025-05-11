@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
-import { isAdmin } from "../middleware/isAdmin";
 import { SpecializationRepository } from "../repositories/implementations/specializationRepository";
 import { SpecializationServices } from "../services/implementations/specializationServices";
 import { SpecializationController } from "../controllers/specializationController";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const specializationRepository = new SpecializationRepository();
 const specializationServices = new SpecializationServices(
@@ -23,7 +23,7 @@ router.get(
 router.post(
   "/create-specialization",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   specializationController.createSpecialization
 );
 

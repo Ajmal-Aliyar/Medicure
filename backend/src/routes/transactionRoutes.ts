@@ -3,7 +3,7 @@ import { tokenMiddleware } from "../middleware/tokenMiddleware";
 import { TransactionRepository } from "../repositories/implementations/transactionRepository";
 import { TransactionServices } from "../services/implementations/transactionServices";
 import { TransactionController } from "../controllers/transactionController";
-import { isAdmin } from "../middleware/isAdmin";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const router = Router();
 
@@ -19,7 +19,7 @@ router.get(
 router.get(
   "/get-revenue",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   transactionController.getTransactionDetails
 );
 

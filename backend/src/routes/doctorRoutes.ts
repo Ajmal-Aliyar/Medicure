@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
 import { DoctorController } from "../controllers/doctorController";
-import { isAdmin } from "../middleware/isAdmin";
-import { isDoctor } from "../middleware/isDoctor";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const router = Router();
 const doctorController = new DoctorController();
@@ -10,7 +9,7 @@ const doctorController = new DoctorController();
 router.get(
   "/profile-details",
   tokenMiddleware,
-  isDoctor,
+  authorizeRoles('doctor'),
   doctorController.getProfileDetails
 );
 router.patch(
@@ -33,7 +32,7 @@ router.get(
 router.get(
   "/get-doctor-details",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   doctorController.getDoctorsDetails
 );
 

@@ -9,7 +9,6 @@ export function errorHandler(
 ) {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
-  console.log(message,'msg')
   const description = err.description || 'An unexpected error occurred';
   res.status(statusCode).json({
     status: 'error',

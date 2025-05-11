@@ -3,9 +3,9 @@ import { tokenMiddleware } from "../middleware/tokenMiddleware";
 import { WithdrawController } from "../controllers/withdrawController";
 import { WithdrawRepository } from "../repositories/implementations/withdrawRepository";
 import { WithdrawService } from "../services/implementations/withdrawService";
-import { isAdmin } from "../middleware/isAdmin";
 import { WalletRepository } from "../repositories/implementations/walletRepository";
 import { TransactionRepository } from "../repositories/implementations/transactionRepository";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.post("/", tokenMiddleware, withdrawController.createWithdrawRequest);
 router.get(
   "/",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   withdrawController.getWithdrawRequests
 );
 router.get(
@@ -34,7 +34,7 @@ router.get(
 router.patch(
   "/approve",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   withdrawController.approveWithdrawRequest
 );
 router.patch(

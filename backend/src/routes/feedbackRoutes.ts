@@ -5,7 +5,7 @@ import { FeedbackRepository } from "../repositories/implementations/feedbackRepo
 import { FeedbackService } from "../services/implementations/feedbackServices";
 import { FeedbackController } from "../controllers/feedbackController";
 import { DoctorRepository } from "../repositories/implementations/doctorRepository";
-import { isDoctor } from "../middleware/isDoctor";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const router = Router();
 
@@ -32,7 +32,7 @@ router.get(
 router.get(
   "/fetch-feedback/doctor",
   tokenMiddleware,
-  isDoctor,
+  authorizeRoles('admin'),
   feedbackController.getFeedbackForDoctor
 );
 

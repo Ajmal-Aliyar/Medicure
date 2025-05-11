@@ -4,11 +4,10 @@ import { AppointmentRepository } from "../repositories/implementations/appointme
 import { AppointmentServices } from "../services/implementations/appointmentServices";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
 import { PatientRepository } from "../repositories/implementations/patientRepository";
-import { isDoctor } from "../middleware/isDoctor";
 import { SlotRepository } from "../repositories/implementations/slotRepository";
-import { isAdmin } from "../middleware/isAdmin";
 import { ChatRepository } from "../repositories/implementations/chatRepository";
 import { MedicalRecordRepository } from "../repositories/implementations/medicalRecordRepository";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const router = Router();
 
@@ -34,13 +33,13 @@ router.get(
 router.get(
   "/get-appointments-admin",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   appointmentController.getAllAppointments
 );
 router.get(
   "/get-appointments-doctor",
   tokenMiddleware,
-  isDoctor,
+  authorizeRoles('doctor'),
   appointmentController.getAllAppointmentsOfDoctor
 );
 router.post(
@@ -57,14 +56,14 @@ router.get(
 router.get(
   "/finish-consulting/:appointmentId/:slotId",
   tokenMiddleware,
-  isDoctor,
+  authorizeRoles('doctor'),
   appointmentController.finishedConsulting
 );
 
 router.get(
   "/appointment-details",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   appointmentController.appointmentDetails
 );
 

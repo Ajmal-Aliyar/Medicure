@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/authController";
 import { tokenMiddleware } from "../middleware/tokenMiddleware";
+import { env } from "../config/env";
 
 const router = Router();
 const authController = new AuthController();
@@ -8,11 +9,11 @@ const authController = new AuthController();
 router.get("/logout", (req, res) => {
   res.clearCookie("accessToken", {
     httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
+    secure:  env.NODE_ENV === "production",
   });
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure:  env.NODE_ENV === "production",
   });
   res.send("Cookie deleted");
 });

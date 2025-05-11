@@ -13,7 +13,7 @@ import { PatientRepository } from "../repositories/implementations/patientReposi
 import { ChatRepository } from "../repositories/implementations/chatRepository";
 import { MedicalRecordRepository } from "../repositories/implementations/medicalRecordRepository";
 import { WalletRepository } from "../repositories/implementations/walletRepository";
-import { isAdmin } from "../middleware/isAdmin";
+import { authorizeRoles } from "../middleware/authorizeRoles";
 
 const transactionRepository = new TransactionRepository();
 const transactionServices = new TransactionServices(transactionRepository);
@@ -56,7 +56,7 @@ router.post("/refund", tokenMiddleware, paymentController.refundPayment);
 router.get(
   "/approve-withdraw",
   tokenMiddleware,
-  isAdmin,
+  authorizeRoles('admin'),
   paymentController.approveWithdrawRequest
 );
 

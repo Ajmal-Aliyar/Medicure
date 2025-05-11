@@ -1,11 +1,12 @@
 import { createClient } from "redis";
 import dotenv from "dotenv";
+import { env } from "../config/env";
 
 dotenv.config();
 
 
 const redisClient = createClient({
-  url: process.env.REDIS_URL || "redis://redis:6379",
+  url:  env.REDIS_URL || "redis://redis:6379",
   socket: {
       reconnectStrategy: (retries) => {
           if (retries > 3) {
