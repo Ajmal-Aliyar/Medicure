@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { RootState } from '../store/store';
 import { AuthInfo } from './AuthorizedRoute';
+import BlockedModal from '../components/common/BlockedModal';
 
 interface ProtectedRouteProps {
     children: JSX.Element;
@@ -17,7 +18,7 @@ interface ProtectedRouteProps {
 const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
-
+    const [isBlocked, setIsBlocked] = useState(false);
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
@@ -39,7 +40,12 @@ const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => 
                     }
                 }
             } catch (error) {
-                console.error('Error fetching auth user data:', error);
+                
+                const err = error as { response?: { data?: { status?: string } } };
+                if (err?.response?.data?.status === 'blocked') {
+                    setIsBlocked(true);
+                }
+                console.log('Error fetching auth user data:', err);
             } finally {
                 setLoading(false);
             }
@@ -47,6 +53,10 @@ const UnAuthorizedRoute = ({ children, preventedRole }: ProtectedRouteProps) => 
         fetchUserInfo()
 
     }, [dispatch, loading]);
+
+    if (isBlocked) {
+        return <BlockedModal />;
+    }
 
     const { role, isAuthenticated } = useSelector((state: RootState) => state.auth);
 

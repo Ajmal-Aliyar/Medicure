@@ -48,9 +48,7 @@ export const stopStreaming = (roomId: string) => {
     }
     streams = [];
 
-    console.log('emmitted');
     socket.emit('candidate-left', { roomId });
-    console.log('emmitted');
     
 
     store.dispatch(setSuccess('Consulting finished successfully.'));

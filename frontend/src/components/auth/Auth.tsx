@@ -8,6 +8,7 @@ import { sendOTPApi, signInApi, signUpApi } from "../../sevices/authRepository"
 import { IAuthPageProps, IErrorType, ISignInResponse } from "../../types/authType";
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate/authValidate";
 import GoogleAuth from "./GoogleAuth";
+import BlockedModal from "../common/BlockedModal";
 
 
 const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, role }) => {
@@ -23,6 +24,7 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
     const [serverError, setServerError] = useState<string>("");
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [isForgotPassword, setIsForgotPassword] = useState(false)
+    const [isBlocked, setIsBlocked] = useState(false)
     const [errorMessage, setErrorMessage] = useState<IErrorType>({
         name: '',
         email: '',
@@ -48,7 +50,12 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
                     }
                 } catch (error: unknown) {
                     setLoading(false);
-                    setServerError('Something went wrong! Please try again later.');
+                    const err = error as { response?: { data?: { status?: string } } };
+                    if (err?.response?.data?.status === 'blocked') {
+                        setIsBlocked(true);
+                    } else {
+                        setServerError('Something went wrong! Please try again later.');
+                    }
                 }
             } else {
                 handleErrorMessage('email', email);
@@ -65,7 +72,7 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
                     setAuthStatus('otp-verification')
                 } catch (error: unknown) {
                     setLoading(false);
-                    setServerError( 'Something went wrong! Please try again later.');
+                    setServerError('Something went wrong! Please try again later.');
                 }
             } else {
                 handleErrorMessage('name', name);
@@ -79,6 +86,10 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
 
     const handleErrorServerMessage = () => {
         setServerError('')
+    }
+
+    if (isBlocked) {
+        return <BlockedModal />;
     }
 
     const handleErrorMessage = (field: string, value: string) => {
@@ -262,9 +273,9 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
             </div>
 
             {role === 'user' && <GoogleAuth />}
-            
+
             <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
-                {!loading && serverError !== ''  ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
+                {!loading && serverError !== '' ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}
                 {loading ? <HoneyComb /> : ''}
             </div>
 

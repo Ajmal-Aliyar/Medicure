@@ -5,4 +5,6 @@ export interface IAdmin extends Document {
     fullName: string;
     email: string;
     password: string;
+    isBlocked: boolean;
+    isApproved: boolean
 }

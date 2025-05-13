@@ -7,11 +7,13 @@ import { clearError, clearSuccess, clearWarning } from '../../store/slices/commo
 import SuccessModal from './SuccessMessage';
 import WarningMessage from './WarningMessage';
 import ConsultationAlert from './ConsultationAlert';
+import BlockedModal from './BlockedModal';
 
 const NotificationPortal: React.FC = () => {
     const { error, success, warning, loading, consulting} = useSelector(
         (state: RootState) => state.notification
     );
+    const { isBlocked } = useSelector((state: RootState) => state.auth)
     const dispatch = useDispatch()
 
     const handleError = () => {
@@ -43,6 +45,10 @@ const NotificationPortal: React.FC = () => {
         }
         if (consulting) {
             return <div className={`w-screen h-screen bg-[#00000059] ${consulting ? "bg-opacity-100" : 'bg-opacity-0'} duration-500 fixed top-0 flex justify-center items-center z-50`}><ConsultationAlert /></div>
+        }
+
+        if (isBlocked) {
+            return <BlockedModal />
         }
     
         return null;

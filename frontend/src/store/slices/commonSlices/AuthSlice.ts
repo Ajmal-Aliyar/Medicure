@@ -7,6 +7,7 @@ interface AuthState {
   role: string;
   isApproved?: boolean;
   isAuthenticated: boolean;
+  isBlocked: boolean
 }
 
 const initialState: AuthState = {
@@ -15,6 +16,7 @@ const initialState: AuthState = {
   role: '',
   isApproved: false,
   isAuthenticated: false,
+  isBlocked: false
 };
 
 export const logOutUser = createAsyncThunk(
@@ -47,6 +49,9 @@ const authSlice = createSlice({
     logout: (state) => {
       Object.assign(state, initialState);
     },
+    blockUser: (state) => {
+      state.isBlocked = true
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -60,5 +65,5 @@ const authSlice = createSlice({
 });
 
 
-export const { setData, login, logout } = authSlice.actions;
+export const { setData, login, logout, blockUser } = authSlice.actions;
 export default authSlice.reducer;

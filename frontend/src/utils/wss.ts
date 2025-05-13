@@ -98,6 +98,5 @@ export const getSocket = (): typeof Socket => {
 };
 
 export const joinChat = (chatId: string) => {
-    console.log('hello')
     getSocket().emit("joinChat", chatId);
 };

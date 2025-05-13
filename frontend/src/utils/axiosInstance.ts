@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ENV } from '../constants/env';
+import store from '../store/store';
+import { blockUser } from '../store/slices/commonSlices/AuthSlice';
 
 
 export const api = axios.create({
@@ -30,14 +32,18 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    if (error.response?.status === 401) {
-      console.log('caught error');
-      window.location.href='/auth'
-    }
+// api.interceptors.response.use(
+//   (res) => res,
+//   async (error) => {
+//     if (error.response?.status === 401) {
+//       console.log('caught error');
+//       window.location.href='/auth'
+//     }
 
-    return Promise.reject(error);
-  }
-);
+//     if (error.response?.data.status === 'blocked') {
+//       store.dispatch(blockUser())
+//     }
+
+//     return Promise.reject(error);
+//   }
+// );

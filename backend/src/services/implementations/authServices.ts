@@ -55,6 +55,7 @@ export class AuthService {
           ? { isApproved: userData.isApproved ?? false }
           : {}),
         role,
+        isBlocked: userData.isBlocked
       };
     } catch (error) {
       console.error(`Error fetching user info: ${(error as Error).message}`);

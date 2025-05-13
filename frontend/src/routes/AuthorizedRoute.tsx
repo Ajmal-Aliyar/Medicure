@@ -5,6 +5,7 @@ import { api } from '../utils/axiosInstance';
 import { Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { RootState } from '../store/store';
+import BlockedModal from '../components/common/BlockedModal';
 
 interface ProtectedRouteProps {
     children: JSX.Element;
@@ -24,20 +25,22 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
     const { role, isAuthenticated, isApproved } = useSelector(
         (state: RootState) => state.auth
     );
-
+    const [isBlocked, setIsBlocked] = useState(false);
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
                 const response = await api.get<AuthInfo>('/api/auth/user-info');
-                console.log('Fetched user data:', response.data);
+                console.log('Fetched user data:', response);
                 if (response.data) {
-
                     dispatch(setData(response.data));
                     dispatch(login());
                 }
             } catch (error) {
-                
-                console.error('Error fetching auth user data:', error);
+                const err = error as { response?: { data?: { status?: string } } };
+                if (err?.response?.data?.status === 'blocked') {
+                    setIsBlocked(true);
+                }
+                console.log('Error fetching auth user data:', err);
             } finally {
                 setLoading(false);
             }
@@ -49,6 +52,10 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
             setLoading(false);
         }
     }, [dispatch, isAuthenticated, isApproved]);
+    
+    if (isBlocked) {
+        return <BlockedModal />;
+    }
 
     if (loading) {
         return (
@@ -57,6 +64,8 @@ const AuthorizedRoute = ({ children, allowedRole }: ProtectedRouteProps) => {
             </div>
         );
     }
+
+
 
     if (!isAuthenticated) return <Navigate to={allowedRole === 'user' ? `/auth` : `/${allowedRole}/auth`} replace />;
     if (role === 'doctor' && isApproved === false) return <Navigate to='/doctor/verify-details' replace />;
