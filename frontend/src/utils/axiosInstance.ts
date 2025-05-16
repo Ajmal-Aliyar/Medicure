@@ -1,8 +1,5 @@
 import axios from 'axios';
 import { ENV } from '../constants/env';
-import store from '../store/store';
-import { blockUser } from '../store/slices/commonSlices/AuthSlice';
-
 
 export const api = axios.create({
   baseURL: ENV.API_URL,
