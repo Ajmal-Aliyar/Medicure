@@ -20,4 +20,5 @@ export interface IPatientRepository {
     block(patientId: string): Promise<UpdateResult> 
     unblock(patientId: string): Promise<UpdateResult>
     getMinDetails(patientId: mongoose.Types.ObjectId): Promise<{ _id:mongoose.Types.ObjectId, fullName: string, profileImage: string }>
+    getPatientDashboardDetails(): Promise<{ totalUsers: number, activePatients: number, blockedPatients: number }>
 }

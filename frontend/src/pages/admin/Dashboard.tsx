@@ -8,7 +8,7 @@ function Dashboard() {
       <HeaderCards />
       <div className="w-full p-3 flex flex-col lg:flex-row gap-4  md:flex-wrap">
         <ActivityChart />
-        <div className="w-full lg:min-w-[300px] max-w-[500px] mt-4 lg:mt-0 lg:flex-1 rounded-md shadow-md">
+        <div className="w-full lg:min-w-[300px] max-w-[500px] mt-4 lg:mt-0 lg:flex-1 ">
           <div className="w-full h-full">
               <Calendar />
           </div>

@@ -5,6 +5,7 @@ import specialization from './routes/specializationRoutes';
 import appointmentRouter from './routes/appointmentRoutes';
 import transactionRouter from './routes/transactionRoutes';
 import testReportRouter from './routes/testReportRoutes';
+import dashboardRoute from './routes/dashboardRoutes';
 import feedbackRouter from './routes/feedbackRoutes';
 import withdrawRouter from './routes/withdrawRoutes';
 import patientRouter from './routes/patientRoutes';
@@ -51,6 +52,7 @@ app.use('/api/specialization', specialization)
 app.use('/api/appointment', appointmentRouter)
 app.use('/api/transaction', transactionRouter)
 app.use('/api/record', medicalRecordRouter)
+app.use('/api/dashboard', dashboardRoute)
 app.use('/api/report', testReportRouter)
 app.use('/api/feedback', feedbackRouter)
 app.use('/api/withdraw', withdrawRouter)

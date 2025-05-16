@@ -346,6 +346,10 @@ export class AppointmentRepository implements IAppointmentRepository {
     );
   }
 
+  async getTotalPendingAppointments(): Promise<number> {
+    return await AppointmentModel.countDocuments({ status: 'Completed'})
+  }
+
   async getAppointmentsBySlotId(
     slotId: string
   ): Promise<IAppointmentDocument[]> {

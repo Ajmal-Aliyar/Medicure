@@ -43,10 +43,10 @@ const Calendar = () => {
     const daysInMonth = generateCalendarDays(currentDate);
 
     return (
-        <div className="bg-[#16423C] w-full lg:min-w-[300px] max-w-[500px] mt-4 lg:mt-0 lg:flex-1 rounded-md shadow-md">
+        <div className="bg-[#16423C] w-full h-full lg:min-w-[300px] max-w-[500px] mt-4 lg:mt-0 lg:flex-1 rounded-md shadow-md">
             <div className="w-full h-full">
                 <div className="font-semibold border-b-2 border-neutral-700 p-2 text-[#E9EFEC]">
-                    Appointments
+                    Calender
                 </div>
                 <div className="p-2"></div>
                 <div className="w-full max-w-md mx-auto p-4 text-neutral-100">
@@ -75,20 +75,32 @@ const Calendar = () => {
                             </div>
                         ))}
 
-                        {daysInMonth.map((day, index) => (
-                            <div
-                                key={index}
-                                className={`p-2 rounded-md text-center ${day ? "text-[#E9EFEC]" : "text-transparent"
-                                    } ${day ? "hover:bg-[#C4DAD2] hover:text-[#16423C] cursor-pointer" : ""}`}
-                            >
-                                {day}
-                            </div>
-                        ))}
+                        {daysInMonth.map((day, index) => {
+                            const today = new Date();
+                            const isToday =
+                                day &&
+                                today.getDate() === day &&
+                                today.getMonth() === currentDate.getMonth() &&
+                                today.getFullYear() === currentDate.getFullYear();
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={`p-2 rounded-md text-center transition duration-200 ${day ? "text-[#E9EFEC]" : "text-transparent"
+                                        } ${day ? "hover:bg-[#C4DAD2] hover:text-[#16423C] cursor-pointer" : ""}
+        ${isToday ? "bg-[#6a9c89] font-bold shadow-md hover:bg-[#6a9c89]" : ""}
+      `}
+                                >
+                                    {day}
+                                </div>
+                            );
+                        })}
+
                     </div>
                 </div>
             </div>
         </div>
-  );
+    );
 };
 
 export default Calendar;

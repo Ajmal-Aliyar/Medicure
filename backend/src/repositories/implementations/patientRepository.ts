@@ -79,15 +79,16 @@ export class PatientRepository implements IPatientRepository {
     profileImage: string;
   }): Promise<UpdateResult> {
     try {
-      return await PatientModel.updateOne({ _id: patientId }, { $set: { profileImage } });
+      return await PatientModel.updateOne(
+        { _id: patientId },
+        { $set: { profileImage } }
+      );
     } catch (error) {
       throw "Error updating profile image: " + error;
     }
   }
 
-  async getMinDetails(
-    patientId: mongoose.Types.ObjectId
-  ): Promise<{
+  async getMinDetails(patientId: mongoose.Types.ObjectId): Promise<{
     _id: mongoose.Types.ObjectId;
     fullName: string;
     profileImage: string;
@@ -120,7 +121,10 @@ export class PatientRepository implements IPatientRepository {
   }
 
   async block(patientId: string): Promise<UpdateResult> {
-    return await PatientModel.updateOne({ _id: patientId }, { $set: { isBlocked: true } });
+    return await PatientModel.updateOne(
+      { _id: patientId },
+      { $set: { isBlocked: true } }
+    );
   }
 
   async unblock(patientId: string): Promise<UpdateResult> {
@@ -128,5 +132,23 @@ export class PatientRepository implements IPatientRepository {
       { _id: patientId },
       { $set: { isBlocked: false } }
     );
+  }
+
+  async getPatientDashboardDetails(): Promise<{
+    totalUsers: number;
+    activePatients: number;
+    blockedPatients: number;
+  }> {
+    const [totalUsers, activePatients, blockedPatients] = await Promise.all([
+      await PatientModel.countDocuments(),
+      await PatientModel.countDocuments({ isBlocked: false }),
+      await PatientModel.countDocuments({ isBlocked: true }),
+    ])
+
+    return {
+      totalUsers,
+      activePatients,
+      blockedPatients,
+    }
   }
 }
