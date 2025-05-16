@@ -69,17 +69,24 @@ export class WithdrawService implements IWithdrawService {
     try {
       const companyWallet =
         await this.walletRepository.getWalletBalanceByOwnerId("Company");
-      const request: IWithdrawSchema =
+        
+        const request: IWithdrawSchema =
         await this.withdrawRepository.getWithdrawRequestById(clientId);
+        
+        const reqWallet = 
+          await this.walletRepository.getWalletBalanceByOwnerId(request.recieverId);
 
-      if (companyWallet < request.amount) {
+console.log(companyWallet, reqWallet, request.amount, 'dfxgvhbjkl');
+
+      if (companyWallet < request.amount || reqWallet < request.amount) {
         throw new Error("Insufficient balance in accound.");
       }
-
+      
       const updateResult = await this.withdrawRepository.updateWithdrawRequest(
         clientId,
         "approved"
       );
+
       if (updateResult.modifiedCount <= 0) {
         throw new Error("unable to approve.");
       }
@@ -92,9 +99,10 @@ export class WithdrawService implements IWithdrawService {
         "withdraw"
       );
 
+
       await this.walletRepository.decrement("Company", request.amount);
       await this.walletRepository.decrement(request.recieverId, request.amount);
-
+      
       return "withdraw request approved successfully";
     } catch (error: unknown) {
       throw error;

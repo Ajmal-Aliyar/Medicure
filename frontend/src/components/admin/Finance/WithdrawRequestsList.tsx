@@ -6,23 +6,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { approveWithdrawRequestApi, cancelWithdrawRequestApi, fetchWithdrawRequestsApi, fetchWithdrawRequestsByUserApi, IWithdrawRequests } from "../../../sevices/withdraw";
 import { RootState } from "../../../store/store";
 
+
 const WithdrawRequestsList: FC = () => {
   const [requests, setRequests] = useState<IWithdrawRequests[]>([])
   const [skip, setSkip] = useState<number>(0);
   const [limit] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
-  const [status, setStatus] = useState< '' | 'pending' | 'approved' | 'rejected'>('')
+  const [status, setStatus] = useState<'' | 'pending' | 'approved' | 'rejected'>('')
   const { role } = useSelector((state: RootState) => state.auth)
-  const [ theme, setTheme] = useState({dark: '', mid: '', light: ''})
+  const [theme, setTheme] = useState({ dark: '', mid: '', light: '' })
   const dispatch = useDispatch()
 
 
   useEffect(() => {
-    const newTheme = role === 'doctor' ? {dark: '#51aff6ce', mid: '#51aff666', light: '#51aff630'} : {dark: '#6A9C89', mid: '#a0c0b4', light: '#C4DAD2'}
+    const newTheme = role === 'doctor' ? { dark: '#51aff6ce', mid: '#51aff666', light: '#51aff630' } : { dark: '#6A9C89', mid: '#a0c0b4', light: '#C4DAD2' }
     setTheme(newTheme)
     const fetchWithdrawrequests = async () => {
       const requestsFunction = role === 'doctor' ? fetchWithdrawRequestsByUserApi : fetchWithdrawRequestsApi
-      const { withdrawRequests, total } = await requestsFunction( status, skip, limit)
+      const { withdrawRequests, total } = await requestsFunction(status, skip, limit)
 
       setRequests(withdrawRequests)
       setTotal(total)
@@ -44,22 +45,24 @@ const WithdrawRequestsList: FC = () => {
   };
 
   const ApproveRequestHandler = (id: string, status: string) => {
-    dispatch(setExtra(() => ApproveRequest( id, status)))
+    dispatch(setExtra(() => ApproveRequest(id, status)))
     dispatch(setWarning(`Do you want to ${status} this request?`))
   }
 
-  const ApproveRequest = async ( id: string, status: string) => {
+  const ApproveRequest = async (id: string, status: string) => {
     try {
       dispatch(setLoading(true))
       dispatch(clearWarning())
       dispatch(setExtra(null))
 
-      const response =  status === 'approve' ? await approveWithdrawRequestApi(id) : await cancelWithdrawRequestApi(id) 
+      const response = status === 'approve' ? await approveWithdrawRequestApi(id) : await cancelWithdrawRequestApi(id)
       setStatus(status === 'cancel' ? 'rejected' : 'approved')
       dispatch(setSuccess(response.message))
 
     } catch (error: unknown) {
-      dispatch(setError(`Error occured while ${status} withdraw`))
+      const err = error as any;
+      const errorMsg = err.response?.data?.message || `Error occured while ${status} withdraw`
+      dispatch(setError(errorMsg))
     } finally {
       dispatch(setLoading(false))
     }
@@ -95,7 +98,7 @@ const WithdrawRequestsList: FC = () => {
         </div>
         {total > 0 && <div className=" text-white flex gap-1">
           <button onClick={handlePrev} disabled={skip === 0} className="px-2 py-1 bg-[#a0c0b4] h-fit rounded"
-           style={{ backgroundColor: theme.mid}}><ChevronLeft size={20} /></button>
+            style={{ backgroundColor: theme.mid }}><ChevronLeft size={20} /></button>
           <div className=' max-w-[300px] gap-1 overflow-x-auto flex'>
             {Array.from({ length: Math.ceil(total / limit) }, (_, index) => (
               <button
@@ -110,7 +113,7 @@ const WithdrawRequestsList: FC = () => {
           </div>
 
           <button onClick={handleNext} disabled={skip + limit >= total} className="px-2 py-1 h-fit rounded"
-            style={{ backgroundColor: theme.mid}}><ChevronRight size={20} /></button>
+            style={{ backgroundColor: theme.mid }}><ChevronRight size={20} /></button>
         </div>}
       </div>
 
@@ -121,29 +124,29 @@ const WithdrawRequestsList: FC = () => {
             <div>
               <p className="text-md text-[#2f3c62d8] font-medium ">{rq.doctorDetails.fullName}</p>
               <p className="text-md font-medium "
-              style={{ color: theme.dark}}>{rq.doctorDetails.specialization}</p>
+                style={{ color: theme.dark }}>{rq.doctorDetails.specialization}</p>
             </div>
           </div>
           <div className='flex flex-wrap justify-end w-[150px] gap-1'>
             <div
-             className={`flex items-center gap-1 outline h-fit px-2 rounded-md text-sm  cursor-pointer relative `}
-            style={{ outlineColor: theme.dark, color: theme.dark}}>
+              className={`flex items-center gap-1 outline h-fit px-2 rounded-md text-sm  cursor-pointer relative `}
+              style={{ outlineColor: theme.dark, color: theme.dark }}>
               {convertTo12HourFormat(rq.updatedAt)}
             </div>
             <div className={`flex items-center gap-1 outline h-fit px-2 rounded-md text-sm cursor-pointer relative `}
-            style={{ outlineColor: theme.dark, color: theme.dark}}>
+              style={{ outlineColor: theme.dark, color: theme.dark }}>
               {rq.amount}rs
             </div>
-            {  rq.status === 'pending' && 
-            <div className={`flex items-center gap-1 outline bg-gray-700/60 h-fit px-1 rounded-sm text-white cursor-pointer relative `}
-              onClick={() => ApproveRequestHandler(rq._id, 'cancel')}>
-              <X size={19}/>
-            </div>}
-            { role === 'admin' && rq.status === 'pending' && 
-            <div className={`flex items-center gap-1 outline  h-fit px-1 rounded-sm bg-[#6A9C89] text-white cursor-pointer relative `}
-              onClick={() => ApproveRequestHandler(rq._id, 'approve')}>
-              <Check size={20}/>
-            </div>}
+            {rq.status === 'pending' &&
+              <div className={`flex items-center gap-1 outline bg-gray-700/60 h-fit px-1 rounded-sm text-white cursor-pointer relative `}
+                onClick={() => ApproveRequestHandler(rq._id, 'cancel')}>
+                <X size={19} />
+              </div>}
+            {role === 'admin' && rq.status === 'pending' &&
+              <div className={`flex items-center gap-1 outline  h-fit px-1 rounded-sm bg-[#6A9C89] text-white cursor-pointer relative `}
+                onClick={() => ApproveRequestHandler(rq._id, 'approve')}>
+                <Check size={20} />
+              </div>}
           </div>
         </div>
       )) : <p className="w-full h-16 flex items-center text-gray-500 font-medium">empty !</p>}

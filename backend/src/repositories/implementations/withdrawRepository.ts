@@ -71,7 +71,7 @@ export class WithdrawRepository implements IWithdrawRepository {
   }
 
   async getWithdrawRequestById(clientId: string): Promise<IWithdrawSchema> {
-    return await WithdrawModel.findById({ clientId });
+    return await WithdrawModel.findById(clientId);
   }
 
   async updateWithdrawRequest(

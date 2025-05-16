@@ -32,7 +32,7 @@ router.get(
 router.get(
   "/fetch-feedback/doctor",
   tokenMiddleware,
-  authorizeRoles('admin'),
+  authorizeRoles('admin', 'doctor'),
   feedbackController.getFeedbackForDoctor
 );
 
