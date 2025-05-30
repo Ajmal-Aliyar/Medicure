@@ -1,0 +1,1 @@
+export type IRole = 'patient' | 'doctor' | 'admin';
