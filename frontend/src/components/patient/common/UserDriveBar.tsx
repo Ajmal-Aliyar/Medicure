@@ -1,9 +1,10 @@
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice';
-import { logOutUser } from '../../../store/slices/commonSlices/AuthSlice';
 import { AppDispatch } from '../../../store/store';
 import { BookText, Library, LogOut, MessageSquareText, Wallet } from 'lucide-react';
+import { api } from '../../../utils/axiosInstance';
+import { logout } from '../../../store/slices/AuthSlice';
 
 function UserDriveBar() {
     const dispatch = useDispatch<AppDispatch>();
@@ -12,9 +13,16 @@ function UserDriveBar() {
         dispatch(setWarning("Are you sure you want to log out?"));
         dispatch(setExtra(() => {
             dispatch(clearWarning());
-            dispatch(logOutUser());
+            dispatch(logOutUser);
         }));
     };
+
+    const logOutUser = async (): Promise<void> => {
+        console.log('hello world');
+        
+        await api.post('/api/auth/logout');
+        dispatch(logout())
+    }
 
     const menuItems = [
         { name: "Medical Records", path: "/drive/medical-records", icon: <Library size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },

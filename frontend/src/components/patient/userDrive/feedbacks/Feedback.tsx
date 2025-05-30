@@ -20,7 +20,7 @@ const Feedback = () => {
   const fetchFeedbacks = async () => {
     try {
       dispatch(setLoading(true));
-      const { feedbacks, total } = await fetchFeedbacksApi('user', showMore,  5)
+      const { feedbacks, total } = await fetchFeedbacksApi('patient', showMore,  5)
 
       console.log(feedbacks, total);
       

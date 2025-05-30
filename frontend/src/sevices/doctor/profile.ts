@@ -16,6 +16,10 @@ export const updateProfileApi = async (doctorData:IDoctorData) => {
     return await api.patch('/api/doctor/profile-update',{...doctorData})
 }
 
-export const updateProfileImageApi = async (profileImage: string) => {
-    return await api.patch('/api/doctor/update-profile-image',{profileImage})
-}
+// export const updateProfileImageApi = async (profileImage: string) => {
+//     return await api.patch('/api/doctor/update-profile-image',{profileImage})
+// }
+
+export const updateDoctorProfileImageReff = async (profileImage: string) => {
+  return await api.patch('/api/doctor/profile/image', { profileImage });
+};

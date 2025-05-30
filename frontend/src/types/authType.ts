@@ -15,7 +15,7 @@ export interface ISignInResponse {
     data: {
         _id: string;
         email: string;
-        role: 'doctor' | 'user' | 'admin';
+        role: 'doctor' | 'patient' | 'admin';
         message: string
     };
 };

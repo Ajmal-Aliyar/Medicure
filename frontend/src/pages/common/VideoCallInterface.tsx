@@ -116,7 +116,7 @@ const VideoCallInterface = () => {
     stopStreaming(roomId as string);
 
 
-    if (client.role === "user") {
+    if (client.role === "patient") {
       navigate("/drive/appointments");
     } else if (client.role === "doctor") {
       await changeAppointmentStatusApi(appointmentId as string, slotId as string)

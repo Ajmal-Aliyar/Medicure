@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { login } from "../../store/slices/commonSlices/AuthSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { IVerificationOTPProp } from "../../types/authType";
-import { sendOTPApi, verifyOtpAndRegisterApi, verifyOtpApi } from "../../sevices/authRepository";
+import { sendOTPApi, verifyOtpApi, verifyOtpApiReff } from "../../sevices/authRepository";
 import RegisteredModal from "./RegisteredModal";
 
 const VerificationOTP: React.FC<IVerificationOTPProp> = ({ isChangePassword, setAuthStatus }) => {
@@ -105,7 +105,7 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ isChangePassword, set
       }
     } else {
       try {
-        const response = await verifyOtpAndRegisterApi(OTP2Send, email)
+        const response = await verifyOtpApiReff(OTP2Send, email)
         setLoading(false);
           console.log('Login successful:', response.data);
           setMessage('Thank you for registering! Your account has been created successfully.')
