@@ -2,10 +2,18 @@ import { getVerificationDetailsApi, patchVerificationDetailsApi } from '../../..
 import { IProfileDetailsFormProps } from '../../../types/doctor/verifyDetailsType';
 import React, { useEffect, useState } from 'react';
 
-
+export interface IVerificationDetails {
+    registrationNumber: string,
+        registrationCouncil: string,
+        registrationYear: string,
+        degree: string,
+        university: string,
+        yearOfCompletion: string,
+        yearsOfExperience: string
+}
 const ProfileDetailsForm: React.FC<IProfileDetailsFormProps> = ({ handleModal, setLoading }) => {
     const [currentSlide, setCurrentSlide] = useState(1);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<IVerificationDetails>({
         registrationNumber: '',
         registrationCouncil: '',
         registrationYear: '',

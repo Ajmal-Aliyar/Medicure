@@ -1,30 +1,31 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-const AuthorizedRoute = ({ children, allowedRole }: { children: ReactNode, allowedRole: string }) => {
-  const { isAuthenticated, role, isApproved } = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
+const AuthorizedRoute = ({
+  children,
+  allowedRole,
+}: {
+  children: ReactNode;
+  allowedRole: string;
+}) => {
+  const { isAuthenticated, role, isApproved } = useSelector(
+    (state: RootState) => state.auth
+  );
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/auth", { replace: true });
-      return;
-    }
+  if (!isAuthenticated) {
+    if (allowedRole === "patient") return <Navigate to="/auth" replace />;
+    return <Navigate to={`/${allowedRole}/auth`} replace />;
+  }
 
-    if (!isApproved) {
-      navigate("/doctor/verify-details", { replace: true });
-      return;
-    }
+  if (role !== allowedRole) {
+    if (role === "patient") return <Navigate to="/" replace />;
+    return <Navigate to={`/${role}/dashboard`} replace />;
+  }
 
-    if (role !== allowedRole) {
-      navigate("/unauthorized", { replace: true });
-    }
-  }, [isAuthenticated, isApproved, role, navigate, allowedRole]);
-
-  if (!isAuthenticated || !isApproved || role !== allowedRole) {
-    return null; 
+  if (role === "doctor" && isApproved !== "approved") {
+    return <Navigate to="/doctor/verify-details" replace />;
   }
 
   return <>{children}</>;

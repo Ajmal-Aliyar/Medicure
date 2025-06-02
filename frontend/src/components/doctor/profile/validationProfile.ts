@@ -6,9 +6,9 @@ export interface IDoctorData {
     gender: string;
     phone: string;
     addressLine: string;
-    streetAddress: string;
+    street: string;
     specialization: string;
-    languageSpoken: string;
+    languageSpoken: string[];
     city: string;
     state: string;
     country: string;

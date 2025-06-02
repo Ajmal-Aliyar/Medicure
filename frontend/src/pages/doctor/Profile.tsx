@@ -9,7 +9,7 @@ import ProfileTopBody from "../../components/doctor/profile/ProfileTopBody"
 import Experience from "../../components/doctor/profile/Experience"
 import { fetchSlotDetails } from "../../sevices/slot/slot"
 import Education from "../../components/doctor/profile/Education"
-import { getProfileDetails, updateDoctorProfileImageReff } from "../../sevices/doctor/profile"
+import { getProfileDetails, updateDoctorProfileImage } from "../../sevices/doctor/profile"
 import Reviews from "../../components/doctor/profile/Reviews"
 import Slots from "../../components/doctor/profile/Slots"
 import { ISlotSlice } from "../../types/slot/fetchSlot"
@@ -52,7 +52,7 @@ function Profile() {
     }, []);
 
     const requestUpdateProfileImage  = async (imageId: string) => {
-        await updateDoctorProfileImageReff(imageId)
+        await updateDoctorProfileImage(imageId)
     }
 
 

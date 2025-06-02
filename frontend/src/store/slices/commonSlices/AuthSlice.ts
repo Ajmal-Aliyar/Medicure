@@ -1,57 +1,79 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { api } from '../../../utils/axiosInstance';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { api } from "../../../utils/axiosInstance";
+import { AppUser } from "../../../types/common/IAppUser";
 
 interface AuthState {
   _id: string;
   email: string;
   role: string;
-  isApproved?: boolean;
+  fullName: string | null;
+  profileImage: string | null;
+  isApproved: null | "pending" | "applied" | "approved" | "rejected";
   isAuthenticated: boolean;
-  isBlocked: boolean
+  isBlocked: boolean;
 }
 
 const initialState: AuthState = {
-  _id: '',
-  email: '',
-  role: '',
-  isApproved: false,
+  _id: "",
+  email: "",
+  role: "",
+  isApproved: null,
+  fullName: null,
+  profileImage: null,
   isAuthenticated: false,
-  isBlocked: false
+  isBlocked: false,
 };
 
 export const logOutUser = createAsyncThunk(
-  'auth/logout',
+  "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      await api.post('/api/auth/logout');
-      return true; 
+      await api.post("/api/auth/logout");
+      return true;
     } catch (error: unknown) {
-      return rejectWithValue('Error occured while logout' );
+      return rejectWithValue("Error occured while logout");
     }
   }
 );
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
-    setData: (state, action: PayloadAction<{ _id: string; email: string; role: string; isApproved?: boolean }>) => {
-      const { _id, email, role, isApproved } = action.payload;
-      state._id = _id;
+    setData: (state, action: PayloadAction<{ id: string, email: string, role: string, isApproved: null | "pending" | "applied" | "approved" | "rejected" }>) => {
+      const { id, email, role, isApproved } = action.payload;
+      state._id = id;
       state.email = email;
       state.role = role;
       state.isApproved = isApproved;
-      state.isAuthenticated = false; 
+      state.isAuthenticated = false;
     },
-    login: (state) => {
+    login: (state, action: PayloadAction<AppUser>) => {
+      const { id, email, role, isApproved, fullName, profileImage } = action.payload;
+      console.log(action.payload, 'datas');
+      
+      state._id = id;
+      state.email = email;
+      state.role = role;
+      state.fullName = fullName;
+      state.profileImage = profileImage;
+      state.isApproved = isApproved;
       state.isAuthenticated = true;
-    },
-    logout: (state) => {
-      Object.assign(state, initialState);
+      // state.isLoading = false;
     },
     blockUser: (state) => {
-      state.isBlocked = true
-    }
+      state.isBlocked = true;
+    },
+    handleApprove: (
+      state,
+      action: PayloadAction<{
+        status: "pending" | "applied" | "approved" | "rejected";
+      }>
+    ) => {
+      console.log(action.payload.status);
+
+      state.isApproved = action.payload.status;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -59,11 +81,10 @@ const authSlice = createSlice({
         Object.assign(state, initialState);
       })
       .addCase(logOutUser.rejected, (_state, action) => {
-        console.error('Logout failed:', action.payload);
+        console.error("Logout failed:", action.payload);
       });
   },
 });
 
-
-export const { setData, login, logout, blockUser } = authSlice.actions;
+export const { setData, login, blockUser, handleApprove } = authSlice.actions;
 export default authSlice.reducer;

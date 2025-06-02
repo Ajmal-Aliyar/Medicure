@@ -13,7 +13,7 @@ export const AppLayout = ({ children }: { children: ReactNode }) => {
   }
 
     return (
-        <main className="w-screen h-screen">
+        <main className="w-screen h-screen relative ">
             {children}
         </main>
     );

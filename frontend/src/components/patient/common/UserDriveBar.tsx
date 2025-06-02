@@ -3,8 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { clearWarning, setExtra, setWarning } from '../../../store/slices/commonSlices/notificationSlice';
 import { AppDispatch } from '../../../store/store';
 import { BookText, Library, LogOut, MessageSquareText, Wallet } from 'lucide-react';
-import { api } from '../../../utils/axiosInstance';
-import { logout } from '../../../store/slices/AuthSlice';
+import { logOutUser } from '../../../store/slices/commonSlices/AuthSlice';
 
 function UserDriveBar() {
     const dispatch = useDispatch<AppDispatch>();
@@ -12,17 +11,11 @@ function UserDriveBar() {
     const handleLogout = () => {
         dispatch(setWarning("Are you sure you want to log out?"));
         dispatch(setExtra(() => {
-            dispatch(clearWarning());
-            dispatch(logOutUser);
+            dispatch(clearWarning())
+            dispatch(logOutUser())
         }));
     };
 
-    const logOutUser = async (): Promise<void> => {
-        console.log('hello world');
-        
-        await api.post('/api/auth/logout');
-        dispatch(logout())
-    }
 
     const menuItems = [
         { name: "Medical Records", path: "/drive/medical-records", icon: <Library size={20} color="#0c0b3eb5" strokeWidth={2.75} /> },
@@ -38,8 +31,7 @@ function UserDriveBar() {
                     key={item.path}
                     to={item.path}
                     className={({ isActive }) =>
-                        `cursor-pointer my-2 hover:lg:scale-105 hover:translate-x-1 duration-300 ${
-                            isActive ? "text-[#0c0b3eb5] font-semibold" : "text-[#0c0b3eb5]"
+                        `cursor-pointer my-2 hover:lg:scale-105 hover:translate-x-1 duration-300 ${isActive ? "text-[#0c0b3eb5] font-semibold" : "text-[#0c0b3eb5]"
                         }`
                     }
                 >

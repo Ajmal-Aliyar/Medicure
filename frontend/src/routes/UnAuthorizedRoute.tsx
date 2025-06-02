@@ -1,27 +1,30 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import { RootState } from "../store/store";
-import { useNavigate } from "react-router-dom";
 
 const UnAuthorizedRoute = ({ children }: { children: ReactNode }) => {
-  const { isAuthenticated, role, isApproved } = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
+  const { isAuthenticated, role, isApproved } = useSelector(
+    (state: RootState) => state.auth
+  );
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (role === "patient") {
-        navigate("/", { replace: true });
-      } else {
-        if (!isApproved) {
-          navigate("/doctor/verify-details", { replace: true });
-        } else {
-          navigate(`/${role}/dashboard`, { replace: true });
-        }
-      }
-    }
-  }, [isAuthenticated, role, isApproved, navigate]);
+  if (!isAuthenticated) return <>{children}</>;
 
-  if (isAuthenticated) return null;
+  if (role === "admin") {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  if (role === "doctor") {
+    return isApproved === "approved" ? (
+      <Navigate to="/doctor/dashboard" replace />
+    ) : (
+      <Navigate to="/doctor/verify-details" replace />
+    );
+  }
+
+  if (role === "patient") {
+    return <Navigate to="/" replace />;
+  }
 
   return <>{children}</>;
 };

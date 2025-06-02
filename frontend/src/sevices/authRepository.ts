@@ -29,11 +29,11 @@ export const changePasswordApi = async (email: string,password: string,role: str
       })
 }
 
-export const verifyOtpApi = async (otp: string, email: string) => {
-    return api.post('/api/auth/verify-otp', {
-        otp, email
-      })
-}
+// export const verifyOtpApi = async (otp: string, email: string) => {
+//     return api.post('/api/auth/verify-otp', {
+//         otp, email
+//       })
+// }
 
 export const verifyOtpAndRegisterApi = async (otp: string, email: string) => {
     return api.post('/api/auth/verify-otp-register', {
@@ -42,7 +42,7 @@ export const verifyOtpAndRegisterApi = async (otp: string, email: string) => {
 }
 
 // backend refactor
-export const registerApiReff = async (name: string, email: string, mobile: string, password: string, role: string) => {
+export const registerApi = async (name: string, email: string, mobile: string, password: string, role: string) => {
     console.log('send');
     
     return await api.post('/api/auth/register', {
@@ -54,21 +54,22 @@ export const registerApiReff = async (name: string, email: string, mobile: strin
     })
 }
 
-export const verifyOtpApiReff = async (otp: string, email: string) => {
+export const verifyOtpApi = async (otp: string, email: string) => {
     return api.post('/api/auth/verify-otp', {
         otp, email
       })
 }
 
-export const loginApiReff = async (email: string, password: string, role: string): Promise<ISignInResponse> => {
-    return await api.post('/api/auth/login', {
+export const loginApi = async (email: string, password: string, role: string): Promise<ISignInResponse> => {
+    const result =  await api.post<ISignInResponse>('/api/auth/login', {
         email,
         password,
         role
     })
+    return result.data
 }
 
-export const logoutApiReff = async (email: string, password: string, role: string): Promise<ISignInResponse> => {
+export const logoutApi = async (email: string, password: string, role: string): Promise<ISignInResponse> => {
     return await api.post('/api/auth/logout', {
         email,
         password,

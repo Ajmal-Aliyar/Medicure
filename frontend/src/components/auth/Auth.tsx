@@ -3,8 +3,8 @@ import { useDispatch } from "react-redux";
 import HoneyComb from "../common/HoneyComb";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../common/ErrorMessage";
-import { setData } from "../../store/slices/commonSlices/AuthSlice";
-import { loginApiReff, registerApiReff, sendOTPApi } from "../../sevices/authRepository"
+import { login, setData } from "../../store/slices/commonSlices/AuthSlice";
+import { loginApi, registerApi, sendOTPApi } from "../../sevices/authRepository"
 import { IAuthPageProps, IErrorType, ISignInResponse } from "../../types/authType";
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate/authValidate";
 import GoogleAuth from "./GoogleAuth";
@@ -40,14 +40,9 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
         if (isLogin) {
             if (!errorMessage.email && !errorMessage.password && email && password) {
                 try {
-                    const response: ISignInResponse = await loginApiReff(email, password, role)
-                    dispatch(setData({ _id: response.data._id, email, role }))
+                    const response: ISignInResponse = await loginApi(email, password, role)
+                    dispatch(login(response.data))
                     setLoading(false);
-                    if (role === 'doctor') {
-                        navigate('/doctor/dashboard')
-                    } else {
-                        navigate('/')
-                    }
                 } catch (error: unknown) {
                     setLoading(false);
                     const err = error as { response?: { data?: { status?: string } } };
@@ -66,9 +61,9 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
             if (!errorMessage.name && !errorMessage.email && !errorMessage.mobile && !errorMessage.password && name && email && mobile && password) {
                 console.log(role)
                 try {
-                    await registerApiReff(name, email, mobile, password, role)
+                    await registerApi(name, email, mobile, password, role)
                     setLoading(false);
-                    dispatch(setData({ _id: '', email, role }))
+                    dispatch(setData({ id: '', email, isApproved: null, role }))
                     setAuthStatus('otp-verification')
                 } catch (error: unknown) {
                     setLoading(false);
@@ -135,7 +130,7 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
                 setLoading(false);
                 console.log('Signup successful:', response.data);
                 setAuthStatus('otp-verification')
-                dispatch(setData({ _id: '', email, role }))
+                dispatch(setData({ id: '', email, role, isApproved: null }))
                 setIsChangePassword(true)
             } catch (error: unknown) {
                 setLoading(false);

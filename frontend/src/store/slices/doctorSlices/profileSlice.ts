@@ -14,7 +14,7 @@ export interface IExperience {
 
 export interface IAddress {
     addressLine: string;
-    streetAddress: string;
+    street: string;
     city: string;
     state: string;
     country: string;
@@ -38,7 +38,7 @@ export interface ProfileState {
     address: IAddress;
     specialization: string;
     yearsOfExperience: number;
-    languageSpoken: string;
+    languageSpoken: string[];
     fees: number;
     isBlocked: boolean;
     isProfileCompleted: boolean;
@@ -66,7 +66,7 @@ const initialState: ProfileState = {
     headline: '',
     address: {
         addressLine: '',
-        streetAddress: '',
+        street: '',
         city: '',
         state: '',
         country: '',
@@ -74,7 +74,7 @@ const initialState: ProfileState = {
     },
     specialization: '',
     yearsOfExperience: 0,
-    languageSpoken: '',
+    languageSpoken: [],
     fees: 0,
     isBlocked: false,
     isProfileCompleted: false,

@@ -3,8 +3,7 @@ import notification from './slices/commonSlices/notificationSlice'
 import patientProfile from './slices/patientSlices/profileSlice'
 import doctorProfile from './slices/doctorSlices/profileSlice'
 import slotReducer from './slices/doctorSlices/slotSlice';
-// import authReducer from './slices/commonSlices/AuthSlice';
-import authReducer from './slices/AuthSlice'
+import authReducer from './slices/commonSlices/AuthSlice';
 import chatReducer from './slices/commonSlices/chatSlice'
 import { configureStore } from '@reduxjs/toolkit';
 import videoConsultReducer from './slices/commonSlices/videoConsultSlice'

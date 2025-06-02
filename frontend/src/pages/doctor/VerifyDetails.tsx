@@ -1,6 +1,5 @@
 import ProfileVerificationForm from '../../components/doctor/verify-details/ProfileVerificationForm';
 import ProfileDetailsForm from '../../components/doctor/verify-details/ProfileDetailsForm';
-import AppointmentSetUp from '../../components/doctor/appointments/AppointmentSetUp';
 import ModalAnimation from '../../components/doctor/verify-details/ModalAnimation';
 import Animation from '../../components/doctor/verify-details/Animation';
 import Content from '../../components/doctor/verify-details/Content';
@@ -11,11 +10,8 @@ import EditProfilePortal from '../../components/doctor/profile/EditProfilePortal
 import ImageUploader from '../../components/doctor/profile/EditProfileImage';
 import EditProfileSection from '../../components/doctor/profile/EditProfileSection';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProfileDetails, updateDoctorProfileImageReff } from '../../sevices/doctor/profile';
-import { fetchSlotDetails } from '../../sevices/slot/slot';
-import { ISlotSlice } from '../../types/slot/fetchSlot';
+import { getProfileDetails, updateDoctorProfileImage } from '../../sevices/doctor/profile';
 import { setProfileData } from '../../store/slices/doctorSlices/profileSlice';
-import { setFees, setSlotData } from '../../store/slices/doctorSlices/slotSlice';
 import { RootState } from '../../store/store';
 
 function VerifyDetails() {
@@ -33,15 +29,8 @@ function VerifyDetails() {
     useEffect(() => {
         const getDoctorAndSlotData = async () => {
             try {
-                const [doctorResponse, slotResponse] = await Promise.all([
-                    getProfileDetails(),
-                    fetchSlotDetails()
-                ]);
-                
-                const slotData: ISlotSlice = slotResponse
+                const doctorResponse = await  getProfileDetails()      
                 dispatch(setProfileData(doctorResponse))
-                dispatch(setSlotData(slotData.slots))
-                dispatch(setFees(slotData.fees))
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -50,7 +39,7 @@ function VerifyDetails() {
     }, []);
 
     const requestUpdateProfileImage = async (imageId: string) => {
-        await updateDoctorProfileImageReff(imageId)
+        await updateDoctorProfileImage(imageId)
     }
 
     return (
@@ -77,14 +66,6 @@ function VerifyDetails() {
                     <ProfileVerificationForm handleModal={handleModal} setLoading={setLoading} />
                 </ModalAnimation>
             )}
-            {isModalOpen === 'Appointments Setup' && (
-                <ModalAnimation onClose={handleModal}>
-                    <AppointmentSetUp handleModal={handleModal} />
-                </ModalAnimation>
-            )}
-
-
-
 
 
 
