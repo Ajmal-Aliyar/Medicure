@@ -1,4 +1,11 @@
-import { IAddress, IEducation, IExperience, IGender, IWeekDay } from "@/interfaces";
+import {
+  IAddress,
+  IDocument,
+  IEducation,
+  IExperience,
+  IGender,
+  IWeekDay,
+} from "@/interfaces";
 import { Document, Types } from "mongoose";
 
 export interface IDoctor extends Document {
@@ -9,8 +16,8 @@ export interface IDoctor extends Document {
     email: string;
     mobile: string;
     password: string;
-    gender: IGender
-    dob: Date;
+    gender: IGender;
+    dob: string;
     profileImage: string | null;
     languageSpoken: string[];
   };
@@ -19,22 +26,17 @@ export interface IDoctor extends Document {
     registrationNumber: string;
     registrationCouncil: string;
     registrationYear: number;
-    specialization: string[];
-    headline?: string;
-    about?: string;
+    specialization: string;
+    headline: string;
+    about: string;
     yearsOfExperience: number;
-    educationDetails?: IEducation;
     education: IEducation[];
     experience: IExperience[];
     fees: {
       amount: number;
       currency: string;
     };
-    documents: {
-      identityProof: string;
-      medicalRegistration: string;
-      establishmentProof: string;
-    };
+    documents: IDocument;
   };
 
   availability: {
@@ -54,9 +56,18 @@ export interface IDoctor extends Document {
   };
 
   status: {
-    isBlocked: boolean;
-    isProfileCompleted: boolean;
-    isApproved: boolean;
-    isVerified: boolean;
+    accountStatus: {
+      isBlocked: boolean;
+      reason: string | null;
+    };
+    profile: {
+      isApproved: boolean;
+      reviewStatus: "pending" | "applied" | "approved" | "rejected";
+      reviewComment: string | null;
+    };
+    verification: {
+      isVerified: boolean;
+      verifiedAt: Date;
+    };
   };
 }

@@ -1,5 +1,7 @@
 export interface IExperience {
-    place: string;
-    year: string;
-    experience: number;
+    hospitalName: string,
+    role: string,
+    startDate: Date,
+    endDate: Date,
+    description: string,
 }

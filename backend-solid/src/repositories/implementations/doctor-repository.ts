@@ -2,6 +2,7 @@ import { DoctorModel, IDoctor } from "@/models";
 import { injectable } from "inversify";
 import { BaseRepository, IDoctorRepository } from "@/repositories";
 import { CreateUserDto } from "@/dtos";
+import { UpdateQuery } from "mongoose";
 
 @injectable()
 export class DoctorRepository
@@ -10,14 +11,6 @@ export class DoctorRepository
 {
   constructor() {
     super(DoctorModel);
-  }
-
-  async findByEmail(email: string): Promise<IDoctor | null> {
-    return await this.model.findOne({ email });
-  }
-
-  async findById(id: string): Promise<IDoctor | null> {
-    return await this.model.findById(id);
   }
 
   async register(data: CreateUserDto): Promise<Partial<IDoctor>> {
@@ -37,5 +30,14 @@ export class DoctorRepository
       { new: true }
     );
     return updatedDoctor;
+  }
+
+  async updateStatus(
+    doctorId: string,
+    update: UpdateQuery<IDoctor["status"]>
+  ): Promise<IDoctor | null> {
+    return this.model
+      .findByIdAndUpdate(doctorId, { $set: update }, { new: true })
+      .exec();
   }
 }

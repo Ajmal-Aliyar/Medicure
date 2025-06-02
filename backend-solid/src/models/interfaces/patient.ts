@@ -12,7 +12,7 @@ export interface IPatient extends Document {
     email: string;
     password: string;
     gender: IGender;
-    dob: Date;
+    dob: string;
     bloodGroup?: string;
     languageSpoken?: string[]; 
   };

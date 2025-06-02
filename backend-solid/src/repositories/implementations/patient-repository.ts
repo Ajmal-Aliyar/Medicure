@@ -11,15 +11,6 @@ export class PatientRepository
   constructor() {
     super(PatientModel);
   }
-
-  async findByEmail(email: string): Promise<IPatient | null> {
-    return await this.model.findOne({ email });
-  }
-
-  async findById(id: string): Promise<IPatient | null> {
-    return await this.model.findById(id);
-  }
-
   async register(data: CreateUserDto): Promise<Partial<IPatient>> {
     const patient = {
       personal: data,

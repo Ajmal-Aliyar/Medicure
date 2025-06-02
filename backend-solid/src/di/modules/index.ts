@@ -1,3 +1,4 @@
+export * from './admin-module';
 export * from './auth-module';
 export * from './doctor-module';
 export * from './patient-module';

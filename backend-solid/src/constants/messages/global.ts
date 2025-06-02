@@ -1,6 +1,6 @@
 export const GLOBAL_MESSAGES = {
   SUCCESS: {
-    PROFILE_IMAGE_UPDATED: "Profile image updated successfully."
+    
   },
   ERROR: {
     BAD_REQUEST: "Bad request.",

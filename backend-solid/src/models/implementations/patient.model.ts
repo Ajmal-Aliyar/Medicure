@@ -10,7 +10,7 @@ const PatientSchema = new Schema<IPatient>(
       email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
       gender: { type: String, enum: ['Male', 'Female', 'Other']},
-      dob: { type: Date},
+      dob: { type: String },
       bloodGroup: { type: String },
       languageSpoken: [{ type: String }],
     },
@@ -38,7 +38,6 @@ const PatientSchema = new Schema<IPatient>(
       isBlocked: { type: Boolean, default: false },
       isVerified: { type: Boolean, default: false },
       isProfileCompleted: { type: Boolean, default: false },
-      isApproved: { type: Boolean, default: true },
     },
 
     meta: {

@@ -1,5 +1,6 @@
 import { Container } from "inversify";
 import {
+  bindAdminModule,
   bindAuthModule,
   bindDoctorModule,
   bindPatientModule,
@@ -13,6 +14,7 @@ const startContainer = async () => {
   await bindPatientModule(container);
   await bindDoctorModule(container);
   await bindSharedModule(container);
+  await bindAdminModule(container);
 };
 
 const getContainer = (): Container => {

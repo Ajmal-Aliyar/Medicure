@@ -40,5 +40,6 @@ export const AUTH_MESSAGES = {
     CORRUPTED_CACHE_DATA: "Corrupted cached registration data.",
     USER_ID_MISSING: "User ID is missing from the request.",
     USER_NOT_FOUND: "User not found",
+    INVALID_USER: "Invalid user",
   },
 };

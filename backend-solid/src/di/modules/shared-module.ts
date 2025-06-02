@@ -2,12 +2,12 @@ import nodemailer from "nodemailer";
 import { Container } from "inversify";
 import { RedisClientType } from "redis";
 import { TYPES } from "@/di/types";
-import { IOtpService, OtpService } from "@/services";
 import { createTransporter, getRedisClient } from "@/config";
 import {
   ICacheService,
   IEmailService,
   IMediaService,
+  IOtpService,
   IPasswordHasher,
   ITokenService,
 } from "@/interfaces";
@@ -15,6 +15,7 @@ import {
   CloudinaryService,
   EmailService,
   JwtService,
+  OtpService,
   PasswordHasher,
   RedisService,
 } from "@/infrastructure";

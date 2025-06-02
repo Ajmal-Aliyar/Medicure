@@ -8,6 +8,10 @@ export const TYPES = {
   AuthService: Symbol.for("AuthService"),
   AuthController: Symbol.for("AuthController"),
 
+  AdminRepository: Symbol.for('AdminRepository'),
+  AdminService: Symbol.for('AdminService'),
+  AdminController: Symbol.for('AdminController'),
+
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),
   EmailService: Symbol.for("EmailService"),

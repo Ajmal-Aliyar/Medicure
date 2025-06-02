@@ -1,5 +1,6 @@
 import { env } from "@/config";
 import { IMediaService } from "@/interfaces";
+import { IDoctor } from "@/models";
 import { injectable } from "inversify";
 
 @injectable()
@@ -30,7 +31,7 @@ export class CloudinaryService implements IMediaService {
     console.log("Cloudinary Deletion Success:", result);
   }
 
-   extractPublicId(url: string): string {
+  extractPublicId(url: string): string {
     try {
       const parts = url.split("/");
       const filename = parts[parts.length - 1];
