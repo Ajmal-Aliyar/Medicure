@@ -4,12 +4,14 @@ export const successResponse = (
   res: Response,
   statusCode: number,
   message: string,
-  data?: any
+  data?: any,
+  meta?: { total: number, skip: number, limit: number, totalPages: number}
 ) => {
   return res.status(statusCode).json({
     success: true,
     message,
     data: data ?? null,
+    ...(meta && { meta })
   });
 };
 

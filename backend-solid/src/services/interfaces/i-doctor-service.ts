@@ -1,5 +1,4 @@
 import { DoctorProfileDTO, DoctorProfileUpdateDTO, ProfessionalVerificationDTO, VerificationProofsDto } from "@/dtos";
-import { IDoctor } from "@/models";
 
 export interface IDoctorService {
   updateProfileImg(doctorId: string, imageUrl: string): Promise<void>;
@@ -10,5 +9,4 @@ export interface IDoctorService {
   getVerificationProofs(doctorId: string): Promise<VerificationProofsDto>;
   updateVerificationProofs( doctorId: string, proofs: VerificationProofsDto): Promise<void>;
   submitForReview(doctorId: string): Promise<void>;
-  ensureDoctorExists(doctorId: string): Promise<IDoctor>
 }

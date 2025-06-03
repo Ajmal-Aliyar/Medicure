@@ -1,3 +1,4 @@
+
 export const GLOBAL_MESSAGES = {
   SUCCESS: {
     
@@ -11,5 +12,9 @@ export const GLOBAL_MESSAGES = {
     INTERNAL_SERVER_ERROR: "Something went wrong. Please try again later.",
     ACCESS_TOKEN_MISSING: "Access token is missing or invalid",
     INVALID_REFRESH_TOKEN: "Invalid or expired refresh token.",
+    ACCESS_TOKEN_EXPIRED: "Access token expired."
   },
+  VALIDATION: {
+    INVALID_PAGINATION: "Invalid pagination parameters."
+  }
 };

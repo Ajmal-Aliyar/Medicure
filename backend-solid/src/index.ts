@@ -21,6 +21,7 @@ async function bootstrap() {
       logger.info(`Server running on port ${env.PORT}`);
     });
   } catch (err) {
+    console.error('Error caught by bootstrap : ',err)
     logger.error("Bootstrapping failed:", err);
     process.exit(1);
   }

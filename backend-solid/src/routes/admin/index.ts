@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { createDoctorRouter } from "./doctor-route";
+import { createAdminDoctorRouter } from "./doctor-route";
 
 
 export const createAdminRouter = () => {
     const router = Router();
-    router.use("/doctor", createDoctorRouter());
+    router.use("/doctors", createAdminDoctorRouter());
     return router
 }
 

@@ -40,10 +40,7 @@ const PatientSchema = new Schema<IPatient>(
       isProfileCompleted: { type: Boolean, default: false },
     },
 
-    meta: {
-      createdBy: { type: String },
-      updatedBy: { type: String },
-    },
+   
   },
   {
     timestamps: true, 

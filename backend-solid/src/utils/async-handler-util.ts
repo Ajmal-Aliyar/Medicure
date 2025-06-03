@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
 
 export function asyncHandler(
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
+  fn: (req: Request, res: Response) => Promise<void>
 ): RequestHandler {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await fn(req, res, next);
+      await fn(req, res);
     } catch (error) {
       console.error('AsyncHandler caught error:', {
         error: error instanceof Error ? error.message : 'Unknown error',

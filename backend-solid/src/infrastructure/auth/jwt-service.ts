@@ -10,7 +10,7 @@ export class JwtService implements ITokenService {
   private refreshTokenSecret = env.REFRESH_TOKEN_SECRET;
 
   generateAccessToken(payload: object): string {
-    return jwt.sign(payload, this.accessTokenSecret, { expiresIn: "15m" });
+    return jwt.sign(payload, this.accessTokenSecret, { expiresIn: "1m" });
   }
 
   generateRefreshToken(payload: object): string {

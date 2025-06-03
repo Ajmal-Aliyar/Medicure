@@ -40,4 +40,25 @@ export class DoctorRepository
       .findByIdAndUpdate(doctorId, { $set: update }, { new: true })
       .exec();
   }
+
+  async getDoctorsSummaryByReviewStatus(
+    status: string,
+    { skip = 0, limit = 10 }
+  ): Promise<{ total: number; doctors: IDoctor[] }> {
+    const filter = { "status.profile.reviewStatus": status };
+    const total = await this.model.countDocuments(filter);
+    const doctors = await this.model
+      .find(filter, {
+        "personal.fullName": 1,
+        "personal.profileImage": 1,
+        "professional.specialization": 1,
+        "rating": 1,
+        "professional.fees": 1
+      })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    return { total, doctors };
+  }
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProfileRouter } from "./profile-route";
+import { createProfileRouter } from "./doctor-route";
 
 
 export const createDoctorRouter = () => {

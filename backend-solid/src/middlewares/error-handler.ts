@@ -9,6 +9,8 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
+  console.log('jaisdf');
+  
   if (err instanceof BaseError) {
     return errorResponse(res, err.statusCode, err.message);
   }

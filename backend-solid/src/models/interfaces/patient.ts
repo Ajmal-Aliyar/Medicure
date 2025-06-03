@@ -11,14 +11,14 @@ export interface IPatient extends Document {
     mobile: string;
     email: string;
     password: string;
-    gender: IGender;
-    dob: string;
+    gender?: IGender;
+    dob?: string;
     bloodGroup?: string;
     languageSpoken?: string[]; 
   };
 
-  contact: {
-    address: IAddress;
+  contact?: {
+    address?: IAddress;
     emergencyContact?: IEmergencyContact;
   };
 
@@ -29,10 +29,5 @@ export interface IPatient extends Document {
     isApproved: boolean;
   };
 
-  meta: {
-    createdAt: Date;
-    updatedAt: Date;
-    createdBy?: string;
-    updatedBy?: string;
-  };
+
 }

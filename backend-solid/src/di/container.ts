@@ -5,7 +5,7 @@ import {
   bindDoctorModule,
   bindPatientModule,
   bindSharedModule,
-} from "./modules";
+} from "@/di";
 
 const container: Container = new Container();
 
