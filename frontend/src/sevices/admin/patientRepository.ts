@@ -9,12 +9,12 @@ export const fetchAllPatientsApi = async (skip: number, limit: number): Promise<
     return { data: response.data.data, total: response.data.total };
 }
 
-export const blockRole = async (_id: string, role: string): Promise<{ message: string }> => {
-    const response = await api.get<{ message: string }>(`/api/admin/block-role?_id=${_id}&role=${role}`);
+export const blockRole = async (_id: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>(`/api/admin/doctors/${_id}/block`);
     return response.data;
 };
 
-export const unblockRole = async (_id: string, role: string): Promise<{ message: string }> => {
-    const response = await api.get<{ message: string }>(`/api/admin/unblock-role?_id=${_id}&role=${role}`);
+export const unblockRole = async (_id: string): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>(`/api/admin/doctors/${_id}/unblock`);
     return response.data;
 };

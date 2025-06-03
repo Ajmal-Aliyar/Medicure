@@ -1,10 +1,11 @@
-import { IPatientProfilePayload } from "../../../types/patient/profileType";
+import { PatientProfileDto } from "../../../types/patient/profileType";
 
 interface IAddressSectionProps {
-    patientData: IPatientProfilePayload;
+    patientData: PatientProfileDto;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChange}) => {
+    const {address}  = patientData.contact;
     return (
         <div className="flex flex-wrap gap-3">
             <div className="w-[250px]">
@@ -17,7 +18,7 @@ const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChang
                 <input
                     type="text"
                     name="houseName"
-                    value={patientData.houseName || ''}
+                    value={address.addressLine || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
@@ -33,7 +34,7 @@ const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChang
                 <input
                     type="text"
                     name="street"
-                    value={patientData.street || ''}
+                    value={address.street || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500" />
             </div>
@@ -48,7 +49,7 @@ const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChang
                 <input
                     type="text"
                     name="city"
-                    value={patientData.city || ''}
+                    value={address.city || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
@@ -64,7 +65,7 @@ const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChang
                 <input
                     type="text"
                     name="state"
-                    value={patientData.state || ''}
+                    value={address.state || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
@@ -80,7 +81,7 @@ const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChang
                 <input
                     type="text"
                     name="country"
-                    value={patientData.country || ''}
+                    value={address.country || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
@@ -96,7 +97,7 @@ const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChang
                 <input
                     type="text"
                     name="pincode"
-                    value={patientData.pincode || ''}
+                    value={address.pincode || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />

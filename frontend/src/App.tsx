@@ -14,12 +14,11 @@ import { ENV } from './constants/env';
 import { setupInterceptors } from './utils/setUpInterceptors';
 import {AppLayout} from './layouts/AppLayout';
 
-
+setupInterceptors();
 const App = () => {
   const _id = useSelector((state: RootState) => state.auth._id)
   useEffect(() => {
 
-    setupInterceptors();
     // connectWithSocketIOServer(_id)
     console.log('connected to socket', _id );
     

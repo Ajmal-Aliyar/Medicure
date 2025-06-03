@@ -12,29 +12,3 @@ export const api = axios.create({
   withCredentials: true, 
 });
 
-
-
-// api.interceptors.request.use(
-//   (config) => {
-//     console.log('reeeqst send');
-    
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
-// api.interceptors.response.use(
-//   (res) => res,
-//   async (error) => {
-//     if (error.response?.status === 401) {
-//       console.log('caught error');
-//       window.location.href='/auth'
-//     }
-
-//     // if (error.response?.data.status === 'blocked') {
-//     //   store.dispatch(blockUser())
-//     // }
-
-//     return Promise.reject(error);
-//   }
-// );

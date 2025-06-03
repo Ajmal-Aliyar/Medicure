@@ -6,6 +6,7 @@ import HoneyComb from '../components/common/HoneyComb';
 import VerifyDetails from '../pages/doctor/VerifyDetails';
 import ProfileCompleted from '../components/doctor/verify-details/ProfileCompleted';
 import Banner from '../components/doctor/verify-details/Banner';
+import ProfileRejected from '../components/doctor/verify-details/ProfileRejected';
 
 const PrivateRoute = () => {
   const { isAuthenticated, isApproved, role } = useSelector((state: RootState) => state.auth);
@@ -42,7 +43,7 @@ const PrivateRoute = () => {
     case 'applied':
         return <><Banner /><ProfileCompleted /></>
     case 'rejected':
-        return <div>rejected</div>
+        return <><Banner /><ProfileRejected /></>
     default: return <Navigate to="/doctor/dashboard" replace />
   }
 };

@@ -5,66 +5,58 @@ import ProfileTopBody from "../../components/patient/profile/ProfileTopBody";
 import { getPatientProfileData, updatePatientProfileData } from "../../sevices/patient/profile";
 import { useDispatch } from "react-redux";
 import { setError, setSuccess } from "../../store/slices/commonSlices/notificationSlice";
-import { useNavigate } from "react-router-dom";
 import { PatientProfileValidation } from "../../utils/validate/validationPatientProfileUpdate";
-import { IPatientProfile, IPatientProfilePayload } from "../../types/patient/profileType";
+import { PatientProfileDto } from "../../types/patient/profileType";
 import { setPatientProfileData } from "../../store/slices/patientSlices/profileSlice";
 
 function Profile() {
-    const [patientData, setProfileData] = useState<IPatientProfilePayload>({
-        profileImage: '',
-        fullName: '',
-        phone: '',
-        email: '',
-        dob: '',
-        bloodGroup: '',
-        gender: '',
-        houseName: '',
-        street: '',
-        city: '',
-        state: '',
-        country: '',
-        pincode: '',
+    const [patientData, setProfileData] = useState<PatientProfileDto>({
+        personal: {
+            profileImage:
+                "https://res.cloudinary.com/dwyxogyrk/image/upload/v1737173758/sk7hria3ngkaujeywrjy.png",
+            fullName: "",
+            email: "",
+            mobile: "",
+            dob: "",
+            gender: "",
+            bloodGroup: "",
+        },
 
+        contact: {
+            address: {
+                addressLine: "",
+                street: "",
+                state: "",
+                city: "",
+                country: "",
+                pincode: "",
+            },
+        },
+        id: "",
+
+        status: {
+            isBlocked: false,
+            isVerified: false,
+            isProfileCompleted: false,
+            isApproved: true,
+        },
     })
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     useEffect(() => {
         const getPatientProfile = async () => {
             try {
-                const response = await getPatientProfileData() as { patientData: IPatientProfile };
-                console.log(response.patientData,'patient')
-                const { profileImage, fullName, phone, email, dob, gender, bloodGroup, address}: IPatientProfile = response.patientData;
-
-                setProfileData({
-                    profileImage,
-                    fullName,
-                    phone,
-                    email,
-                    dob,
-                    gender,
-                    bloodGroup,
-                    ...address, 
-                });
-                dispatch(setPatientProfileData({
-                    profileImage,
-                    fullName,
-                    phone,
-                    email,
-                    dob,
-                    gender,
-                    bloodGroup,
-                    ...address, 
-                }))
+                const response = await getPatientProfileData();
+                console.log(response.data, 'patient')
+                setProfileData(response.data);
+                dispatch(setPatientProfileData(response.data))
             } catch (error: unknown) {
                 dispatch(setError('Error fetching profile'));
-                navigate('/user');
             }
         };
         getPatientProfile();
     }, []);
-    
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const key = e.target.name
@@ -111,7 +103,7 @@ function Profile() {
                     </div>
                 </div>
             </div>
-            
+
         </div>
     );
 }

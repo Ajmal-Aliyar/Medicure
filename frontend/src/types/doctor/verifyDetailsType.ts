@@ -63,11 +63,13 @@ export interface IVerficationDetails {
 }
 
 export interface IFetchAllApprovedDoctors {
-    _id: string;
-    id: string;
-    profileImage: string;
-    fullName: string;
-    specialization: string;
-    rating: string
-    reviewCount: string
+   id: string;
+  fullName: string;
+  profileImage: string | null;
+  specialization: string;
+  fees: { amount: number; currency: string; };
+  rating: {
+    average: number,
+    reviewCount: number
+  }
 }

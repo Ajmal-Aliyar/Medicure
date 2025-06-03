@@ -6,8 +6,8 @@ import RegistrationDetails from "./RegistrationDetails";
 import AppointmentDetails from "./AppointmentDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { clearWarning, setError, setExtra, setSuccess, setWarning } from "../../../store/slices/commonSlices/notificationSlice";
-import { approveDoctorApi, rejectDoctorApi } from "../../../sevices/admin/doctorRepository";
 import { RootState } from "../../../store/store";
+import { updateDoctorStatusApi } from "../../../sevices/admin/doctorRepository";
 
 interface ApproveDoctorDetailsApi {
     setOpenPage: Dispatch<SetStateAction<string>>;
@@ -22,7 +22,7 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
         const _id = doctorId.selectId
         const rejectFunction = async () => {
             try {
-                const response = await rejectDoctorApi(_id)
+                const response = await updateDoctorStatusApi(_id, 'rejected')
                 if (response?.message) {
                     dispatch(setSuccess(response.message));
                     setOpenPage('AllDoctors')
@@ -42,7 +42,7 @@ const ApproveDoctorDetails:React.FC<ApproveDoctorDetailsApi> = ({setOpenPage}) =
         const _id = doctorId.selectId
         const confirmFunction = async () => {
             try {
-                const response = await approveDoctorApi(_id)
+                const response = await updateDoctorStatusApi(_id, 'approved')
                 if (response?.message) {
                     dispatch(setSuccess(response.message));
                     setOpenPage('AllDoctors')

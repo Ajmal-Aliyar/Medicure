@@ -1,11 +1,11 @@
 import { handleAxiosError } from "../../utils/errorUtil";
 import { api } from "../../utils/axiosInstance"
-import { IPatientProfilePayload } from "../../types/patient/profileType";
+import { IPatientProfilePayload, PatientProfileDto } from "../../types/patient/profileType";
 
 
 export const getPatientProfileData = async () => {
     try {
-        const response = await api.get('/api/patient/profile-details');
+        const response = await api.get<{data: PatientProfileDto}>('/api/patient/profile/');
         return response.data;
     } catch (error) {
         const errorMessage = handleAxiosError(error); 
@@ -13,9 +13,9 @@ export const getPatientProfileData = async () => {
     }
 }
 
-export const updatePatientProfileData = async ({dob, bloodGroup, gender, houseName, street, state, city, country, pincode}:IPatientProfilePayload) => {
+export const updatePatientProfileData = async (data:PatientProfileDto) => {
     try {
-        return await api.patch('/api/patient/profile-details',{ dob, bloodGroup, gender, houseName, street, state, city, country, pincode})
+        return await api.patch('/api/patient/profile-details',data)
     } catch (error) {
         const errorMessage = handleAxiosError(error); 
         throw new Error(errorMessage); 
