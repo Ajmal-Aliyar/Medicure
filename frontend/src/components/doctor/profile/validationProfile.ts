@@ -4,7 +4,7 @@ export interface IDoctorData {
     about: string;
     dob: string;
     gender: string;
-    phone: string;
+    mobile: string;
     addressLine: string;
     street: string;
     specialization: string;

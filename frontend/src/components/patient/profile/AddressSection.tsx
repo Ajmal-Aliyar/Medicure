@@ -5,19 +5,20 @@ interface IAddressSectionProps {
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChange}) => {
-    const {address}  = patientData.contact;
+    let {address}  = patientData.contact;
+
     return (
         <div className="flex flex-wrap gap-3">
             <div className="w-[250px]">
                 <label
-                    htmlFor="houseName"
+                    htmlFor="addressLine"
                     className="block text-sm text-gray-400 "
                 >
-                   House  No. / Street Name/ Area *
+                   Address Line *
                 </label>
                 <input
                     type="text"
-                    name="houseName"
+                    name="addressLine"
                     value={address.addressLine || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"

@@ -24,7 +24,7 @@ export interface IAddress {
 export interface ProfileState {
     fullName: string;
     email: string;
-    phone: string;
+    mobile: string;
     password: string;
     gender: 'Male' | 'Female' | '';
     profileImage: string;
@@ -49,7 +49,7 @@ export interface ProfileState {
 const initialState: ProfileState = {
     fullName: '',
     email: '',
-    phone: '',
+    mobile: '',
     password: '',
     gender: '',
     profileImage: '',

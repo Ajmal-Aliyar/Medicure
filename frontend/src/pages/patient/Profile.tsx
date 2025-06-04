@@ -47,7 +47,6 @@ function Profile() {
         const getPatientProfile = async () => {
             try {
                 const response = await getPatientProfileData();
-                console.log(response.data, 'patient')
                 setProfileData(response.data);
                 dispatch(setPatientProfileData(response.data))
             } catch (error: unknown) {
@@ -58,12 +57,32 @@ function Profile() {
     }, []);
 
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleAboutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
         const key = e.target.name
         const val = e.target.value
+        console.log(key, val, 'sdfgggg');
+
         setProfileData((prev) => ({
             ...prev,
-            [key]: val || '',
+            personal: { ...prev.personal, [key]: val || '' }
+        }));
+    };
+
+    const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+        const key = e.target.name
+        const val = e.target.value
+
+        setProfileData((prev) => ({
+            ...prev,
+            contact: {
+                ...prev.contact,
+                address: {
+                    ...prev.contact.address,
+                    [key]: val || "",
+                },
+            },
         }));
     };
 
@@ -95,11 +114,11 @@ function Profile() {
                     </div>
                     <div className="p-4 flex flex-col">
                         <p className="text-gray-500 font-medium mb-2 text-lg">About Details</p>
-                        <AboutDetails patientData={patientData} handleChange={handleChange} />
+                        <AboutDetails patientData={patientData} handleChange={handleAboutChange} />
                     </div>
                     <div className="p-4 flex flex-col">
                         <p className="text-gray-500 font-medium mb-2 text-lg">Address</p>
-                        <AddressSection patientData={patientData} handleChange={handleChange} />
+                        <AddressSection patientData={patientData} handleChange={handleAddressChange} />
                     </div>
                 </div>
             </div>

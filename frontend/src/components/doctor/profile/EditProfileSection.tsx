@@ -17,7 +17,7 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
         about: '',
         dob: '',
         gender: '',
-        phone: '',
+        mobile: '',
         addressLine: '',
         street: '',
         specialization: '',
@@ -96,8 +96,8 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
                         placeholder="Write about yourself..."
                     />
                 </div>
-                <label htmlFor="phone" className="text-md font-medium text-gray-400">Phone*</label>
-                <input id="phone" type="text" value={doctorData.phone} onChange={handleChange}
+                <label htmlFor="mobile" className="text-md font-medium text-gray-400">Mobile*</label>
+                <input id="mobile" type="text" value={doctorData.mobile} onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
 
                 <label htmlFor="dob" className="text-md font-medium text-gray-400">Date Of Birth*</label>
