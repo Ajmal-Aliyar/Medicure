@@ -14,8 +14,8 @@ export class PatientController implements IPatientController {
   ) {}
 
   getProfileDetails = async (req: Request, res: Response): Promise<void> => {
-    console.log(req.user, 'sdffds');
-    
+    console.log(req.user, "sdffds");
+
     const patientId = req.user?.id as string;
     const patientProfile = await this.patientService.getProfile(patientId);
     if (!patientProfile) {
@@ -31,5 +31,30 @@ export class PatientController implements IPatientController {
       CLIENT_MESSAGES.SUCCESS.PROFILE_FETCHED,
       patientProfile
     );
+  };
+
+  updateProfile = async (req: Request, res: Response): Promise<void> => {
+    const patient = req.user?.id as string;
+    await this.patientService.updateProfile(patient, req.body);
+    successResponse(
+      res,
+      HTTP_STATUS.OK,
+      CLIENT_MESSAGES.SUCCESS.PROFILE_UPDATED
+    );
+  };
+
+  updateProfileImage = async (req: Request, res: Response): Promise<void> => {
+    const doctorId = req.user?.id as string;
+    const { profileImage } = req.body;
+    if (!profileImage) {
+      errorResponse(
+        res,
+        HTTP_STATUS.BAD_REQUEST,
+        CLIENT_MESSAGES.ERROR.IMAGE_UPDATE_FAILED
+      );
+      return;
+    }
+    await this.patientService.updateProfileImg(doctorId, profileImage);
+    successResponse(res, HTTP_STATUS.OK, CLIENT_MESSAGES.SUCCESS.IMAGE_UPDATED);
   };
 }

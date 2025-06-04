@@ -17,16 +17,13 @@ export interface IPatient extends Document {
     languageSpoken?: string[]; 
   };
 
-  contact?: {
-    address?: IAddress;
-    emergencyContact?: IEmergencyContact;
+  contact: {
+    address: IAddress;
+    emergencyContact: IEmergencyContact;
   };
 
   status: {
     isBlocked: boolean;
-    isVerified: boolean;
-    isProfileCompleted: boolean;
-    isApproved: boolean;
   };
 
 

@@ -4,7 +4,7 @@ export interface DoctorProfileUpdateDTO {
   about: string;
   dob: string;
   gender: string;
-  phone: string;
+  mobile: string;
   addressLine: string;
   street: string;
   specialization: string;
@@ -24,7 +24,7 @@ export interface DoctorProfileDTO {
   about: string;
   dob: string;
   gender: IGender;
-  phone: string;
+  mobile: string;
   specialization: string;
   languageSpoken: string[];
   address: IAddress

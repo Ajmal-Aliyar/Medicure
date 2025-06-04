@@ -16,7 +16,7 @@ export class DoctorProfileMapper {
       profileImage: doctor.personal.profileImage || "",
       dob: doctor.personal.dob ? doctor.personal.dob : "",
       gender: doctor.personal.gender || "",
-      phone: doctor.personal.mobile || "",
+      mobile: doctor.personal.mobile || "",
       specialization: doctor.professional.specialization || "",
       languageSpoken: doctor.personal.languageSpoken || [],
       address: {
@@ -33,8 +33,6 @@ export class DoctorProfileMapper {
   };
 
   static toDoctorUpdate = (dto: DoctorProfileUpdateDTO): Partial<IDoctor> => {
-    const update: Partial<IDoctor> = {};
-
     const personalUpdates: { [key: string]: string | string[] } = {};
     const professionalUpdates: { [key: string]: string } = {};
     const locationUpdates: { [key: string]: string } = {};
@@ -46,7 +44,7 @@ export class DoctorProfileMapper {
       personalUpdates["personal.gender"] = dto.gender;
     if (dto.languageSpoken !== undefined)
       personalUpdates["personal.languageSpoken"] = dto.languageSpoken;
-    if (dto.phone !== undefined) personalUpdates["personal.mobile"] = dto.phone;
+    if (dto.mobile !== undefined) personalUpdates["personal.mobile"] = dto.mobile;
 
     if (dto.headline !== undefined)
       professionalUpdates["professional.headline"] = dto.headline;

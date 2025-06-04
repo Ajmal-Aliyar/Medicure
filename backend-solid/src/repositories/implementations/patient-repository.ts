@@ -17,4 +17,16 @@ export class PatientRepository
     };
     return await this.model.create(patient);
   }
+
+  async updateImage(
+      doctorId: string,
+      imageUrl: string
+    ): Promise<IPatient | null> {
+      const updatedDoctor = await this.model.findByIdAndUpdate(
+        doctorId,
+        { "personal.profileImage": imageUrl },
+        { new: true }
+      );
+      return updatedDoctor;
+    }
 }
