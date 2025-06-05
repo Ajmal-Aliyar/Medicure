@@ -28,3 +28,15 @@ export interface IPatient extends Document {
 
 
 }
+
+
+//  medicalInfo: {
+//     bloodGroup: String,
+//     allergies: [String],
+//     chronicConditions: [String],
+//     emergencyContact: {
+//       name: String,
+//       relationship: String,
+//       mobile: String,
+//     }
+//   },

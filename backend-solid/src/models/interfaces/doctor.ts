@@ -39,15 +39,6 @@ export interface IDoctor extends Document {
     documents: IDocument;
   };
 
-  availability: {
-    days: IWeekDay[];
-    timeSlots: {
-      start: string;
-      end: string;
-    }[];
-    timezone: string;
-  };
-
   location: IAddress;
 
   rating: {

@@ -1,2 +1,2 @@
 export * from './auth-validators';
-export * from './doctor-profile-validator'
+export * from './doctor';

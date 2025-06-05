@@ -50,17 +50,6 @@ const DoctorSchema = new Schema<IDoctor>(
       },
     },
 
-    availability: {
-      days: [String],
-      timeSlots: [
-        {
-          start: String,
-          end: String,
-        },
-      ],
-      timezone: String,
-    },
-
     location: {
       street: String,
       city: String,

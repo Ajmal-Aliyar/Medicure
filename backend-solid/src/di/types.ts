@@ -6,6 +6,8 @@ export const TYPES = {
   //Doctor
   DoctorController: Symbol.for("DoctorController"),
   DoctorService: Symbol.for("DoctorService"),
+  DoctorScheduleController: Symbol.for("DoctorScheduleController"),
+  DoctorScheduleService: Symbol.for("DoctorScheduleService"),
 
   //Patient
   PatientController: Symbol.for("PatientController"),
@@ -13,6 +15,7 @@ export const TYPES = {
 
   //Repository
   DoctorRepository: Symbol.for("DoctorRepository"),
+  ScheduleRepository: Symbol.for("ScheduleRepository"),
   PatientRepository: Symbol.for("PatientRepository"),
   AdminRepository: Symbol.for("AdminRepository"),
 
