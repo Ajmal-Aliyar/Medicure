@@ -22,7 +22,7 @@ const WeeklyScheduleSchema = new Schema({
 }, { _id: false });
 
 const DoctorScheduleSchema = new Schema<IDoctorSchedule>({
-  doctorId: { type: String, ref: "Doctor", required: true, unique: true },
+  doctorId: { type: Schema.Types.ObjectId, ref: "Doctor", required: true, unique: true },
   weeklySchedule: { type: WeeklyScheduleSchema, required: true },
 
   autoApprove: { type: Boolean, default: false },

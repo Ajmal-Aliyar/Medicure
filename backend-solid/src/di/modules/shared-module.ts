@@ -9,6 +9,7 @@ import {
   IMediaService,
   IOtpService,
   IPasswordHasher,
+  ISlotCronJob,
   ITokenService,
 } from "@/interfaces";
 import {
@@ -18,7 +19,11 @@ import {
   OtpService,
   PasswordHasher,
   RedisService,
+  SlotCronJob,
 } from "@/infrastructure";
+import { IScheduleService, ISlotService, ScheduleService, SlotService } from "@/services";
+import { ISlotRepository, SlotRepository } from "@/repositories";
+
 export const bindSharedModule = async (container: Container) => {
   container.bind<IMediaService>(TYPES.MediaService).to(CloudinaryService);
   container.bind<ICacheService>(TYPES.CacheService).to(RedisService);
@@ -26,10 +31,15 @@ export const bindSharedModule = async (container: Container) => {
   container.bind<IOtpService>(TYPES.OtpService).to(OtpService);
   container.bind<IPasswordHasher>(TYPES.PasswordHasher).to(PasswordHasher);
   container.bind<ITokenService>(TYPES.TokenService).to(JwtService);
+  container.bind<ISlotCronJob>(TYPES.SlotCronJob).to(SlotCronJob);
   container
     .bind<RedisClientType>(TYPES.RedisClient)
     .toConstantValue(getRedisClient());
   container
     .bind<nodemailer.Transporter>(TYPES.EmailTransporter)
     .toConstantValue(createTransporter());
+
+  container.bind<IScheduleService>(TYPES.ScheduleService).to(ScheduleService)
+  container.bind<ISlotService>(TYPES.SlotService).to(SlotService)
+  container.bind<ISlotRepository>(TYPES.SlotRepository).to(SlotRepository)
 };

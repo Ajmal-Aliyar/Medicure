@@ -1,7 +1,8 @@
 import { ISlot } from "@/models";
+import { IBaseRepository } from "./i-base-repository";
 
-export interface ISlotRepository {
+export interface ISlotRepository extends IBaseRepository<ISlot> {
   findByDoctorAndDate(doctorId: string, date: Date): Promise<ISlot[]>;
   findAvailableSlotsByDoctor(doctorId: string): Promise<ISlot[]>;
-  bulkCreate(slots: ISlot[]): Promise<ISlot[]>;
+  bulkCreate(slots: Partial<ISlot>[]): Promise<ISlot[]>;
 }

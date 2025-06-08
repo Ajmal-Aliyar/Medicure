@@ -37,4 +37,7 @@ export const bindDoctorModule = async (container: Container) => {
   container
     .bind<IDoctorScheduleController>(TYPES.DoctorScheduleController)
     .to(DoctorScheduleController);
+
+
+  
 };

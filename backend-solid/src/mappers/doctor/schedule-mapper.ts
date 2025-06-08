@@ -1,5 +1,6 @@
 import { DoctorScheduleCreateInput } from "@/dtos";
 import { IDoctorSchedule } from "@/models";
+import { Types } from "mongoose";
 
 
 export class DoctorScheduleMapper {
@@ -8,7 +9,7 @@ export class DoctorScheduleMapper {
     data: Partial<IDoctorSchedule>
   ): DoctorScheduleCreateInput {
     return {
-      doctorId,
+      doctorId: new Types.ObjectId(doctorId),
       weeklySchedule: data.weeklySchedule || {},
       autoApprove: data.autoApprove ?? false,
       advanceBooking: data.advanceBooking ?? 0,

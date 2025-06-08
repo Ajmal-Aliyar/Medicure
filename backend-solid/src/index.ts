@@ -4,13 +4,14 @@ import { errorHandler } from "@/middlewares";
 import { logger, env, connectRedis, connectDB } from "@/config";
 import { startContainer } from "@/di";
 import { createApp } from "./server";
+import { startCronJobs } from "./infrastructure";
 
 async function bootstrap() {
   try {
     await connectDB();
     await connectRedis();
     await startContainer();
-    
+    startCronJobs()
     
     const app = createApp(); 
     registerRoutes(app);

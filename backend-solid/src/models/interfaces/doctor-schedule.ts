@@ -1,6 +1,6 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
-export type ShiftType = 'normal' | 'emergency';
+export type ShiftType = 'consult' | 'emergency';
 
 export interface IShift {
     startTime: string;    
@@ -9,7 +9,7 @@ export interface IShift {
     duration: number;     
     fees: number;        
     buffer?: number;     
-    isActive?: boolean;   
+    isActive: boolean;   
     }
 
 export type Day =
@@ -28,7 +28,7 @@ export type IWeeklySchedule = {
 };
 
 export interface IDoctorSchedule extends Document {
-  doctorId: string;             
+  doctorId: Types.ObjectId;             
   weeklySchedule: IWeeklySchedule;
   autoApprove: boolean;
   advanceBooking: number;       

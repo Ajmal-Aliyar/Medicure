@@ -1,21 +1,17 @@
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 
-export interface ISlot extends Document {
+export interface ISlotCreateInput {
   doctorId: Types.ObjectId;
   startTime: string;
   endTime: string;
-  date: string;
+  date: Date;
   type:  "consult" | "emergency";
   duration: number;
   fees: number;
-  buffer: number;
   status: "available" | "pending" | "booked";
-  isActive: boolean;
   bookingDetails?: {
     isBooked: boolean;
     patientId?: Types.ObjectId;
     bookedAt?: Date;
   };
-  createdAt: Date;
-  updatedAt: Date;
 }

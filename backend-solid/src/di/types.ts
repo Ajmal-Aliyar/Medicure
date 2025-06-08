@@ -1,3 +1,4 @@
+
 export const TYPES = {
   //Admin
   AdminDoctorController: Symbol.for("AdminDoctorController"),
@@ -8,6 +9,7 @@ export const TYPES = {
   DoctorService: Symbol.for("DoctorService"),
   DoctorScheduleController: Symbol.for("DoctorScheduleController"),
   DoctorScheduleService: Symbol.for("DoctorScheduleService"),
+  DoctorSlotService: Symbol.for("DoctorSlotService"),
 
   //Patient
   PatientController: Symbol.for("PatientController"),
@@ -18,10 +20,13 @@ export const TYPES = {
   ScheduleRepository: Symbol.for("ScheduleRepository"),
   PatientRepository: Symbol.for("PatientRepository"),
   AdminRepository: Symbol.for("AdminRepository"),
+  SlotRepository: Symbol.for("SlotRepository"),
 
   //Public
   AuthController: Symbol.for("AuthController"),
   AuthService: Symbol.for("AuthService"),
+  ScheduleService: Symbol.for("ScheduleService"),
+  SlotService: Symbol.for("SlotService"),
 
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),
@@ -30,5 +35,6 @@ export const TYPES = {
   PasswordHasher: Symbol.for("PasswordHasher"),
   RedisClient: Symbol.for("RedisClient"),
   TokenService: Symbol.for("TokenService"),
+  SlotCronJob: Symbol.for("SlotCronJob"),
   EmailTransporter: Symbol.for("EmailTransporter"),
 };
