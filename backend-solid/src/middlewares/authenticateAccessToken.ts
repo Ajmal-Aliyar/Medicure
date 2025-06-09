@@ -21,9 +21,13 @@ export const authenticateAccessToken = async (
     const tokenService = container.get<ITokenService>(TYPES.TokenService);
 
     const { id, role } = tokenService.verifyAccessToken(token);
+    if (!id || !role) {
+      throw new UnauthorizedError(GLOBAL_MESSAGES.ERROR.ACCESS_TOKEN_MISSING);
+    }
 
     req.user = {
-      id, role
+      id,
+      role,
     };
 
     next();

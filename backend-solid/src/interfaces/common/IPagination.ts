@@ -1,6 +1,6 @@
 export interface IPagination {
     skip: number,
-    limit: number
+    limit: number,
 }
 
 export interface PaginationMeta {

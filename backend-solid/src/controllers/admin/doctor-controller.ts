@@ -22,14 +22,11 @@ export class AdminDoctorController implements IAdminDoctorController {
     res: Response
   ): Promise<void> => {
     const status = String(req.query.status)
-    const { skip, limit } = getPaginationParams(req);
+    const pagination = getPaginationParams(req);
 
     const { total, doctors } =
-      await this.adminDoctorService.getDoctorsByReviewStatus( status, {
-        skip,
-        limit,
-      });
-    const meta = buildPaginationMeta(total, skip, limit);
+      await this.adminDoctorService.getDoctorsByReviewStatus( status, pagination);
+    const meta = buildPaginationMeta(total, pagination.skip, pagination.limit);
     successResponse(
       res,
       HTTP_STATUS.OK,

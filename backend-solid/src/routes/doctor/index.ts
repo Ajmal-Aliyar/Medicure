@@ -7,6 +7,7 @@ export const createDoctorRouter = () => {
     const router = Router();
     router.use("/profile", createProfileRouter());
     router.use("/schedule", createDoctorScheduleRouter());
+    router.use("/slot", createDoctorScheduleRouter());
     return router
 }
 

@@ -3,7 +3,6 @@ import { ISlot } from "@/models";
 import { ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { ISlotService } from "../interfaces";
-import { IPagination } from "@/interfaces";
 import { Types } from "mongoose";
 
 @injectable()
