@@ -8,8 +8,7 @@ export interface ISlot extends Document {
   type:  "consult" | "emergency";
   duration: number;
   fees: number;
-  buffer: number;
-  status: "available" | "pending" | "booked";
+  status:"available" | "booked" | "cancelled" | "completed";
   isActive: boolean;
   bookingDetails?: {
     isBooked: boolean;

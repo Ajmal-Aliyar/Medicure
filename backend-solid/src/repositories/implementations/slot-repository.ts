@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { Types } from "mongoose";
+import { FilterQuery, Types } from "mongoose";
 import { BaseRepository } from "../base";
 import { ISlot, SlotModel } from "@/models";
 import { ISlotRepository } from "../interfaces";
@@ -13,23 +13,28 @@ export class SlotRepository
     super(SlotModel);
   }
 
-  async findByDoctorAndDate(doctorId: string, date: Date): Promise<ISlot[]> {
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
-
-    return this.model.find({
+  async findByDoctorAndDate(
+    doctorId: string,
+    date: string,
+    isActive?: boolean,
+    status?: string
+  ): Promise<ISlot[]> {
+    const query: FilterQuery<ISlot> = {
       doctorId: new Types.ObjectId(doctorId),
-      startTime: { $gte: start, $lte: end },
-    });
+      date,
+    };
+    if (isActive !== undefined) {
+      query.isActive = isActive;
+    }
+    if (status !== undefined) {
+      query.status = status;
+    }
+    return this.model.find(query);
   }
 
   async findAvailableSlotsByDoctor(doctorId: string): Promise<ISlot[]> {
     return this.model.find({
-      doctorId: new Types.ObjectId(doctorId),
-      status: "available",
+      doctorId: new Types.ObjectId(doctorId)
     });
   }
 

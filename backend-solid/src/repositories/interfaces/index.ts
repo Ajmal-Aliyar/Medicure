@@ -4,3 +4,5 @@ export * from './i-base-repository';
 export * from './i-admin-repository';
 export * from './i-schedule-repository';
 export * from './i-slot-repository';
+export * from './i-appointment-repository';
+export * from './i-prescription-repository';

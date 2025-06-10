@@ -8,14 +8,18 @@ import {
 import {
   DoctorScheduleService,
   DoctorService,
+  DoctorSlotService,
   IDoctorScheduleService,
   IDoctorService,
+  IDoctorSlotService,
 } from "@/services";
 import {
   DoctorController,
   DoctorScheduleController,
+  DoctorSlotController,
   IDoctorController,
   IDoctorScheduleController,
+  IDoctorSlotController,
 } from "@/controllers";
 import { ScheduleRepository } from "@/repositories";
 
@@ -39,5 +43,7 @@ export const bindDoctorModule = async (container: Container) => {
     .to(DoctorScheduleController);
 
 
+    container.bind<IDoctorSlotController>(TYPES.DoctorSlotController).to(DoctorSlotController)
+    container.bind<IDoctorSlotService>(TYPES.DoctorSlotService).to(DoctorSlotService)
   
 };

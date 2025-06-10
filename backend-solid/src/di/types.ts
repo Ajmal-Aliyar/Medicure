@@ -10,6 +10,7 @@ export const TYPES = {
   DoctorScheduleController: Symbol.for("DoctorScheduleController"),
   DoctorScheduleService: Symbol.for("DoctorScheduleService"),
   DoctorSlotService: Symbol.for("DoctorSlotService"),
+  DoctorSlotController: Symbol.for("DoctorSlotController"),
 
   //Patient
   PatientController: Symbol.for("PatientController"),

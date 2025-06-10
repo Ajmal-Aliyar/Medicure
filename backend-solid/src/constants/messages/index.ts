@@ -3,3 +3,4 @@ export * from './global';
 export * from './user';
 export * from './admin';
 export * from './schedule';
+export * from './slot';

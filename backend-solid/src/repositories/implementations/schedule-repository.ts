@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import { IScheduleRepository } from "../interfaces/i-schedule-repository";
 import { DoctorScheduleModel, IDoctorSchedule } from "@/models";
 import { BaseRepository } from "../base";
+import { IScheduleRepository } from "../interfaces";
 
 
 @injectable()

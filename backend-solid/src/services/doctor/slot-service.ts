@@ -4,6 +4,8 @@ import { ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IDoctorSlotService } from "../interfaces";
 import { IPagination } from "@/interfaces";
+import { DoctorSlotMapper } from "@/mappers";
+import { CategorizedSlots } from "@/dtos";
 
 @injectable()
 export class DoctorSlotService implements IDoctorSlotService {
@@ -12,16 +14,17 @@ export class DoctorSlotService implements IDoctorSlotService {
     private slotRepo: ISlotRepository
   ) {}
 
-  async getAllSlotsByDoctor(doctorId: string, pagination: IPagination) {
-    const { skip, limit } = pagination
-    return this.slotRepo.findAll({ skip, limit } )
-  }
-
-  async getSlotsByDoctorAndDate(doctorId: string, date: Date): Promise<ISlot[]> {
-    return this.slotRepo.findByDoctorAndDate(doctorId, date);
-  }
-
   async createSlots(slots: Partial<ISlot>[]): Promise<ISlot[]> {
     return this.slotRepo.bulkCreate(slots as ISlot[]);
+  }
+
+  async getSlotsByDoctorAndDate(
+    doctorId: string,
+    date: string,
+    status?: string,
+    isActive?: boolean
+  ): Promise<CategorizedSlots> {
+    const data = await this.slotRepo.findByDoctorAndDate(doctorId, date, isActive, status);
+    return DoctorSlotMapper.toGetSlotByDoctorAndDate(doctorId, data)
   }
 }

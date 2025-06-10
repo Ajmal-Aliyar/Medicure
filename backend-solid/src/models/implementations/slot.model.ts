@@ -13,10 +13,9 @@ const SlotSchema = new Schema<ISlot>(
     },
     type: { type: String, enum: ["consult", "emergency"], required: true },
     fees: { type: Number, required: true },
-    buffer: { type: Number, default: 0 },
     status: {
       type: String,
-      enum: ["available", "pending", "booked"],
+      enum: ["available", "booked", "cancelled", "completed"],
       default: "available",
     },
     duration: {

@@ -50,7 +50,6 @@ export const splitShiftsIntoSlots = (
         endTime: format(slotEnd, "HH:mm"),
         type,
         duration,
-        buffer,
         fees,
         isActive,
         status: "available",
