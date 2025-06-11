@@ -5,3 +5,7 @@ export * from './schedule.model';
 export * from './slot.model';
 export * from './appointment.model';
 export * from './prescription.model';
+export * from './review.model';
+export * from './specialization.model';
+export * from './transaction.model';
+export * from './withdraw.model';

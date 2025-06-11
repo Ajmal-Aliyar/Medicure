@@ -5,3 +5,7 @@ export * from './patient';
 export * from './slot';
 export * from './appointment';
 export * from './prescription';
+export * from './specialization';
+export * from './review';
+export * from './transaction';
+export * from './withdraw';
