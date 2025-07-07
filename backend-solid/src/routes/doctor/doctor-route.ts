@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getContainer } from "@/di";
 import { Container } from "inversify";
-import { authenticateAccessToken, authorizeRoles, validateRequest } from "@/middlewares";
+import { validateRequest } from "@/middlewares";
 import { IDoctorController } from "@/controllers";
 import { TYPES } from "@/di/types";
 import {
@@ -19,7 +19,6 @@ export const createProfileRouter = (): Router => {
     TYPES.DoctorController
   );
 
-  router.use(authenticateAccessToken, authorizeRoles('doctor'));
 
   router
     .route("/")

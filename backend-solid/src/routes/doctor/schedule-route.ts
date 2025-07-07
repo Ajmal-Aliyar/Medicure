@@ -2,8 +2,6 @@ import { IDoctorScheduleController } from "@/controllers";
 import { getContainer } from "@/di";
 import { TYPES } from "@/di/types";
 import {
-  authenticateAccessToken,
-  authorizeRoles,
   validateRequest,
 } from "@/middlewares";
 import { asyncHandler } from "@/utils";
@@ -19,8 +17,6 @@ export const createDoctorScheduleRouter = (): Router => {
   const doctorScheduleController = container.get<IDoctorScheduleController>(
     TYPES.DoctorScheduleController
   );
-
-  router.use(authenticateAccessToken, authorizeRoles("doctor"));
 
   router
     .route("/")

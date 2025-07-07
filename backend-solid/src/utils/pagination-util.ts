@@ -22,7 +22,7 @@ export const buildPaginationMeta = (
   limit: number
 ): PaginationMeta => {
   return {
-    page: limit/1,
+    page: limit/DEFAULT_PAGE,
     totalPages: Math.ceil(total / DEFAULT_PAGE),
   };
 };

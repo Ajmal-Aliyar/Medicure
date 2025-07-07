@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import { Container } from "inversify";
 import { getContainer } from "@/di";
 import { IPatientAppointmentController } from "@/controllers";

@@ -14,7 +14,6 @@ export const createAdminDoctorRouter = (): Router => {
     TYPES.AdminDoctorController
   );
 
-  router.use(authenticateAccessToken, authorizeRoles("admin"));
 
   router.get(
     "/",
