@@ -4,3 +4,4 @@ export * from './user';
 export * from './admin';
 export * from './schedule';
 export * from './slot';
+export * from './specialization';

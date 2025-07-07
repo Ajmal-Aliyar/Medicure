@@ -1,8 +1,8 @@
 import { injectable } from "inversify";
-import { AppointmentModel, IAppointment,  } from "@/models";
+import { AppointmentModel, IAppointment } from "@/models";
 import { BaseRepository } from "../base";
-import { IAppointmentRepository } from "../interfaces";
-
+import { FindAllOptions, IAppointmentRepository } from "../interfaces";
+import { PopulatedAppointment } from "@/interfaces";
 
 @injectable()
 export class AppointmentRepository
@@ -12,5 +12,31 @@ export class AppointmentRepository
   constructor() {
     super(AppointmentModel);
   }
-  
+
+  async getAppointmentsForUser({
+    filter = {},
+    skip = 0,
+    limit = 10,
+    sort = { createdAt: -1 },
+  }: FindAllOptions<IAppointment>): Promise<{
+    appointments: PopulatedAppointment[];
+    total: number;
+  }> {
+    const [appointments, total] = await Promise.all([
+      this.model
+        .find(filter)
+        .skip(skip)
+        .limit(limit)
+        .sort(sort)
+        .populate("doctorId", "personal.fullName personal.profileImage professional.specialization")
+        .populate("patientId", "personal.fullName personal.profileImage personal.dob")
+        .lean<PopulatedAppointment[]>(),  
+      this.model.countDocuments(filter),
+    ]);
+
+    return {
+      appointments,
+      total,
+    };
+  }
 }

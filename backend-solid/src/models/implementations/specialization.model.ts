@@ -43,4 +43,4 @@ const SpecializationSchema = new Schema<ISpecialization>(
   }
 );
 
-export const Specialization = model<ISpecialization>("Specialization", SpecializationSchema);
+export const SpecializationModel = model<ISpecialization>("Specialization", SpecializationSchema);

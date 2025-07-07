@@ -5,7 +5,6 @@ import {
   isBefore,
   format,
   addDays,
-  startOfDay,
 } from "date-fns";
 import { Types } from "mongoose";
 
@@ -27,6 +26,7 @@ export const splitShiftsIntoSlots = (
   const slots: Partial<ISlot>[] = [];
 
   for (const shift of shifts) {
+    console.log("Shift: ", shift)
     const {
       startTime,
       endTime,
@@ -45,7 +45,7 @@ export const splitShiftsIntoSlots = (
 
       slots.push({
         doctorId: new Types.ObjectId(doctorId),
-        date: format(date, "yyyy-MM-dd"),
+        date: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())),
         startTime: format(start, "HH:mm"),
         endTime: format(slotEnd, "HH:mm"),
         type,
@@ -66,6 +66,8 @@ export const generateSlotsForAdvanceDays = (
   schedule: IDoctorSchedule
 ): Partial<ISlot>[] => {
   const { weeklySchedule, advanceBooking, doctorId } = schedule;
+  console.log("Schedule: ", schedule)
+
   const allSlots: Partial<ISlot>[] = [];
 
   for (let i = 1; i <= advanceBooking; i++) {

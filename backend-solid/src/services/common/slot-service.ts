@@ -4,6 +4,7 @@ import { ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { ISlotService } from "../interfaces";
 import { Types } from "mongoose";
+import { BadRequestError } from "@/errors";
 
 @injectable()
 export class SlotService implements ISlotService {
@@ -17,7 +18,7 @@ export class SlotService implements ISlotService {
 
   async getSlotsByDoctorAndDate(
     doctorId: string,
-    date: string
+    date: Date
   ): Promise<ISlot[]> {
     const { data } = await this.slotRepo.findAll({
       filter: {
@@ -31,35 +32,80 @@ export class SlotService implements ISlotService {
   }
 
   async getNewSlotsForDate(
-  doctorId: string,
-  date: string,
-  generatedSlots: ISlot[]
-): Promise<ISlot[]> {
-  const existingSlots = await this.getSlotsByDoctorAndDate(String(doctorId), date);
+    doctorId: string,
+    date: Date,
+    generatedSlots: ISlot[]
+  ): Promise<ISlot[]> {
+    const existingSlots = await this.getSlotsByDoctorAndDate(
+      String(doctorId),
+      date
+    );
 
-  const existingSlotKeys = new Set(
-    existingSlots.map(slot => `${slot.startTime}-${slot.endTime}`)
-  );
+    const existingSlotKeys = new Set(
+      existingSlots.map((slot) => `${slot.startTime}-${slot.endTime}`)
+    );
 
-  const newSlots = generatedSlots.filter(
-    slot => !existingSlotKeys.has(`${slot.startTime}-${slot.endTime}`)
-  );
+    const newSlots = generatedSlots.filter(
+      (slot) => !existingSlotKeys.has(`${slot.startTime}-${slot.endTime}`)
+    );
 
-  return newSlots;
-}
+    return newSlots;
+  }
 
+  async releaseSlot(slotId: string, patientId: string): Promise<boolean> {
+    const slot = await this.slotRepo.findById(slotId);
 
-  // async getSlotsByDate(
-  //   date: Date,
-  //   pagination: IPagination
-  // ): Promise<{
-  //   data: ISlot[];
-  //   total: number;
-  // }> {
-  //   return this.slotRepo.findAll({ filter: { date }, ...pagination });
-  // }
+    if (!slot) return false;
 
-  // async createSlots(slots: Partial<ISlot>[]): Promise<ISlot[]> {
-  //   return this.slotRepo.bulkCreate(slots as ISlot[]);
-  // }
+    const reservedPatientId = slot.bookingDetails?.patientId?.toString();
+    if (slot.status !== "reserved" || reservedPatientId !== patientId) {
+      return false;
+    }
+    await this.slotRepo.update(slotId, {
+      status: "available",
+      bookingDetails: {
+        isBooked: false,
+        patientId: undefined,
+        bookedAt: undefined,
+      },
+    });
+
+    return true;
+  }
+
+  async validateSlotAvailability(
+    slotId: string,
+    patientId: string
+  ): Promise<ISlot> {
+    const slot = await this.slotRepo.findById(slotId);
+    if (!slot) {
+      throw new BadRequestError("Slot not found.");
+    }
+    if (slot.status !== "available") {
+      throw new BadRequestError("Slot is not available.");
+    }
+    const updated = await this.slotRepo.update(slotId, {
+      status: "reserved",
+      bookingDetails: {
+        isBooked: false,
+        patientId: new Types.ObjectId(patientId),
+      },
+    });
+    if (!updated) {
+      throw new Error("Failed to reserve the slot. Try again.");
+    }
+    return slot;
+  }
+
+  async slotBooked(slotId: string, patientId: string): Promise<void> {
+    const bookingDetails = {
+      isBooked: true,
+      patientId: new Types.ObjectId(patientId),
+      bookedAt: new Date(),
+    };
+    await this.slotRepo.update(slotId, {
+      status: "booked",
+      bookingDetails,
+    });
+  }
 }

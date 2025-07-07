@@ -3,25 +3,19 @@ import { TYPES } from "@/di/types";
 import {
   DoctorRepository,
   IDoctorRepository,
-  IScheduleRepository,
 } from "@/repositories";
 import {
-  DoctorScheduleService,
   DoctorService,
-  DoctorSlotService,
-  IDoctorScheduleService,
   IDoctorService,
-  IDoctorSlotService,
+  IPatientDoctorService,
+  PatientDoctorService,
 } from "@/services";
 import {
   DoctorController,
-  DoctorScheduleController,
-  DoctorSlotController,
   IDoctorController,
-  IDoctorScheduleController,
-  IDoctorSlotController,
+  IPatientDoctorController,
+  PatientDoctorController,
 } from "@/controllers";
-import { ScheduleRepository } from "@/repositories";
 
 export const bindDoctorModule = async (container: Container) => {
   container
@@ -33,17 +27,9 @@ export const bindDoctorModule = async (container: Container) => {
     .to(DoctorController);
 
   container
-    .bind<IScheduleRepository>(TYPES.ScheduleRepository)
-    .to(ScheduleRepository);
+    .bind<IPatientDoctorService>(TYPES.PatientDoctorService)
+    .to(PatientDoctorService);
   container
-    .bind<IDoctorScheduleService>(TYPES.DoctorScheduleService)
-    .to(DoctorScheduleService);
-  container
-    .bind<IDoctorScheduleController>(TYPES.DoctorScheduleController)
-    .to(DoctorScheduleController);
-
-
-    container.bind<IDoctorSlotController>(TYPES.DoctorSlotController).to(DoctorSlotController)
-    container.bind<IDoctorSlotService>(TYPES.DoctorSlotService).to(DoctorSlotService)
-  
+    .bind<IPatientDoctorController>(TYPES.PatientDoctorController)
+    .to(PatientDoctorController);
 };

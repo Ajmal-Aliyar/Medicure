@@ -5,7 +5,6 @@ const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const shiftSchema = z.object({
   startTime: z.string().regex(timeRegex, "Invalid startTime format (HH:mm)"),
   endTime: z.string().regex(timeRegex, "Invalid endTime format (HH:mm)"),
-  // type: z.enum(["online", "offline", "emergency"]).optional(),
   type: z.enum(["consult", "emergency"]).optional(),
   duration: z.number().min(1, "Minimum 1 minute"),
   fees: z.number().min(0),
@@ -13,7 +12,7 @@ const shiftSchema = z.object({
 });
 
 const dayScheduleSchema = z.object({
-  shifts: z.array(shiftSchema).nonempty("At least one shift is required")
+  shifts: z.array(shiftSchema)
 });
 
 const weeklyScheduleSchema = z.object({
@@ -30,7 +29,6 @@ export const updateDoctorScheduleSchema = z.object({
   weeklySchedule: weeklyScheduleSchema.optional(),
   autoApprove: z.boolean().optional(),
   advanceBooking: z.number().min(0).max(365).optional(), 
-  // timezone: z.string().min(1, "Timezone is required"),
   isActive: z.boolean().optional(),
 }).strict();
 

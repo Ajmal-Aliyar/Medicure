@@ -18,7 +18,12 @@ export const createAdminDoctorRouter = (): Router => {
 
   router.get(
     "/",
-    asyncHandler(adminDoctorController.getDoctorsByReviewStatus)
+    asyncHandler(adminDoctorController.getDoctorsSummary)
+  );
+
+  router.get(
+    "/:doctorId/profile",
+    asyncHandler(adminDoctorController.getDoctorProfile)
   );
 
   router.get(

@@ -6,7 +6,7 @@ dotenv.config();
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().default(3000),
-  CORS_URL: z.string().url(),
+  FRONTEND_BASE_URL: z.string().url(),
 
   MONGODB_URI: z.string().url(),
   REDIS_URL: z.string().url(),
@@ -20,6 +20,9 @@ const envSchema = z.object({
   CLOUDINARY_API_URL: z.string().url(),
   CLOUDINARY_API_SECRET: z.string().min(1),
   CLOUDINARY_API_KEY: z.string().min(1),
+
+  STRIPE_SECRET_KEY: z.string().min(1),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

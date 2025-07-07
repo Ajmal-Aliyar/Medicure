@@ -1,5 +1,5 @@
 export interface IAddress {
-    addressLine: string;
+    // addressLine: string;
     city: string;
     state: string;
     street: string;

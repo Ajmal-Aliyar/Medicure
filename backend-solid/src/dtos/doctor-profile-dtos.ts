@@ -15,11 +15,14 @@ export interface DoctorProfileUpdateDTO {
   pincode: string;
 }
 
-import { IAddress, IGender } from "@/interfaces";
+import { IAddress, IEducation, IExperience, IGender } from "@/interfaces";
 
 export interface DoctorProfileDTO {
+  id: string;
   fullName: string;
   profileImage: string;
+  email: string;
+  registrationNumber: string
   headline: string;
   about: string;
   dob: string;
@@ -28,6 +31,10 @@ export interface DoctorProfileDTO {
   specialization: string;
   languageSpoken: string[];
   address: IAddress
+  rating: number;
+  yearsOfExperience: number;
+  education: IEducation[];
+  experience: IExperience[];
 }
 
 export interface ProfessionalVerificationDTO {

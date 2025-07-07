@@ -3,18 +3,17 @@ import { IPatient } from "@/models";
 
 export class PatientProfileMapper {
   static toPatientDto(patient: IPatient): PatientProfileDto {
-    const { contact } = patient;
+    const { _id, contact } = patient;
     const { password, ...safePersonal } = patient.personal;
 
     return {
+      id: String(_id),
       personal: safePersonal,
       contact,
     };
   }
 
   static toPatientUpdate(dto: PatientProfileDto): Partial<IPatient> {
-    console.log(dto,'ds');
-    
     const { address, emergencyContact } = dto.contact;
     const updates: Record<string, string | string[]> = {};
 
@@ -37,9 +36,6 @@ export class PatientProfileMapper {
       updates["personal.bloodGroup"] = dto.personal.bloodGroup;
     }
 
-    if (address.addressLine !== undefined) {
-      updates["contact.address.addressLine"] = address.addressLine;
-    }
     if (address.city !== undefined) {
       updates["contact.address.city"] = address.city;
     }

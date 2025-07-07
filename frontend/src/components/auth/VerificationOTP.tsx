@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { login } from "../../store/slices/commonSlices/AuthSlice";
 import { useSelector, useDispatch } from 'react-redux';
 import { IVerificationOTPProp } from "../../types/authType";
-import { sendOTPApi, verifyOtpApi, verifyOtpApi } from "../../sevices/authRepository";
+import { sendOTPApi, verifyOtpApi,  } from "../../sevices/authRepository";
 import RegisteredModal from "./RegisteredModal";
 
 const VerificationOTP: React.FC<IVerificationOTPProp> = ({ isChangePassword, setAuthStatus }) => {
@@ -123,7 +123,7 @@ const VerificationOTP: React.FC<IVerificationOTPProp> = ({ isChangePassword, set
   const handleModal = () => {
     setMessage('')
     if (!isChangePassword) {
-      dispatch(login())
+      // dispatch(Login())
     }
     setAuthStatus('auth')
   }

@@ -3,8 +3,7 @@ import { ISlot } from "@/models";
 import { ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IDoctorSlotService } from "../interfaces";
-import { IPagination } from "@/interfaces";
-import { DoctorSlotMapper } from "@/mappers";
+import { SlotMapper } from "@/mappers";
 import { CategorizedSlots } from "@/dtos";
 
 @injectable()
@@ -25,6 +24,6 @@ export class DoctorSlotService implements IDoctorSlotService {
     isActive?: boolean
   ): Promise<CategorizedSlots> {
     const data = await this.slotRepo.findByDoctorAndDate(doctorId, date, isActive, status);
-    return DoctorSlotMapper.toGetSlotByDoctorAndDate(doctorId, data)
+    return SlotMapper.toGetSlotByDoctorAndDate(doctorId, data)
   }
 }

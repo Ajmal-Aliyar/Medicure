@@ -7,29 +7,25 @@ const appointmentSchema = new Schema<IAppointment>(
       type: Schema.Types.ObjectId,
       ref: "Doctor",
       required: [true, "Doctor ID is required"],
-      index: true,
     },
     patientId: {
       type: Schema.Types.ObjectId,
       ref: "Patient",
       required: [true, "Patient ID is required"],
-      index: true,
     },
     slotId: {
       type: Schema.Types.ObjectId,
       ref: "Slot",
       required: [true, "Slot ID is required"],
-      index: true,
     },
     roomId: {
       type: String,
-      required: [true, "Room ID is required"],
       trim: true,
+      required: [true, "Room ID is required"]
     },
     appointmentDate: {
       type: Date,
       required: [true, "Appointment date is required"],
-      index: true,
     },
     startTime: {
       type: String,
@@ -55,36 +51,34 @@ const appointmentSchema = new Schema<IAppointment>(
       type: String,
       enum: {
         values: [
-          "Scheduled",
-          "Confirmed",
-          "In Progress",
-          "Completed",
-          "Cancelled",
-          "No Show",
+          "scheduled",
+          "in Progress",
+          "completed",
+          "cancelled",
+          "no show",
         ],
         message: "Invalid status",
       },
-      default: "Scheduled",
-      index: true,
+      default: "scheduled"
     },
     appointmentType: {
       type: String,
       enum: {
-        values: ["Consultation", "Follow-up", "Emergency"],
+        values: ["consult", "follow-up", "emergency"],
         message: "Invalid type",
       },
       required: [true, "Appointment type is required"],
     },
     transactionId: {
       type: String,
-      required: [true, "Transaction ID is required"],
-      unique: true,
       trim: true,
+      unique: true,
+      required: [true, "Transaction ID is required"],
     },
     recordId: {
       type: Schema.Types.ObjectId,
       ref: "MedicalRecord",
-      required: [true, "Record ID is required"],
+      default: null,
     },
     notes: {
       type: String,
@@ -100,10 +94,6 @@ const appointmentSchema = new Schema<IAppointment>(
   { timestamps: true }
 );
 
-appointmentSchema.index({ doctorId: 1, appointmentDate: 1 });
-appointmentSchema.index({ patientId: 1, appointmentDate: 1 });
-appointmentSchema.index({ appointmentDate: 1, status: 1 });
-appointmentSchema.index({ doctorId: 1, status: 1 });
 
 export const AppointmentModel = model<IAppointment>(
   "Appointment",

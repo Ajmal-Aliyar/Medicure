@@ -3,6 +3,7 @@ export const CLIENT_MESSAGES = {
     IMAGE_UPDATED: "Profile image updated successfully.",
     PROFILE_IMAGE_FETCHED: "Image fetched successfully.",
     PROFILE_FETCHED: "Profile fetched successfully.",
+    PUBLIC_PROFILE_FETCHED: "Public profile details fetched successfully.",
     PROFILE_UPDATED: "Profile updated successfully.",
     PROFESSIONAL_DETAILS_FETCHED: "Professional details fetched successfully.",
     PROFESSIONAL_DETAILS_UPDATED: "Professional details updated successfully.",

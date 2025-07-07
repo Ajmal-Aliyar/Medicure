@@ -62,6 +62,8 @@ export class DoctorController implements IDoctorController {
   ): Promise<void> => {
     const doctorId: string = req.user?.id as string;
     const payload: ProfessionalVerificationDTO = req.body;
+    console.log(payload, 'payload');
+    
     await this.doctorService.updateProfessionalDetails(doctorId, payload);
     successResponse(
       res,

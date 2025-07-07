@@ -8,10 +8,10 @@ export interface IAppointment extends Document {
   appointmentDate: Date;
   startTime: string; 
   endTime: string;   
-  status: "Scheduled" | "Confirmed" | "In Progress" | "Completed" | "Cancelled" | "No Show";
-  appointmentType: "Consultation" | "Follow-up" | "Emergency";
+  status: "scheduled" | "in progress" | "completed" | "cancelled" | "no show";
+  appointmentType: "consult" | "follow-up" | "emergency";
   transactionId: string;
-  recordId: Types.ObjectId;
+  recordId: Types.ObjectId | null;
   
   notes?: string;          
   cancelReason?: string;   

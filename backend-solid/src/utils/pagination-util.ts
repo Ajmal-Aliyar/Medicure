@@ -3,12 +3,13 @@ import { BadRequestError } from "@/errors";
 import { GLOBAL_MESSAGES } from "@/constants";
 import { IPagination, PaginationMeta } from "@/interfaces";
 
-
+const DEFAULT_PAGE = 6;
 export const getPaginationParams = (req: Request): IPagination => {
-  const skip = Number(req.query.skip) || 0;
-  const limit = Number(req.query.limit) || 10;
+  const page = Number(req.query.page) || 1
+  const skip = (page - 1) * DEFAULT_PAGE
+  const limit = page * DEFAULT_PAGE
 
-  if (isNaN(skip) || isNaN(limit) || skip < 0 || limit <= 0) {
+  if (isNaN(page) || page <= 0 ) {
     throw new BadRequestError(GLOBAL_MESSAGES.VALIDATION.INVALID_PAGINATION);
   }
 
@@ -18,13 +19,10 @@ export const getPaginationParams = (req: Request): IPagination => {
 
 export const buildPaginationMeta = (
   total: number,
-  skip: number,
   limit: number
 ): PaginationMeta => {
   return {
-    total,
-    skip,
-    limit,
-    totalPages: Math.ceil(total / limit),
+    page: limit/1,
+    totalPages: Math.ceil(total / DEFAULT_PAGE),
   };
 };

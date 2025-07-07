@@ -9,7 +9,7 @@ import Patients from "../pages/admin/Patients";
 import Specialization from "../pages/admin/Specialization";
 import Appointments from "../pages/admin/Appointments";
 import Finance from "../pages/admin/Finance";
-import PageNotFound from "../pages/common/PageNotFound";
+import PageNotFound from "../pages/public/PageNotFound";
 import Message from "../pages/admin/Message";
 import UnAuthorizedRoute from "./UnAuthorizedRoute";
 import AuthorizedRoute from "./AuthorizedRoute";

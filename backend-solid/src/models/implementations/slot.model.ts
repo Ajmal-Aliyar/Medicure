@@ -7,7 +7,7 @@ const SlotSchema = new Schema<ISlot>(
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     date: {
-      type: String,
+      type: Date,
       required: true,
       index: true,
     },
@@ -15,7 +15,7 @@ const SlotSchema = new Schema<ISlot>(
     fees: { type: Number, required: true },
     status: {
       type: String,
-      enum: ["available", "booked", "cancelled", "completed"],
+      enum: ["available", "reserved", "booked", "cancelled", "completed"],
       default: "available",
     },
     duration: {

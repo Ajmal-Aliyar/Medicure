@@ -10,25 +10,29 @@ import { IDoctor } from "@/models";
 export class DoctorProfileMapper {
   static toDoctor = (doctor: IDoctor): DoctorProfileDTO => {
     return {
+      id: doctor.id || "",
       fullName: doctor.personal.fullName || "",
       headline: doctor.professional.headline || "",
       about: doctor.professional.about || "",
       profileImage: doctor.personal.profileImage || "",
       dob: doctor.personal.dob ? doctor.personal.dob : "",
+      email: doctor.personal.email || "",
+      registrationNumber: doctor.professional.registrationNumber || "",
       gender: doctor.personal.gender || "",
       mobile: doctor.personal.mobile || "",
       specialization: doctor.professional.specialization || "",
       languageSpoken: doctor.personal.languageSpoken || [],
+      yearsOfExperience: doctor.professional.yearsOfExperience || 0,
+      experience: doctor.professional.experience || [],
+      education: doctor.professional.education || [],
       address: {
-        addressLine: `${doctor.location.street || ""}, ${
-          doctor.location.city || ""
-        }, ${doctor.location.state || ""} - ${doctor.location.pincode || ""}`,
         street: doctor.location.street || "",
         city: doctor.location.city || "",
         state: doctor.location.state || "",
         country: doctor.location.country || "",
         pincode: doctor.location.pincode || "",
       },
+      rating: doctor.rating.average || 0
     };
   };
 
@@ -73,14 +77,18 @@ export class DoctorProfileMapper {
     doctor: IDoctor
   ): ProfessionalVerificationDTO => {
     const { professional } = doctor;
+  const firstEducation = professional.education?.[0];
+
     return {
       registrationNumber: professional.registrationNumber,
       registrationCouncil: professional.registrationCouncil,
       registrationYear: professional.registrationYear,
       yearsOfExperience: professional.yearsOfExperience,
-      degree: professional.education[0].degree,
-      university: professional.education[0].university,
-      yearOfCompletion: professional.education[0].yearOfCompletion,
+     ...(firstEducation && {
+      degree: firstEducation.degree,
+      university: firstEducation.university,
+      yearOfCompletion: firstEducation.yearOfCompletion,
+    }),
     };
   };
 
@@ -133,10 +141,14 @@ export class DoctorProfileMapper {
   };
 
   static toUpdateVerificationProofs = (
-    proofs: VerificationProofsDto
-  ): Partial<Pick<IDoctor, "professional">> & { [key: string]: IDocument } => {
-    const update: { [key: string]: IDocument } = {};
-    update[`professional.documents`] = proofs;
-    return update;
-  };
+  proofs: VerificationProofsDto
+): Partial<Pick<IDoctor, "professional">> & { [key: string]: IDocument } => {
+  const filteredProofs = Object.fromEntries(
+    Object.entries(proofs).filter(([_, value]) => value != null)
+  ) as VerificationProofsDto;
+  const update: { [key: string]: IDocument } = {};
+  update["professional.documents"] = filteredProofs;
+  return update;
+};
+
 }

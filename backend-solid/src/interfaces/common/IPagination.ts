@@ -4,8 +4,6 @@ export interface IPagination {
 }
 
 export interface PaginationMeta {
-  total: number;
-  skip: number;
-  limit: number;
+  page: number
   totalPages: number;
 }

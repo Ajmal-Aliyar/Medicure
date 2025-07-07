@@ -10,8 +10,6 @@ export const PatientProfileValidation = (data: PatientProfileDto) => {
             return `${key} cannot be null or undefined`;
         }
     }
-    
-
 
     if (!/^\S+@\S+\.\S+$/.test(personal.email)) {
         return 'Invalid email format'

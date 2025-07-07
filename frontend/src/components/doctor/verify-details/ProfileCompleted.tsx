@@ -1,4 +1,4 @@
-import { Edit, X } from "lucide-react"
+import { Edit } from "lucide-react"
 import { useDispatch } from "react-redux"
 import { handleApprove } from "../../../store/slices/commonSlices/AuthSlice"
 

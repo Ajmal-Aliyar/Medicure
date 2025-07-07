@@ -1,3 +1,4 @@
+import { PaginationMeta } from "@/interfaces";
 import { Response } from "express";
 
 export const successResponse = (
@@ -5,7 +6,7 @@ export const successResponse = (
   statusCode: number,
   message: string,
   data?: any,
-  meta?: { total: number, skip: number, limit: number, totalPages: number}
+  meta?: PaginationMeta
 ) => {
   return res.status(statusCode).json({
     success: true,

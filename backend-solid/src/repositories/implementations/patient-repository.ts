@@ -11,6 +11,11 @@ export class PatientRepository
   constructor() {
     super(PatientModel);
   }
+
+  async findByEmail(email: string): Promise<IPatient | null> {
+    return await this.model.findOne({ 'personal.email': email });
+  }
+
   async register(data: CreateUserDto): Promise<Partial<IPatient>> {
     const patient = {
       personal: data,
@@ -19,14 +24,14 @@ export class PatientRepository
   }
 
   async updateImage(
-      doctorId: string,
-      imageUrl: string
-    ): Promise<IPatient | null> {
-      const updatedDoctor = await this.model.findByIdAndUpdate(
-        doctorId,
-        { "personal.profileImage": imageUrl },
-        { new: true }
-      );
-      return updatedDoctor;
-    }
+    doctorId: string,
+    imageUrl: string
+  ): Promise<IPatient | null> {
+    const updatedDoctor = await this.model.findByIdAndUpdate(
+      doctorId,
+      { "personal.profileImage": imageUrl },
+      { new: true }
+    );
+    return updatedDoctor;
+  }
 }

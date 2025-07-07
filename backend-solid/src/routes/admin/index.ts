@@ -4,7 +4,7 @@ import { createAdminDoctorRouter } from "./doctor-route";
 
 export const createAdminRouter = () => {
     const router = Router();
-    router.use("/doctors", createAdminDoctorRouter());
+    router.use("/doctor", createAdminDoctorRouter());
     return router
 }
 

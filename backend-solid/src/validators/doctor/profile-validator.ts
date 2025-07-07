@@ -53,19 +53,22 @@ export const verificationProofsSchema = z.object({
     .string({
       required_error: "Establishment proof is required",
     })
-    .min(1, "Establishment proof cannot be empty"),
+    .min(1, "Establishment proof cannot be empty").nullable()
+    .optional(),
 
   identityProof: z
     .string({
       required_error: "Identity proof is required",
     })
-    .min(1, "Identity proof cannot be empty"),
+    .min(1, "Identity proof cannot be empty").nullable()
+    .optional(),
 
   medicalRegistration: z
     .string({
       required_error: "Medical registration proof is required",
     })
-    .min(1, "Medical registration proof cannot be empty"),
+    .min(1, "Medical registration proof cannot be empty").nullable()
+    .optional(),
 });
 
 

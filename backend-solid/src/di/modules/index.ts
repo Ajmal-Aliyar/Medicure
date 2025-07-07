@@ -3,3 +3,8 @@ export * from './auth-module';
 export * from './doctor-module';
 export * from './patient-module';
 export * from './shared-module';
+export * from './specialization-module';
+export * from './schedule-module';
+export * from './slot-module';
+export * from './appointment-module';
+export * from './payment-module';

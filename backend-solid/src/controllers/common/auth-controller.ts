@@ -43,14 +43,7 @@ export class AuthController implements IAuthController {
 
 
   register = async (req: Request, res: Response): Promise<void> => {
-    const { email, password, fullName, mobile, role } = req.body;
-    await this.authService.register({
-      email,
-      password,
-      fullName,
-      mobile,
-      role,
-    });
+    await this.authService.register(req.body)
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -75,9 +68,21 @@ export class AuthController implements IAuthController {
 
 
 
+   resendOtp = async(req: Request, res: Response): Promise<void> => {
+    const { email } = req.body;
+    console.log(email,'email form resend otp')
+    await this.authService.resendOtp(email);
+    successResponse(
+      res,
+      HTTP_STATUS.OK,
+      AUTH_MESSAGES.SUCCESS.OTP_RESENDED,
+    );
+  }
+
+
+
 
   refreshToken = async (req: Request, res: Response): Promise<void> => {
-    console.log('refresh token');
     const token = req.cookies.refreshToken;
     const { user, accessToken, refreshToken } =
     await this.authService.refreshToken(token);
@@ -104,7 +109,8 @@ export class AuthController implements IAuthController {
     successResponse(
       res,
       HTTP_STATUS.OK,
-      AUTH_MESSAGES.SUCCESS.LOGOUT_SUCCESSFUL
+      AUTH_MESSAGES.SUCCESS.LOGOUT_SUCCESSFUL,
+      {success: true}
     );
   };
 

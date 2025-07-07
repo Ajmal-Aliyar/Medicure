@@ -1,31 +1,74 @@
 import { ADMIN_MESSAGES } from "@/constants";
 import { TYPES } from "@/di/types";
-import { ApprovedDoctorsDto, DoctorApprovalDetailsDto, DoctorApprovalRequestDto } from "@/dtos";
+import {
+  ApprovedDoctorsDto,
+  DoctorApprovalDetailsDto,
+  DoctorApprovalRequestDto,
+  DoctorMappedProfileDto,
+  PublicDoctorDetails,
+} from "@/dtos";
 import { BadRequestError } from "@/errors";
-import { IPagination, IReviewStatus } from "@/interfaces";
-import { AdminDoctorMapper, AuthMapper } from "@/mappers";
+import {  IPagination, IReviewStatus } from "@/interfaces";
+import { AdminDoctorMapper, AuthMapper, DoctorMapper } from "@/mappers";
 import { IDoctor } from "@/models";
 import { IDoctorRepository } from "@/repositories";
 import { IAdminDoctorService } from "@/services";
-import { ensureDoctorExists, getValidDoctorReviewStatus } from "@/utils";
+import {
+  ensureDoctorExists,
+  getValidDoctorReviewStatus,
+  mapFilterQueryToDoctorOptions,
+} from "@/utils";
+import { FilterDoctorQuery } from "@/validators";
 import { inject, injectable } from "inversify";
-
 @injectable()
 export class AdminDoctorService implements IAdminDoctorService {
   constructor(
     @inject(TYPES.DoctorRepository)
     private readonly doctorRepo: IDoctorRepository
   ) {}
+  
+  async getFilteredDoctor(
+      doctorOptions: FilterDoctorQuery,
+      pagination: IPagination
+    ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
+      const options = mapFilterQueryToDoctorOptions(doctorOptions, true);
+      const { data, total } = await this.doctorRepo.filterDoctorForAdmin(
+        options,
+        pagination
+      );
+      const filteredDoctor = DoctorMapper.toDoctorCardDto(data, true);
+      return { total, doctors: filteredDoctor };
+    }
+
+    async getDoctorProfile(
+      doctorId: string | null
+    ): Promise<DoctorMappedProfileDto> {
+      const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+      return AdminDoctorMapper.toMapDoctorWithDefaults(doctor);
+    }
+
+
+
+
+
 
   async getDoctorsByReviewStatus(
     reviewStatus: string,
     pagination: IPagination
-  ): Promise<{ total: number; doctors: (DoctorApprovalRequestDto | ApprovedDoctorsDto | Partial<IDoctor>)[]}> {
-    reviewStatus = getValidDoctorReviewStatus(reviewStatus) as IReviewStatus
-    const { total, doctors } = await this.doctorRepo.getDoctorsSummaryByReviewStatus(
-      reviewStatus,
-      pagination
-    );
+  ): Promise<{
+    total: number;
+    doctors: (
+      | DoctorApprovalRequestDto
+      | ApprovedDoctorsDto
+      | Partial<IDoctor>
+    )[];
+  }> {
+    reviewStatus = getValidDoctorReviewStatus(reviewStatus) as IReviewStatus;
+    const { total, doctors } =
+      await this.doctorRepo.getDoctorsSummaryByReviewStatus(
+        reviewStatus,
+        pagination
+      );
     const dtos = doctors.map((doctor) => {
       switch (reviewStatus) {
         case "approved":
@@ -34,14 +77,17 @@ export class AdminDoctorService implements IAdminDoctorService {
         case "applied":
           return AdminDoctorMapper.toDoctorApprovalSummaryDto(doctor);
         case "pending":
-          return AuthMapper.toUserDto(doctor, 'doctor');
+          return AuthMapper.toUserDto(doctor, "doctor");
         default:
-          return AuthMapper.toUserDto(doctor, 'doctor');
+          return AuthMapper.toUserDto(doctor, "doctor");
       }
     });
     return { total, doctors: dtos };
   }
 
+  
+
+  
   async getDoctorApprovalDetails(
     doctorId: string | null
   ): Promise<DoctorApprovalDetailsDto> {
@@ -94,7 +140,7 @@ export class AdminDoctorService implements IAdminDoctorService {
     if (doctor.status.accountStatus.isBlocked === block) {
       const msg = block
         ? ADMIN_MESSAGES.ERROR.DOCTOR_ALREADY_BLOCKED
-        :  ADMIN_MESSAGES.ERROR.DOCTOR_NOT_BLOCKED;
+        : ADMIN_MESSAGES.ERROR.DOCTOR_NOT_BLOCKED;
       throw new BadRequestError(msg);
     }
     doctor.status.accountStatus.isBlocked = block;

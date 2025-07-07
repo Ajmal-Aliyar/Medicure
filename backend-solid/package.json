@@ -24,6 +24,7 @@
     "nodemailer": "^7.0.3",
     "redis": "^5.1.0",
     "reflect-metadata": "^0.2.2",
+    "stripe": "^18.3.0",
     "uuid": "^9.0.0",
     "winston": "^3.9.0",
     "zod": "^3.25.13"
@@ -37,6 +38,7 @@
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.11.30",
     "@types/nodemailer": "^6.4.17",
+    "@types/stripe": "^8.0.416",
     "@types/uuid": "^10.0.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",

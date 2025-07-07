@@ -9,6 +9,8 @@ import {
 import { Document, Types } from "mongoose";
 
 export interface IDoctor extends Document {
+  createdAt: Date;
+  updatedAt: Date;
   _id: Types.ObjectId;
 
   personal: {

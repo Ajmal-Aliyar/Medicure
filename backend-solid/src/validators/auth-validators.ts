@@ -19,7 +19,7 @@ export const registerSchema = z.object({
     required_error: AUTH_MESSAGES.VALIDATION.ROLE_REQUIRED,
     invalid_type_error: AUTH_MESSAGES.VALIDATION.ROLE_INVALID,
   }),
-});
+}).strict();
 
 export const loginSchema = z.object({
   email: z
@@ -41,4 +41,10 @@ export const verifyOtpSchema = z.object({
   otp: z
     .string({ required_error: AUTH_MESSAGES.VALIDATION.OTP_REQUIRED })
     .min(6, { message: AUTH_MESSAGES.VALIDATION.OTP_MIN }),
+});
+
+export const resendOtpSchema = z.object({
+  email: z
+    .string({ required_error: AUTH_MESSAGES.VALIDATION.EMAIL_REQUIRED })
+    .email({ message: AUTH_MESSAGES.VALIDATION.EMAIL_INVALID }),
 });

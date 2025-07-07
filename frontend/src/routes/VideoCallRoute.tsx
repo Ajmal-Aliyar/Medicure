@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import VideoCallInterface from '../pages/common/VideoCallInterface'
+import VideoCallInterface from '../pages/public/VideoCallInterface'
 // import AuthorizedRoute from './AuthorizedRoute'
 
 const VideoCallRoute = () => {

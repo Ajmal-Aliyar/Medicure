@@ -6,6 +6,7 @@ import { IDoctorSchedule } from "@/models";
 import { DoctorScheduleMapper } from "@/mappers";
 import { NotFoundError } from "@/errors";
 import { SCHEDULE_MESSAGES } from "@/constants";
+import { Types } from "mongoose";
 
 @injectable()
 export class DoctorScheduleService implements IDoctorScheduleService {
@@ -14,8 +15,10 @@ export class DoctorScheduleService implements IDoctorScheduleService {
   ) {}
 
   async getSchedule(doctorId: string): Promise<IDoctorSchedule | null> {
-    return this.scheduleRepo.findByDoctorId(doctorId);
-  }
+  const sch = await this.scheduleRepo.findByDoctorId(doctorId);
+  console.log(sch, 'Schedule fetched');
+  return sch;
+}
 
   async upsertSchedule(
     doctorId: string,

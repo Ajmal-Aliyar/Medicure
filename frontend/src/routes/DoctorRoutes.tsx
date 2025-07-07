@@ -8,10 +8,11 @@ import PrivateRoute from "./PrivateRoute";
 import Auth from "../pages/patient/Auth";
 import Appointments from "../pages/doctor/Appointments";
 import Finance from "../pages/doctor/Finance";
-import PageNotFound from "../pages/common/PageNotFound";
-import Chat from "../pages/common/Chat";
+import PageNotFound from "../pages/public/PageNotFound";
+import Chat from "../pages/public/Chat";
 import AuthorizedRoute from "./AuthorizedRoute";
 import UnAuthorizedRoute from "./UnAuthorizedRoute";
+import SlotTrial from "../pages/doctor/SlotTrial";
 
 
 function DoctorRoutes() {
@@ -24,6 +25,7 @@ function DoctorRoutes() {
                 <Route path="appointments" element={<AuthorizedRoute allowedRole='doctor'><Appointments /></AuthorizedRoute>} />
                 <Route path="finance" element={<AuthorizedRoute allowedRole='doctor'><Finance /></AuthorizedRoute>} />
                 <Route path="chats" element={<AuthorizedRoute allowedRole='doctor'><Chat /></AuthorizedRoute>} />
+                <Route path="slots" element={<SlotTrial />} />
             </Route>
 
             <Route

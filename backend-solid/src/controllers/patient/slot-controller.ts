@@ -1,26 +1,26 @@
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
-import { ISlotService } from "@/services";
-import { getPaginationParams, successResponse } from "@/utils";
+import { successResponse } from "@/utils";
 import { IPatientSlotController } from "../interfaces";
 import { HTTP_STATUS } from "@/constants";
+import { IPatientSlotService } from "@/services";
 
 @injectable()
 export class PatientSlotController implements IPatientSlotController{
   constructor(
-    @inject(TYPES.SlotService)
-    private readonly slotService: ISlotService
+    @inject(TYPES.PatientSlotService)
+    private readonly slotService: IPatientSlotService
   ) {}
 
-  async getDoctorSlotsForBooking(req: Request, res: Response) {
+   getDoctorSlotsForBooking = async (req: Request, res: Response): Promise<void> => {
     const { doctorId, date } = req.query;
-    const pagination = getPaginationParams(req)
-    // const slots = await this.slotService.getAvailableSlots(
-    //   String(doctorId),
-    //   new Date(String(date))
-    // );
-    return successResponse(res, HTTP_STATUS.OK, "Available slots for booking", );
+    const result = await this.slotService.getDoctorSlotsForBooking(
+      String(doctorId),
+      String(date),
+      {skip: 0, limit: Infinity}
+    );
+    successResponse(res, HTTP_STATUS.OK, "Available slots for booking", result);
   }
   
 }

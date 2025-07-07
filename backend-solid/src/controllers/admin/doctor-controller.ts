@@ -9,6 +9,7 @@ import {
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { IAdminDoctorController } from "../interfaces";
+import { filterDoctorQuerySchema } from "@/validators";
 
 @injectable()
 export class AdminDoctorController implements IAdminDoctorController {
@@ -26,13 +27,47 @@ export class AdminDoctorController implements IAdminDoctorController {
 
     const { total, doctors } =
       await this.adminDoctorService.getDoctorsByReviewStatus( status, pagination);
-    const meta = buildPaginationMeta(total, pagination.skip, pagination.limit);
+    const meta = buildPaginationMeta(total, pagination.limit);
     successResponse(
       res,
       HTTP_STATUS.OK,
-      ADMIN_MESSAGES.SUCCESS.DOCTOR_DETAILS_FETCHED,
+      ADMIN_MESSAGES.SUCCESS.DOCTORS_DETAILS_FETCHED,
       doctors,
       meta
+    );
+  };
+
+   getDoctorsSummary = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+    const pagination = getPaginationParams(req);
+    const parsedQuery = filterDoctorQuerySchema.parse(req.query);
+    const { total, doctors } =
+      await this.adminDoctorService.getFilteredDoctor( parsedQuery, pagination);
+    const meta = buildPaginationMeta(total, pagination.limit);
+    successResponse(
+      res,
+      HTTP_STATUS.OK,
+      ADMIN_MESSAGES.SUCCESS.DOCTORS_DETAILS_FETCHED,
+      doctors,
+      meta
+    );
+  };
+
+  getDoctorProfile = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+    const doctorId = req.params.doctorId as string;
+    const doctor = await this.adminDoctorService.getDoctorProfile(
+      doctorId
+    );
+    successResponse(
+      res,
+      HTTP_STATUS.OK,
+      ADMIN_MESSAGES.SUCCESS.DOCTORS_DETAILS_FETCHED,
+      doctor
     );
   };
 
@@ -47,7 +82,7 @@ export class AdminDoctorController implements IAdminDoctorController {
     successResponse(
       res,
       HTTP_STATUS.OK,
-      ADMIN_MESSAGES.SUCCESS.DOCTOR_DETAILS_FETCHED,
+      ADMIN_MESSAGES.SUCCESS.DOCTORS_DETAILS_FETCHED,
       doctor
     );
   };

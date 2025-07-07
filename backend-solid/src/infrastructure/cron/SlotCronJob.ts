@@ -18,6 +18,7 @@ export class SlotCronJob implements ISlotCronJob {
 
   public scheduleSlotCreationJob(): void {
     cron.schedule("33 23 * * *", async () => {
+    // cron.schedule("16 10 * * *", async () => {
       console.log("🕐 [Cron] Starting slot generation...");
 
       const schedules: IDoctorSchedule[] =
@@ -29,7 +30,7 @@ export class SlotCronJob implements ISlotCronJob {
 
       for (const schedule of schedules) {
         const slots = generateSlotsForAdvanceDays(schedule);
-        const slotsByDate = new Map<string, Partial<ISlot>[]>();
+        const slotsByDate = new Map<Date, Partial<ISlot>[]>();
 
         for (const slot of slots) {
           if (!slot.date) continue;

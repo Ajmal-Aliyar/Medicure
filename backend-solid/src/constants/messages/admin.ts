@@ -1,6 +1,6 @@
 export const ADMIN_MESSAGES = {
   SUCCESS: {
-    DOCTOR_DETAILS_FETCHED: "Doctor profile details retrieved successfully.",
+    DOCTORS_DETAILS_FETCHED: "Doctors profile details retrieved successfully.",
     STATUS_UPDATED:  "Doctor status updated successfully.",
     BlOCKED_DOCTOR: "Blocked doctor successfully",
     UNBlOCKED_DOCTOR: "Unblocked doctor successfully",

@@ -1,11 +1,12 @@
-import { CreateUserDto } from "@/dtos";
+import { CreateUserDto, FilterDoctorRepoResponse } from "@/dtos";
 import { IDoctor } from "@/models";
-import { UpdateQuery } from "mongoose";
+import { Types, UpdateQuery } from "mongoose";
 import { IBaseRepository } from "./i-base-repository";
-import { IPagination } from "@/interfaces";
+import { GetDoctorOptions, IPagination } from "@/interfaces";
 
 export interface IDoctorRepository extends IBaseRepository<IDoctor> {
   register(data: CreateUserDto): Promise<Partial<IDoctor>>;
+  findByEmail(email: string): Promise<IDoctor | null>;
   updateImage(doctorId: string, imageUrl: string): Promise<IDoctor | null>;
   updateStatus(
     doctorId: string,
@@ -13,5 +14,17 @@ export interface IDoctorRepository extends IBaseRepository<IDoctor> {
   ): Promise<IDoctor | null>;
   getDoctorsSummaryByReviewStatus(
     status: string,
-    pagination: IPagination): Promise<{ total: number; doctors: IDoctor[] }>;
+    pagination: IPagination
+  ): Promise<{ total: number; doctors: IDoctor[] }>;
+  filterDoctorForAdmin(
+    options: GetDoctorOptions,
+    pagination: IPagination
+  ): Promise<{ data: Partial<FilterDoctorRepoResponse>[]; total: number }>;
+  PublicDoctorCardDetails(
+    options: GetDoctorOptions,
+    pagination: IPagination
+  ): Promise<{ data: Partial<FilterDoctorRepoResponse>[]; total: number }>;
+  findBasicInfoById(doctorId: string): Promise<{ name: string, specialization: string}>;
 }
+
+

@@ -1,7 +1,7 @@
-import { CategorizedSlots } from "@/dtos";
+import { CategorizedSlots, PublicSlotDetails } from "@/dtos";
 import { ISlot } from "@/models";
 
-export class DoctorSlotMapper {
+export class SlotMapper {
   static toGetSlotByDoctorAndDate(doctorId: string, data: ISlot[]): CategorizedSlots {
     const categorized: CategorizedSlots = {
       morning: [],
@@ -26,8 +26,22 @@ export class DoctorSlotMapper {
         categorized.lateNight.push(slot); 
       }
     });
-    console.log(categorized, 'ct');
     
     return categorized;
+  }
+
+  static toPublicSlotDetails(slots: ISlot[]): PublicSlotDetails[] {
+    return slots.map((slot): PublicSlotDetails => ({
+      id: String(slot._id),
+      doctorId: slot.doctorId,
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      date: slot.date,
+      type: slot.type,
+      duration: slot.duration,
+      fees: slot.fees,
+      status: slot.status,
+      isActive: slot.isActive
+    }));
   }
 }

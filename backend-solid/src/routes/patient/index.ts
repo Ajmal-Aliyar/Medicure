@@ -1,11 +1,21 @@
 import { Router } from "express";
-import { createProfileRouter } from "./patient-route";
+import { createProfileRoute } from "./patient-route";
+import { createSlotRoute } from "./slot-route";
+import { authenticateAccessToken, authorizeRoles } from "@/middlewares";
+import { createPaymentRoute } from "./payment-route";
+import { createAppointmentRoute } from "./appointment";
 ;
 
 
 export const createPatientRouter = () => {
     const router = Router();
-    router.use("/profile", createProfileRouter());
+    router.use(authenticateAccessToken, authorizeRoles("patient"));
+
+    router.use("/profile", createProfileRoute());
+    router.use("/slot", createSlotRoute())
+    router.use("/payment", createPaymentRoute())
+    router.use("/appointment", createAppointmentRoute())
+
     return router
 }
 

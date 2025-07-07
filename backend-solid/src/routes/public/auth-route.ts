@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticateAccessToken, validateRequest } from "@/middlewares";
 import { IAuthController } from "@/controllers";
-import { registerSchema, loginSchema, verifyOtpSchema } from "@/validators";
+import { registerSchema, loginSchema, verifyOtpSchema, resendOtpSchema } from "@/validators";
 import { Container } from "inversify";
 import { TYPES } from "@/di/types";
 import { getContainer } from "@/di";
@@ -28,6 +28,12 @@ export const createAuthRouter = (): Router => {
     "/verify-otp",
     validateRequest(verifyOtpSchema),
     asyncHandler(authController.verifyOtpAndRegister)
+  );
+
+  router.post(
+    "/resend-otp",
+    validateRequest(resendOtpSchema),
+    asyncHandler(authController.resendOtp.bind(authController))
   );
 
   router.post(

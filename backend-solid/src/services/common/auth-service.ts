@@ -24,7 +24,7 @@ import {
   IRole,
   ITokenService,
 } from "@/interfaces";
-import { IDoctor, IPatient, IAdmin} from "@/models";
+import { IDoctor, IPatient, IAdmin } from "@/models";
 import { AuthMapper } from "@/mappers";
 
 @injectable()
@@ -48,14 +48,14 @@ export class AuthService implements IAuthService {
     const role: IRole = data.role;
     const email = data.email.trim().toLowerCase();
     const userRepo = this.getUserRepo(role);
-    const existing = await userRepo.findOne({ email });
+    const existing = await userRepo.findByEmail(email);
     if (existing) {
       throw new ConflictError(AUTH_MESSAGES.ERROR.EMAIL_ALREADY_EXISTS);
     }
     const hashedPassword = await this.passwordHasher.hash(data.password);
     const otp = this.otpService.generateOtp();
     console.log("RM-LOG", "OTP", otp);
-    await this.otpService.storeOtp(data.email, otp);
+    await this.otpService.storeOtp(email, otp);
     await this.cacheService.set(
       data.email,
       JSON.stringify({
@@ -73,9 +73,9 @@ export class AuthService implements IAuthService {
     const role: IRole = data.role;
     const email = data.email.trim().toLowerCase();
     const userRepo = this.getRepo(role);
-    const user = await userRepo.findOne({ email });
+    const user = await userRepo.findByEmail(email);
     if (!user) {
-      throw new UnauthorizedError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+      throw new NotFoundError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
     }
 
     const isPasswordValid = await this.passwordHasher.compare(
@@ -83,13 +83,47 @@ export class AuthService implements IAuthService {
       user.personal.password
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+      throw new BadRequestError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
     }
 
     return this.buildAuthResponse(user, role);
   }
 
+  async resendOtp(email: string): Promise<void> {
+    console.log('resend');
+    
+    email = email.trim().toLowerCase();
+
+    const cachedDataString = await this.cacheService.get(email);
+    if (!cachedDataString) {
+      throw new BadRequestError(AUTH_MESSAGES.ERROR.NO_REGISTRATION_DATA);
+    }
+
+    let cachedData: any;
+    try {
+      cachedData = JSON.parse(cachedDataString);
+    } catch {
+      throw new BadRequestError(AUTH_MESSAGES.ERROR.CORRUPTED_CACHE_DATA);
+    }
+
+    const otp = this.otpService.generateOtp();
+    console.log("RM-LOG", "Resend OTP", otp);
+    await this.otpService.storeOtp(email, otp);
+    await this.cacheService.set(
+      email,
+      JSON.stringify({
+        ...cachedData,
+        otp,
+      }),
+      900
+    );
+    await this.emailService.sendOtpEmail(email, otp);
+  }
+
   async refreshToken(token: string): Promise<AuthResponse> {
+    if (!token) {
+      throw new UnauthorizedError(GLOBAL_MESSAGES.ERROR.INVALID_REFRESH_TOKEN);
+    }
     const payload = this.tokenService.verifyRefreshToken(token);
 
     if (typeof payload === "string" || !payload.id) {
@@ -120,7 +154,7 @@ export class AuthService implements IAuthService {
     email = email.trim().toLowerCase();
     const isValidOtp = await this.otpService.verifyOtp(email, otp);
     if (!isValidOtp) {
-      throw new UnauthorizedError(AUTH_MESSAGES.ERROR.OTP_INVALID_OR_EXPIRED);
+      throw new BadRequestError(AUTH_MESSAGES.ERROR.OTP_INVALID_OR_EXPIRED);
     }
 
     const cachedDataString = await this.cacheService.get(email);
@@ -137,7 +171,7 @@ export class AuthService implements IAuthService {
 
     const role: IRole = cachedData.role;
     const userRepo = this.getUserRepo(role);
-    const existingUser = await userRepo.findOne({ email });
+    const existingUser = await userRepo.findByEmail(email);
     if (existingUser) {
       throw new ConflictError(AUTH_MESSAGES.ERROR.USER_ALREADY_EXISTS);
     }
@@ -168,7 +202,7 @@ export class AuthService implements IAuthService {
     return AuthMapper.toUserDto(user, role);
   }
 
-  private getRepo(role: IRole): IBaseRepository<IDoctor | IPatient | IAdmin> {
+  private getRepo(role: IRole): IPatientRepository | IDoctorRepository | IAdminRepository {
     if (role === "patient") return this.patientRepo;
     if (role === "doctor") return this.doctorRepo;
     if (role === "admin") return this.adminRepo;

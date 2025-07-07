@@ -28,6 +28,7 @@ export const AUTH_MESSAGES = {
     PROFILE_FETCHED: "User profile fetched successfully.",
     REGISTRATION_INITIATED: "OTP sent to email. Complete registration to continue.",
     USER_REGISTERED_AND_AUTHORIZED: "User registered and authorized successfully.",
+    OTP_RESENDED: "OTP reshared successfully."
   },
 
   ERROR: {

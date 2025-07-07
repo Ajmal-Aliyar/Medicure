@@ -12,7 +12,7 @@ import UserDriveLayout from '../pages/patient/UserDriveLayout';
 import Appointments from '../components/patient/userDrive/appointments/Appointments';
 import Feedback from '../components/patient/userDrive/feedbacks/Feedback';
 import Finance from '../components/patient/userDrive/finance/Finance';
-import PageNotFound from '../pages/common/PageNotFound';
+import PageNotFound from '../pages/public/PageNotFound';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ChatLayout from '../pages/patient/ChatLayout';
 import MedicalRecord from '../components/patient/userDrive/medicalRecords/MedicalRecord';

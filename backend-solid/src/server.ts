@@ -5,13 +5,16 @@ import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { requestLogger } from "@/middlewares";
 import { env } from "@/config";
+import { createPaymentRoute } from "./routes/patient/payment-route";
 
 
 export const createApp = () => {
   const app = express();
 
+  app.use("/api/webhook", express.raw({ type: "application/json" }), createPaymentRoute());
+  
   app.use(cors({
-  origin:  env.CORS_URL,
+  origin:  env.FRONTEND_BASE_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   credentials: true
 }));

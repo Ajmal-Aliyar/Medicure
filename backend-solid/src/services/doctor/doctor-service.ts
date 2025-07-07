@@ -11,9 +11,9 @@ import {
   ProfessionalVerificationDTO,
   VerificationProofsDto,
 } from "@/dtos";
-import { IDoctor } from "@/models";
+import { IDoctor, IDoctorSchedule } from "@/models";
 import { ensureDoctorExists } from "@/utils";
-import { IDoctorService } from "../interfaces";
+import { IDoctorScheduleService, IDoctorService } from "../interfaces";
 
 @injectable()
 export class DoctorService implements IDoctorService {
@@ -21,7 +21,9 @@ export class DoctorService implements IDoctorService {
     @inject(TYPES.DoctorRepository)
     private readonly doctorRepo: IDoctorRepository,
     @inject(TYPES.MediaService)
-    private readonly mediaService: IMediaService
+    private readonly mediaService: IMediaService,
+    @inject(TYPES.DoctorScheduleService)
+    private readonly scheduleService: IDoctorScheduleService
   ) {}
 
 
@@ -34,9 +36,11 @@ export class DoctorService implements IDoctorService {
     }
   }
 
-  async getProfile(doctorId: string): Promise<DoctorProfileDTO> {
+  async getProfile(doctorId: string): Promise<{ doctor: DoctorProfileDTO, schedule: IDoctorSchedule | null}> {
     const doctor: IDoctor = await ensureDoctorExists(doctorId, this.doctorRepo);
-    return DoctorProfileMapper.toDoctor(doctor);
+    const data = DoctorProfileMapper.toDoctor(doctor);
+    const schedule = await this.scheduleService.getSchedule(doctor.id)
+    return { doctor: data, schedule }
   }
 
   async updateProfile(
@@ -84,8 +88,9 @@ export class DoctorService implements IDoctorService {
     proofs: VerificationProofsDto
   ): Promise<void> {
     const doctor: IDoctor = await ensureDoctorExists(doctorId, this.doctorRepo);
-    await this.cleanupOldDocuments(doctor, proofs);
-    const updateData = DoctorProfileMapper.toUpdateVerificationProofs(proofs);
+    const filteredProofs = await this.cleanupOldDocuments(doctor, proofs);
+    const updateData = DoctorProfileMapper.toUpdateVerificationProofs(filteredProofs);
+    console.log(updateData, "updateData")
     const updated = await this.doctorRepo.update(doctorId, updateData);
     if (!updated) {
       throw new InternalServerError(
@@ -155,28 +160,35 @@ export class DoctorService implements IDoctorService {
   }
 
   private async cleanupOldDocuments(
-    doctor: IDoctor,
-    newProofs: VerificationProofsDto
-  ): Promise<void> {
-    const proofKeys: (keyof VerificationProofsDto)[] = [
-      "identityProof",
-      "medicalRegistration",
-      "establishmentProof",
-    ];
+  doctor: IDoctor,
+  newProofs: VerificationProofsDto
+): Promise<VerificationProofsDto> {
+  const proofKeys: (keyof VerificationProofsDto)[] = [
+    "identityProof",
+    "medicalRegistration",
+    "establishmentProof",
+  ];
 
-    const publicIdsToDelete: string[] = [];
+  const publicIdsToDelete: string[] = [];
 
-    for (const key of proofKeys) {
-      const newValue = newProofs[key];
-      const existingValue = doctor.professional?.documents?.[key];
-      if (newValue && existingValue) {
-        const publicId = this.mediaService.extractPublicId(existingValue);
-        if (publicId) publicIdsToDelete.push(publicId);
-      }
+  for (const key of proofKeys) {
+    const newValue = newProofs[key];
+    const existingValue = doctor.professional?.documents?.[key];
+
+    if (newValue && existingValue) {
+      const publicId = this.mediaService.extractPublicId(existingValue);
+      if (publicId) publicIdsToDelete.push(publicId);
     }
-
-    if (publicIdsToDelete.length > 0) {
-      await this.mediaService.delete(publicIdsToDelete);
+    if (!newValue && existingValue) {
+      newProofs[key] = existingValue;
     }
   }
+
+  if (publicIdsToDelete.length > 0) {
+    await this.mediaService.delete(publicIdsToDelete);
+  }
+
+  return newProofs;
+}
+
 }
