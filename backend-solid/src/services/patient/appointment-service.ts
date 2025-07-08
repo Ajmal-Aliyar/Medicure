@@ -3,16 +3,11 @@ import { IAppointmentRepository, ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IPatientAppointmentService } from "../interfaces";
 import {
-  AppointmentCard,
   IAppointmentCreateInput,
-  IPagination,
-  IRole,
 } from "@/interfaces";
 import { Types } from "mongoose";
 import { generateRoomId } from "@/utils";
 import { BadRequestError, NotFoundError } from "@/errors";
-import { IAppointment } from "@/models";
-import { AppointmentMapper } from "@/mappers/appointment-mapper";
 import { format } from "date-fns";
 
 @injectable()

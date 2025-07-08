@@ -1,6 +1,9 @@
 import { ISlot } from "@/models";
 import { Types } from "mongoose";
 
+export type ISlotStatus = "available" | "reserved" | "booked" | "cancelled" | "completed";
+export type ISlotType = "consult" | "emergency";
+
 export type SlotTimeCategory =
   | 'morning'
   | 'afternoon'
@@ -17,9 +20,10 @@ export interface PublicSlotDetails {
     startTime: string;
     endTime: string;
     date: Date;
-    type:  "consult" | "emergency";
+    type:  ISlotType;
     duration: number;
     fees: number;
-    status:"available" | "reserved" | "booked" | "cancelled" | "completed";
+    status: ISlotStatus
     isActive: boolean;
 }
+

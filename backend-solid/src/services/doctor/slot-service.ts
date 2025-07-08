@@ -17,7 +17,7 @@ export class DoctorSlotService implements IDoctorSlotService {
     return this.slotRepo.bulkCreate(slots as ISlot[]);
   }
 
-  async getSlotsByDoctorAndDate(
+  async getSlots(
     doctorId: string,
     date: string,
     status?: string,

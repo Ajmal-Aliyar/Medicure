@@ -21,8 +21,6 @@ import {
   RedisService,
   SlotCronJob,
 } from "@/infrastructure";
-import { IScheduleService, ISlotService, ScheduleService, SlotService } from "@/services";
-import { ISlotRepository, SlotRepository } from "@/repositories";
 
 export const bindSharedModule = async (container: Container) => {
   container.bind<IMediaService>(TYPES.MediaService).to(CloudinaryService);
@@ -38,8 +36,4 @@ export const bindSharedModule = async (container: Container) => {
   container
     .bind<nodemailer.Transporter>(TYPES.EmailTransporter)
     .toConstantValue(createTransporter());
-
-  container.bind<IScheduleService>(TYPES.ScheduleService).to(ScheduleService)
-  container.bind<ISlotService>(TYPES.SlotService).to(SlotService)
-  container.bind<ISlotRepository>(TYPES.SlotRepository).to(SlotRepository)
 };

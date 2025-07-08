@@ -106,7 +106,7 @@ export class PaymentService implements IPaymentService {
             transactionId: paymentIntentId,
           });
 
-          await this.slotService.slotBooked( slotId, patientId);
+          await this.slotService.bookSlot( slotId, patientId);
         }
         case "checkout.session.expired": {
           const session = event.data.object as Stripe.Checkout.Session;

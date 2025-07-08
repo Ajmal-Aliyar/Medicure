@@ -31,7 +31,6 @@ export class PatientService implements IPatientService {
     updateData: PatientProfileDto
   ): Promise<void> {
     const updateFields = PatientProfileMapper.toPatientUpdate(updateData);
-    console.log(updateFields, " hoolee");
 
     const updated = await this.patientRepo.update(patientId, updateFields);
     if (!updated) {

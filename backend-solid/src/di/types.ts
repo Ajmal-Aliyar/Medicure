@@ -45,6 +45,7 @@ export const TYPES = {
   PaymentService: Symbol.for("PaymentService"),
   PaymentController: Symbol.for("PaymentController"),
   AppointmentService: Symbol.for("AppointmentService"),
+  SlotController: Symbol.for("SlotController"),
 
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),

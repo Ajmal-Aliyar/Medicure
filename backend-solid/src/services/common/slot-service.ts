@@ -5,6 +5,9 @@ import { inject, injectable } from "inversify";
 import { ISlotService } from "../interfaces";
 import { Types } from "mongoose";
 import { BadRequestError } from "@/errors";
+import { SlotMapper } from "@/mappers";
+import { IPagination, IRole, ISlotDetails } from "@/interfaces";
+import { FilterSlotQuery } from "@/validators/slot-validator";
 
 @injectable()
 export class SlotService implements ISlotService {
@@ -15,6 +18,27 @@ export class SlotService implements ISlotService {
   async createBulkSlots(slots: Partial<ISlot>[]): Promise<ISlot[]> {
     return this.slotRepo.bulkCreate(slots);
   }
+  async getSlots(
+    id: string,
+    role: IRole,
+    parsedQuery: FilterSlotQuery,
+    { skip = 0, limit = 6 }: IPagination
+  ): Promise<{ slots: ISlotDetails[]; total: number }> {
+    const filter = this.buildFilterByRole(role, parsedQuery);
+
+    const { data, total } = await this.slotRepo.findAll({
+      filter,
+      skip,
+      limit,
+      sort: { date: 1, startTime: 1 },
+    });
+
+    const mappedAppointments = SlotMapper.toSlotDetails(data, id, role);
+
+    return { slots: mappedAppointments, total };
+  }
+
+  
 
   async getSlotsByDoctorAndDate(
     doctorId: string,
@@ -97,7 +121,7 @@ export class SlotService implements ISlotService {
     return slot;
   }
 
-  async slotBooked(slotId: string, patientId: string): Promise<void> {
+  async bookSlot(slotId: string, patientId: string): Promise<void> {
     const bookingDetails = {
       isBooked: true,
       patientId: new Types.ObjectId(patientId),
@@ -107,5 +131,16 @@ export class SlotService implements ISlotService {
       status: "booked",
       bookingDetails,
     });
+  }
+
+  private buildFilterByRole(
+    role: IRole,
+    parsedQuery: FilterSlotQuery
+  ): Record<string, any> {
+    const filter = SlotMapper.toSlotFiltersToQuery(parsedQuery, role)
+    if (role !== "doctor") filter.isActive = true
+    console.log(filter, 'fil');
+    
+    return filter;
   }
 }
