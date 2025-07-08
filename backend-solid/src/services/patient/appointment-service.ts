@@ -9,6 +9,7 @@ import { Types } from "mongoose";
 import { generateRoomId } from "@/utils";
 import { BadRequestError, NotFoundError } from "@/errors";
 import { format } from "date-fns";
+import { IAppointment } from "@/models";
 
 @injectable()
 export class PatientAppointmentService implements IPatientAppointmentService {
@@ -25,7 +26,7 @@ export class PatientAppointmentService implements IPatientAppointmentService {
     slotId,
     status,
     transactionId,
-  }: IAppointmentCreateInput): Promise<void> {
+  }: IAppointmentCreateInput): Promise<IAppointment> {
     const slotDetails = await this.slotRepo.findById(slotId);
     if (!slotDetails) {
       throw new NotFoundError("Slot does not exist.");
@@ -57,5 +58,7 @@ export class PatientAppointmentService implements IPatientAppointmentService {
     if (!appointment) {
       throw new Error("Failed to create appointment.");
     }
+
+    return appointment
   }
 }

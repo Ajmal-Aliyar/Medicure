@@ -8,6 +8,6 @@ export interface IPatientAppointmentService {
     slotId,
     status,
     transactionId,
-  }: IAppointmentCreateInput): Promise<void>;
+  }: IAppointmentCreateInput): Promise<IAppointment>;
 
 }

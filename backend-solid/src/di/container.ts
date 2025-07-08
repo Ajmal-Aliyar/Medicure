@@ -11,19 +11,21 @@ import {
   bindSlotModule,
   bindSpecializationModule,
 } from "@/di";
+import { bindTransactionModule } from "./modules/transaction-module";
 const container: Container = new Container();
 
-const startContainer = async () => {
-  await bindAuthModule(container);
-  await bindPatientModule(container);
-  await bindDoctorModule(container);
-  await bindSharedModule(container);
-  await bindAdminModule(container);
-  await bindSpecializationModule(container);
-  await bindScheduleModule(container);
-  await bindSlotModule(container);
-  await bindPaymentModule(container);
-  await bindAppointmentModule(container);
+const startContainer =  () => {
+   bindAuthModule(container);
+   bindPatientModule(container);
+   bindDoctorModule(container);
+   bindSharedModule(container);
+   bindAdminModule(container);
+   bindSpecializationModule(container);
+   bindScheduleModule(container);
+   bindSlotModule(container);
+   bindPaymentModule(container);
+   bindAppointmentModule(container);
+   bindTransactionModule(container);
 };
 
 const getContainer = (): Container => {

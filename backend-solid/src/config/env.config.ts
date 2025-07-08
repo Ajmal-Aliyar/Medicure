@@ -23,6 +23,8 @@ const envSchema = z.object({
 
   STRIPE_SECRET_KEY: z.string().min(1),
   STRIPE_WEBHOOK_SECRET: z.string().min(1),
+
+  ADMIN_ID: z.string().min(1)
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

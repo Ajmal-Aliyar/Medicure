@@ -9,3 +9,4 @@ export * from './specialization';
 export * from './review';
 export * from './transaction';
 export * from './withdraw';
+export * from './wallet';

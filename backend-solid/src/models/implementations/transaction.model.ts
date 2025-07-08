@@ -1,61 +1,38 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
 import { ITransaction } from "../interfaces";
 
 const TransactionSchema = new Schema<ITransaction>(
   {
-    transactionId: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
+    from: {
+      type:  Schema.Types.ObjectId,
+      required: true, 
     },
-    senderId: {
-      type: String,
-    },
-    recieverId: {
-      type: String,
-    },
-    type: {
-      type: String,
-      enum: ["Appointment", "Refund", "Withdraw"],
+    to: {
+      type:  Schema.Types.ObjectId,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["Pending", "Completed", "Failed", "Cancelled"],
-      required: true,
+    doctorId: {
+      type:  Schema.Types.ObjectId,
+      ref: "Doctor",
     },
     amount: {
       type: Number,
       required: true,
-      min: 0,
+      min: 1,
     },
-    currency: {
+    type: {
       type: String,
-      required: true,
-      default: "INR",
-      uppercase: true,
-    },
-    paymentMethod: {
-      type: String,
-      enum: ["Card", "UPI", "Wallet", "BankTransfer"],
+      enum: ["appointment", "withdrawal", "refund"],
       required: true,
     },
-    gatewayTransactionId: {
+    status: {
       type: String,
+      enum: ["pending", "success", "failed"],
+      default: "pending",
     },
-    failureReason: {
-      type: String,
-    },
-    parentTransactionId: {
-      type: String,
-    },
-    description: {
-      type: String,
-      trim: true,
-    },
-    completedAt: {
-      type: Date,
+    appointmentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Appointment",
     },
   },
   { timestamps: true }

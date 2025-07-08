@@ -1,37 +1,16 @@
-import { Document, Types } from 'mongoose';
-export type TransactionType = 
-  | "Appointment"    
-  | "Refund"         
-  | "Withdraw";
+import { Document, Types } from "mongoose";
 
+export type TransactionType = "appointment" | "refund" | "withdraw";
 
-export type TransactionStatus = 
-  | "Pending"
-  | "Completed" 
-  | "Failed"
-  | "Cancelled";
-
-
-export type PaymentMethod = 
-  | "Card"
-  | "UPI"
-  | "Wallet"
-  | "BankTransfer"
+export type TransactionStatus = "pending" | "success" | "failed";
 
 export interface ITransaction extends Document {
-  transactionId: string;    
-  senderId?: string;           
-  recieverId?: string;          
+  from: Types.ObjectId;
+  to: Types.ObjectId;
+  amount: number;
   type: TransactionType;
   status: TransactionStatus;
-  amount: number;
-  currency: string;            
-  paymentMethod: PaymentMethod;
-  gatewayTransactionId?: string;
-  failureReason?: string;
-  parentTransactionId?: string; 
-  description?: string;      
+  doctorId?: Types.ObjectId;
+  appointmentId?: Types.ObjectId;
   createdAt: Date;
-  updatedAt: Date;
-  completedAt?: Date;
 }

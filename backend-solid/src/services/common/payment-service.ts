@@ -8,6 +8,7 @@ import {
   IPatientAppointmentService,
   IPaymentService,
   ISlotService,
+  ITransactionService,
 } from "../interfaces";
 
 @injectable()
@@ -17,7 +18,9 @@ export class PaymentService implements IPaymentService {
     @inject(TYPES.DoctorRepository)
     private readonly doctorRepo: IDoctorRepository,
     @inject(TYPES.PatientAppointmentService)
-    private readonly patientAppointmentService: IPatientAppointmentService
+    private readonly patientAppointmentService: IPatientAppointmentService,
+    @inject(TYPES.TransactionService)
+    private readonly transactionService: ITransactionService
   ) {}
 
   async checkoutSession(
@@ -76,9 +79,6 @@ export class PaymentService implements IPaymentService {
           const { doctorId, patientId, slotId } = metadata;
 
           const paymentIntentId = session.payment_intent as string;
-          const amount = Math.round(
-            (((session.amount_total || 0) / 100) * 90) / 100
-          );
 
           // const transaction = await this.transactionServices.createTransaction({
           //   transactionId: paymentIntentId,
@@ -98,15 +98,22 @@ export class PaymentService implements IPaymentService {
           //   throw new Error("Failed to store transaction");
           // }
 
-          await this.patientAppointmentService.createAppointment({
-            doctorId,
-            patientId,
-            slotId,
-            status: "scheduled",
-            transactionId: paymentIntentId,
-          });
+          const appointment =
+            await this.patientAppointmentService.createAppointment({
+              doctorId,
+              patientId,
+              slotId,
+              status: "scheduled",
+              transactionId: paymentIntentId,
+            });
+          await this.slotService.bookSlot(slotId, patientId);
 
-          await this.slotService.bookSlot( slotId, patientId);
+          const transaction = await this.transactionService.bookAppointment({
+            patientId,
+            doctorId,
+            appointmentId: String(appointment._id),
+            amount: session.amount_total || 0,
+          });
         }
         case "checkout.session.expired": {
           const session = event.data.object as Stripe.Checkout.Session;
