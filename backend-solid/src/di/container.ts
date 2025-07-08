@@ -12,6 +12,7 @@ import {
   bindSpecializationModule,
 } from "@/di";
 import { bindTransactionModule } from "./modules/transaction-module";
+import { bindWalletModule } from "./modules/wallet.module";
 const container: Container = new Container();
 
 const startContainer =  () => {
@@ -26,6 +27,7 @@ const startContainer =  () => {
    bindPaymentModule(container);
    bindAppointmentModule(container);
    bindTransactionModule(container);
+   bindWalletModule(container)
 };
 
 const getContainer = (): Container => {

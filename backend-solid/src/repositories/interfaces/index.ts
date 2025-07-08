@@ -8,3 +8,4 @@ export * from './i-appointment-repository';
 export * from './i-prescription-repository';
 export * from './i-specialization-repository';
 export * from './i-transaction-repository';
+export * from './i-wallet-repository';

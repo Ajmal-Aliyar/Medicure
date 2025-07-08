@@ -6,10 +6,9 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from "@/errors";
-import { IAuthService } from "@/services";
+import { IAuthService, IWalletService } from "@/services";
 import {
   IAdminRepository,
-  IBaseRepository,
   IDoctorRepository,
   IPatientRepository,
 } from "@/repositories";
@@ -41,7 +40,8 @@ export class AuthService implements IAuthService {
     @inject(TYPES.PasswordHasher)
     private readonly passwordHasher: IPasswordHasher,
     @inject(TYPES.OtpService) private readonly otpService: IOtpService,
-    @inject(TYPES.CacheService) private readonly cacheService: ICacheService
+    @inject(TYPES.CacheService) private readonly cacheService: ICacheService,
+    @inject(TYPES.WalletService) private readonly walletService: IWalletService
   ) {}
 
   async register(data: RegisterDto): Promise<void> {
@@ -85,13 +85,11 @@ export class AuthService implements IAuthService {
     if (!isPasswordValid) {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
     }
-
+    
     return this.buildAuthResponse(user, role);
   }
 
   async resendOtp(email: string): Promise<void> {
-    console.log('resend');
-    
     email = email.trim().toLowerCase();
 
     const cachedDataString = await this.cacheService.get(email);
@@ -169,7 +167,7 @@ export class AuthService implements IAuthService {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.CORRUPTED_CACHE_DATA);
     }
 
-    const role: IRole = cachedData.role;
+    const role: "patient" | "doctor" = cachedData.role;
     const userRepo = this.getUserRepo(role);
     const existingUser = await userRepo.findByEmail(email);
     if (existingUser) {
@@ -185,6 +183,7 @@ export class AuthService implements IAuthService {
 
     await this.otpService.deleteOtp(email);
     await this.cacheService.del(email);
+    await this.walletService.createWallet(String(createdUser.id), role);
 
     return this.buildAuthResponse(createdUser, role);
   }
@@ -202,7 +201,9 @@ export class AuthService implements IAuthService {
     return AuthMapper.toUserDto(user, role);
   }
 
-  private getRepo(role: IRole): IPatientRepository | IDoctorRepository | IAdminRepository {
+  private getRepo(
+    role: IRole
+  ): IPatientRepository | IDoctorRepository | IAdminRepository {
     if (role === "patient") return this.patientRepo;
     if (role === "doctor") return this.doctorRepo;
     if (role === "admin") return this.adminRepo;

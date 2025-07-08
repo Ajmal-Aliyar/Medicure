@@ -1,14 +1,13 @@
 import { env, stripe } from "@/config";
 import { TYPES } from "@/di/types";
 import { ISlot } from "@/models";
-import { IDoctorRepository } from "@/repositories";
+import { IDoctorRepository, ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import Stripe from "stripe";
 import {
-  IPatientAppointmentService,
+  IAppointmentService,
   IPaymentService,
   ISlotService,
-  ITransactionService,
 } from "../interfaces";
 
 @injectable()
@@ -17,11 +16,13 @@ export class PaymentService implements IPaymentService {
     @inject(TYPES.SlotService) private readonly slotService: ISlotService,
     @inject(TYPES.DoctorRepository)
     private readonly doctorRepo: IDoctorRepository,
-    @inject(TYPES.PatientAppointmentService)
-    private readonly patientAppointmentService: IPatientAppointmentService,
-    @inject(TYPES.TransactionService)
-    private readonly transactionService: ITransactionService
+    @inject(TYPES.SlotRepository)
+    private readonly slotRepo: ISlotRepository,
+    @inject(TYPES.AppointmentService)
+    private readonly appointmentService: IAppointmentService
   ) {}
+
+
 
   async checkoutSession(
     patientId: string,
@@ -35,7 +36,6 @@ export class PaymentService implements IPaymentService {
       String(slot.doctorId)
     );
     const lineItems = this.buildLineItems(slot, doctorInfo);
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -48,9 +48,11 @@ export class PaymentService implements IPaymentService {
         slotId: slot._id.toString(),
       },
     });
-
     return session;
   }
+
+
+
 
   async getSessionDetails(
     sessionId: string
@@ -62,89 +64,55 @@ export class PaymentService implements IPaymentService {
     return session;
   }
 
+
+
+
   async webhookHandler(bodyData: string, sig: string): Promise<void> {
     let event: Stripe.Event;
+    event = stripe.webhooks.constructEvent(
+      bodyData,
+      sig,
+      env.STRIPE_WEBHOOK_SECRET
+    );
 
-    try {
-      event = stripe.webhooks.constructEvent(
-        bodyData,
-        sig,
-        env.STRIPE_WEBHOOK_SECRET
-      );
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const metadata = session.metadata || {};
+        const { doctorId, patientId, slotId } = metadata;
+        const paymentIntentId = session.payment_intent as string;
+        const amount = (session.amount_total || 0) / 100;
 
-      switch (event.type) {
-        case "checkout.session.completed": {
-          const session = event.data.object as Stripe.Checkout.Session;
-          const metadata = session.metadata || {};
-          const { doctorId, patientId, slotId } = metadata;
-
-          const paymentIntentId = session.payment_intent as string;
-
-          // const transaction = await this.transactionServices.createTransaction({
-          //   transactionId: paymentIntentId,
-          //   senderId: metadata.patientId,
-          //   recieverId: metadata.doctorId,
-          //   amount,
-          //   status: "success",
-          // });
-
-          // await this.walletRepository.increment(metadata.doctorId, amount);
-          // await this.walletRepository.increment(
-          //   "Company",
-          //   (session.amount_total || 0) / 100
-          // );
-
-          // if (!transaction) {
-          //   throw new Error("Failed to store transaction");
-          // }
-
-          const appointment =
-            await this.patientAppointmentService.createAppointment({
-              doctorId,
-              patientId,
-              slotId,
-              status: "scheduled",
-              transactionId: paymentIntentId,
-            });
-          await this.slotService.bookSlot(slotId, patientId);
-
-          const transaction = await this.transactionService.bookAppointment({
-            patientId,
-            doctorId,
-            appointmentId: String(appointment._id),
-            amount: session.amount_total || 0,
-          });
-        }
-        case "checkout.session.expired": {
-          const session = event.data.object as Stripe.Checkout.Session;
-          const slotId = session.metadata?.slotId;
-          if (slotId) {
-            // await this.slotRepo.update(slotId, { status: "available" });
-          }
-          break;
-        }
-
-        case "payment_intent.canceled": {
-          const intent = event.data.object as Stripe.PaymentIntent;
-          const slotId = intent.metadata?.slotId;
-          if (slotId) {
-            // await this.slotRepo.update(slotId, { status: "available" });
-          }
-          break;
-        }
-
-        default:
-          break;
+        await this.appointmentService.bookAppointment({
+          doctorId,
+          patientId,
+          slotId,
+          amount,
+          paymentIntentId,
+        });
       }
-    } catch (error) {
-      if (error instanceof Stripe.errors.StripeSignatureVerificationError) {
-        console.error("Invalid Stripe signature:", error);
-      } else {
-        console.error("Error handling webhook event:", error);
+
+      case "checkout.session.expired": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        const slotId = session.metadata?.slotId;
+        // if (slotId) await this.slotRepo.update(slotId, { status: "available" });
+        break;
       }
-      throw new Error("Webhook handling failed.");
+
+      case "payment_intent.canceled": {
+        const intent = event.data.object as Stripe.PaymentIntent;
+        const slotId = intent.metadata?.slotId;
+        // if (slotId) await this.slotRepo.update(slotId, { status: "available" });
+        break;
+      }
+
+      default:
+        break;
     }
   }
+
+
+
 
   async cancelCheckout(
     slotId: string | undefined,
@@ -152,6 +120,10 @@ export class PaymentService implements IPaymentService {
   ): Promise<boolean> {
     return await this.slotService.releaseSlot(slotId, patientId);
   }
+
+
+
+
 
   private buildLineItems(
     slot: ISlot,

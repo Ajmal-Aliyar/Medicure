@@ -47,7 +47,9 @@ export const TYPES = {
   SlotController: Symbol.for("SlotController"),
   TransactionRepository: Symbol.for("TransactionRepository"),
   TransactionService: Symbol.for("TransactionService"),
-  
+  WalletRepository: Symbol.for("WalletRepository"),
+  WalletService: Symbol.for("WalletService"),
+
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),
   EmailService: Symbol.for("EmailService"),
