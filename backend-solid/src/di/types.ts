@@ -49,6 +49,7 @@ export const TYPES = {
   TransactionService: Symbol.for("TransactionService"),
   WalletRepository: Symbol.for("WalletRepository"),
   WalletService: Symbol.for("WalletService"),
+  TransactionController: Symbol.for("TransactionController"),
 
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),

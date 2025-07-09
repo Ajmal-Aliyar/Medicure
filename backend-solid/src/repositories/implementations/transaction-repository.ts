@@ -2,7 +2,7 @@ import { ITransaction, Transaction } from "@/models";
 import { BaseRepository } from "../base";
 import { ITransactionRepository } from "../interfaces/i-transaction-repository";
 import { Types } from "mongoose";
-import { IPagination } from "@/interfaces";
+import { IPagination, IRole } from "@/interfaces";
 import { env } from "@/config";
 
 export class TransactionRepository
@@ -13,23 +13,29 @@ export class TransactionRepository
     super(Transaction);
   }
 
-  async transactionHistoryOfPatient(patientId: string, { skip = 0, limit = 6}: IPagination) {
-    const patientObjectId = new Types.ObjectId(patientId)
-    return await this.model.find({
-      $or: [{ from: patientObjectId }, { to: patientObjectId }],
-    }).sort({ createdAt: -1 }).skip(skip).limit(limit);
-  }
+  async getTransactionHistory(
+    ownerId: string,
+    ownerType: IRole,
+    pagination: IPagination = { skip: 0, limit: 6 }
+  ): Promise<{ transactions: ITransaction[]; total: number }> {
+    const ownerObjectId = new Types.ObjectId(ownerId);
+    const { skip = 0, limit = 6 } = pagination;
 
-  async transactionHistoryOfDoctor(doctorId: string) {
-    const doctorObjectId = new Types.ObjectId(doctorId)
-    return await this.model.find({ doctorId: doctorObjectId }).sort({ createdAt: -1 })
-  }
+    let filter = {};
 
-  async transactionHistoryOfAdmin() {
-    const adminObjectId = new Types.ObjectId(env.ADMIN_ID)
+    if (ownerType === "doctor") {
+      filter = { doctorId: ownerObjectId };
+    } else {
+      filter = {
+        $or: [{ from: ownerObjectId }, { to: ownerObjectId }],
+      };
+    }
 
-    return await this.model.find({
-      $or: [{ from: adminObjectId }, { to: adminObjectId }],
-    }).sort({ createdAt: -1 });
+    const [ transactions, total] = await Promise.all([
+      this.model.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      this.model.countDocuments(filter),
+    ]);
+
+    return { transactions, total }
   }
 }

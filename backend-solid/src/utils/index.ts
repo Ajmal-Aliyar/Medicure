@@ -6,3 +6,4 @@ export * from './slot-generator-util';
 export * from './doctor-query-util';
 export * from './date-validator-util'
 export * from './room-generator-util'
+export * from './transaction-direction-util'
