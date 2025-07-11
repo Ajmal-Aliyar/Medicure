@@ -9,6 +9,7 @@ export interface IAppointmentService {
     parsedQuery: FilterAppointmentQuery,
     pagination: IPagination
   ): Promise<{ appointments: AppointmentCard[]; total: number }>;
+  getAppointmentByRoomId(id: string, role: IRole, roomId: string): Promise<any>;
   bookAppointment({
       doctorId,
       patientId,

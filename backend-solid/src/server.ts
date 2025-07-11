@@ -23,5 +23,6 @@ export const createApp = () => {
   app.use(express.json());
   app.use(requestLogger);
   app.use(cookieParser());
+  
   return app;
 };

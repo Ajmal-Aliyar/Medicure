@@ -1,3 +1,10 @@
+import { IAppointmentStatus, IAppointmentType } from "@/models";
+import { Types } from "mongoose";
+import { DoctorCardDetails, PatientCardDetails } from "./card-details";
+import { IGender } from "./IGender";
+import { BloodGroup } from "./IBloodGroup";
+
+
 export interface IAppointmentCreateInput {
   doctorId: string;
   patientId: string;
@@ -11,16 +18,11 @@ export interface AppointmentCard {
   appointmentDate: string;
   startTime: string;
   endTime: string;
-  status:
-    | "scheduled"
-    | "confirmed"
-    | "in progress"
-    | "completed"
-    | "cancelled"
-    | "no show";
-  appointmentType: "consult" | "follow-up" | "emergency";
+  status: IAppointmentStatus;
+  appointmentType: IAppointmentType;
   doctor: AppointmentUserInfo;
   patient: AppointmentUserInfo;
+  roomId: string;
 }
 
 interface AppointmentUserInfo {
@@ -31,21 +33,14 @@ interface AppointmentUserInfo {
   age?: number;
 }
 
-import { Types } from "mongoose";
 
 export interface PopulatedAppointment {
   _id: Types.ObjectId;
   appointmentDate: string;
   startTime: string;
   endTime: string;
-  status:
-    | "scheduled"
-    | "confirmed"
-    | "in progress"
-    | "completed"
-    | "cancelled"
-    | "no show";
-  appointmentType: "consult" | "follow-up" | "emergency";
+  status: IAppointmentStatus;
+  appointmentType: IAppointmentType;
   doctorId: {
     _id: Types.ObjectId;
     personal: {
@@ -64,6 +59,62 @@ export interface PopulatedAppointment {
         age?: number;
     }
   };
+  roomId: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface PopulatedAppointmentForRoom {
+  _id: Types.ObjectId;
+  appointmentDate: string;
+  startTime: string;
+  endTime: string;
+  status: IAppointmentStatus;
+  appointmentType: IAppointmentType;
+  doctorId: {
+    _id: Types.ObjectId;
+    personal: {
+      fullName: string;
+      profileImage: string;
+      languageSpoken: string[];
+      gender: IGender
+    };
+    professional: {
+      yearOfExperience: number;
+      specialization: string;
+    };
+    rating: {
+      average: number;
+      reviewCount: number;
+    };
+  };
+  patientId: {
+    _id: Types.ObjectId;
+    personal: {
+      fullName: string;
+      profileImage: string;
+      dob?: string;
+      mobile: string;
+      gender?: IGender;
+      bloodGroup: BloodGroup;
+    };
+  };
+  transactionId: string;
+  roomId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+export interface AppointmentDetailsPopulated {
+  id: string;
+  appointmentDate: string;
+  startTime: string;
+  endTime: string;
+  status: IAppointmentStatus;
+  appointmentType: IAppointmentType;
+  doctor: DoctorCardDetails;
+  patient: PatientCardDetails;
+  roomId: string;
+  transactionId: string;
 }

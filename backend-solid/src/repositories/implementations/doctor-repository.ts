@@ -143,6 +143,7 @@ export class DoctorRepository
         .select({
           _id: 1,
           "personal.fullName": 1,
+          "personal.gender": 1,
           "professional.yearsOfExperience": 1,
           "professional.specialization": 1,
           "personal.profileImage": 1,

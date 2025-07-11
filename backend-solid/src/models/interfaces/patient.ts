@@ -1,5 +1,6 @@
 import { Document, Types } from 'mongoose';
 import {  IAddress, IEmergencyContact, IGender } from '@/interfaces';
+import { BloodGroup } from '@/interfaces/common/IBloodGroup';
 
 
 export interface IPatient extends Document {
@@ -13,7 +14,7 @@ export interface IPatient extends Document {
     password: string;
     gender?: IGender;
     dob?: string;
-    bloodGroup?: string;
+    bloodGroup?: BloodGroup;
     languageSpoken?: string[]; 
   };
 

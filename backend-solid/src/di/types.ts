@@ -12,7 +12,7 @@ export const TYPES = {
   DoctorSlotService: Symbol.for("DoctorSlotService"),
   DoctorSlotController: Symbol.for("DoctorSlotController"),
   DoctorAppointmentController: Symbol.for("DoctorAppointmentController"),
-
+  
   //Patient
   PatientController: Symbol.for("PatientController"),
   PatientDoctorController: Symbol.for("PatientDoctorController"),
@@ -22,7 +22,7 @@ export const TYPES = {
   PatientSlotService: Symbol.for("PatientSlotService"),
   PatientAppointmentController: Symbol.for("PatientAppointmentController"),
   PatientAppointmentService: Symbol.for("PatientAppointmentService"),
-
+  
   //Repository
   DoctorRepository: Symbol.for("DoctorRepository"),
   ScheduleRepository: Symbol.for("ScheduleRepository"),
@@ -31,7 +31,7 @@ export const TYPES = {
   SlotRepository: Symbol.for("SlotRepository"),
   AppointmentRepository: Symbol.for("AppointmentRepository"),
   SpecializationRepository: Symbol.for("SpecializationRepository"),
-
+  
   //Public
   AuthController: Symbol.for("AuthController"),
   AuthService: Symbol.for("AuthService"),
@@ -50,6 +50,7 @@ export const TYPES = {
   WalletRepository: Symbol.for("WalletRepository"),
   WalletService: Symbol.for("WalletService"),
   TransactionController: Symbol.for("TransactionController"),
+  AppointmentController: Symbol.for("AppointmentController"),
 
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),

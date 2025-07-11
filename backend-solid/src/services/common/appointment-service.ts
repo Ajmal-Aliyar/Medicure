@@ -7,7 +7,7 @@ import {
   ITransactionService,
   IWalletService,
 } from "../interfaces";
-import { AppointmentCard, IPagination, IRole } from "@/interfaces";
+import { AppointmentCard, AppointmentDetailsPopulated, IPagination, IRole } from "@/interfaces";
 import { AppointmentMapper } from "@/mappers";
 import {
   IAppointmentRepository,
@@ -16,6 +16,7 @@ import { Types } from "mongoose";
 import { FilterAppointmentQuery } from "@/validators";
 import { IAppointment } from "@/models";
 import { env } from "@/config";
+import { NotFoundError } from "@/errors";
 
 @injectable()
 export class AppointmentService implements IAppointmentService {
@@ -63,6 +64,15 @@ export class AppointmentService implements IAppointmentService {
     await this.walletService.updateWalletBalance(doctorId, "doctor", amount);
     await this.walletService.updateWalletBalance(env.ADMIN_ID, "admin", amount);
     return appointment;
+  }
+
+  async getAppointmentByRoomId(id: string, role: IRole, roomId: string): Promise<AppointmentDetailsPopulated> {
+    const filter = { roomId, ...(role === 'patient' ? {patientId: new Types.ObjectId(id)} : {doctorId: new Types.ObjectId(id)})}
+    const appointment = await this.appointmentRepo.getAppointmentsForRoom({filter})
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found");
+    }
+    return AppointmentMapper.toAppointmentPopulated(appointment)
   }
 
   async getAppointmentsCardDetails(

@@ -41,6 +41,7 @@ export interface FilterDoctorRepoResponse {
     profileImage: string | null;
     dob?: string;
     languageSpoken?: string[];
+    gender: string
   };
   professional?: {
     yearsOfExperience?: number;

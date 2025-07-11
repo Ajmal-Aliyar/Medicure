@@ -2,7 +2,7 @@ import { injectable } from "inversify";
 import { AppointmentModel, IAppointment } from "@/models";
 import { BaseRepository } from "../base";
 import { FindAllOptions, IAppointmentRepository } from "../interfaces";
-import { PopulatedAppointment } from "@/interfaces";
+import { PopulatedAppointment, PopulatedAppointmentForRoom } from "@/interfaces";
 
 @injectable()
 export class AppointmentRepository
@@ -33,10 +33,22 @@ export class AppointmentRepository
         .lean<PopulatedAppointment[]>(),  
       this.model.countDocuments(filter),
     ]);
-
     return {
       appointments,
       total,
     };
+  }
+
+  async getAppointmentsForRoom({
+    filter
+  }: FindAllOptions<IAppointment>): Promise<PopulatedAppointmentForRoom | null> {
+    return await 
+      this.model
+        .findOne(filter)
+        .populate(
+          "doctorId", 
+          "personal.fullName personal.profileImage personal.dob personal.gender personal.languageSpoken professional.specialization professional.yearsOfExperience rating")
+        .populate("patientId", "personal.fullName personal.profileImage personal.dob personal.bloodGroup personal.gender personal.mobile")
+        .lean<PopulatedAppointmentForRoom>()
   }
 }

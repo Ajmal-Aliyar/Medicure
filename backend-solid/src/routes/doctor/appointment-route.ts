@@ -1,4 +1,4 @@
-import { IDoctorAppointmentController, IDoctorSlotController } from "@/controllers";
+import { IAppointmentController } from "@/controllers";
 import { getContainer } from "@/di";
 import { TYPES } from "@/di/types";
 import { authenticateAccessToken, authorizeRoles } from "@/middlewares";
@@ -8,11 +8,10 @@ import { Router } from "express";
 export const createAppointmentRouter = (): Router => {
   const router = Router();
   const container = getContainer()
-  const appointmentController = container.get<IDoctorAppointmentController>(TYPES.DoctorAppointmentController)
+  const appointmentController = container.get<IAppointmentController>(TYPES.AppointmentController)
 
-  router.use(authenticateAccessToken, authorizeRoles('doctor'))
-
-  router.get('/', asyncHandler(appointmentController.getAppointmentsByDoctorId))
+  router.get('/', asyncHandler(appointmentController.getAppointmentsCardDetails))
+  router.get('/:roomId', asyncHandler(appointmentController.getAppointmentByRoomId))
   
   return router;
 };

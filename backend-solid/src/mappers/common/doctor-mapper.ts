@@ -21,6 +21,7 @@ export class DoctorMapper {
     id: doctor._id?.toString() || "",
 
     fullName: doctor.personal?.fullName || "",
+    gender: doctor.personal?.gender || "",
     dob: doctor.personal?.dob || null,
     profileImage: doctor.personal?.profileImage || null,
     languageSpoken: doctor.personal?.languageSpoken || null,

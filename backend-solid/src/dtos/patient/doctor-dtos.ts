@@ -1,6 +1,7 @@
 export interface PublicDoctorDetails {
   id: string;
   fullName: string;
+  gender: string;
   dob: string | null;
   profileImage: string | null;
   languageSpoken: string[] | null;

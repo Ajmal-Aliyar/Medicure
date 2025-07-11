@@ -1,5 +1,7 @@
 import { Document, Types } from "mongoose";
 
+export type IAppointmentStatus = "scheduled" | "in progress" | "completed" | "cancelled" | "no show"
+export type IAppointmentType = "consult" | "follow-up" | "emergency";
 export interface IAppointment extends Document {
   doctorId: Types.ObjectId;
   patientId: Types.ObjectId;
@@ -8,7 +10,7 @@ export interface IAppointment extends Document {
   appointmentDate: Date;
   startTime: string; 
   endTime: string;   
-  status: "scheduled" | "in progress" | "completed" | "cancelled" | "no show";
+  status: IAppointmentStatus;
   appointmentType: "consult" | "follow-up" | "emergency";
   transactionId: string;
   recordId: Types.ObjectId | null;
