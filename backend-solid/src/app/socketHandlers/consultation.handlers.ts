@@ -7,14 +7,19 @@ export const handleConsultationEvents = (
   socket: Socket,
   cacheService: ICacheService
 ) => {
-
   socket.on(
     SOCKET_EVENTS.CONSULT.JOIN_ROOM,
-    async ({ roomId }) => {
+    async ({ roomId, candidateId }) => {
       socket.join(roomId);
+      await cacheService.set(`socket:${candidateId}`, socket.id);
       socket
         .to(roomId)
         .emit(SOCKET_EVENTS.CONSULT.JOINED_ROOM, { socketId: socket.id });
+      const socketsInRoom = await io.in(roomId).allSockets(); // returns a Set<string>
+      console.log(
+        `All socket IDs in room ${roomId}:`,
+        Array.from(socketsInRoom)
+      );
     }
   );
 
@@ -27,7 +32,9 @@ export const handleConsultationEvents = (
   });
 
   socket.on(SOCKET_EVENTS.CONSULT.ICE_CANDIDATE, async ({ to, candidate }) => {
+
     const socketId = await cacheService.get(`socket:${to}`);
+    console.log( `socket:${to}`, socketId, 'yeee')
     io.to(socketId as string).emit(SOCKET_EVENTS.CONSULT.ICE_CANDIDATE, {
       candidate,
     });
