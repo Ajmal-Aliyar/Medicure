@@ -32,6 +32,8 @@ export class AdminDoctorService implements IAdminDoctorService {
       pagination: IPagination
     ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
       const options = mapFilterQueryToDoctorOptions(doctorOptions, true);
+      console.log(options, 'op');
+      
       const { data, total } = await this.doctorRepo.filterDoctorForAdmin(
         options,
         pagination

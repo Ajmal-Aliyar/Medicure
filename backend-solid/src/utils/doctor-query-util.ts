@@ -15,6 +15,7 @@ export function mapFilterQueryToDoctorOptions(query: FilterDoctorQuery, isAdmin:
     ratingMax,
     sortField,
     sortOrder,
+    createdAt
   } = query;
 
   const filters: GetDoctorOptions["filters"] = {
@@ -27,6 +28,7 @@ export function mapFilterQueryToDoctorOptions(query: FilterDoctorQuery, isAdmin:
     ...(experienceMax && !isNaN(Number(experienceMax)) && { experienceMax: Number(experienceMax) }),
     ...(ratingMin && !isNaN(Number(ratingMin)) && { ratingMin: Number(ratingMin) }),
     ...(ratingMax && !isNaN(Number(ratingMax)) && { ratingMax: Number(ratingMax) }),
+    ...(createdAt && isValidDate(createdAt) && { createdAt }),
   };
 
   return {
@@ -34,4 +36,8 @@ export function mapFilterQueryToDoctorOptions(query: FilterDoctorQuery, isAdmin:
     ...(sortField && { sortField }),
     ...(sortOrder && { sortOrder }),
   };
+}
+
+function isValidDate(date: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(date);
 }

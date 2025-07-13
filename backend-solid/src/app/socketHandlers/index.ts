@@ -3,7 +3,6 @@ import { ICacheService } from "@/interfaces";
 import { TYPES } from "@/di/types";
 import { getContainer } from "@/di";
 import { handleChatingEvents } from "./messaging.handler";
-import { handleVideoCallEvents } from "./videoCall.handler";
 import { handleConsultationEvents } from "./consultation.handlers";
 
 export const registerSocketEventHandlers = async (
@@ -30,7 +29,6 @@ export const registerSocketEventHandlers = async (
   );
 
   handleChatingEvents(io, socket, cacheService);
-  handleVideoCallEvents(io, socket, cacheService);
   handleConsultationEvents(io, socket, cacheService);
 
   socket.on("disconnect", (reason) => {

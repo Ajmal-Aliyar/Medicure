@@ -9,6 +9,7 @@ export interface GetDoctorOptions {
     experienceMax?: number;
     ratingMin?: number;
     ratingMax?: number;
+    createdAt?: string;
   };
   sortField?: string;
   sortOrder?: "asc" | "desc";

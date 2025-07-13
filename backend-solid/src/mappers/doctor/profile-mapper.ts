@@ -22,9 +22,9 @@ export class DoctorProfileMapper {
       mobile: doctor.personal.mobile || "",
       specialization: doctor.professional.specialization || "",
       languageSpoken: doctor.personal.languageSpoken || [],
-      yearsOfExperience: doctor.professional.yearsOfExperience || 0,
-      experience: doctor.professional.experience || [],
-      education: doctor.professional.education || [],
+      experience: doctor.professional.yearsOfExperience || 0,
+      experiences: doctor.professional.experience || [],
+      educations: doctor.professional.education || [],
       address: {
         street: doctor.location.street || "",
         city: doctor.location.city || "",
@@ -32,7 +32,7 @@ export class DoctorProfileMapper {
         country: doctor.location.country || "",
         pincode: doctor.location.pincode || "",
       },
-      rating: doctor.rating.average || 0
+      rating: doctor.rating
     };
   };
 

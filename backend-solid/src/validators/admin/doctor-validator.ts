@@ -16,6 +16,8 @@ export const filterDoctorQuerySchema = z.object({
   sortField: z.string().optional(),
   sortOrder: z.enum(["asc", "desc"]).optional(),
 
+  createdAt: z.string().optional(),
+
   page: z.string().regex(/^\d+$/, "Page must be a number").optional(),
 });
 

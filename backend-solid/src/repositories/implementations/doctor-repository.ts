@@ -179,6 +179,7 @@ export class DoctorRepository
       specialization,
       ratingMin,
       ratingMax,
+      createdAt,
     } = filters;
 
     if (searchQuery) {
@@ -201,6 +202,16 @@ export class DoctorRepository
       query["status.accountStatus.isBlocked"] = true;
     } else if (accountStatus === "unblocked") {
       query["status.accountStatus.isBlocked"] = false;
+    }
+
+    if (createdAt) {
+      const start = new Date(createdAt);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(createdAt);
+      end.setHours(23, 59, 59, 999);
+
+      query["createdAt"] = { $gte: start, $lte: end };
     }
 
     if (experienceMin && !isNaN(experienceMin)) {

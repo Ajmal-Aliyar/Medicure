@@ -31,10 +31,13 @@ export interface DoctorProfileDTO {
   specialization: string;
   languageSpoken: string[];
   address: IAddress
-  rating: number;
-  yearsOfExperience: number;
-  education: IEducation[];
-  experience: IExperience[];
+  rating: {
+    average: number,
+    reviewCount: number
+  };
+  experience: number;
+  educations: IEducation[];
+  experiences: IExperience[];
 }
 
 export interface ProfessionalVerificationDTO {

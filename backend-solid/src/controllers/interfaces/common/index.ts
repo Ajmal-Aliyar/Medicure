@@ -3,3 +3,4 @@ export * from './i-auth-controller';
 export * from './i-payment-controller';
 export * from './i-transaction-controller';
 export * from './i-appointment-controller';
+export * from './i-wallet-controller';

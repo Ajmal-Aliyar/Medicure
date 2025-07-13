@@ -2,20 +2,6 @@ export const SOCKET_EVENTS = {
   CONNECTION: "connection",
   DISCONNECT: "disconnect",
 
-  VIDEO_CALL: {
-    INITIATE: "video:initiate",         
-    RINGING: "video:ringing",            
-    ACCEPTED: "video:accepted",               
-    ACCEPT: "video:accept",               
-    REJECT: "video:reject",               
-    END: "video:end",                     
-    BUSY: "video:busy",                 
-
-    OFFER: "video:offer",              
-    ANSWER: "video:answer",             
-    ICE_CANDIDATE: "video:ice-candidate" 
-  },
-
   CHAT: {
     SEND_MESSAGE: "chat:send-message", 
     RECEIVE_MESSAGE: "chat:receive-message", 
