@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { IReview } from "../interfaces";
+import { IFeedback } from "../interfaces";
 
-const ReviewSchema = new Schema<IReview>(
+const FeedbackSchema = new Schema<IFeedback>(
   {
     doctorId: {
       type: Schema.Types.ObjectId,
@@ -36,4 +36,4 @@ const ReviewSchema = new Schema<IReview>(
 );
 
 
-export const ReviewModel = mongoose.model<IReview>( "Review", ReviewSchema)
+export const FeedbackModel = mongoose.model<IFeedback>( "Feedback", FeedbackSchema)

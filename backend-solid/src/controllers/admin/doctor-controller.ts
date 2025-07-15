@@ -27,7 +27,7 @@ export class AdminDoctorController implements IAdminDoctorController {
 
     const { total, doctors } =
       await this.adminDoctorService.getDoctorsByReviewStatus( status, pagination);
-    const meta = buildPaginationMeta(total, pagination.limit);
+    const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -45,7 +45,7 @@ export class AdminDoctorController implements IAdminDoctorController {
     const parsedQuery = filterDoctorQuerySchema.parse(req.query);
     const { total, doctors } =
       await this.adminDoctorService.getFilteredDoctor( parsedQuery, pagination);
-    const meta = buildPaginationMeta(total, pagination.limit);
+    const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(
       res,
       HTTP_STATUS.OK,

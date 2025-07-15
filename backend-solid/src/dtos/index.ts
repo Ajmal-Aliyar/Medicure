@@ -7,3 +7,5 @@ export * from './doctor-slot-dtos';
 
 
 export *  from './patient';
+
+export * from './feedback-dtos';

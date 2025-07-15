@@ -39,7 +39,7 @@ export class AppointmentRepository
     };
   }
 
-  async getAppointmentsForRoom({
+  async getAppointmentDetailsPopulated({
     filter
   }: FindAllOptions<IAppointment>): Promise<PopulatedAppointmentForRoom | null> {
     return await 
@@ -51,4 +51,5 @@ export class AppointmentRepository
         .populate("patientId", "personal.fullName personal.profileImage personal.dob personal.bloodGroup personal.gender personal.mobile")
         .lean<PopulatedAppointmentForRoom>()
   }
+
 }

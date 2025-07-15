@@ -70,7 +70,7 @@ export const generateSlotsForAdvanceDays = (
 
   const allSlots: Partial<ISlot>[] = [];
 
-  for (let i = 1; i <= advanceBooking; i++) {
+  for (let i = 0; i <= advanceBooking; i++) {
     const localDate = addDays(new Date(), i);
     const dayIndex = localDate.getDay();
     const day: Day = DAYS[dayIndex];

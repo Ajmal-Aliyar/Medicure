@@ -20,7 +20,7 @@ export class TransactionController implements ITransactionController {
       const { id, role } = req.user;
 
     const { transactions, total } = await this.transactionService.getTransactionHistory( id, role, pagination);
-       const meta = buildPaginationMeta(total, pagination.limit);
+       const meta = buildPaginationMeta(total, pagination.skip);
       successResponse(res, HTTP_STATUS.OK, "Transactions fetched successfully.", transactions, meta);
     };  
 }

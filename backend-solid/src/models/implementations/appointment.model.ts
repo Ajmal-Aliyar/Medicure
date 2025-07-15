@@ -52,7 +52,7 @@ const appointmentSchema = new Schema<IAppointment>(
       enum: {
         values: [
           "scheduled",
-          "in Progress",
+          "in progress",
           "completed",
           "cancelled",
           "no show",
@@ -74,6 +74,11 @@ const appointmentSchema = new Schema<IAppointment>(
       trim: true,
       unique: true,
       required: [true, "Transaction ID is required"],
+    },
+    feedbackId: {
+      type: Schema.Types.ObjectId,
+      ref: "Feedback",
+      default: null,
     },
     recordId: {
       type: Schema.Types.ObjectId,

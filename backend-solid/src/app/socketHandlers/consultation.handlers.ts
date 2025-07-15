@@ -1,20 +1,29 @@
 import { SOCKET_EVENTS } from "@/constants/socket-events";
 import { ICacheService } from "@/interfaces";
+import { IDoctorAppointmentService } from "@/services";
 import { Server, Socket } from "socket.io";
 
 export const handleConsultationEvents = (
   io: Server,
   socket: Socket,
-  cacheService: ICacheService
+  cacheService: ICacheService,
+  appointmentService: IDoctorAppointmentService
 ) => {
   socket.on(
     SOCKET_EVENTS.CONSULT.JOIN_ROOM,
-    async ({ roomId, candidateId }) => {
+    async ({ roomId, candidateId, patientId }) => {
       socket.join(roomId);
       await cacheService.set(`socket:${candidateId}`, socket.id);
+      if (candidateId !== patientId) {
+        const patientSocketId = await cacheService.get(`socket:${patientId}`);
+        io.to(patientSocketId as string).emit(SOCKET_EVENTS.CONSULT.DOCTOR_JOINED, { socketId: socket.id, roomId });
+      }
       socket
         .to(roomId)
         .emit(SOCKET_EVENTS.CONSULT.JOINED_ROOM, { socketId: socket.id });
+        if (candidateId !== patientId) {
+          await appointmentService.markAppointmentInProgress(roomId, candidateId)
+      }
     }
   );
 

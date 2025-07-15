@@ -6,4 +6,5 @@ export interface IAppointmentController {
     res: Response
   ): Promise<void>;
   getAppointmentByRoomId(req: Request, res: Response): Promise<void>;
+  getAppointmentById( req: Request, res: Response ): Promise<void>;
 }

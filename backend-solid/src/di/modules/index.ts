@@ -8,3 +8,7 @@ export * from './schedule-module';
 export * from './slot-module';
 export * from './appointment-module';
 export * from './payment-module';
+export * from './prescription-module';
+export * from './transaction-module';
+export * from './wallet-module';
+export * from './feedback-module';

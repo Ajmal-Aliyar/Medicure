@@ -6,3 +6,5 @@ export * from './slot-repository';
 export * from './specialization-repository';
 export * from './appointment-repository';
 export * from './transaction-repository';
+export * from './prescription-repository';
+export * from './feedback-repository';

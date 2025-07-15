@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 export interface IDoctorAppointmentController {
-    getAppointmentsByDoctorId(
+    markAppointmentCompleted(
     req: Request,
     res: Response
   ): Promise<void>

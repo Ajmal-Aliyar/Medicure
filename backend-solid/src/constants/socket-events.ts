@@ -14,6 +14,7 @@ export const SOCKET_EVENTS = {
 
   CONSULT: {
     JOIN_ROOM: "consult:join-room",
+    DOCTOR_JOINED: "consult:doctor-joined",
     JOINED_ROOM: "consult:joined-room",
     OFFER: "consult:offer",
     ANSWER: "consult:answer",

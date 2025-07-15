@@ -6,7 +6,7 @@ export * from './slot';
 export * from './appointment';
 export * from './prescription';
 export * from './specialization';
-export * from './review';
+export * from './feedback';
 export * from './transaction';
 export * from './withdraw';
 export * from './wallet';

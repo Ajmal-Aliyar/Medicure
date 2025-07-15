@@ -1,13 +1,17 @@
-import { IAppointmentCreateInput, IPagination } from "@/interfaces";
 import { IAppointment } from "@/models";
 
 export interface IPatientAppointmentService {
-  createAppointment({
-    patientId,
+  bookAppointment({
     doctorId,
+    patientId,
     slotId,
-    status,
-    transactionId,
-  }: IAppointmentCreateInput): Promise<IAppointment>;
-
+    amount,
+    paymentIntentId,
+  }: {
+    doctorId: string;
+    patientId: string;
+    slotId: string;
+    amount: number;
+    paymentIntentId: string;
+  }): Promise<IAppointment>
 }

@@ -17,8 +17,8 @@ export class SlotCronJob implements ISlotCronJob {
   ) {}
 
   public scheduleSlotCreationJob(): void {
-    cron.schedule("33 23 * * *", async () => {
-    // cron.schedule("07 9 * * *", async () => {
+    // cron.schedule("33 23 * * *", async () => {
+    cron.schedule("50 18 * * *", async () => {
       console.log("🕐 [Cron] Starting slot generation...");
 
       const schedules: IDoctorSchedule[] =

@@ -1,26 +1,63 @@
 import { TYPES } from "@/di/types";
 import { IAppointmentRepository, ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
-import { IPatientAppointmentService } from "../interfaces";
-import {
-  IAppointmentCreateInput,
-} from "@/interfaces";
+import { IPatientAppointmentService, ISlotService, ITransactionService, IWalletService } from "../interfaces";
+import { IAppointmentCreateInput } from "@/interfaces";
 import { Types } from "mongoose";
 import { generateRoomId } from "@/utils";
 import { BadRequestError, NotFoundError } from "@/errors";
 import { format } from "date-fns";
 import { IAppointment } from "@/models";
+import { env } from "@/config";
 
 @injectable()
 export class PatientAppointmentService implements IPatientAppointmentService {
   constructor(
     @inject(TYPES.AppointmentRepository)
     private readonly appointmentRepo: IAppointmentRepository,
-    @inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository
+    @inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository,
+    @inject(TYPES.TransactionService)
+    private readonly transactionService: ITransactionService,
+    @inject(TYPES.WalletService)
+    private readonly walletService: IWalletService,
+    @inject(TYPES.SlotService)
+    private readonly slotService: ISlotService
   ) {}
 
+  async bookAppointment({
+    doctorId,
+    patientId,
+    slotId,
+    amount,
+    paymentIntentId,
+  }: {
+    doctorId: string;
+    patientId: string;
+    slotId: string;
+    amount: number;
+    paymentIntentId: string;
+  }): Promise<IAppointment> {
+    const appointment = await this.createAppointment({
+      doctorId,
+      patientId,
+      slotId,
+      status: "scheduled",
+      transactionId: paymentIntentId,
+    });
+    await this.slotService.bookSlot(slotId, patientId);
+    await this.transactionService.bookAppointment({
+      doctorId,
+      patientId,
+      appointmentId: String(appointment._id),
+      amount,
+      transactionId: paymentIntentId,
+    });
+    await this.walletService.updateWalletBalance(doctorId, "doctor", amount);
+    await this.walletService.updateWalletBalance(env.ADMIN_ID, "admin", amount);
+    return appointment;
+  }
 
-  async createAppointment({
+  private async createAppointment({
     patientId,
     doctorId,
     slotId,
@@ -59,6 +96,6 @@ export class PatientAppointmentService implements IPatientAppointmentService {
       throw new Error("Failed to create appointment.");
     }
 
-    return appointment
+    return appointment;
   }
 }

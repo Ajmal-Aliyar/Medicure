@@ -1,5 +1,4 @@
-import { AppointmentCard, IPagination, IRole } from "@/interfaces";
-import { IAppointment } from "@/models";
+import { AppointmentCard, AppointmentDetailsPopulated, AppointmentPageDetails, IPagination, IRole } from "@/interfaces";
 import { FilterAppointmentQuery } from "@/validators";
 
 export interface IAppointmentService {
@@ -9,18 +8,6 @@ export interface IAppointmentService {
     parsedQuery: FilterAppointmentQuery,
     pagination: IPagination
   ): Promise<{ appointments: AppointmentCard[]; total: number }>;
-  getAppointmentByRoomId(id: string, role: IRole, roomId: string): Promise<any>;
-  bookAppointment({
-      doctorId,
-      patientId,
-      slotId,
-      amount,
-      paymentIntentId,
-    }: {
-      doctorId: string;
-      patientId: string;
-      slotId: string;
-      amount: number;
-      paymentIntentId: string;
-    }): Promise<IAppointment>
+  getAppointmentByRoomId(id: string, role: IRole, roomId: string): Promise<AppointmentDetailsPopulated>;
+  getAppointmentById( id: string, role: string, appointmentId: string): Promise<AppointmentPageDetails>;
 }

@@ -25,6 +25,7 @@ export class SlotService implements ISlotService {
     { skip = 0, limit = 6 }: IPagination
   ): Promise<{ slots: ISlotDetails[]; total: number }> {
     const filter = this.buildFilterByRole(role, parsedQuery);
+console.log(skip, limit, '0');
 
     const { data, total } = await this.slotRepo.findAll({
       filter,
@@ -32,6 +33,9 @@ export class SlotService implements ISlotService {
       limit,
       sort: { date: 1, startTime: 1 },
     });
+
+    console.log(data.length, total);
+    
 
     const mappedAppointments = SlotMapper.toSlotDetails(data, id, role);
 

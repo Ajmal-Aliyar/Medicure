@@ -4,15 +4,18 @@ import {
   bindAppointmentModule,
   bindAuthModule,
   bindDoctorModule,
+  bindFeedbackModule,
   bindPatientModule,
   bindPaymentModule,
+  bindPrescriptionModule,
   bindScheduleModule,
   bindSharedModule,
   bindSlotModule,
   bindSpecializationModule,
+  bindTransactionModule,
+  bindWalletModule,
 } from "@/di";
-import { bindTransactionModule } from "./modules/transaction-module";
-import { bindWalletModule } from "./modules/wallet.module";
+
 const container: Container = new Container();
 
 const startContainer =  () => {
@@ -28,6 +31,8 @@ const startContainer =  () => {
    bindAppointmentModule(container);
    bindTransactionModule(container);
    bindWalletModule(container)
+   bindPrescriptionModule(container)
+   bindFeedbackModule(container)
 };
 
 const getContainer = (): Container => {

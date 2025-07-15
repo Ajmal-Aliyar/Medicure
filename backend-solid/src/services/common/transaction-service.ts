@@ -21,13 +21,15 @@ export class TransactionService implements ITransactionService {
     doctorId: string;
     appointmentId: string;
     amount: number;
+    transactionId: string;
   }): Promise<ITransaction> {
-    const { patientId, doctorId, appointmentId, amount } = params;
+    const { patientId, doctorId, appointmentId, amount, transactionId } = params;
     const transaction: Partial<ITransaction> = {
       from: new Types.ObjectId(patientId),
       to: new Types.ObjectId(env.ADMIN_ID),
       doctorId: new Types.ObjectId(doctorId),
       appointmentId: new Types.ObjectId(appointmentId),
+      transactionId,
       amount,
       type: "appointment",
       status: "success",

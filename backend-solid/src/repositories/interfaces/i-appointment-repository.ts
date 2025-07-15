@@ -8,6 +8,6 @@ export interface IAppointmentRepository extends BaseRepository<IAppointment> {
     appointments: PopulatedAppointment[];
     total: number;
   }>;
-  getAppointmentsForRoom(
+  getAppointmentDetailsPopulated(
       filter: FindAllOptions<IAppointment>): Promise<PopulatedAppointmentForRoom | null>
 }

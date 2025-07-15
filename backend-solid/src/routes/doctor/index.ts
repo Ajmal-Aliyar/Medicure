@@ -2,9 +2,9 @@ import { Router } from "express";
 import { createProfileRouter } from "./doctor-route";
 import { createDoctorScheduleRouter } from "./schedule-route";
 import { createDoctorSlotRouter } from "./slot-route";
-import { createAppointmentRoute } from "../patient/appointment";
 import { authenticateAccessToken, authorizeRoles } from "@/middlewares";
 import { createTransactionRoute } from "./transaction-route";
+import { createAppointmentRouter } from "./appointment-route";
 
 
 export const createDoctorRouter = () => {
@@ -13,7 +13,7 @@ export const createDoctorRouter = () => {
     router.use("/profile", createProfileRouter());
     router.use("/schedule", createDoctorScheduleRouter());
     router.use("/slot", createDoctorSlotRouter());
-    router.use("/appointment", createAppointmentRoute());
+    router.use("/appointment", createAppointmentRouter());
     router.use("/transaction", createTransactionRoute());
     return router
 }

@@ -3,7 +3,6 @@ import { BaseRepository } from "../base";
 import { ITransactionRepository } from "../interfaces/i-transaction-repository";
 import { Types } from "mongoose";
 import { IPagination, IRole } from "@/interfaces";
-import { env } from "@/config";
 
 export class TransactionRepository
   extends BaseRepository<ITransaction>

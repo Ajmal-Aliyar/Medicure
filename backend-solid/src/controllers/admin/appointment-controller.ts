@@ -20,27 +20,5 @@ export class AdminAppointmentController
     private readonly appointmentService: IAppointmentService
   ) {}
 
-  getAppointmentsByAdminId = async (
-    req: Request,
-    res: Response
-  ): Promise<void> => {
-    const { id, role } = req.user;
-    const pagination = getPaginationParams(req);
-    const parsedQuery = filterAppointmentQuerySchema.parse(req.query)
-    const { appointments, total } =
-      await this.appointmentService.getAppointmentsCardDetails(
-        id,
-        role,
-        parsedQuery,
-        pagination
-      );
-    const meta = buildPaginationMeta(total, pagination.limit);
-    successResponse(
-      res,
-      HTTP_STATUS.OK,
-      "Appointments details fetched successfully.",
-      appointments,
-      meta
-    );
-  };
+  
 }

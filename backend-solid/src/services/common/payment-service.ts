@@ -1,11 +1,11 @@
 import { env, stripe } from "@/config";
 import { TYPES } from "@/di/types";
 import { ISlot } from "@/models";
-import { IDoctorRepository, ISlotRepository } from "@/repositories";
+import { IDoctorRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import Stripe from "stripe";
 import {
-  IAppointmentService,
+  IPatientAppointmentService,
   IPaymentService,
   ISlotService,
 } from "../interfaces";
@@ -16,10 +16,8 @@ export class PaymentService implements IPaymentService {
     @inject(TYPES.SlotService) private readonly slotService: ISlotService,
     @inject(TYPES.DoctorRepository)
     private readonly doctorRepo: IDoctorRepository,
-    @inject(TYPES.SlotRepository)
-    private readonly slotRepo: ISlotRepository,
-    @inject(TYPES.AppointmentService)
-    private readonly appointmentService: IAppointmentService
+    @inject(TYPES.PatientAppointmentService)
+    private readonly patientAppointmentService: IPatientAppointmentService
   ) {}
 
 
@@ -83,7 +81,7 @@ export class PaymentService implements IPaymentService {
         const paymentIntentId = session.payment_intent as string;
         const amount = (session.amount_total || 0) / 100;
 
-        await this.appointmentService.bookAppointment({
+        await this.patientAppointmentService.bookAppointment({
           doctorId,
           patientId,
           slotId,

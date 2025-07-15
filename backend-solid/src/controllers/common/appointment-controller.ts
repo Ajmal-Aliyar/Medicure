@@ -34,7 +34,7 @@ export class AppointmentController
         parsedQuery,
         pagination
       );
-    const meta = buildPaginationMeta(total, pagination.limit);
+    const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -59,4 +59,18 @@ export class AppointmentController
       appointment
     );
   }
+
+   getAppointmentById = async( req: Request, res: Response ): Promise<void> => {
+    const { id, role } = req.user;
+    const {appointmentId} = req.params
+    console.log('appointmentId:', appointmentId);
+    
+    const appointmentDetails = await this.appointmentService.getAppointmentById(id, role, appointmentId)
+    successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "Appointment details fetched successfully.",
+      appointmentDetails
+    );
+   }
 }

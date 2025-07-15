@@ -1,78 +1,50 @@
 import { TYPES } from "@/di/types";
 import { inject, injectable } from "inversify";
+import { IAppointmentService } from "../interfaces";
 import {
-  IAppointmentService,
-  IPatientAppointmentService,
-  ISlotService,
-  ITransactionService,
-  IWalletService,
-} from "../interfaces";
-import { AppointmentCard, AppointmentDetailsPopulated, IPagination, IRole } from "@/interfaces";
+  AppointmentCard,
+  AppointmentDetailsPopulated,
+  AppointmentPageDetails,
+  IPagination,
+  IRole,
+} from "@/interfaces";
 import { AppointmentMapper } from "@/mappers";
-import {
-  IAppointmentRepository,
-} from "@/repositories";
+import { IAppointmentRepository, IPrescriptionRepository, ITransactionRepository } from "@/repositories";
 import { Types } from "mongoose";
 import { FilterAppointmentQuery } from "@/validators";
+import { NotFoundError, UnauthorizedError } from "@/errors";
 import { IAppointment } from "@/models";
-import { env } from "@/config";
-import { NotFoundError } from "@/errors";
 
 @injectable()
 export class AppointmentService implements IAppointmentService {
   constructor(
     @inject(TYPES.AppointmentRepository)
     private readonly appointmentRepo: IAppointmentRepository,
+    @inject(TYPES.TransactionRepository)
+    private readonly transactionRepo: ITransactionRepository,
+    @inject(TYPES.PrescriptionRepository)
+    private readonly prescriptionRepo: IPrescriptionRepository
+  ) {}
 
-    @inject(TYPES.PatientAppointmentService)
-    private readonly patientAppointmentService: IPatientAppointmentService,
-    @inject(TYPES.TransactionService)
-    private readonly transactionService: ITransactionService,
-    @inject(TYPES.WalletService)
-    private readonly walletService: IWalletService,
-    @inject(TYPES.SlotService)
-    private readonly slotService: ISlotService
-  ) { }
-
-  async bookAppointment({
-    doctorId,
-    patientId,
-    slotId,
-    amount,
-    paymentIntentId,
-  }: {
-    doctorId: string;
-    patientId: string;
-    slotId: string;
-    amount: number;
-    paymentIntentId: string;
-  }): Promise<IAppointment> {
-    const appointment = await this.patientAppointmentService.createAppointment({
-      doctorId,
-      patientId,
-      slotId,
-      status: "scheduled",
-      transactionId: paymentIntentId,
-    });
-    await this.slotService.bookSlot(slotId, patientId);
-    await this.transactionService.bookAppointment({
-      doctorId,
-      patientId,
-      appointmentId: String(appointment._id),
-      amount,
-    });
-    await this.walletService.updateWalletBalance(doctorId, "doctor", amount);
-    await this.walletService.updateWalletBalance(env.ADMIN_ID, "admin", amount);
-    return appointment;
-  }
-
-  async getAppointmentByRoomId(id: string, role: IRole, roomId: string): Promise<AppointmentDetailsPopulated> {
-    const filter = { roomId, ...(role === 'patient' ? {patientId: new Types.ObjectId(id)} : {doctorId: new Types.ObjectId(id)})}
-    const appointment = await this.appointmentRepo.getAppointmentsForRoom({filter})
+  async getAppointmentByRoomId(
+    id: string,
+    role: IRole,
+    roomId: string
+  ): Promise<AppointmentDetailsPopulated> {
+    const filter = {
+      roomId,
+      ...(role === "patient"
+        ? { patientId: new Types.ObjectId(id) }
+        : { doctorId: new Types.ObjectId(id) }),
+    };
+    const appointment =
+      await this.appointmentRepo.getAppointmentDetailsPopulated({
+        filter,
+      });
     if (!appointment) {
       throw new NotFoundError("Appointment not found");
     }
-    return AppointmentMapper.toAppointmentPopulated(appointment)
+    return AppointmentMapper.toAppointmentPopulated(appointment);
   }
 
   async getAppointmentsCardDetails(
@@ -93,6 +65,54 @@ export class AppointmentService implements IAppointmentService {
       AppointmentMapper.toAppointmentsCard(appointments);
     return { appointments: mappedAppointments, total };
   }
+
+  async getAppointmentById(
+  id: string,
+  role: IRole,
+  appointmentId: string
+): Promise<AppointmentPageDetails> {
+  let filter: Record<string, any> = {
+    _id: new Types.ObjectId(appointmentId),
+  };
+
+  switch (role) {
+    case "patient":
+      filter.patientId = new Types.ObjectId(id);
+      break;
+    case "doctor":
+      filter.doctorId = new Types.ObjectId(id);
+      break;
+    case "admin":
+      break;
+    default:
+      throw new UnauthorizedError("Invalid role for accessing appointment");
+  }
+
+  const appointment = await this.appointmentRepo.getAppointmentDetailsPopulated({ filter });
+
+  if (!appointment) {
+    throw new NotFoundError("Appointment not found");
+  }
+
+  const transaction = await this.transactionRepo.findOne({
+    transactionId: appointment.transactionId,
+  });
+
+  if (!transaction) {
+    throw new NotFoundError("Transaction not found for this appointment");
+  }
+
+  const prescription =
+    appointment.status === "completed"
+      ? await this.prescriptionRepo.findOne({ appointmentId })
+      : null;
+
+  return AppointmentMapper.toReturnAppointmentPageDetails(
+    appointment,
+    transaction,
+    prescription
+  );
+}
 
   private buildFilterByRole(
     id: string,

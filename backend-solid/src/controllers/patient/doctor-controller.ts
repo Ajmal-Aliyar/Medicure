@@ -22,7 +22,7 @@ export class PatientDoctorController implements IPatientDoctorController {
       const parsedQuery = filterDoctorQuerySchema.parse(req.query);
       const { total, doctors } =
         await this.doctorService.getPublicDoctorDetails( parsedQuery, pagination);
-      const meta = buildPaginationMeta(total, pagination.limit);
+      const meta = buildPaginationMeta(total, pagination.skip);
       successResponse(
         res,
         HTTP_STATUS.OK,

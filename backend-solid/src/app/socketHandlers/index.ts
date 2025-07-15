@@ -4,6 +4,7 @@ import { TYPES } from "@/di/types";
 import { getContainer } from "@/di";
 import { handleChatingEvents } from "./messaging.handler";
 import { handleConsultationEvents } from "./consultation.handlers";
+import {  IDoctorAppointmentService } from "@/services";
 
 export const registerSocketEventHandlers = async (
   io: Server,
@@ -11,6 +12,7 @@ export const registerSocketEventHandlers = async (
 ) => {
   const container = getContainer();
   const cacheService = container.get<ICacheService>(TYPES.CacheService);
+  const appointmentService = container.get<IDoctorAppointmentService>(TYPES.DoctorAppointmentService);
 
   const user = socket.data.user;
 
@@ -29,7 +31,7 @@ export const registerSocketEventHandlers = async (
   );
 
   handleChatingEvents(io, socket, cacheService);
-  handleConsultationEvents(io, socket, cacheService);
+  handleConsultationEvents(io, socket, cacheService, appointmentService);
 
   socket.on("disconnect", (reason) => {
     console.log(

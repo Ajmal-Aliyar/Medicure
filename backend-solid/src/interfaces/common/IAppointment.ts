@@ -1,8 +1,9 @@
-import { IAppointmentStatus, IAppointmentType } from "@/models";
 import { Types } from "mongoose";
 import { DoctorCardDetails, PatientCardDetails } from "./card-details";
 import { IGender } from "./IGender";
 import { BloodGroup } from "./IBloodGroup";
+import { IAppointmentStatus, IAppointmentType } from "@/types";
+import { IMedication, TransactionStatus, TransactionType } from "@/models";
 
 
 export interface IAppointmentCreateInput {
@@ -59,6 +60,7 @@ export interface PopulatedAppointment {
         age?: number;
     }
   };
+  feedbackId: string | null;
   roomId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -66,7 +68,7 @@ export interface PopulatedAppointment {
 
 export interface PopulatedAppointmentForRoom {
   _id: Types.ObjectId;
-  appointmentDate: string;
+  appointmentDate: Date;
   startTime: string;
   endTime: string;
   status: IAppointmentStatus;
@@ -80,7 +82,7 @@ export interface PopulatedAppointmentForRoom {
       gender: IGender
     };
     professional: {
-      yearOfExperience: number;
+      yearsOfExperience: number;
       specialization: string;
     };
     rating: {
@@ -99,6 +101,7 @@ export interface PopulatedAppointmentForRoom {
       bloodGroup: BloodGroup;
     };
   };
+  feedbackId: string | null;
   transactionId: string;
   roomId: string;
   createdAt: Date;
@@ -108,7 +111,7 @@ export interface PopulatedAppointmentForRoom {
 
 export interface AppointmentDetailsPopulated {
   id: string;
-  appointmentDate: string;
+  appointmentDate: Date;
   startTime: string;
   endTime: string;
   status: IAppointmentStatus;
@@ -117,4 +120,43 @@ export interface AppointmentDetailsPopulated {
   patient: PatientCardDetails;
   roomId: string;
   transactionId: string;
+  feedbackId: string | null;
 }
+
+
+
+export type AppointmentPageDetails = {
+  id: string;
+  appointmentDate: Date;
+  startTime: string;
+  endTime: string;
+  status: IAppointmentStatus; 
+  appointmentType: IAppointmentType; 
+  roomId: string;
+  createdAt: Date;
+
+  doctor: DoctorCardDetails;
+  patient: PatientCardDetails;
+
+  transaction: {
+    transactionId: string;
+    amount: number;
+    status: TransactionStatus;
+    type: TransactionType;
+    createdAt: Date;
+  };
+
+  prescription?: {
+    id: string;
+    prescriptionNumber: string;
+    diagnosis: string[];
+    symptoms: string[];
+    medications: IMedication[];
+    notes?: string;
+    issuedDate: Date;
+    validUntil: Date;
+    followUpRequired: boolean;
+    followUpDate: Date | null;
+    allergies: string[];
+  };
+};

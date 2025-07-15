@@ -34,7 +34,7 @@ export class PatientAppointmentController
         parsedQuery,
         pagination
       );
-    const meta = buildPaginationMeta(total, pagination.limit);
+    const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(
       res,
       HTTP_STATUS.OK,

@@ -7,6 +7,7 @@ bookAppointment(params: {
     patientId: string;
     doctorId: string;
     appointmentId: string;
+    transactionId: string;
     amount: number;
   }): Promise<ITransaction>
   getTransactionHistory(ownerId: string, ownerType: IRole, pagination: IPagination): Promise<{ transactions: TransactionDetails[], total: number }>

@@ -23,7 +23,7 @@ export class DoctorSlotController implements IDoctorSlotController {
     const { id, role } = req.user;
 
     const { slots, total } = await this.slotService.getSlots( id, role, parsedQuery, pagination);
-     const meta = buildPaginationMeta(total, pagination.limit);
+     const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(res, HTTP_STATUS.OK, SLOT_MESSAGES.SLOT_FETCHED, slots, meta);
   };  
 

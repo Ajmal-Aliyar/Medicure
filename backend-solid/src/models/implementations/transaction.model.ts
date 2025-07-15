@@ -30,6 +30,10 @@ const TransactionSchema = new Schema<ITransaction>(
       enum: ["pending", "success", "failed"],
       default: "pending",
     },
+    transactionId: {
+      type: String,
+      required: true
+    },
     appointmentId: {
       type: Schema.Types.ObjectId,
       ref: "Appointment",
