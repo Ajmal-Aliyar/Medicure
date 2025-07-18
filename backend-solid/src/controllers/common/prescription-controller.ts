@@ -27,4 +27,17 @@ export class PrescriptionController
       prescription
     );
   };
+
+  viewPrescription = async (req: Request, res: Response): Promise<void> => {
+    const { id, role } = req.user;
+    const { prescriptionId } = req.params
+    const prescription =
+      await this.prescriptionService.viewPrescriptionForDownload( id, role, prescriptionId);
+    successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "Prescription details fetched succesfully.",
+      prescription
+    );
+  };
 }

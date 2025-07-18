@@ -13,6 +13,7 @@ export const createPrescriptionRouter = (): Router => {
     );
 
     router.get('/:prescriptionId', asyncHandler(prescriptionController.getPrescription))
+    router.get('/view/:prescriptionId', asyncHandler(prescriptionController.viewPrescription))
 
   return router;
 };

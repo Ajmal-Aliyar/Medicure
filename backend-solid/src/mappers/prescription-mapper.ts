@@ -1,4 +1,4 @@
-import { FrontendPrescriptionPayload } from "@/interfaces/common/Prescription";
+import { FrontendPrescriptionPayload, PrescriptionFullDetails, ViewPrescription } from "@/interfaces/common/Prescription";
 import { IPrescription } from "@/models";
 import { Types } from "mongoose";
 
@@ -23,5 +23,27 @@ export class PrescriptionMapper {
           : undefined,
       allergies: payload.allergies,
     };
+  }
+
+  static mapToViewPrescription(data: PrescriptionFullDetails): ViewPrescription {
+    const { _id, doctorId, patientId, appointmentId, ...prescription } = data
+    return {
+        ...prescription,
+        id: data._id.toString(),
+        appointment: {
+            ...data.appointmentId
+        },
+        doctor: {
+            ...data.doctorId
+        },
+        patient: {
+            ...data.patientId
+        },
+        notes: data.notes || '',
+        allergies: data.allergies || [],
+        diagnosis: data.diagnosis || [],
+        symptoms: data.symptoms || [],
+        followUpDate: data.followUpDate || null
+    }
   }
 }
