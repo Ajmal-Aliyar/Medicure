@@ -14,7 +14,7 @@ export class PatientSlotService implements IPatientSlotService {
 
     async getDoctorSlotsForBooking(doctorId: string, date: string, pagination: IPagination): Promise<{ slots: PublicSlotDetails[], total: number; }> {
        ensureTodayOrFuture(date);
-        const { data, total } = await this.slotRepo.findAll({filter: {doctorId : new Types.ObjectId(doctorId), date}, ...pagination})
+        const { data, total } = await this.slotRepo.findAll({filter: {doctorId : new Types.ObjectId(doctorId), isActive: true, date}, sort: { createdAt: 1 }, ...pagination})
         const slots = SlotMapper.toPublicSlotDetails(data) 
         return { slots, total }
     } 

@@ -3,3 +3,4 @@ export * from './doctor';
 export * from './admin';
 
 export * from './appointment-validator';
+export * from './feedback-validator';

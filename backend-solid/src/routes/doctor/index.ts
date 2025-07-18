@@ -5,6 +5,8 @@ import { createDoctorSlotRouter } from "./slot-route";
 import { authenticateAccessToken, authorizeRoles } from "@/middlewares";
 import { createTransactionRoute } from "./transaction-route";
 import { createAppointmentRouter } from "./appointment-route";
+import { createFeedbackRouter } from "./feedback-route";
+import { createPrescriptionRouter } from "./prescription-route";
 
 
 export const createDoctorRouter = () => {
@@ -15,6 +17,8 @@ export const createDoctorRouter = () => {
     router.use("/slot", createDoctorSlotRouter());
     router.use("/appointment", createAppointmentRouter());
     router.use("/transaction", createTransactionRoute());
+    router.use("/feedback", createFeedbackRouter())
+    router.use("/prescription", createPrescriptionRouter())
     return router
 }
 

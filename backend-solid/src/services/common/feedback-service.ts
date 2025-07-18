@@ -3,7 +3,8 @@ import { IFeedbackService } from "../interfaces"
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
 import { IFeedbackRepository } from "@/repositories";
-import { IPagination, } from "@/interfaces";
+import { FeedbackDetails, IPagination, IRole, } from "@/interfaces";
+import { FeedbackMapper } from "@/mappers/feedbackMapper";
 
 @injectable()
 export class FeedbackService implements IFeedbackService {
@@ -17,11 +18,15 @@ export class FeedbackService implements IFeedbackService {
   async getFeedbacksByDoctorId(
      doctorId: string,
       pagination: IPagination
-    ): Promise<{ data: IFeedback[]; total: number }> {
-      const { data, total } = await this.feedbackRepo.findAll({
-        filter: { doctorId },
-        ...pagination,
-      });
-      return { data, total };
+    ): Promise<{ data: FeedbackDetails[]; total: number }> {
+      const { feedbacks, total } = await this.feedbackRepo.getFeedbackDetailsPopulated({
+            filter:  { doctorId },
+            sort:  {createdAt: -1},
+            ...pagination
+          });
+      const mappedFeedbacks =
+                FeedbackMapper.toFeedbackDetailsByRole(feedbacks, 'doctor');
+      return { data: mappedFeedbacks, total };
     }
+
 }

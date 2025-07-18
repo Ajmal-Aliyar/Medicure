@@ -1,4 +1,4 @@
-import { IPagination } from "@/interfaces";
+import { FeedbackDetails, IPagination } from "@/interfaces";
 import { IFeedback } from "@/models";
 
 export interface IFeedbackService {
@@ -6,5 +6,5 @@ export interface IFeedbackService {
     getFeedbacksByDoctorId(
          doctorId: string,
           pagination: IPagination
-        ): Promise<{ data: IFeedback[]; total: number }>
+        ): Promise<{ data: FeedbackDetails[]; total: number }>
 }

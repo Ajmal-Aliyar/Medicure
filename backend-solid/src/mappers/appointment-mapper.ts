@@ -25,6 +25,7 @@ export class AppointmentMapper {
         age: a.patientId.personal.age,
       },
       feedbackId: a.feedbackId || null,
+      prescriptionId: a.prescriptionId || null,
       roomId: a.roomId
     }));
 
@@ -113,11 +114,9 @@ static toAppointmentPopulated(rawAppointments: PopulatedAppointmentForRoom): App
     prescription: prescription
       ? {
           id: '',
-          prescriptionNumber: prescription.prescriptionNumber,
           diagnosis: prescription.diagnosis,
           symptoms: prescription.symptoms,
           medications: prescription.medications.map((med: IMedication) => ({
-            medicineId: med.medicineId,
             medicineName: med.medicineName,
             dosage: med.dosage,
             frequency: med.frequency,

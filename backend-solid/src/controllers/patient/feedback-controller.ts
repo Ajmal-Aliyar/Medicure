@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
 import { Request, Response } from "express";
-import { successResponse } from "@/utils";
+import { buildPaginationMeta, getPaginationParams, successResponse } from "@/utils";
 import { HTTP_STATUS } from "@/constants";
 import { IPatientFeedbackController } from "../interfaces";
 import { IPatientFeedbackService } from "@/services";
@@ -21,5 +21,19 @@ export class PatientFeedbackController implements IPatientFeedbackController {
     await this.patientFeedbackService.submitFeedback(appointmentId, patientId, { rating, comment });
     successResponse(res, HTTP_STATUS.CREATED, "Feedback submitted successfully");
   };
+
+  getFeedbacksByPatientId = async (req: Request, res: Response): Promise<void> => {
+    const { id, role } = req.user;
+    const pagination = getPaginationParams(req);
+    const {feedbacks, total} = await this.patientFeedbackService.getFeedbacksByPatientId(id, role, pagination)
+    const meta = buildPaginationMeta(total, pagination.skip);
+     successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "Feedback details fetched successfully.",
+      feedbacks,
+      meta
+    );
+  }
 
 }

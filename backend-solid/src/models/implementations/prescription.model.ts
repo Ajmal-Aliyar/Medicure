@@ -2,10 +2,6 @@ import { model, Schema } from "mongoose";
 import { IMedication, IPrescription } from "../interfaces";
 
 const medicationSchema = new Schema<IMedication>({
-  medicineId: {
-    type: String,
-    default: null
-  },
   medicineName: {
     type: String,
     required: [true, "Medicine name is required"],
@@ -59,13 +55,6 @@ const medicationSchema = new Schema<IMedication>({
 
 const prescriptionSchema = new Schema<IPrescription>(
   {
-    prescriptionNumber: {
-      type: String,
-      required: [true, "Prescription number is required"],
-      unique: true,
-      trim: true,
-      uppercase: true
-    },
     doctorId: {
       type: Schema.Types.ObjectId,
       ref: "Doctor",

@@ -1,5 +1,5 @@
 import { TYPES } from "@/di/types";
-import { IAppointmentRepository, ISlotRepository } from "@/repositories";
+import { IAppointmentRepository, IPrescriptionRepository, ISlotRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IPatientAppointmentService, ISlotService, ITransactionService, IWalletService } from "../interfaces";
 import { IAppointmentCreateInput } from "@/interfaces";
@@ -21,7 +21,7 @@ export class PatientAppointmentService implements IPatientAppointmentService {
     @inject(TYPES.WalletService)
     private readonly walletService: IWalletService,
     @inject(TYPES.SlotService)
-    private readonly slotService: ISlotService
+    private readonly slotService: ISlotService,
   ) {}
 
   async bookAppointment({

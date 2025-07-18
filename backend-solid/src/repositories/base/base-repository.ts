@@ -24,14 +24,12 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     filter = {},
     skip = 0,
     limit = 10,
-    sort = { createdAt: -1 },
+    sort = { createdAt: 1 },
   }: FindAllOptions<T> = {}): Promise<{ data: T[]; total: number }> {
-    console.log(skip, limit, 'skip & limit')
     const [data, total] = await Promise.all([
       this.model.find(filter).skip(skip).limit(limit).sort(sort),
       this.model.countDocuments(filter),
     ]);
-    console.log(data.length, total, 'length & total')
     return { data, total };
   }
 

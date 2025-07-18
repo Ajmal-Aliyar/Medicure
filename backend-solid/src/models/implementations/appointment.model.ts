@@ -80,9 +80,9 @@ const appointmentSchema = new Schema<IAppointment>(
       ref: "Feedback",
       default: null,
     },
-    recordId: {
+    prescriptionId: {
       type: Schema.Types.ObjectId,
-      ref: "MedicalRecord",
+      ref: "Prescription",
       default: null,
     },
     notes: {

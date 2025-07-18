@@ -5,8 +5,8 @@ import { NotFoundError, BadRequestError } from "@/errors";
 import { Types } from "mongoose";
 import { IPatientFeedbackService } from "../interfaces";
 import { SubmitFeedbackDTO } from "@/dtos";
-import { IFeedback } from "@/models";
-import { IPagination } from "@/interfaces";
+import { FeedbackDetails, IPagination, IRole } from "@/interfaces";
+import { FeedbackMapper } from "@/mappers/feedbackMapper";
 
 @injectable()
 export class PatientFeedbackService implements IPatientFeedbackService {
@@ -46,13 +46,20 @@ export class PatientFeedbackService implements IPatientFeedbackService {
   }
 
   async getFeedbacksByPatientId(
-    patientId: string,
-    pagination: IPagination
-  ): Promise<{ data: IFeedback[]; total: number }> {
-    const { data, total } = await this.feedbackRepo.findAll({
-      filter: { patientId },
-      ...pagination,
-    });
-    return { data, total };
-  }
+        patientId: string,
+        role: IRole,
+        { skip = 0, limit = 6 }: IPagination
+      ): Promise<{ feedbacks: FeedbackDetails[]; total: number }> {
+        const filter = {patientId};
+        const { feedbacks, total } =
+          await this.feedbackRepo.getFeedbackDetailsPopulated({
+            filter,
+            skip,
+            limit,
+            sort: { appointmentDate: 1, startTime: 1 },
+          });
+        const mappedFeedbacks =
+          FeedbackMapper.toFeedbackDetailsByRole(feedbacks, role);
+        return { feedbacks: mappedFeedbacks, total };
+      }
 }

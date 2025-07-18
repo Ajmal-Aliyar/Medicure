@@ -4,3 +4,4 @@ export * from './payment-controller';
 export * from './transaction-controller';
 export * from './appointment-controller';
 export * from './feedback-controller';
+export * from './prescription-controller';

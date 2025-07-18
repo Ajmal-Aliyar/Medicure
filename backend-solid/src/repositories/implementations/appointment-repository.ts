@@ -51,5 +51,4 @@ export class AppointmentRepository
         .populate("patientId", "personal.fullName personal.profileImage personal.dob personal.bloodGroup personal.gender personal.mobile")
         .lean<PopulatedAppointmentForRoom>()
   }
-
 }

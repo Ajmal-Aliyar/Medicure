@@ -61,6 +61,7 @@ export interface PopulatedAppointment {
     }
   };
   feedbackId: string | null;
+  prescriptionId: string | null;
   roomId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -148,7 +149,6 @@ export type AppointmentPageDetails = {
 
   prescription?: {
     id: string;
-    prescriptionNumber: string;
     diagnosis: string[];
     symptoms: string[];
     medications: IMedication[];

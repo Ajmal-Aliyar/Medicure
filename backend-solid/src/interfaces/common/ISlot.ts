@@ -37,3 +37,5 @@ export interface ISlotDetails {
     bookedAt?: Date;
   };
 }
+
+export interface SlotChartData {date: string, totalSlots: number, bookedSlots: number}

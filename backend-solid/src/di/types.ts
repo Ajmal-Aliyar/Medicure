@@ -17,6 +17,16 @@ export const TYPES = {
   FeedbackService: Symbol.for("FeedbackService"),
   FeedbackController: Symbol.for("FeedbackController"),
   PatientFeedbackController: Symbol.for("PatientFeedbackController"),
+
+  
+  //Presciption
+  PrescriptionRepository: Symbol.for("PrescriptionRepository"),
+  DoctorPrescriptionService: Symbol.for("DoctorPrescriptionService"),
+  PrescriptionService: Symbol.for("PrescriptionService"),
+  PrescriptionController: Symbol.for("PrescriptionController"),
+  DoctorPrescriptionController: Symbol.for("DoctorPrescriptionController"),
+
+
   
   //Admin
   AdminDoctorController: Symbol.for("AdminDoctorController"),
@@ -45,7 +55,6 @@ export const TYPES = {
   AdminRepository: Symbol.for("AdminRepository"),
   SlotRepository: Symbol.for("SlotRepository"),
   SpecializationRepository: Symbol.for("SpecializationRepository"),
-  PrescriptionRepository: Symbol.for("PrescriptionRepository"),
   
   //Public
   AuthController: Symbol.for("AuthController"),

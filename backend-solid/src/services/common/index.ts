@@ -6,3 +6,4 @@ export * from './appointment-service';
 export * from './transaction-service';
 export * from './wallet-service';
 export * from './feedback-service';
+export * from './prescription-service';

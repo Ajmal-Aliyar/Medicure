@@ -1,4 +1,4 @@
-import { FilterQuery, UpdateQuery } from "mongoose";
+import { FilterQuery } from "mongoose";
 
 export interface IBaseRepository<T> {
   findById(id: string): Promise<T | null>;
