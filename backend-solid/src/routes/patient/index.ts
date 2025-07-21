@@ -7,6 +7,8 @@ import { createAppointmentRoute } from "./appointment";
 import { createTransactionRoute } from "./transaction";
 import { createFeedbackRoute } from "./feedback";
 import { createPrescriptionRouter } from "./prescription";
+import { createMedicalRecordRouter } from "./medical-record";
+import { createConnectionRequestRoute } from "./connection-request";
 ;
 
 
@@ -21,7 +23,8 @@ export const createPatientRouter = () => {
     router.use("/transaction", createTransactionRoute())
     router.use("/feedback", createFeedbackRoute())
     router.use("/prescription", createPrescriptionRouter())
-
+    router.use("/medical-record", createMedicalRecordRouter())
+    router.use("/connection/request", createConnectionRequestRoute())
     return router
 }
 

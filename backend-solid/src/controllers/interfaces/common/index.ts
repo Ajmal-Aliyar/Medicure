@@ -6,3 +6,4 @@ export * from './i-appointment-controller';
 export * from './i-wallet-controller';
 export * from './i-feedback-controller';
 export * from './i-prescription-controller';
+export * from './i-connection-request-controller';

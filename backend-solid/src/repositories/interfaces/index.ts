@@ -10,3 +10,7 @@ export * from './i-specialization-repository';
 export * from './i-transaction-repository';
 export * from './i-wallet-repository';
 export * from './i-feedback-repository';
+export * from './i-medical-record-repository';
+export * from './i-connection-request-repository';
+export * from './i-conversation-repository';
+export * from './i-message-repository';

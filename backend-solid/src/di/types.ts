@@ -1,3 +1,4 @@
+
 export const TYPES = {
   //Appointment
   AppointmentRepository: Symbol.for("AppointmentRepository"),
@@ -27,7 +28,32 @@ export const TYPES = {
   DoctorPrescriptionController: Symbol.for("DoctorPrescriptionController"),
 
 
+  //medical records
+  MedicalRecordRepository: Symbol.for("MedicalRecordRepository"),
+  DoctorMedicalRecordService: Symbol.for("DoctorMedicalRecordService"),
+  PatientMedicalRecordService: Symbol.for("PatientMedicalRecordService"),
+  PatientMedicalRecordController: Symbol.for("PatientMedicalRecordController"),
+  DoctorMedicalRecordController: Symbol.for("DoctorMedicalRecordController"),
   
+  
+  //Connection request
+  ConnectionRequestRepository: Symbol.for("ConnectionRequestRepository"),
+  ConnectionRequestService: Symbol.for("ConnectionRequestService"),
+  ConnectionRequestController: Symbol.for("ConnectionRequestController"),
+
+
+  //Conversation
+  ConversationRepository: Symbol.for("ConversationRepository"),
+  ConversationService: Symbol.for("ConversationService"),
+
+
+  //Message
+  MessageRepository: Symbol.for("MessageRepository"),
+
+
+
+
+
   //Admin
   AdminDoctorController: Symbol.for("AdminDoctorController"),
   AdminDoctorService: Symbol.for("AdminDoctorService"),

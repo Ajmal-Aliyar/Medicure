@@ -8,3 +8,7 @@ export * from './appointment-repository';
 export * from './transaction-repository';
 export * from './prescription-repository';
 export * from './feedback-repository';
+export * from './medical-record-repository';
+export * from './connection-request-repository';
+export * from './conversation-repository';
+export * from './message-repository';

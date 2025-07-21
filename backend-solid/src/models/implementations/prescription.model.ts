@@ -11,12 +11,6 @@ const medicationSchema = new Schema<IMedication>({
     type: String,
     required: [true, "Dosage is required"],
     trim: true,
-    validate: {
-      validator: function(dosage: string) {
-        return /^\d+(\.\d+)?\s*(mg|ml|g|mcg|units?|tablets?|capsules?)$/i.test(dosage);
-      },
-      message: "Dosage must include quantity and unit (e.g., 500mg, 10ml)"
-    }
   },
   frequency: {
     type: String,

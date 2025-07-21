@@ -7,3 +7,6 @@ export * from './i-transaction-service';
 export * from './i-wallet-service';
 export * from './i-feedback-service';
 export * from './i-prescription-service';
+export * from './i-medical-record-service';
+export * from './i-connection-request-service';
+export * from './i-conversation-service';

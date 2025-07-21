@@ -10,3 +10,7 @@ export * from './specialization.model';
 export * from './transaction.model';
 export * from './withdraw.model';
 export * from './wallet.model';
+export * from './medical-record.model';
+export * from './connection-request.model';
+export * from './conversation.model';
+export * from './message.model';

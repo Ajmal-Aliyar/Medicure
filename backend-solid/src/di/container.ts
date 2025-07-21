@@ -3,8 +3,11 @@ import {
   bindAdminModule,
   bindAppointmentModule,
   bindAuthModule,
+  bindConnectionRequestModule,
+  bindConversationModule,
   bindDoctorModule,
   bindFeedbackModule,
+  bindMedicalRecordModule,
   bindPatientModule,
   bindPaymentModule,
   bindPrescriptionModule,
@@ -30,9 +33,12 @@ const startContainer =  () => {
    bindPaymentModule(container);
    bindAppointmentModule(container);
    bindTransactionModule(container);
-   bindWalletModule(container)
-   bindPrescriptionModule(container)
-   bindFeedbackModule(container)
+   bindWalletModule(container);
+   bindPrescriptionModule(container);
+   bindFeedbackModule(container);
+   bindMedicalRecordModule(container);
+   bindConnectionRequestModule(container);
+   bindConversationModule(container);
 };
 
 const getContainer = (): Container => {

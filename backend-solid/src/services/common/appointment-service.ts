@@ -13,7 +13,6 @@ import { IAppointmentRepository, IPrescriptionRepository, ITransactionRepository
 import { Types } from "mongoose";
 import { FilterAppointmentQuery } from "@/validators";
 import { NotFoundError, UnauthorizedError } from "@/errors";
-import { IAppointment } from "@/models";
 
 @injectable()
 export class AppointmentService implements IAppointmentService {

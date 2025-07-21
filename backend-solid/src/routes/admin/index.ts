@@ -4,6 +4,7 @@ import { createAppointmentRouter } from "./appointment-route";
 import { authenticateAccessToken, authorizeRoles } from "@/middlewares";
 import { createAdminSlotRouter } from "./slot-route";
 import { createTransactionRoute } from "./transaction-route";
+import { createConnectionRequestRoute } from "./connection-request";
 
 
 
@@ -15,6 +16,7 @@ export const createAdminRouter = () => {
     router.use("/appointment", createAppointmentRouter());
     router.use("/slot", createAdminSlotRouter());
     router.use("/transaction", createTransactionRoute());
+    router.use("/connection/request", createConnectionRequestRoute());
     return router
 }
 

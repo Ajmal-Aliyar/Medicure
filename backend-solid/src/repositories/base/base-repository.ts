@@ -23,7 +23,7 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
   async findAll({
     filter = {},
     skip = 0,
-    limit = 10,
+    limit = 12,
     sort = { createdAt: 1 },
   }: FindAllOptions<T> = {}): Promise<{ data: T[]; total: number }> {
     const [data, total] = await Promise.all([

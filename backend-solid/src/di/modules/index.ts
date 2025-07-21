@@ -12,3 +12,6 @@ export * from './prescription-module';
 export * from './transaction-module';
 export * from './wallet-module';
 export * from './feedback-module';
+export * from './medical-record-module';
+export * from './connection-request-module';
+export * from './conversation-module';

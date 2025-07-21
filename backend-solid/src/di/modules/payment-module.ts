@@ -1,7 +1,6 @@
 import { Container } from "inversify";
 import { TYPES } from "../types";
-import { IPaymentService } from "@/services";
-import { PaymentService } from "@/services/common/payment-service";
+import { IPaymentService, PaymentService } from "@/services";
 import { IPaymentController, PaymentController } from "@/controllers";
 
 
