@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import type { MetaType } from "@/types/common";
-import type { IConnectionRequest, IConnectionRequestService } from "@/types/connection-request";
+import type { ConnectionRequestListDetails, IConnectionRequest, IConnectionRequestService } from "@/types/connection-request";
 
 const BASE_URL = "/api/patient/connection/request";
 
@@ -9,8 +9,8 @@ export interface IPatientConnectionRequestService extends IConnectionRequestServ
 }
 
 export const patientConnectionRequestService: IPatientConnectionRequestService = {
-  getRequests: async (page: number): Promise<{ data: IConnectionRequest[], meta: MetaType}> => {
-    const response = await api.get<{ data: IConnectionRequest[],  meta: MetaType}>(
+  getRequests: async (page: number): Promise<{ data: ConnectionRequestListDetails[], meta: MetaType}> => {
+    const response = await api.get<{ data: ConnectionRequestListDetails[],  meta: MetaType}>(
       `${BASE_URL}?page=${page}`
     );
     return response.data;

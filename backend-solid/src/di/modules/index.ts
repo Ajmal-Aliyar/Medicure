@@ -15,3 +15,4 @@ export * from './feedback-module';
 export * from './medical-record-module';
 export * from './connection-request-module';
 export * from './conversation-module';
+export * from './message-module';

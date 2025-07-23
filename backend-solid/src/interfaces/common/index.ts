@@ -7,3 +7,4 @@ export * from './ISlot';
 export * from './IAppointment';
 export * from './ITransaction';
 export * from './IFeedback';
+export * from './IConnectionRequests';

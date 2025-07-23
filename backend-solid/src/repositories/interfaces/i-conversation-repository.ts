@@ -1,4 +1,6 @@
 import { IConversation } from "@/models";
-import { IBaseRepository } from "./i-base-repository";
+import { FindAllOptions, IBaseRepository } from "./i-base-repository";
 
-export interface IConversationRepository extends IBaseRepository<IConversation> {}
+export interface IConversationRepository extends IBaseRepository<IConversation> {
+    getConversactionsOfUser(options: FindAllOptions<IConversation>): Promise<{ data: any[]; total: number }>
+}

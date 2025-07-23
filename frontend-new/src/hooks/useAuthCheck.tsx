@@ -3,6 +3,7 @@ import { authService } from "@/services/api/public/auth";
 import { loginSuccess, logout } from "@/slices/authSlice";
 import socket from "@/sockets";
 import { registerConsultationHandlers } from "@/sockets/handlers/consultation-handler";
+import { registerChatHandlers } from "@/sockets/handlers/message.handler";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -27,6 +28,7 @@ export const useAuthCheck = () => {
 
                     socket.connect()
                     registerConsultationHandlers()
+                    registerChatHandlers()
                 } else {
                     dispatch(logout())
                 }

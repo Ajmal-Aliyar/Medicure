@@ -21,7 +21,7 @@ export const createPrescriptionRouter = (): Router => {
 
   router
     .route("/")
-    .post( validateRequest(prescriptionSchema), asyncHandler(doctorPrescriptionController.createPrescription))
+    .post(validateRequest(prescriptionSchema), asyncHandler(doctorPrescriptionController.createPrescription))
     .put(asyncHandler(doctorPrescriptionController.updatePrescription));
 
     router.get('/:prescriptionId', asyncHandler(prescriptionController.getPrescription))

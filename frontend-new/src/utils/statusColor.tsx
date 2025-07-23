@@ -4,11 +4,15 @@ export function statusColor(status: string): string {
             return "yellow";
         case "completed":
             return "green";
+        case "accepted":
+            return "green";
         case "success":
             return "green";
         case "failed":
             return "red";
         case "cancelled":
+            return "red";
+        case "rejected":
             return "red";
         case "no show":
             return "orange";

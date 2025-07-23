@@ -11,7 +11,8 @@ export const createConnectionRequestRoute = (): Router => {
   const container: Container = getContainer();
   const connectionRequest = container.get<IConnectionRequestController>(TYPES.ConnectionRequestController);
 
-  router.patch('/approve', asyncHandler(connectionRequest.approveRequest))
+  router.patch('/approve/:requestId', asyncHandler(connectionRequest.approveRequest))
+  router.get('/', asyncHandler(connectionRequest.getConnectionRequests))
 
  
   return router;

@@ -45,11 +45,12 @@ export const TYPES = {
   //Conversation
   ConversationRepository: Symbol.for("ConversationRepository"),
   ConversationService: Symbol.for("ConversationService"),
+  ConversationController: Symbol.for("ConversationController"),
 
 
   //Message
   MessageRepository: Symbol.for("MessageRepository"),
-
+  MessageService: Symbol.for("MessageService"),
 
 
 

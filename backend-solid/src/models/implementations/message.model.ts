@@ -30,7 +30,6 @@ const MessageSchema = new Schema<IMessage>(
     seenBy: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
       }
     ],
   },

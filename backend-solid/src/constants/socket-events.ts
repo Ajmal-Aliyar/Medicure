@@ -5,10 +5,11 @@ export const SOCKET_EVENTS = {
   CHAT: {
     SEND_MESSAGE: "chat:send-message", 
     RECEIVE_MESSAGE: "chat:receive-message", 
-    TYPING: "chat:typing",               
-    STOP_TYPING: "chat:stop-typing",     
-    MESSAGE_SEEN: "chat:message-seen",   
-    FETCH_HISTORY: "chat:fetch-history"  
+    LAST_MESSAGE: "chat:last-message", 
+    // TYPING: "chat:typing",               
+    // STOP_TYPING: "chat:stop-typing",     
+    // MESSAGE_SEEN: "chat:message-seen",   
+    // FETCH_HISTORY: "chat:fetch-history"  
   },
 
 

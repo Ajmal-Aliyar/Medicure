@@ -11,7 +11,10 @@ export const createConnectionRequestRoute = (): Router => {
   const container: Container = getContainer();
   const connectionRequest = container.get<IConnectionRequestController>(TYPES.ConnectionRequestController);
 
-  router.post('/', asyncHandler(connectionRequest.createConnectionRequest))
+ router
+    .route("/")
+    .post(asyncHandler(connectionRequest.createConnectionRequest))
+    .get(asyncHandler(connectionRequest.getConnectionRequests));
 
  
   return router;

@@ -3,7 +3,10 @@ export const SOCKET_EVENTS = {
   DISCONNECT: "disconnect",
 
   CHAT: {
-    
+    SEND_MESSAGE: "chat:send-message",
+    RECEIVE_MESSAGE: "chat:receive-message", 
+    LAST_MESSAGE: "chat:last-message", 
+
   },
 
   CONSULT: {

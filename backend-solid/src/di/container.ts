@@ -8,6 +8,7 @@ import {
   bindDoctorModule,
   bindFeedbackModule,
   bindMedicalRecordModule,
+  bindMessageModule,
   bindPatientModule,
   bindPaymentModule,
   bindPrescriptionModule,
@@ -39,6 +40,7 @@ const startContainer =  () => {
    bindMedicalRecordModule(container);
    bindConnectionRequestModule(container);
    bindConversationModule(container);
+   bindMessageModule(container);
 };
 
 const getContainer = (): Container => {

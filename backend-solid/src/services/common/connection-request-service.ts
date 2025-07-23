@@ -8,6 +8,8 @@ import {
 import { inject, injectable } from "inversify";
 import { Types } from "mongoose";
 import { IConnectionRequestService, IConversationService } from "../interfaces";
+import { ConnectionRequestListDetails, IPagination, IRole } from "@/interfaces";
+import { ConnectionRequestMapper } from "@/mappers/connection-requests-mapper";
 
 @injectable()
 export class ConnectionRequestService implements IConnectionRequestService {
@@ -23,20 +25,20 @@ export class ConnectionRequestService implements IConnectionRequestService {
   ) {}
 
   async createRequest(
-    initiatorId: string,
-    role: string,
+    patientId: string,
+    role: IRole,
     doctorId: string
-  ): Promise<IConnectionRequest> {
+  ): Promise<void> {
+    if (role !== 'patient') throw new BadRequestError('Bad request')
     const doctor = await this.doctorRepo.findById(doctorId);
     if (!doctor) {
       throw new NotFoundError("Doctor not found");
     }
-
-    const initiatorObjectId = new Types.ObjectId(initiatorId);
+    const patientObjectId = new Types.ObjectId(patientId);
     const doctorObjectId = new Types.ObjectId(doctorId);
 
     const existing = await this.connectionRequestRepo.findOne({
-      initiatorId: initiatorObjectId,
+      patientId: patientObjectId,
       doctorId: doctorObjectId,
     });
 
@@ -45,14 +47,11 @@ export class ConnectionRequestService implements IConnectionRequestService {
     }
 
     const connectionPayload: Partial<IConnectionRequest> = {
-      initiatorId: initiatorObjectId,
+      patientId: patientObjectId,
       doctorId: doctorObjectId,
-      status: role === "admin" ? "accepted" : "pending",
     };
 
-    const request = await this.connectionRequestRepo.create(connectionPayload);
-    await this.conversactionService.createConversation(initiatorObjectId, doctorObjectId, false)
-    return request
+    await this.connectionRequestRepo.create(connectionPayload);
   }
 
   async approveRequest(doctorId: string, requestId: string): Promise<void> {
@@ -74,5 +73,29 @@ export class ConnectionRequestService implements IConnectionRequestService {
 
     connection.status = "accepted";
     await connection.save();
+    this.conversactionService.createConversation([{id: doctorId, role: 'doctor'}, {id: String(connection.patientId), role: 'patient'}], false)
+
+  }
+
+  async getConnectionRequests(
+    id: string,
+    role: IRole,
+    pagination: IPagination
+  ): Promise<{ data: ConnectionRequestListDetails[]; total: number }> {
+    const objectId = new Types.ObjectId(id);
+    const filter = {
+      ...(role === "doctor" ? { doctorId: objectId } : { patientId: objectId }),
+    };
+
+    const { requests, total } = await this.connectionRequestRepo.getAllRequests(
+      {
+        filter,
+        ...pagination,
+        sort: { createdAt: -1 },
+      }
+    );
+
+    const mappedRequests = ConnectionRequestMapper.toRequestList(requests);
+    return { data: mappedRequests, total };
   }
 }

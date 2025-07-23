@@ -1,102 +1,97 @@
-import { DEFAULT_IMAGE } from '@/app/constants';
-import type { RootState } from '@/app/store';
-import { Send } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-interface Props {
-    selectedChat: { chatId: string, profileImg: string | null, name: string };
-    setSelectedChat: React.Dispatch<React.SetStateAction<{
-    chatId: string;
-    profileImg: null;
-    name: string;
-}>>
+import type { RootState } from "@/app/store";
+import socket from "@/sockets";
+import { SOCKET_EVENTS } from "@/types/socket";
+import { formatTo12HourTime } from "@/utils/formatDate";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+interface Message {
+    conversationId: string;
+    senderId: string;
+    text: string;
+    timestamp: Date;
+    senderName: string
 }
-const ChatWindow = ({selectedChat, setSelectedChat}: Props) => {
-    const [message, setMessage] = useState('');
-    const {user} = useSelector((state: RootState) => state.auth)
-    const dispatch = useDispatch()
-
-    const bottomRef = useRef<HTMLDivElement | null>(null);
+interface Props {
+    senderId: string;
+    senderName: string;
+}
+const ChatWindow = ({ senderId, senderName }: Props) => {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [newMessage, setNewMessage] = useState<string>("");
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const { chat } = useSelector((state: RootState) => state.chat)
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-        const MarkAsRead = async (chatId: string) => {
-            // await markAsReadApi(chatId)
+        const handleReceiveMessage = ({ message }: { message: Message }) => {
+            setMessages((prev) => [...prev, message]);
+        };
+
+        const fetchMessages = async () => {
+            
         }
-        selectedChat?.chatId && MarkAsRead(selectedChat.chatId)
-    }, [selectedChat]);
 
-    if (!selectedChat)
-        return (
-            <div className="flex-grow flex flex-col h-full bg-white justify-center items-center">
-                <div className="max-w-md p-6 text-center">
-                    <h2 className="text-2xl font-bold text-gray-800">Welcome to the Chat Section</h2>
-                    <p className="mt-2 text-gray-600">
-                        Select a conversation from the sidebar to start chatting. 🚀
-                    </p>
-                </div>
-            </div>
-        );
+        socket.on(SOCKET_EVENTS.CHAT.RECEIVE_MESSAGE, handleReceiveMessage);
+        fetchMessages()
+        return () => {
+            socket.off(SOCKET_EVENTS.CHAT.RECEIVE_MESSAGE, handleReceiveMessage);
+        };
+    }, [])
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+
+    const sendMessage = () => {
+        if (!newMessage.trim()) return;
+        const message: Message = {
+            conversationId: chat?._id as string,
+            senderId,
+            text: newMessage,
+            timestamp: new Date(),
+            senderName: chat?.isGroup ? chat.name as string : senderName
+        };
+
+        const participants = chat?.members.map(participant => participant.id);
 
 
-    const sendMessage = async () => {
-        if (message.trim()) {
-            // await sendMessageApi(message, user?.id, selectedChat.chatId);
-            // dispatch(addMessage({ _id: '', content: message, senderId: userId, chatId: selectedChat.chatId }));
-            setMessage('');
-        }
+        socket.emit(SOCKET_EVENTS.CHAT.SEND_MESSAGE, {
+            senderId, participants, message
+        });
+
+        setMessages((prev) => [...prev, message]);
+        setNewMessage("");
     };
     return (
-        <div className="flex-grow flex flex-col h-full">
-
-            <div className="p-4 bg-white flex justify-between items-center border-b border-gray-300 h-[80px]">
-                <div className="flex items-center">
-                    <div className="mr-4 flex">
-                        <img src={selectedChat.profileImg || DEFAULT_IMAGE} className='max-w-[40px] rounded-full border-2 border-gray-400' />
-                    </div>
-                    <div>
-                        <h2 className="font-semibold">{selectedChat?.name}</h2>
-                        <p className="text-xs text-gray-500">Online</p>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex-grow bg-gray-100 p-4 overflow-y-auto">
-                {/* {selectedChat.messages.map((msg) => (
-                    <div
-                        key={msg._id}
-                        className={`flex mb-4 ${msg.senderId === userId ? "justify-end" : "justify-start"}`}
-                    >
-                        {msg.senderId !== userId && (
-                            <img src={selectedChat.profileImage} className="max-w-[30px] rounded-full mr-2" alt="" />
-                        )}
-                        <div
-                            className={`px-3 py-1  rounded-xl max-w-md h-fit ${msg.senderId === userId ? "bg-[#93cdf990] text-right rounded-br-none" : "bg-white text-left rounded-bl-none "
-                                }`}
-                        >
-                            {msg.content}
+        <div className="col-span-3 flex flex-col bg-background">
+            {chat ? <>
+                <div className="flex-1 p-4 overflow-y-auto">
+                    {messages.map((msg, idx) => (
+                        <div key={idx} className={`mb-2 w-fit max-w-xs px-4 py-2 rounded-lg text-sm ${msg.senderId === senderId ? "bg-primary-light ml-auto" : "bg-white "} text-secondary`}>
+                            <p>{msg.text}</p>
+                            <p className="text-[10px] text-muted-dark mt-1 text-right">
+                                {formatTo12HourTime(new Date(msg.timestamp))}
+                            </p>
                         </div>
-                    </div>
-                ))} */}
-                <div ref={bottomRef} />
-            </div>
-
-            <div className="p-4 bg-white flex items-center space-x-4">
-                <input
-                    placeholder="Type a message"
-                    className="flex-grow outline-none"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                />
-                <button
-                    className="text-[#51aff6]"
-                    onClick={sendMessage}
-                >
-                    <Send />
-                </button>
-            </div>
+                    ))}
+                    <div ref={messagesEndRef} />
+                </div>
+                <div className="p-4 border-t border-border flex gap-2 bg-white">
+                    <input
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                        className="flex-1 px-4 py-2 border border-border rounded-full text-sm focus:outline-none"
+                        placeholder="Type your message..."
+                    />
+                    <button
+                        onClick={sendMessage}
+                        className="px-4 py-2 bg-primary text-white rounded-full text-sm"
+                    >
+                        Send
+                    </button>
+                </div></> : <div>
+                no chat selected
+            </div>}
         </div>
     )
 }

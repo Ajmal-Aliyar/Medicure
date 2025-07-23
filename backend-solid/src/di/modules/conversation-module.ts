@@ -5,17 +5,15 @@ import {
     ConversationService,
   IConversationService,
 } from "@/services";
-// import {
-//   ConversationController,
-//   IConversationController,
-// } from "@/controllers";
+import { ConversationController, IConversationController } from "@/controllers";
+
 
 export const bindConversationModule = async (container: Container) => {
   container
     .bind<IConversationRepository>(TYPES.ConversationRepository)
     .to(ConversationRepository);
   container.bind<IConversationService>(TYPES.ConversationService).to(ConversationService);
-//   container
-//     .bind<IConversationController>(TYPES.ConversationController)
-//     .to(ConversationController);
+  container
+    .bind<IConversationController>(TYPES.ConversationController)
+    .to(ConversationController);
 };

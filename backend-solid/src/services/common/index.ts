@@ -9,3 +9,4 @@ export * from './feedback-service';
 export * from './prescription-service';
 export * from './connection-request-service';
 export * from './conversation-service';
+export * from './message-service';

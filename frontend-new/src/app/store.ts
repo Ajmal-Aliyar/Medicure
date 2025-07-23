@@ -5,6 +5,7 @@ import globalReducer from '@/slices/globalSlice';
 import doctorReducer from '@/slices/doctorSlice';
 import patientReducer from '@/slices/patientSlice';
 import consultationReducer from '@/slices/consultationSlice';
+import chatSliceReducer from '@/slices/chatSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
     global: globalReducer,
     doctor: doctorReducer,
     patient: patientReducer,
-    consultation: consultationReducer
+    consultation: consultationReducer,
+    chat: chatSliceReducer,
   },
 });
 

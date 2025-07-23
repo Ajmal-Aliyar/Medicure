@@ -35,7 +35,7 @@ const id = useSelector((state: RootState) => state.auth.user?.id);
         { icon: <LayoutDashboard strokeWidth={3} />, label: 'Dashboard', path: '/doctor/dashboard' },
         { icon: <ClipboardPlus strokeWidth={3}/>, label: 'Appointments', path: '/doctor/appointments' },
         { icon: <Calendar strokeWidth={3}/>, label: 'Slots', path: '/doctor/slots' },
-        { icon: <MessageSquare strokeWidth={3} /> , label: 'Chats', path: '/doctor/chats' },
+        { icon: <MessageSquare strokeWidth={3} /> , label: 'Chats', path: '/chat' },
         { icon: <Landmark strokeWidth={3}/>, label: 'Finances', path: '/doctor/finances' },
         { icon: <CircleUserRound strokeWidth={3} />, label: 'Profile', path: `/doctor/profile/${id}` },
     ];

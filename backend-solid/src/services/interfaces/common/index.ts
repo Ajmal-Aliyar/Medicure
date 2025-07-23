@@ -10,3 +10,4 @@ export * from './i-prescription-service';
 export * from './i-medical-record-service';
 export * from './i-connection-request-service';
 export * from './i-conversation-service';
+export * from './i-message-service';

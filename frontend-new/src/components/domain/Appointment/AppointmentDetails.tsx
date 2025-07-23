@@ -6,7 +6,7 @@ import type { AppointmentPageDetails, IAppointmentService } from "@/types/appoin
 import type { IRole } from "@/types/auth";
 import { formatTimeTo12Hour, parseToMD } from "@/utils/formatDate";
 import { statusColor } from "@/utils/statusColor";
-import { BellRing, ClipboardPlus, Clock8, CreditCard, FileChartColumn, IndianRupee, Mail, MessageSquare, SquareActivity, Stethoscope, X } from "lucide-react";
+import { BellRing, ClipboardPlus, Clock8, CreditCard, FileChartColumn, IndianRupee, Link, Mail, MessageSquare, SquareActivity, Stethoscope, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DoctorCard } from "../Cards";
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button";
 import type { RootState } from "@/app/store";
 import { setConsultationData } from "@/slices/consultationSlice";
 import { useNavigate } from "react-router-dom";
+import { patientConnectionRequestService } from "@/services/api/patient/connection-request";
 
 interface Props {
     appointmentId: string;
@@ -57,11 +58,17 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
             dispatch(setConsultationData({
                 doctorId: appointment.doctor.id,
                 patientId: appointment.patient.id,
-                roomId: appointment.roomId
+                roomId: appointment.roomId,
+                appointmentId: appointment.id
             }))
             navigate(`/consultation/${appointment.roomId}`);
         }
+        dispatch(setAppointment(null))
     };
+
+    const sendConnectionRequest = async (doctorId: string) => {
+        await patientConnectionRequestService.request(doctorId)
+    }
     return (
         <div className="w-screen h-screen fixed top-0 right-0 bg-black/50 flex lg:p-4 z-40">
             <div className="max-w-2xl ml-auto bg-surface shadow rounded-md flex flex-col lg:min-w-6xl relative">
@@ -167,7 +174,8 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                             {user?.role === "patient" && <div className="flex flex-col w-full p-2 gap-1">
                                 <div className="flex gap-1">
                                     <Button className="flex-1 py-2">Profile</Button>
-                                    <Button variant="outline" className="flex-1 py-2 flex items-center justify-center gap-1"><MessageSquare className="mt-1" /> Message</Button>
+                                    <Button variant="outline" className="flex-1 py-2 flex items-center justify-center gap-1"
+                                    onClick={() => sendConnectionRequest(appointmentDetails.doctor.id)}><Link className="mt-1" /> Connect</Button>
                                 </div>
                                 <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
                                     {`Notify Doctor`} <BellRing /></Button>

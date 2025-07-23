@@ -6,7 +6,7 @@ import { IConnectionRequest } from "../interfaces";
 
 const ConnectionSchema = new Schema<IConnectionRequest>(
   {
-    initiatorId: { type: Schema.Types.ObjectId, required: true },
+    patientId: { type: Schema.Types.ObjectId, ref: "Patient", required: true },
     doctorId: { type: Schema.Types.ObjectId, ref: "Doctor", required: true },
     status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" },
   },
