@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 export const AddProfile: React.FC<{ setEditProfile: Dispatch<SetStateAction<string>> }> = ({ setEditProfile }) => {
-    const doctor = useSelector((state: RootState) => state.doctor)
+    const {doctor} = useSelector((state: RootState) => state.doctor)
+    
     const dispatch = useDispatch()
 
     const [doctorData, setDoctorData] = useState<IDoctorData>({

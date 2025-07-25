@@ -26,8 +26,8 @@ export const handleChatingEvents = (
       messageService.createMessage({
         conversationId: message.conversationId,
         senderId,
-        content: message.text,
-        createdAt: message.timestamp,
+        content: message.content,
+        createdAt: message.createdAt,
       });
     }
   );

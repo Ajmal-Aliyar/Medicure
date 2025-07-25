@@ -12,6 +12,7 @@ export const createFeedbackRoute = (): Router => {
   const patientFeedbackService = container.get<IPatientFeedbackController>(TYPES.PatientFeedbackController)
 
   router.get('/', asyncHandler(patientFeedbackService.getFeedbacksByPatientId))
+  router.post("/:appointmentId", asyncHandler(patientFeedbackService.submitFeedback))
 
  
   return router;

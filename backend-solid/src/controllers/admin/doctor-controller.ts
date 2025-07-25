@@ -91,19 +91,19 @@ export class AdminDoctorController implements IAdminDoctorController {
     const { doctorId } = req.params;
     const { reviewStatus, reviewComment } = req.body;
     await this.adminDoctorService.updateDoctorStatus(doctorId, reviewStatus, reviewComment);
-    successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.STATUS_UPDATED);
+    successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.STATUS_UPDATED, true);
   }
 
   blockDoctor = async(req: Request, res: Response): Promise<void> => {
     const { doctorId } = req.params;
     const { reason } = req.body;
     await this.adminDoctorService.blockDoctor(doctorId, reason);
-    successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.BlOCKED_DOCTOR);
+    successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.BlOCKED_DOCTOR, true);
   }
 
   unblockDoctor = async(req: Request, res: Response): Promise<void> => {
     const { doctorId } = req.params;
     await this.adminDoctorService.unblockDoctor(doctorId);
-    successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.UNBlOCKED_DOCTOR);
+    successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.UNBlOCKED_DOCTOR, true);
   }
 }

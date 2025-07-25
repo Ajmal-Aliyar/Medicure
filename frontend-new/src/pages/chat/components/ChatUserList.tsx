@@ -47,7 +47,7 @@ const ChatUserList = ({ id, role }: Props) => {
         setLoading(false);
       }
     };
-    
+
         socket.on(SOCKET_EVENTS.CHAT.LAST_MESSAGE, ({ message }) => {
   setConversations(prev =>
     prev.map(conversation =>
@@ -56,8 +56,8 @@ const ChatUserList = ({ id, role }: Props) => {
             ...conversation,
             lastMessage: {
               ...conversation.lastMessage, 
-              message: message.text,
-              date: message.timestamp,
+              message: message.content,
+              date: message.createdAt,
             },
           }
         : conversation
@@ -110,12 +110,12 @@ const ChatUserList = ({ id, role }: Props) => {
                 {chat.isGroup ? chat.name || "Unnamed Group" : otherMember.fullName}
               </p>
               <p className="text-xs text-muted truncate">
-                {chat.lastMessage.message}
+                {chat.lastMessage.message.length > 16 ? `${chat.lastMessage.message.slice(0,16)}...` : chat.lastMessage.message}
               </p>
             </div>
             <div className="mt-2 text-right">
               <p className="text-secondary font-medium text-xs">
-                {formatTo12HourTime(chat.lastMessage.date as Date)}
+                {chat.lastMessage.date && formatTo12HourTime(chat.lastMessage.date)}
               </p>
               <div className="w-4 h-4 ml-auto mt-1 bg-primary rounded-full flex items-center justify-center text-[10px] text-white">
                 1

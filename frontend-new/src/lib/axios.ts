@@ -2,7 +2,7 @@ import axios from "axios";
 import { env } from "./env";
 import { showError } from "./toast";
 import type { AuthUser } from "@/types/auth";
-import { loginSuccess } from "@/slices/authSlice";
+import { loginSuccess, logout } from "@/slices/authSlice";
 import { store } from "@/app/store";
 import { setLoading } from "@/slices/globalSlice";
 
@@ -18,6 +18,9 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     const status = error.response?.status;
     const message = error?.response?.data?.message || error.message || "Unexpected error occurred";
+    if (message === "User is blocked") {
+      store.dispatch(logout())
+    }
     const isRefreshEndpoint = originalRequest.url?.includes("/api/auth/refresh-token");
 
     if (status === 401 && !originalRequest._retry && !isRefreshEndpoint) {
@@ -32,7 +35,6 @@ api.interceptors.response.use(
     }
 
     if (!(status === 401 && isRefreshEndpoint) && !(status === 401 && originalRequest._retry)) {
-      console.log("error occurred", message);
       showError(message);
     }
 

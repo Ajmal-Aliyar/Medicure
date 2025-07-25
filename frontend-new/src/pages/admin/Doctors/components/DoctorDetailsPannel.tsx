@@ -66,7 +66,7 @@ export const DoctorDetailsPannel = ({ doctorId, setDoctorId }: Props) => {
                         {step === 0 && <DoctorProfile data={doctor} />}
                         {step === 1 && <DoctorProfessional data={doctor} />}
                         {step === 2 && <DoctorDocuments data={doctor} />}
-                        {step === 3 && <DoctorStatus data={doctor} />}
+                        {step === 3 && <DoctorStatus data={doctor} setDoctor={setDoctor} />}
                     </div>
                 </div>
             )}

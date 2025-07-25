@@ -10,8 +10,10 @@ export const Login = () => {
     const textRole = role === "patient" ? "user" : "doctor";
     const handleSubmit = async (data: Record<string, string>) => {
         const { email, password } = data
-       const user = await authService.login({ email, password, role })
-       dispatch(loginSuccess({user}))
+
+            const user = await authService.login({ email, password, role })
+            dispatch(loginSuccess({ user }))
+
     };
 
     return (

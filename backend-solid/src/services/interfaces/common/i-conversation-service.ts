@@ -10,5 +10,6 @@ export interface IConversationService {
     groupImageUrl?: string
   ): Promise<IConversation>;
   getConversactions(id: string, pagination: IPagination): Promise<{ data: IConversation[], total: number }>;
-  updateLastMessage( id: string, message: string, date: Date ): Promise<void>
+  updateLastMessage( id: string, message: string, date: Date ): Promise<void>;
+  isMember( candidateId: string, conversationId: string): Promise<boolean>;
 }

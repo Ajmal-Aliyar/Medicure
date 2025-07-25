@@ -5,9 +5,11 @@ import { NextFunction, Request, Response } from "express";
 import { getContainer } from "@/di";
 import { ITokenService } from "@/interfaces";
 import jwt from "jsonwebtoken";
+import { IAuthService } from "@/services";
+import { COOKIE_OPTIONS } from "@/config";
 export const authenticateAccessToken = async (
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ) => {
   try {
@@ -19,10 +21,16 @@ export const authenticateAccessToken = async (
     }
 
     const tokenService = container.get<ITokenService>(TYPES.TokenService);
-
+    const authService = container.get<IAuthService>(TYPES.AuthService);
     const { id, role } = tokenService.verifyAccessToken(token);
     if (!id || !role) {
       throw new UnauthorizedError(GLOBAL_MESSAGES.ERROR.ACCESS_TOKEN_MISSING);
+    }
+
+    const data = await authService.me(id, role);
+    if (data.isBlocked) {
+      await authService.logout(id)
+      throw new UnauthorizedError("User is blocked");
     }
 
     req.user = {

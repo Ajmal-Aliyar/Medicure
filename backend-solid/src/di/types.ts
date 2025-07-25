@@ -51,8 +51,13 @@ export const TYPES = {
   //Message
   MessageRepository: Symbol.for("MessageRepository"),
   MessageService: Symbol.for("MessageService"),
+  MessageController: Symbol.for("MessageController"),
 
 
+  // Wallet
+  WalletRepository: Symbol.for("WalletRepository"),
+  WalletService: Symbol.for("WalletService"),
+  WalletController: Symbol.for("WalletController"),
 
 
   //Admin
@@ -97,10 +102,7 @@ export const TYPES = {
   SlotController: Symbol.for("SlotController"),
   TransactionRepository: Symbol.for("TransactionRepository"),
   TransactionService: Symbol.for("TransactionService"),
-  WalletRepository: Symbol.for("WalletRepository"),
-  WalletService: Symbol.for("WalletService"),
   TransactionController: Symbol.for("TransactionController"),
-  WalletController: Symbol.for("WalletController"),
 
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),

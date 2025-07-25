@@ -6,6 +6,11 @@ const BASE_URL = "/api/patient/feedback";
 
 export interface IPatientFeedbackService {
 getFeedbackDetails(page: number): Promise<{ data: FeedbackDetails[],  meta: MetaType}>
+submitFeedbackForAppointment(
+    appointmentId: string,
+    rating: number,
+    comment: string
+  ): Promise<void>;
 }
 
 export const patientFeedbackService: IPatientFeedbackService = {
@@ -14,5 +19,16 @@ export const patientFeedbackService: IPatientFeedbackService = {
       `${BASE_URL}?page=${page}`
     );
     return response.data;
+  },
+
+  submitFeedbackForAppointment: async (
+    appointmentId: string,
+    rating: number,
+    comment: string
+  ): Promise<void> => {
+      await api.post(`${BASE_URL}/${appointmentId}`, {
+        rating,
+        comment,
+      });
   },
 };

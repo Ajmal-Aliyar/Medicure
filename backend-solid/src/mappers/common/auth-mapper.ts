@@ -18,6 +18,7 @@ export class AuthMapper {
       isApproved,
       profileImage: safeUser.personal.profileImage,
       role,
+      ...(role === 'admin' ? { isBlocked: false } : {isBlocked: safeUser.status.accountStatus.isBlocked})
     };
   };
 }

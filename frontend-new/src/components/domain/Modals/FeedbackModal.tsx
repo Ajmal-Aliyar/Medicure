@@ -10,6 +10,7 @@ import type { IRole } from "@/types/auth";
 import { doctorAppointmentService } from "@/services/api/doctor/appointment";
 import type { IAppointmentService } from "@/types/appointment";
 import { adminAppointmentService } from "@/services/api/admin/appointment";
+import { patientFeedbackService } from "@/services/api/patient/feedback";
 
 const MAX_CHARS = 300;
 
@@ -55,7 +56,7 @@ export const FeedbackModal = () => {
 
   const handleFeedbackSubmit = async () => {
     try {
-      await patientAppointmentService.submitFeedbackForAppointment(appointmentId as string, rating, comment);
+      await patientFeedbackService.submitFeedbackForAppointment(appointmentId as string, rating, comment);
       dispatch(clearFeedback());
     } catch (error) {
       console.error("Failed to submit feedback:", error);

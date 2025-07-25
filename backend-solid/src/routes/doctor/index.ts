@@ -10,6 +10,8 @@ import { createPrescriptionRouter } from "./prescription-route";
 import { createMedicalRecordRouter } from "./medical-record";
 import { createConnectionRequestRoute } from "./connection-request";
 import { createConversationRoute } from "./conversation";
+import { createMessageRouter } from "./message";
+import { createWalletRouter } from "./wallet";
 
 
 export const createDoctorRouter = () => {
@@ -25,6 +27,8 @@ export const createDoctorRouter = () => {
     router.use("/medical-record", createMedicalRecordRouter());
     router.use('/connection/request', createConnectionRequestRoute());    
     router.use("/conversation", createConversationRoute());
+    router.use("/message", createMessageRouter());
+    router.use("/wallet", createWalletRouter());
     
     return router
 }
