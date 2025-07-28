@@ -60,7 +60,7 @@ const SelectedDoctor: React.FC<SelectedDoctorProps> = ({ doctor }) => {
         try {
             dispatch(setLoading(true));
             dispatch(clearWarning())
-            if (user.role === 'user' && user.isAuthenticated && selectedSlot) {
+            if (user.role === 'patient' && user.isAuthenticated && selectedSlot) {
                 const response = await createCheckoutSessionApi({
                     doctorName: doctor.fullName,
                     specialization: doctor.specialization,

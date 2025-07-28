@@ -3,8 +3,8 @@ import { useDispatch } from "react-redux";
 import HoneyComb from "../common/HoneyComb";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../common/ErrorMessage";
-import { setData } from "../../store/slices/commonSlices/AuthSlice";
-import { sendOTPApi, signInApi, signUpApi } from "../../sevices/authRepository"
+import { login, setData } from "../../store/slices/commonSlices/AuthSlice";
+import { loginApi, registerApi, sendOTPApi } from "../../sevices/authRepository"
 import { IAuthPageProps, IErrorType, ISignInResponse } from "../../types/authType";
 import { validateName, validateEmail, validateMobile, validatePassword } from "../../utils/validate/authValidate";
 import GoogleAuth from "./GoogleAuth";
@@ -40,14 +40,9 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
         if (isLogin) {
             if (!errorMessage.email && !errorMessage.password && email && password) {
                 try {
-                    const response: ISignInResponse = await signInApi(email, password, role)
-                    dispatch(setData({ _id: response.data._id, email, role }))
+                    const response: ISignInResponse = await loginApi(email, password, role)
+                    dispatch(login(response.data))
                     setLoading(false);
-                    if (role === 'doctor') {
-                        navigate('/doctor/dashboard')
-                    } else {
-                        navigate('/')
-                    }
                 } catch (error: unknown) {
                     setLoading(false);
                     const err = error as { response?: { data?: { status?: string } } };
@@ -66,9 +61,9 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
             if (!errorMessage.name && !errorMessage.email && !errorMessage.mobile && !errorMessage.password && name && email && mobile && password) {
                 console.log(role)
                 try {
-                    await signUpApi(name, email, mobile, password, role)
+                    await registerApi(name, email, mobile, password, role)
                     setLoading(false);
-                    dispatch(setData({ _id: '', email, role }))
+                    dispatch(setData({ id: '', email, isApproved: null, role }))
                     setAuthStatus('otp-verification')
                 } catch (error: unknown) {
                     setLoading(false);
@@ -135,7 +130,7 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
                 setLoading(false);
                 console.log('Signup successful:', response.data);
                 setAuthStatus('otp-verification')
-                dispatch(setData({ _id: '', email, role }))
+                dispatch(setData({ id: '', email, role, isApproved: null }))
                 setIsChangePassword(true)
             } catch (error: unknown) {
                 setLoading(false);
@@ -159,8 +154,8 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
 
     const getButtonText = (isForgotPassword: boolean, isLogin: boolean, role: string) => {
         if (isForgotPassword) return 'Submit';
-        if (isLogin) return role === 'user' ? 'Sign in as user' : 'Sign in as doctor';
-        return role === 'user' ? 'Sign up as user' : 'Sign up as doctor';
+        if (isLogin) return role === 'patient' ? 'Sign in as user' : 'Sign in as doctor';
+        return role === 'patient' ? 'Sign up as user' : 'Sign up as doctor';
     };
 
     return (
@@ -269,10 +264,10 @@ const Auth: React.FC<IAuthPageProps> = ({ setAuthStatus, setIsChangePassword, ro
                     <p className="text-gray-600">Don't have an account? <a onClick={(e) => setLoginFalse(e)} href="" className="text-[#0c0b3e] font-medium">Sign up</a></p> :
                     <p className="text-gray-600">Already have an account? <a onClick={(e) => setLoginTrue(e)} href="" className="text-[#0c0b3e] font-medium">Sign in</a></p>}
 
-                <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={() => navigate(role === 'user' ? '/doctor/auth' : '/auth')}>I'm a {role === 'user' ? 'doctor' : 'patient'}</p>
+                <p className="hover:scale-105 duration-300 underline underline-offset-4 text-center text-sm cursor-pointer text-[#0c0b3e] " onClick={() => navigate(role === 'patient' ? '/doctor/auth' : '/auth')}>I'm a {role === 'patient' ? 'doctor' : 'patient'}</p>
             </div>
 
-            {role === 'user' && <GoogleAuth />}
+            {role === 'patient' && <GoogleAuth />}
 
             <div className={`${serverError !== '' || loading ? '' : 'opacity-0 -z-50 '}  transition-all duration-300 bg-[#b7b7b75b] absolute top-0 left-0 right-0 bottom-0 rounded-lg bg-opacity-80 flex justify-center items-center`}>
                 {!loading && serverError !== '' ? <ErrorMessage message={serverError} handleModal={handleErrorServerMessage} /> : ''}

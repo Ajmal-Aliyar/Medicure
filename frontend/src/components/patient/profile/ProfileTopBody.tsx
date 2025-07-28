@@ -13,8 +13,8 @@ import { RootState } from '../../../store/store';
 const ProfileTopBody: React.FC = () => {
     const patientData = useSelector((state: RootState) => state.patient)
     const [editProfile, setEditProfile] = useState<string>('')
-    const [email, setEmail] = useState(patientData.email);
-    const [mobile, setmobile] = useState(patientData.phone);
+    const [email, setEmail] = useState(patientData.personal.email);
+    const [mobile, setmobile] = useState(patientData.personal.mobile);
     const [emailFocused, setEmailFocused] = useState(true);
     const [mobileFocused, setMobileFocused] = useState(true);
     const [errorMessage, setErrorMessage] = useState({
@@ -41,7 +41,8 @@ const ProfileTopBody: React.FC = () => {
             const response = await updateProfileImageApi(imageId);
             if (response?.data) {
                 dispatch(setSuccess('update profile image'));
-                dispatch(setPatientProfileData({ profileImage: imageId }))
+                patientData.personal.profileImage = imageId
+                dispatch(setPatientProfileData(patientData))
             }
         } catch (error: unknown) {
             console.log(error);
@@ -57,12 +58,12 @@ const ProfileTopBody: React.FC = () => {
             <div className="col-span-12 lg:col-span-6  flex flex-col items-center">
                 <div className="max-w-[150px] w-full rounded-full border-2 border-[#0c0b3eb5] aspect-square m-4" onClick={() => setEditProfile('editProfile')}>
                     <img
-                        src={ patientData?.profileImage || 'https://res.cloudinary.com/dwyxogyrk/image/upload/v1737173758/sk7hria3ngkaujeywrjy.png'}
+                        src={ patientData?.personal.profileImage || 'https://res.cloudinary.com/dwyxogyrk/image/upload/v1737173758/sk7hria3ngkaujeywrjy.png'}
                         alt="Profile"
                         className="rounded-full w-full h-full object-cover"
                     />
                 </div>
-                <p className="text-lg font-medium">{patientData.fullName}</p>
+                <p className="text-lg font-medium">{patientData.personal.fullName}</p>
             </div>
             <div className="flex col-span-12 lg:col-span-6 flex-col justify-center gap-y-4 h-full pb-5 items-center lg:items-start">
 
@@ -71,7 +72,7 @@ const ProfileTopBody: React.FC = () => {
                         type="text"
                         disabled
                         id="email"
-                        value={patientData.email}
+                        value={patientData.personal.email}
                         className={`w-full p-3 ${emailFocused || email ? 'border-t-2 border-r-2 rounded-lg ring-0' : ''} border-b-2 border-l-2 border-[#0c0b3eb5] bg-[#f9f9f9] outline-none text-[#0c0b3eb5] text-base rounded-bl-lg transition duration-300`}
                         onFocus={() => setEmailFocused(true)}
                         onChange={(e) => handleErrorMessage('email', e.target.value)}
@@ -94,7 +95,7 @@ const ProfileTopBody: React.FC = () => {
                         type="text"
                         id='phone'
                         disabled
-                        value={patientData.phone}
+                        value={patientData.personal.mobile}
                         className={`w-full p-3 ${mobileFocused || mobile ? 'border-t-2 border-r-2 rounded-lg ring-0' : ''} border-b-2 border-l-2 border-[#0c0b3eb5] bg-[#f9f9f9] outline-none text-[#0c0b3eb5] text-base rounded-bl-lg transition duration-300`}
                         onFocus={() => setMobileFocused(true)}
                         onChange={(e) => handleErrorMessage('mobile', e.target.value)}
@@ -113,7 +114,7 @@ const ProfileTopBody: React.FC = () => {
             </div>
             {editProfile === 'editProfile' &&
                 <EditProfilePortal onClose={setEditProfile}>
-                    <ImageUploader setEditProfile={setEditProfile} profileImage={patientData?.profileImage} requestUpdateProfileImage={requestUpdateProfileImage} />
+                    <ImageUploader setEditProfile={setEditProfile} profileImage={patientData.personal.profileImage || ''} requestUpdateProfileImage={requestUpdateProfileImage} />
                 </EditProfilePortal>
             }
         </div>

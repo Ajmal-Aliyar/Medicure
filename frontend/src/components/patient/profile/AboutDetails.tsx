@@ -1,11 +1,12 @@
-import { IPatientProfilePayload } from "../../../types/patient/profileType";
+import { PatientProfileDto } from "../../../types/patient/profileType";
 
 
 interface IAboutDetailsProps {
-    patientData: IPatientProfilePayload;
+    patientData: PatientProfileDto;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const AboutDetails:React.FC<IAboutDetailsProps> = ({patientData, handleChange}) => {
+    const {personal} = patientData
     
     return (
         <div className="flex flex-wrap gap-3">
@@ -16,7 +17,7 @@ const AboutDetails:React.FC<IAboutDetailsProps> = ({patientData, handleChange}) 
                 <input
                     type="date"
                     name="dob"
-                    value={patientData.dob || ''}
+                    value={personal.dob || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                     placeholder="DD/MM/YYYY"
@@ -30,7 +31,7 @@ const AboutDetails:React.FC<IAboutDetailsProps> = ({patientData, handleChange}) 
                 <input
                     type="text"
                     name="gender"
-                    value={patientData.gender || ''}
+                    value={personal.gender || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />
@@ -43,7 +44,7 @@ const AboutDetails:React.FC<IAboutDetailsProps> = ({patientData, handleChange}) 
                 <input
                     type="text"
                     name="bloodGroup"
-                    value={patientData.bloodGroup || ''}
+                    value={personal.bloodGroup || ''}
                     onChange={(e) => handleChange(e)}
                     className="w-full border-2 border-gray-300 rounded-md p-2 outline-none focus:border-blue-300 bg-transparent transition-all text-gray-500"
                 />

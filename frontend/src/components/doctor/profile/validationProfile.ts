@@ -4,11 +4,11 @@ export interface IDoctorData {
     about: string;
     dob: string;
     gender: string;
-    phone: string;
+    mobile: string;
     addressLine: string;
-    streetAddress: string;
+    street: string;
     specialization: string;
-    languageSpoken: string;
+    languageSpoken: string[];
     city: string;
     state: string;
     country: string;

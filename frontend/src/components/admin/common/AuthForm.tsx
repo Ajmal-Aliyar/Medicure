@@ -2,7 +2,7 @@ import { useState } from 'react'
 import HoneyComb from '../../common/HoneyComb'
 import { validateEmail, validatePassword } from '../../../utils/validate/authValidate';
 import { IErrorType, ISignInResponse } from '../../../types/authType';
-import { setData } from '../../../store/slices/commonSlices/AuthSlice';
+import { login } from '../../../store/slices/commonSlices/AuthSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setError } from '../../../store/slices/commonSlices/notificationSlice';
@@ -50,10 +50,8 @@ const AuthForm:React.FC<IAuthForm> = ({ role }: { role: string }) => {
         if (!errorMessage.email && !errorMessage.password && email && password) {
             try {
                 const response: ISignInResponse = await signInApi(email, password, role)
-                console.log(response,'admin')
-                dispatch(setData({ _id: response.data._id, email, role }))
+                dispatch(login(response.data))
                 setLoading(false);
-                navigate('/admin/dashboard')
             } catch (error: unknown) {
                 setLoading(false);
                 dispatch(setError('Something went wrong! Please try again later.'))

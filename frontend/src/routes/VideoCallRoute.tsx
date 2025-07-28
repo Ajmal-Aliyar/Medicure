@@ -1,20 +1,19 @@
 import { Route, Routes } from 'react-router-dom'
-import VideoCallInterface from '../pages/common/VideoCallInterface'
-import AuthorizedRoute from './AuthorizedRoute'
-
+import VideoCallInterface from '../pages/public/VideoCallInterface'
+// import AuthorizedRoute from './AuthorizedRoute'
 
 const VideoCallRoute = () => {
     
     return (
         <Routes>
             
-            <Route
+            {/* <Route
                 path="/doctor/meeting/:roomId"
                 element={<AuthorizedRoute allowedRole='doctor'><VideoCallInterface/></AuthorizedRoute> } />
 
             <Route
                 path="/meeting/:roomId"
-                element={<AuthorizedRoute allowedRole='user'><VideoCallInterface/></AuthorizedRoute> } />
+                element={<AuthorizedRoute allowedRole='patient'><VideoCallInterface/></AuthorizedRoute> } /> */}
         </Routes>
     )
 }

@@ -12,20 +12,21 @@ import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
 import { ENV } from './constants/env';
 import { setupInterceptors } from './utils/setUpInterceptors';
+import {AppLayout} from './layouts/AppLayout';
 
-
+setupInterceptors();
 const App = () => {
   const _id = useSelector((state: RootState) => state.auth._id)
   useEffect(() => {
 
-    setupInterceptors();
-    connectWithSocketIOServer(_id)
+    // connectWithSocketIOServer(_id)
     console.log('connected to socket', _id );
     
   }, [_id])
 
   return (
     <Router>
+      <AppLayout>
       <NotificationPortal />
       <Routes >
         <Route path="/*" element={<UserRoutes />} />
@@ -36,6 +37,7 @@ const App = () => {
           <GoogleAuth />
         </GoogleOAuthProvider>} />
       </Routes>
+      </AppLayout>
     </Router>
   );
 };

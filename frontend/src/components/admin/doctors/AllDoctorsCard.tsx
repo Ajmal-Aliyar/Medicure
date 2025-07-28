@@ -1,7 +1,7 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { fetchAllApprovedDoctorsApi } from "../../../sevices/admin/doctorRepository";
+import { fetchAllDoctorsSummaryWithStatusApi } from "../../../sevices/admin/doctorRepository";
 import { useDispatch } from "react-redux";
 import { setError } from "../../../store/slices/commonSlices/notificationSlice";
 import { IFetchAllApprovedDoctors } from "../../../types/doctor/verifyDetailsType";
@@ -23,9 +23,9 @@ const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
     useEffect(() => {
         const getDoctors = async () => {
             try {
-                const response = await fetchAllApprovedDoctorsApi(skip, limit, searchTerm);
+                const response = await fetchAllDoctorsSummaryWithStatusApi('approved', skip, limit);
                 console.log(response)
-                setTotal(response.total)
+                // setTotal(response.total)
                 setDoctors(response.data);
             } catch (error: unknown) {
                 dispatch(setError('error occured while listing doctors'));
@@ -73,13 +73,13 @@ const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
             <div className="h-[475px] p-2  overflow-y-auto">
                 {doctors.map((doctor) => (
                     <div
-                        key={doctor._id}
+                        key={doctor.id}
                         className="border flex p-2 rounded-md items-center relative mb-2 hover:border-[#3ab8a7a8] hover:border-2 border-[#C4DAD2] active:scale-95 duration-300"
-                        onClick={() => handleDoctorSelect(doctor._id)}
+                        onClick={() => handleDoctorSelect(doctor.id)}
                     >
                         <div className="w-14 h-14 bg-blue-200 rounded-full">
                             <img
-                                src={doctor.profileImage}
+                                src={doctor.profileImage || ''}
                                 alt={doctor.fullName}
                                 className="w-full h-full object-cover rounded-full"
                             />
@@ -90,7 +90,7 @@ const AllDoctorsCard: React.FC<AllDoctorsCardProps> = ({ setOpenPage }) => {
                                 {doctor.specialization}
                             </p>
                             <p className="text-xs text-neutral-500">
-                                {doctor.rating} ({doctor.reviewCount} Reviews)
+                                {doctor.rating.average} ({doctor.rating.reviewCount} Reviews)
                             </p>
                         </div>
                     </div>

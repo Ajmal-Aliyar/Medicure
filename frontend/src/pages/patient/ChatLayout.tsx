@@ -1,4 +1,4 @@
-import Chat from "../common/Chat"
+import Chat from "../public/Chat"
 
 const ChatLayout = () => {
   return (

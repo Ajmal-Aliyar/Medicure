@@ -63,7 +63,7 @@ const ProfileVerificationForm: React.FC<IProfileVerificationFormProps> = ({ hand
                     identityProof = null,
                     medicalRegistration = null,
                     establishmentProof = null
-                } = response.data ?? {};
+                } = response.data;
 
                 setIdentityProofPreview(identityProof);
                 setMedicalRegistrationPreview(medicalRegistration);

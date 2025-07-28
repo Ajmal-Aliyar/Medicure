@@ -29,14 +29,50 @@ export const changePasswordApi = async (email: string,password: string,role: str
       })
 }
 
+// export const verifyOtpApi = async (otp: string, email: string) => {
+//     return api.post('/api/auth/verify-otp', {
+//         otp, email
+//       })
+// }
+
+export const verifyOtpAndRegisterApi = async (otp: string, email: string) => {
+    return api.post('/api/auth/verify-otp-register', {
+        otp, email
+      })
+}
+
+// backend refactor
+export const registerApi = async (name: string, email: string, mobile: string, password: string, role: string) => {
+    console.log('send');
+    
+    return await api.post('/api/auth/register', {
+        fullName: name,
+        email,
+        mobile,
+        password,
+        role
+    })
+}
+
 export const verifyOtpApi = async (otp: string, email: string) => {
     return api.post('/api/auth/verify-otp', {
         otp, email
       })
 }
 
-export const verifyOtpAndRegisterApi = async (otp: string, email: string) => {
-    return api.post('/api/auth/verify-otp-register', {
-        otp, email
-      })
+export const loginApi = async (email: string, password: string, role: string): Promise<ISignInResponse> => {
+    const result =  await api.post<ISignInResponse>('/api/auth/login', {
+        email,
+        password,
+        role
+    })
+    return result.data
+}
+
+export const logoutApi = async (email: string, password: string, role: string): Promise<ISignInResponse> => {
+    return await api.post('/api/auth/logout', {
+        email,
+        password,
+        role
+    })
 }

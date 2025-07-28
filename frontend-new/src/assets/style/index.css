@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #51aff6;
+  --color-primary-light: #97cdf6;
+  --color-primary-dark: #3689c9;
+
+  --color-secondary: #0c0b3eb5;
+  --color-secondary-light: #403f89b5;
+  --color-secondary-dark: #06052fc9;
+
+  --color-background: #eeeeee;
+  --color-background-dark: #1e1e1e;
+
+  --color-surface: #f9f9f9;
+  --color-surface-dark: #2a2a2a;
+
+  --color-border: #d4d4d4;
+  --color-border-dark: #444444;
+
+  --color-accent: #89d1ff;
+  --color-accent-dark: #48b4f0;
+
+  --color-muted: #b0b0b0;
+  --color-muted-dark: #777777;
+
+  --color-text: #0c0b3eb5;
+  --color-text-dark: #dcdcf2;
+}
+
+
+
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: #f6f6f6;
+}
+
+
+
+.slider-container {
+  width: 80%;
+  margin: auto;
+  padding: 20px;
+}
+
+.slick-slide {
+  transform: scale(0.8);
+  transition: transform 0.5s ease-in-out;
+  opacity: 0.7;
+}
+
+.slick-center {
+  transform: scale(1);
+  opacity: 1;
+  z-index: 10;
+}
+
+.slide-item {
+  background: #74bff8c7;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  color: #0c0b3eb5;
+}
+
+.slick-list {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  height: 40rem !important;
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 70%;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffffffb3; 
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #96c5ecf5; 
+}
+input:-webkit-autofill {
+  background-color: #eeeeee !important;
+  box-shadow: 0 0 0px 1000px #eeeeee inset !important;  
+}
+
+
+
+/* <div className="flex">
+    <div className="w-10 h-10 bg-secondary"></div>
+    <div className="w-10 h-10 bg-primary"></div>
+    <div className="w-10 h-10 bg-accent"></div>
+    <div className="w-10 h-10 bg-background"></div>
+    <div className="w-10 h-10 bg-border"></div>
+    <div className="w-10 h-10 bg-muted"></div>
+</div> */

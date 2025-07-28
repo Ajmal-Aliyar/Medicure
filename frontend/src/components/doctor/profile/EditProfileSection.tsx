@@ -17,11 +17,11 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
         about: '',
         dob: '',
         gender: '',
-        phone: '',
+        mobile: '',
         addressLine: '',
-        streetAddress: '',
+        street: '',
         specialization: '',
-        languageSpoken: '',
+        languageSpoken: [],
         city: '',
         state: '',
         country: '',
@@ -37,10 +37,18 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
-        setDoctorData((prevData) => ({
-            ...prevData,
-            [id]: value
-        }));
+        if (id === 'languageSpoken') {
+            setDoctorData((prevData) => ({
+                ...prevData,
+                [id]: value.split(',')
+            }));
+        } else {
+            setDoctorData((prevData) => ({
+                ...prevData,
+                [id]: value
+            }));
+        }
+
     };
 
     const handleSave = async () => {
@@ -88,8 +96,8 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
                         placeholder="Write about yourself..."
                     />
                 </div>
-                <label htmlFor="phone" className="text-md font-medium text-gray-400">Phone*</label>
-                <input id="phone" type="text" value={doctorData.phone} onChange={handleChange}
+                <label htmlFor="mobile" className="text-md font-medium text-gray-400">Mobile*</label>
+                <input id="mobile" type="text" value={doctorData.mobile} onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
 
                 <label htmlFor="dob" className="text-md font-medium text-gray-400">Date Of Birth*</label>
@@ -103,7 +111,7 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
                 <input id="specialization" type="text" value={doctorData.specialization} onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
                 <label htmlFor="languageSpoken" className="text-md font-medium text-gray-400">Spoken language*</label>
-                <input id="languageSpoken" type="text" value={doctorData.languageSpoken} onChange={handleChange}
+                <input id="languageSpoken" type="text" value={doctorData.languageSpoken.join(', ')} onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
 
 
@@ -113,7 +121,7 @@ const EditProfileSection: React.FC<IEditProfileSectionProps> = ({ setEditProfile
 
                 <div className="text-xl font-medium text-gray-500 mt-5">Address</div>
 
-                {["addressLine", "streetAddress", "city", "state", "country", "pincode"].map((field) => (
+                {["addressLine", "street", "city", "state", "country", "pincode"].map((field) => (
                     <div key={field}>
                         <label htmlFor={field} className="text-md font-medium text-gray-400">{field.replace(/([A-Z])/g, ' $1').trim()}*</label>
                         <input

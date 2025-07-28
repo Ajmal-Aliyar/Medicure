@@ -87,7 +87,7 @@ function Menu() {
                     <div
                         className={`group/button overflow-hidden border-2 border-[#0c0b3eb5] rounded-lg px-5 lg:py-1 lg:px-7 lg:font-medium cursor-pointer transition-all transform  duration-300 active:scale-95 `}
                         onClick={() => {
-                            if (isAuthenticated && role === 'user') {
+                            if (isAuthenticated && role === 'patient') {
                                 navigate('/profile');
                             } else {
                                 navigate('/auth');
@@ -98,14 +98,14 @@ function Menu() {
                             className="absolute bg-blue-300 inset-0 flex h-full w-full justify-center [transform:skew(-13deg)_translateX(-85%)] opacity-50 group-hover/button:duration-1000 group-hover/button:[transform:skew(-13deg)_translateX(85%)]"
                         >
                             <div className="relative h-full w-10 bg-white/20"></div></div>
-                        {isAuthenticated && role === 'user' ? 'profile' : 'Login'}
+                        {isAuthenticated && role === 'patient' ? 'profile' : 'Login'}
                     </div>
                     <i
-                        className={`fa fa-bars text-[28px] p-2 cursor-pointer transition-all duration-500 transform ${isAuthenticated && role === 'user' ? 'block' : 'lg:hidden'}  ${isOpen ? '-rotate-90 ' : ''}`}
+                        className={`fa fa-bars text-[28px] p-2 cursor-pointer transition-all duration-500 transform ${isAuthenticated && role === 'patient' ? 'block' : 'lg:hidden'}  ${isOpen ? '-rotate-90 ' : ''}`}
                         onClick={() => setIsOpen(!isOpen)}
                     ></i>
                     <nav
-                        className={`flex-col overflow-hidden w-[170px] justify-center absolute top-full left-0 p-1 px-3 mt-2 bg-[#fefefe] rounded-md right-0 hidden lg:block transition-all duration-300 ease-in-out transform ${isOpen && isAuthenticated && role === 'user' ? 'h-56 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}
+                        className={`flex-col overflow-hidden w-[170px] justify-center absolute top-full left-0 p-1 px-3 mt-2 bg-[#fefefe] rounded-md right-0 hidden lg:block transition-all duration-300 ease-in-out transform ${isOpen && isAuthenticated && role === 'patient' ? 'h-56 opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}
                     >
                         <UserDriveBar />
                     </nav>
@@ -158,7 +158,7 @@ function Menu() {
                         Contact
                     </NavLink>
                 </span>
-                <span className={`${isAuthenticated && role === 'user' ? '' : 'hidden'} text-end space-y-3`}>
+                <span className={`${isAuthenticated && role === 'patient' ? '' : 'hidden'} text-end space-y-3`}>
                     <UserDriveBar />
                 </span>
             </div>

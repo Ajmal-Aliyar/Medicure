@@ -25,10 +25,7 @@ const FindDoctors:React.FC = () => {
       <HeaderContent />
       <Specializations />
       <FilterProvider><FilterTopDoctor /></FilterProvider> 
-
       <FilterProvider><TopSpecialists /></FilterProvider>
-
-
       <FindDoctorAnimation />
     </div>
   )

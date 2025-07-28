@@ -1,19 +1,26 @@
-import { blockUser } from "../store/slices/commonSlices/AuthSlice";
-import store from "../store/store";
-import { api } from "./axiosInstance";
+import { api } from './axiosInstance';
+import store from '../store/store';
+import { login } from '../store/slices/commonSlices/AuthSlice';
+import { ISignInResponse } from '../types/authType';
 
 export const setupInterceptors = () => {
   api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response?.status === 401) {
-        console.log('caught error');
-        window.location.href = '/auth';
-      }
+    (res) => res,
+    async (error) => {
+      const originalRequest = error.config;
 
-      if (error.response?.data?.status === 'blocked') {
-        store.dispatch(blockUser());
-        console.log('User blocked, dispatched to store');
+      const isRefreshEndpoint = originalRequest.url?.includes("/api/auth/refresh-token");
+
+      if (error.response?.status === 401 && !originalRequest._retry && !isRefreshEndpoint) {
+        originalRequest._retry = true;
+
+        try {
+          const { data: response } = await api.post<ISignInResponse>("/api/auth/refresh-token");
+          store.dispatch(login(response.data)); 
+          return api(originalRequest);
+        } catch (refreshError) {
+          return Promise.reject(refreshError);
+        }
       }
 
       return Promise.reject(error);
