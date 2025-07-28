@@ -20,7 +20,7 @@ export const ConfirmationModal = ({
   confirmLabel,
   confirmVariant = "primary",
 }: ConfirmationModalProps) => (
-  <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
+  <div className="fixed inset-0 bg-black/20 z-30 flex items-center justify-center">
     <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md text-center relative">
       <button
         className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer"

@@ -12,6 +12,7 @@ import { createConnectionRequestRoute } from "./connection-request";
 import { createConversationRoute } from "./conversation";
 import { createMessageRouter } from "./message";
 import { createWalletRouter } from "./wallet";
+import { createWithdrawRequestRoute } from "./withdraw-request";
 
 
 export const createDoctorRouter = () => {
@@ -29,6 +30,7 @@ export const createDoctorRouter = () => {
     router.use("/conversation", createConversationRoute());
     router.use("/message", createMessageRouter());
     router.use("/wallet", createWalletRouter());
+    router.use("/withdraw-request", createWithdrawRequestRoute());
     
     return router
 }

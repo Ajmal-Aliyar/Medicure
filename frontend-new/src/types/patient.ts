@@ -68,6 +68,9 @@ export interface IPatient {
     isProfileCompleted: boolean;
     isApproved: boolean;
   };
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IEmergencyContact {

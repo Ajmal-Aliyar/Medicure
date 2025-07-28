@@ -8,3 +8,4 @@ export * from './prescription-controller';
 export * from './connection-request-controller';
 export * from './conversation-controller';
 export * from './message-controller';
+export * from './withdraw-request-controller';

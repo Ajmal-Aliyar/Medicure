@@ -81,7 +81,10 @@ export class AuthService implements IAuthService {
     }
 
     if (role === 'doctor' && user?.status?.accountStatus?.isBlocked) {
-      throw new ForbiddenError("User is blocked by admin.")
+      throw new ForbiddenError("Doctor is blocked by admin.")
+    }
+    if (role === 'patient' && user?.status?.isBlocked) {
+      throw new ForbiddenError("Patient is blocked by admin.")
     }
 
     const isPasswordValid = await this.passwordHasher.compare(

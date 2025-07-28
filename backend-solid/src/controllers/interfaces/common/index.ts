@@ -9,3 +9,4 @@ export * from './i-prescription-controller';
 export * from './i-connection-request-controller';
 export * from './i-conversation-controller';
 export * from './i-message-controller';
+export * from './i-withdraw-request-controller';

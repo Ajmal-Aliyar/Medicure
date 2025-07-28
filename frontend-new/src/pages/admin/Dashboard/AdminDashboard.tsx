@@ -8,7 +8,8 @@ import type { FilterDoctorSummary } from "@/types/doctor";
 import { useNavigate } from "react-router-dom";
 import { isToday } from "date-fns";
 import { formatDateToLong } from "@/utils/formatDate";
-import AdminWallet from "../Finance/components/AdminWallet";
+import WalletCard from "@/components/domain/Cards/WalletCard";
+import type { IWallet } from "@/types/wallet";
 const LazyTransactionDetails = lazy(() => import("@/pages/admin/Finance/components/TransactionDetails"));
 
 interface ITransaction {
@@ -106,6 +107,7 @@ export const mockTransactions: ITransaction[] = [
 const AdminDashboard = () => {
     const [viewType, setViewType] = useState<"day" | "week" | "month">("day");
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+    const [ wallet, setWallet] = useState<IWallet | null>(null)
     const navigate = useNavigate()
 
     const filters = useMemo(() => ({
@@ -161,7 +163,7 @@ const AdminDashboard = () => {
                     <p className="text-secondary-dark font-medium text-md p-3 border-b border-border">
                         Finance
                     </p>
-                    <AdminWallet/>
+                    <WalletCard wallet={wallet} setWallet={setWallet} role={"admin"} />
                     <Suspense fallback={<div className="p-4">Loading transactions...</div>}>
                         <LazyTransactionDetails className="max-h-[400px]" />
                     </Suspense>

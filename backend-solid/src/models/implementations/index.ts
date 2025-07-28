@@ -14,3 +14,4 @@ export * from './medical-record.model';
 export * from './connection-request.model';
 export * from './conversation.model';
 export * from './message.model';
+export * from './withdraw-request.model';

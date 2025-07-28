@@ -20,14 +20,15 @@ export interface IPatient extends Document {
 
   contact: {
     address: IAddress;
-    emergencyContact: IEmergencyContact;
+    emergencyContact?: IEmergencyContact;
   };
 
   status: {
     isBlocked: boolean;
   };
 
-
+  createdAt: Date,
+  updatedAt: Date
 }
 
 
