@@ -11,7 +11,7 @@ import { FeedbackModal } from "@/components/domain/Modals/FeedbackModal";
 
 
 const DoctorAppointmentPage = () => {
-    let [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(1);
     const [appointmentType, setAppointmentType] = useState<string>("")
     const [appointmentDate, setAppointmentDate] = useState<string>(getNext7Days()[0].value)
     const [status, setStatus] = useState<string>("")

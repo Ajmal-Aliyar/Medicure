@@ -12,13 +12,14 @@ const PatientStatus = ({ data }: Props) => {
     const [status, setStatus] = useState(data.status)
 
     const onToggle = async (field: string, value: boolean) => {
+        if (field === 'isBlocked'){
         if (value) {
             const res = await adminPatientService.blockPatient(data.id);
             if (res) setStatus((prev) => ({ ...prev, isBlocked: true }));
         } else {
             const res = await adminPatientService.unBlockPatient(data.id);
             if (res) setStatus((prev) => ({ ...prev, isBlocked: false }));
-        }
+        }}
     };
 
     return (

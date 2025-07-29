@@ -42,6 +42,7 @@ const ChatRequestList = ({ role }: Props) => {
         setTotalPage(meta.totalPages);
         setError(null);
       } catch (err) {
+        console.log(err);
         setError("Failed to load connection requests.");
       } finally {
         setLoading(false);

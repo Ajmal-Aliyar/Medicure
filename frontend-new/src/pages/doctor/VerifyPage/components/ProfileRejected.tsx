@@ -1,9 +1,7 @@
-import { ArrowBigLeft, ArrowBigRight, Edit, X } from "lucide-react"
-import { useDispatch } from "react-redux"
+import { ArrowBigRight } from "lucide-react"
 
 
 export const ProfileRejected = () => {
-    const dispatch = useDispatch()
     const editSubmitReview = () => {
         // dispatch(handleApprove({ status: "pending" }))
     }

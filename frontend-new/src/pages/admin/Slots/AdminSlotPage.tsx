@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import { getNext7Days } from "@/utils/daysUtil";
 import SevenDaysFilter from "@/components/domain/filters/SevenDaysFilter";
 import { SlotList } from "@/pages/patient/BookingSlotDetails/components/SlotList";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/app/store";
+import { useDispatch } from "react-redux";
 import useSlot from "@/hooks/useSlot";
 import { setLoading } from "@/slices/globalSlice";
 import SlotFilter from "@/components/domain/filters/SlotFilter";
@@ -11,26 +10,25 @@ import { Pagination } from "@/components/ui/Pagination";
 
 const AdminSlotPage = () => {
     const [selectedDate, setSelectedDate] = useState<string>(getNext7Days()[0].value);
-    const user = useSelector((state: RootState) => state.auth.user)
-    let [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(1);
     const [status, setStatus] = useState<string>("")
     const [type, setType] = useState<string>("")
     const [isBooked, setIsBooked] = useState<boolean | null>(null)
-    const [isActive, setIsActive] = useState<boolean | null>(null)
+    // const [isActive, setIsActive] = useState<boolean | null>(null)
     const dispatch = useDispatch()
 
     const filters = useMemo(() => ({
         date: selectedDate,
         status,
         type,
-        isActive,
+        // isActive,
         isBooked,
         page,
     }), [
         selectedDate,
         status,
         type,
-        isActive,
+        // isActive,
         isBooked,
         page,
     ]);

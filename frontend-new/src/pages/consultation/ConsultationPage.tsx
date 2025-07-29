@@ -42,7 +42,9 @@ const ConsultationPage = () => {
         const stream = localVideoRef.current?.srcObject as MediaStream;
         const tracks = type === "audio" ? stream?.getAudioTracks() : stream?.getVideoTracks();
         tracks?.forEach((track) => (track.enabled = !track.enabled));
-        type === "audio" ? setAudioOn((p) => !p) : setVideoOn((p) => !p);
+        if (type === "audio") {
+            setAudioOn((p) => !p)
+        } else { setVideoOn((p) => !p) }
     };
 
 

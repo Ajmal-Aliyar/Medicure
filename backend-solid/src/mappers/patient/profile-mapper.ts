@@ -10,11 +10,14 @@ export class PatientProfileMapper {
       id: String(_id),
       personal: safePersonal,
       contact,
+      status: patient.status,
+      createdAt: patient.createdAt,
+      updatedAt: patient.updatedAt
     };
   }
 
   static toPatientUpdate(dto: PatientProfileDto): Partial<IPatient> {
-    const { address, emergencyContact } = dto.contact;
+    const { address } = dto.contact;
     const updates: Record<string, string | string[]> = {};
 
     if (dto.personal.fullName !== undefined) {
@@ -52,15 +55,6 @@ export class PatientProfileMapper {
       updates["contact.address.state"] = address.state;
     }
 
-    if (emergencyContact.name !== undefined) {
-      updates["contact.emergencyContact.name"] = emergencyContact.name;
-    }
-    if (emergencyContact.phone !== undefined) {
-      updates["contact.emergencyContact.phone"] = emergencyContact.phone;
-    }
-    if (emergencyContact.relation !== undefined) {
-      updates["contact.emergencyContact.relation"] = emergencyContact.relation;
-    }
 
     return updates;
   }

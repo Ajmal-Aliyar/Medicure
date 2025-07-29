@@ -8,9 +8,8 @@ import type {
 } from "@/types/withdraw-request";
 
 const BASE_URL = "/api/doctor/withdraw-request";
-export interface IDoctorWithdrawRequest extends IWithdrawRequestService {}
 
-export const doctorWithdrawRequest: IDoctorWithdrawRequest = {
+export const doctorWithdrawRequest: IWithdrawRequestService = {
   requestWithdraw: async (request: IWithdrawRequestDTO): Promise<IWithdrawRequest> => {
     const response = await api.post<{ data: IWithdrawRequest }>(`${BASE_URL}`, {
       request,

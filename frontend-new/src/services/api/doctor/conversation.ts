@@ -4,11 +4,7 @@ import type { IConversationDetails, IConversationService } from "@/types/convers
 
 const BASE_URL = "/api/doctor/conversation";
 
-export interface IDoctorConversationService extends IConversationService {
-
-}
-
-export const doctorConversationService: IDoctorConversationService = {
+export const doctorConversationService: IConversationService = {
   getConversations: async (page: number): Promise<{ data: IConversationDetails[], meta: MetaType}> => {
     const response = await api.get<{ data: IConversationDetails[],  meta: MetaType}>(
       `${BASE_URL}?page=${page}`

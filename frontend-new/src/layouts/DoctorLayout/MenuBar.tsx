@@ -1,13 +1,12 @@
-
 import type { RootState } from '@/app/store';
 import { useLogout } from '@/hooks';
 import { Calendar, CircleUserRound, ClipboardPlus, Landmark, LayoutDashboard, LogOut, Menu, MessageSquare } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 type MenuItem = {
-    icon: any;
+    icon: ReactNode;
     label: string;
     path: string;
 };

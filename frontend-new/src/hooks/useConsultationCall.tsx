@@ -27,10 +27,10 @@ export const useConsultationCall = ({
     const [callStarted, setCallStarted] = useState(false);
 
     useEffect(() => {
-        remoteUserId && initPeerConnection(remoteUserId)
+       if (remoteUserId ) initPeerConnection(remoteUserId)
         return () => {
             if (localVideoRef.current?.srcObject instanceof MediaStream) {
-                localVideoRef.current.srcObject.getTracks().forEach((track: any) => track.stop());
+                localVideoRef.current.srcObject.getTracks().forEach((track: MediaStreamTrack) => track.stop());
             }
             onClose();
         };

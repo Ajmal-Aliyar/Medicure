@@ -2,7 +2,7 @@ import { DoctorCard } from "@/components/domain/Cards";
 import { Pagination } from "@/components/ui/Pagination";
 import { StarRating } from "@/components/ui/StarRating";
 import { useFeedback } from "@/hooks/useFeedback";
-import { formatDate, formatDateToLong, formatTimeTo12Hour, parseToMD } from "@/utils/formatDate";
+import { formatDateToLong, formatTimeTo12Hour } from "@/utils/formatDate";
 import type { FC } from "react";
 
 const PatientFeedbackPage: FC = () => {

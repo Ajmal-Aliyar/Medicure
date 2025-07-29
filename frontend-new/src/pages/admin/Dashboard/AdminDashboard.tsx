@@ -12,97 +12,6 @@ import WalletCard from "@/components/domain/Cards/WalletCard";
 import type { IWallet } from "@/types/wallet";
 const LazyTransactionDetails = lazy(() => import("@/pages/admin/Finance/components/TransactionDetails"));
 
-interface ITransaction {
-    id: string;
-    amount: number;
-    createdAt: string;
-    type: string;
-    direction: "credit" | "debit";
-    doctorId: string;
-}
-export const mockTransactions: ITransaction[] = [
-    {
-        id: "txn1",
-        amount: 200,
-        createdAt: "2025-07-01T10:15:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn2",
-        amount: 350,
-        createdAt: "2025-07-02T12:20:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn3",
-        amount: 150,
-        createdAt: "2025-07-02T14:50:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn4",
-        amount: 500,
-        createdAt: "2025-07-03T09:00:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn5",
-        amount: 400,
-        createdAt: "2025-07-05T16:45:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn6",
-        amount: 100,
-        createdAt: "2025-07-07T08:10:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn7",
-        amount: 300,
-        createdAt: "2025-07-08T13:35:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn8",
-        amount: 250,
-        createdAt: "2025-07-09T11:25:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn9",
-        amount: 350,
-        createdAt: "2025-07-10T15:00:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-    {
-        id: "txn10",
-        amount: 180,
-        createdAt: "2025-07-11T17:40:00.000Z",
-        type: "appointment",
-        direction: "credit",
-        doctorId: "doc1"
-    },
-];
-
 
 const AdminDashboard = () => {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -116,7 +25,7 @@ const AdminDashboard = () => {
     }), [selectedDate]);
 
 
-    const { data, loading } = useDoctors(filters);
+    const { data } = useDoctors(filters);
     return (
         <div className="w-full h-full overflow-auto">
             <div className="grid grid-cols-3 auto-rows-auto gap-4">
@@ -155,14 +64,6 @@ const AdminDashboard = () => {
                         <LazyTransactionDetails className="max-h-[400px]" />
                     </Suspense>
                 </div>
-                {/* <div className="flex justify-between items-center w-full mt-3 p-4">
-                        <div>
-                            <p className="text-secondary font-bold text-xl"> Account Balance</p>
-                            <p className="text-xs">last updated at</p>
-                        </div>
-
-                        <p className="text-primary font-semibold text-2xl">₹1600</p>
-                    </div> */}
 
             </div>
         </div>

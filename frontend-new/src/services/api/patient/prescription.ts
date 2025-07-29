@@ -4,8 +4,7 @@ import type { IPrescription, IPrescriptionService, IViewPrescription } from "@/t
 
 const BASE_URL = "/api/patient/prescription";
 
-interface IPatientPrescriptionService extends IPrescriptionService {}
-export const patientPrescriptionService: IPatientPrescriptionService = {
+export const patientPrescriptionService: IPrescriptionService = {
   getPrescriptionDetails: async (prescriptionId: string): Promise<IPrescription> => {
     const { data } = await api.get<{ data: IPrescription }>(
       `${BASE_URL}/${prescriptionId}`

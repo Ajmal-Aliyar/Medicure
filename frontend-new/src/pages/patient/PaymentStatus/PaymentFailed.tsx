@@ -31,7 +31,8 @@ const PaymentFailed = () => {
           setSlotId(extractedSlotId);
           await patientPaymentService.cancelCheckout(extractedSlotId);
         }
-      } catch (_error) {
+      } catch (err) {
+        console.log(err);
         navigate(-1);
       }
     };

@@ -1,7 +1,7 @@
-import { uploadCloudinary } from '@/lib/cloudinary';
 import { setLoading } from '@/slices/globalSlice';
 import React, { useState, type Dispatch, type SetStateAction } from 'react';
 import { useDispatch } from 'react-redux';
+import { uploadCloudinary } from '@/lib/cloudinary';
 
 export interface IImageUploader {
     profileImage: string;
@@ -86,6 +86,8 @@ export const ImageUploader: React.FC<IImageUploader> = ({ setEditProfile, profil
                     setEditProfile('');
                 }
             } catch (uploadError) {
+                console.log(uploadError);
+                
                 setError('Failed to upload image.');
             }
         } else {

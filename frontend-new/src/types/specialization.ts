@@ -1,6 +1,4 @@
-export interface ISpecialization {
 
-}
 
 export interface PublicSpecialization {
     name: string;

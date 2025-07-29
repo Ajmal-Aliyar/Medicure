@@ -4,7 +4,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 interface Props {
   value: string;
-  onChange: (value: string) => void; // Corrected type
+  onChange: (value: string) => void;
 }
 
 export const MedicineSelector: React.FC<Props> = ({ value, onChange }) => {
@@ -30,11 +30,13 @@ export const MedicineSelector: React.FC<Props> = ({ value, onChange }) => {
         );
 
         const brandNames: string[] = res.data.results.flatMap(
-          (item: any) => item.openfda.brand_name || []
+          (item: { openfda: {brand_name: string[]}}) => item.openfda.brand_name || []
         );
 
         setSuggestions([...new Set(brandNames)]);
       } catch (error) {
+        console.log(error);
+        
         setSuggestions([]);
       } finally {
         setLoading(false);
