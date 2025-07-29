@@ -13,6 +13,9 @@ export interface Transaction  {
     createdAt: Date;
 }
 
+export interface TransactionChartData {date: string, totalAmount: number, totalTransactions: number}
+
+
 
 
 

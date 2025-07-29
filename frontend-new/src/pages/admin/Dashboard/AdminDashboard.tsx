@@ -105,9 +105,8 @@ export const mockTransactions: ITransaction[] = [
 
 
 const AdminDashboard = () => {
-    const [viewType, setViewType] = useState<"day" | "week" | "month">("day");
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-    const [ wallet, setWallet] = useState<IWallet | null>(null)
+    const [wallet, setWallet] = useState<IWallet | null>(null)
     const navigate = useNavigate()
 
     const filters = useMemo(() => ({
@@ -119,36 +118,24 @@ const AdminDashboard = () => {
 
     const { data, loading } = useDoctors(filters);
     return (
-        <div className="w-full h-full">
-            <div className="grid grid-cols-3 grid-rows-2 gap-4 h-full">
-                <div className="col-span-2 bg-surface rounded-md shadow-md flex flex-col flex-1">
-                    <div className="flex justify-between items-center mb-4 border-b border-border p-3">
-                        <h2 className="font-medium text-md text-secondary-dark">Revenue Overview</h2>
-                        <select
-                            className="border rounded px-2 py-1 text-sm"
-                            value={viewType}
-                            onChange={(e) => setViewType(e.target.value as any)}
-                        >
-                            <option value="day">Daily</option>
-                            <option value="week">Weekly</option>
-                            <option value="month">Monthly</option>
-                        </select>
-                    </div>
-                    <TransactionChart transactions={mockTransactions} viewType={viewType} />
+        <div className="w-full h-full overflow-auto">
+            <div className="grid grid-cols-3 auto-rows-auto gap-4">
+                <div className="col-span-2  bg-surface rounded-md shadow-md flex flex-col h-fit">
+                    <TransactionChart  />
                 </div>
-                <div className=" flex flex-col col-span-1 bg-surface rounded-md shadow-md">
-                    <h2 className="text-secondary-dark font-medium text-md p-3 border-b border-border">Users Ratio</h2>
+                <div className=" flex flex-col col-span-1  bg-surface rounded-md shadow-md ">
+                    <h2 className="text-secondary font-medium text-md p-3 border-b border-border">Users Ratio</h2>
                     <DoctorPatientRatioChart />
                 </div>
-                <div className="bg-surface row-span-2 rounded-md shadow-md">
-                    <p className="text-secondary-dark font-medium text-md p-3 border-b border-border">
+                <div className="bg-surface  rounded-md shadow-md h-fit">
+                    <p className="text-secondary font-medium text-md p-3 border-b border-border">
                         Calender
                     </p>
                     <CalendarWithNavigation selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                 </div>
 
-                <div className="bg-surface row-span-2 rounded-md shadow-md overflow-hidden">
-                    <div className="text-secondary-dark font-medium text-md p-3 border-b border-border flex justify-between">
+                <div className="bg-surface rounded-md shadow-md overflow-hidden ">
+                    <div className="text-secondary font-medium text-md p-3 border-b border-border flex justify-between">
                         <p>Approval Requests</p>
                         <p className="text-primary">{isToday(selectedDate.toString()) ? 'Today' : formatDateToLong(selectedDate.toString())}</p>
                     </div>
@@ -159,16 +146,16 @@ const AdminDashboard = () => {
 
                 </div>
 
-                 <div className="row-span-3 bg-surface rounded-md shadow-md overflow-auto flex flex-col">
-                    <p className="text-secondary-dark font-medium text-md p-3 border-b border-border">
+                <div className=" bg-surface rounded-md shadow-md overflow-auto flex flex-col ">
+                    <p className="text-secondary font-medium text-md p-3 border-b border-border">
                         Finance
                     </p>
-                    <WalletCard wallet={wallet} setWallet={setWallet} role={"admin"} />
+                    <WalletCard wallet={wallet} setWallet={setWallet} role={"admin"} className="border-b border-border"/>
                     <Suspense fallback={<div className="p-4">Loading transactions...</div>}>
                         <LazyTransactionDetails className="max-h-[400px]" />
                     </Suspense>
                 </div>
-                    {/* <div className="flex justify-between items-center w-full mt-3 p-4">
+                {/* <div className="flex justify-between items-center w-full mt-3 p-4">
                         <div>
                             <p className="text-secondary font-bold text-xl"> Account Balance</p>
                             <p className="text-xs">last updated at</p>

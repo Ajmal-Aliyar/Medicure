@@ -12,14 +12,14 @@ export const createPaymentRoute = (): Router => {
     TYPES.PaymentController
   );
 
-  router.post("/book-slot", asyncHandler(paymentController.checkoutSession));
-  router.post("/cancel-checkout", asyncHandler(paymentController.cancelCheckout));
-  router.get("/session-details", asyncHandler(paymentController.getSessionDetails));
   router.post(
     "/webhook",
     express.raw({ type: "application/json" }),
       asyncHandler(paymentController.webhookHandler)
   );
+  router.post("/book-slot", asyncHandler(paymentController.checkoutSession));
+  router.post("/cancel-checkout", asyncHandler(paymentController.cancelCheckout));
+  router.get("/session-details", asyncHandler(paymentController.getSessionDetails));
 
   return router;
 };

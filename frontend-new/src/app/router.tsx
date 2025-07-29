@@ -38,6 +38,7 @@ import ViewPrescription from "@/pages/consultation/ViewPrescription";
 import MedicalRecord from "@/pages/patient/MedicalRecord/MedicalRecord";
 import ChatPage from "@/pages/chat/ChatPage";
 import AdminPatientsPage from "@/pages/admin/patients/AdminPatientsPage";
+import PaymentSuccess from "@/pages/patient/PaymentStatus/PaymentSuccess";
 
 
 const router = createBrowserRouter([
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
       {path: 'find', element: <FindPage /> },
       {path: 'book-slots/:doctorId', element: <AuthorizedRoute allowedRole={["patient"]}><BookingSlotDetails /></AuthorizedRoute>  },
       {path: 'cancel-payment', element: <AuthorizedRoute allowedRole={["patient"]}><PaymentFailed /></AuthorizedRoute> },
+      {path: 'success', element: <AuthorizedRoute allowedRole={["patient"]}><PaymentSuccess /></AuthorizedRoute> },
     ]
   },
   {

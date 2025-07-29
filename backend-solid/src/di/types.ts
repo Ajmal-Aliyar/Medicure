@@ -114,6 +114,8 @@ export const TYPES = {
   TransactionRepository: Symbol.for("TransactionRepository"),
   TransactionService: Symbol.for("TransactionService"),
   TransactionController: Symbol.for("TransactionController"),
+  AdminTransactionService: Symbol.for("AdminTransactionService"),
+  AdminTransactionController: Symbol.for("AdminTransactionController"),
 
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),

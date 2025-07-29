@@ -8,3 +8,5 @@ export interface TransactionDetails {
     createdAt: Date;
     direction: "credit" | "debit"
 }
+
+export interface TransactionChartData {date: string, totalAmount: number, totalTransactions: number}

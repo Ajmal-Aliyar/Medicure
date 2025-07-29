@@ -21,7 +21,7 @@ const UserDriveLayout = () => {
         <div className="w-screen h-screen flex justify-center items-center md:p-6 bg-[#eeeeee] ">
             <div className="w-full h-full rounded-md bg-[#f9f9f9] shadow-lg flex flex-col overflow-hidden">
                 <div className="border-b p-5 w-full max-h-[80px] md:flex hidden items-center cursor-pointer"
-                    onClick={() => navigate(-1)}>
+                    onClick={() => navigate('/find')}>
                     <ChevronLeft />
                     <p className="text-[#0c0b3eb5] text-lg font-medium">My Drive</p>
                 </div>

@@ -16,11 +16,7 @@ type DoctorPatientLogin = {
   patientCount: number;
 };
 
-interface Props {
-  data: DoctorPatientLogin[];
-}
 
-// You can pass this `mockDoctorPatientLogin` as a prop to the component if needed
 export const mockDoctorPatientLogin = [
   { date: "2025-07-01", doctorCount: 12, patientCount: 0 },
   { date: "2025-07-02", doctorCount: 9, patientCount: 41 },

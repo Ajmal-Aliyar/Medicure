@@ -72,7 +72,10 @@ const PaymentFailed = () => {
           payment details and try again.
         </p>
 
-        <Button variant="red" className="py-3" onClick={handleRetry}>Retry Payment</Button>
+        <div className="flex gap-4 ">
+        <Button variant="muted" className="py-2 px-3" onClick={() => navigate('/find')}>Go back</Button>
+        <Button variant="red" className="py-2 px-3" onClick={handleRetry}>Retry Payment</Button>
+        </div>
       </div>
     </div>
   );
