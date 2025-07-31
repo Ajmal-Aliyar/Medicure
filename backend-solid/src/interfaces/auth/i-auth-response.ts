@@ -4,5 +4,6 @@ export interface IAuthResponseUser {
     role: 'admin' | 'doctor' | 'patient';
     isApproved: "pending" | "applied" | "approved" | "rejected";
     fullName: string;
-    profileImage: string | null
+    profileImage: string | null;
+    isBlocked?: boolean;
 }

@@ -6,6 +6,10 @@ import { createAdminSlotRouter } from "./slot-route";
 import { createTransactionRoute } from "./transaction-route";
 import { createConnectionRequestRoute } from "./connection-request";
 import { createConversationRoute } from "./conversation";
+import { createMessageRouter } from "./message";
+import { createWalletRouter } from "./wallet";
+import { createWithdrawRequestRoute } from "./withdraw-request";
+import { createAdminPatientRouter } from "./patient-route";
 
 export const createAdminRouter = () => {
   const router = Router();
@@ -17,5 +21,9 @@ export const createAdminRouter = () => {
   router.use("/transaction", createTransactionRoute());
   router.use("/connection/request", createConnectionRequestRoute());
   router.use("/conversation", createConversationRoute());
+  router.use("/conversation", createMessageRouter());
+  router.use("/wallet", createWalletRouter());
+  router.use("/withdraw-request", createWithdrawRequestRoute());
+  router.use("/patient", createAdminPatientRouter());
   return router;
 };

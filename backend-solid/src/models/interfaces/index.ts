@@ -14,3 +14,4 @@ export * from './medical-record';
 export * from './connection-request';
 export * from './conversation';
 export * from './message';
+export * from './withdraw-request';

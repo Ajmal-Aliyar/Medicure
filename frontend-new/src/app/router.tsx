@@ -37,6 +37,7 @@ import PatientFeedbackPage from "@/pages/patient/Feedback/FeedbackPage";
 import ViewPrescription from "@/pages/consultation/ViewPrescription";
 import MedicalRecord from "@/pages/patient/MedicalRecord/MedicalRecord";
 import ChatPage from "@/pages/chat/ChatPage";
+import AdminPatientsPage from "@/pages/admin/patients/AdminPatientsPage";
 
 
 const router = createBrowserRouter([
@@ -118,6 +119,7 @@ const router = createBrowserRouter([
       { path: "appointments", element:<AdminAppointmentPage/>},
       { path: "slots", element:<AdminSlotPage/>},
       { path: "finances", element:<AdminFinancePage/>},
+      { path: 'patients', element: <AdminPatientsPage /> }
     ],
   },
   {

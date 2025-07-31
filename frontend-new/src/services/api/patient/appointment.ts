@@ -11,11 +11,6 @@ import type { IFeedback } from "@/types/feedback";
 const BASE_URL = "/api/patient/appointment";
 interface IPatientAppointmentService extends IAppointmentService {
   getAppointmentByRoomId(roomId: string): Promise<AppointmentDetailsPopulated>;
-  submitFeedbackForAppointment(
-    appointmentId: string,
-    rating: number,
-    comment: string
-  ): Promise<void>;
 }
 
 export const patientAppointmentService: IPatientAppointmentService = {
@@ -47,16 +42,6 @@ export const patientAppointmentService: IPatientAppointmentService = {
     return response.data.data;
   },
 
-  submitFeedbackForAppointment: async (
-    appointmentId: string,
-    rating: number,
-    comment: string
-  ): Promise<void> => {
-      await api.post(`${BASE_URL}/${appointmentId}/feedback`, {
-        rating,
-        comment,
-      });
-  },
 
   getFeedbackByAppointmentId: async(
     appointmentId: string

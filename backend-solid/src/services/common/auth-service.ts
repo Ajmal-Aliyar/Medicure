@@ -3,6 +3,7 @@ import { RegisterDto, LoginDto, AuthResponse } from "@/dtos";
 import {
   BadRequestError,
   ConflictError,
+  ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from "@/errors";
@@ -73,9 +74,17 @@ export class AuthService implements IAuthService {
     const role: IRole = data.role;
     const email = data.email.trim().toLowerCase();
     const userRepo = this.getRepo(role);
-    const user = await userRepo.findByEmail(email);
+    const user: any = await userRepo.findByEmail(email);
+    
     if (!user) {
       throw new NotFoundError(AUTH_MESSAGES.ERROR.INVALID_CREDENTIALS);
+    }
+
+    if (role === 'doctor' && user?.status?.accountStatus?.isBlocked) {
+      throw new ForbiddenError("Doctor is blocked by admin.")
+    }
+    if (role === 'patient' && user?.status?.isBlocked) {
+      throw new ForbiddenError("Patient is blocked by admin.")
     }
 
     const isPasswordValid = await this.passwordHasher.compare(

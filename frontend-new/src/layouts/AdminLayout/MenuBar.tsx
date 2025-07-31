@@ -34,7 +34,7 @@ export const MenuBar = () => {
         { icon: <Accessibility strokeWidth={3}/>, label: 'Patients', path: '/admin/patients' },
         { icon: <Calendar strokeWidth={3}/>, label: 'Slots', path: '/admin/slots' },
         { icon: <ClipboardPlus strokeWidth={3}/>, label: 'Appointments', path: '/admin/appointments' },
-        { icon: <MessageSquare strokeWidth={3} /> , label: 'Chats', path: '/admin/chats' },
+        // { icon: <MessageSquare strokeWidth={3} /> , label: 'Chats', path: '/admin/chats' },
         { icon: <Landmark strokeWidth={3}/>, label: 'Finances', path: '/admin/finances' },
     ];
 

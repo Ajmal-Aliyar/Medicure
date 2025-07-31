@@ -16,5 +16,8 @@ export interface IRegisteredUserWithPersonal {
       reviewStatus: "pending" | "applied" | "approved" | "rejected";
       reviewComment: string | null;
     };
+    accountStatus: {
+      isBlocked: boolean
+    }
   };
 }

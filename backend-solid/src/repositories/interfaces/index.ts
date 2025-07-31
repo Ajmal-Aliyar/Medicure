@@ -14,3 +14,4 @@ export * from './i-medical-record-repository';
 export * from './i-connection-request-repository';
 export * from './i-conversation-repository';
 export * from './i-message-repository';
+export * from './i-withdraw-request-repository';

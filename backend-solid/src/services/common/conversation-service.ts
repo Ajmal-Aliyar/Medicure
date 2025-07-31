@@ -88,9 +88,15 @@ export class ConversationService implements IConversationService {
   }
 
   async updateLastMessage( id: string, message: string, date: Date): Promise<void> {
-    console.log(message, date);
-    
       await this.conversationRepo.update(id, { lastMessage: {message, date}})
+  }
+
+  async isMember(candidateId: string, conversationId: string): Promise<boolean> {
+    const chat = await this.conversationRepo.findById(conversationId);
+    if (!chat) {
+      throw new NotFoundError("Conversation not found.")
+    }
+    return chat.members.some((candidate) => String(candidate.id) === candidateId);
   }
 
   private getRepo(

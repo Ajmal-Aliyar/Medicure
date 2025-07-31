@@ -66,7 +66,7 @@ const ChatPage = () => {
         </div>
       </div>
 
-      <ChatWindow senderId={user?.id as string} senderName={user?.fullName as string}/>
+      <ChatWindow senderId={user?.id as string} senderName={user?.fullName as string} role={user?.role as IRole}/>
     </>
   );
 };

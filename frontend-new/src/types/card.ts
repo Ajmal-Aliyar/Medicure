@@ -21,4 +21,5 @@ export interface PatientCardDetails extends CardDetails {
   dob: string | null;
   bloodGroup: IBloodGroup | null;
   mobile: string;
+  accountStatus?: boolean
 }

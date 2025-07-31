@@ -1,5 +1,14 @@
 
 export const TYPES = {
+  //Withdraw Requests 
+  WithdrawRequestRepository: Symbol.for("WithdrawRequestRepository"),
+  WithdrawRequestService: Symbol.for("WithdrawRequestService"),
+  WithdrawRequestController: Symbol.for("WithdrawRequestController"),
+  DoctorWithdrawRequestService: Symbol.for("DoctorWithdrawRequestService"),
+  DoctorWithdrawRequestController: Symbol.for("DoctorWithdrawRequestController"),
+  AdminWithdrawRequestService: Symbol.for("AdminWithdrawRequestService"),
+  AdminWithdrawRequestController: Symbol.for("AdminWithdrawRequestController"),
+
   //Appointment
   AppointmentRepository: Symbol.for("AppointmentRepository"),
   AppointmentService: Symbol.for("AppointmentService"),
@@ -51,8 +60,13 @@ export const TYPES = {
   //Message
   MessageRepository: Symbol.for("MessageRepository"),
   MessageService: Symbol.for("MessageService"),
+  MessageController: Symbol.for("MessageController"),
 
 
+  // Wallet
+  WalletRepository: Symbol.for("WalletRepository"),
+  WalletService: Symbol.for("WalletService"),
+  WalletController: Symbol.for("WalletController"),
 
 
   //Admin
@@ -69,8 +83,10 @@ export const TYPES = {
   
   //Patient
   PatientController: Symbol.for("PatientController"),
+  AdminPatientController: Symbol.for("AdminPatientController"),
   PatientDoctorController: Symbol.for("PatientDoctorController"),
   PatientService: Symbol.for("PatientService"),
+  AdminPatientService: Symbol.for("AdminPatientService"),
   PatientDoctorService: Symbol.for("PatientDoctorService"),
   PatientSlotController: Symbol.for("PatientSlotController"),
   PatientSlotService: Symbol.for("PatientSlotService"),
@@ -97,10 +113,7 @@ export const TYPES = {
   SlotController: Symbol.for("SlotController"),
   TransactionRepository: Symbol.for("TransactionRepository"),
   TransactionService: Symbol.for("TransactionService"),
-  WalletRepository: Symbol.for("WalletRepository"),
-  WalletService: Symbol.for("WalletService"),
   TransactionController: Symbol.for("TransactionController"),
-  WalletController: Symbol.for("WalletController"),
 
   MediaService: Symbol.for("MediaService"),
   CacheService: Symbol.for("CacheService"),

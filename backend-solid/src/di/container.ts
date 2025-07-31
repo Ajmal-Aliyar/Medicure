@@ -18,6 +18,7 @@ import {
   bindSpecializationModule,
   bindTransactionModule,
   bindWalletModule,
+  bindWithdrawRequestModule,
 } from "@/di";
 
 const container: Container = new Container();
@@ -41,6 +42,7 @@ const startContainer =  () => {
    bindConnectionRequestModule(container);
    bindConversationModule(container);
    bindMessageModule(container);
+   bindWithdrawRequestModule(container);
 };
 
 const getContainer = (): Container => {

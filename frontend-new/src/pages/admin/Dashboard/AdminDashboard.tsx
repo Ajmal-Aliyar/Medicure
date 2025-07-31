@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 import DoctorPatientRatioChart from "./components/DoctorPatientRationChart";
 import TransactionChart from "./components/TransactionChart"
 import CalendarWithNavigation from "@/pages/doctor/Dashboard/components/CalendarWithNavigation";
@@ -8,7 +8,10 @@ import type { FilterDoctorSummary } from "@/types/doctor";
 import { useNavigate } from "react-router-dom";
 import { isToday } from "date-fns";
 import { formatDateToLong } from "@/utils/formatDate";
-import AdminWallet from "../Finance/components/AdminWallet";
+import WalletCard from "@/components/domain/Cards/WalletCard";
+import type { IWallet } from "@/types/wallet";
+const LazyTransactionDetails = lazy(() => import("@/pages/admin/Finance/components/TransactionDetails"));
+
 interface ITransaction {
     id: string;
     amount: number;
@@ -104,6 +107,7 @@ export const mockTransactions: ITransaction[] = [
 const AdminDashboard = () => {
     const [viewType, setViewType] = useState<"day" | "week" | "month">("day");
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+    const [ wallet, setWallet] = useState<IWallet | null>(null)
     const navigate = useNavigate()
 
     const filters = useMemo(() => ({
@@ -155,20 +159,23 @@ const AdminDashboard = () => {
 
                 </div>
 
-                <div className="row-span-3 bg-surface rounded-md shadow-md overflow-auto flex flex-col">
+                 <div className="row-span-3 bg-surface rounded-md shadow-md overflow-auto flex flex-col">
                     <p className="text-secondary-dark font-medium text-md p-3 border-b border-border">
                         Finance
                     </p>
-                    <AdminWallet className="border-b border-border" />
-                    <div className="flex justify-between items-center w-full mt-3 p-4">
+                    <WalletCard wallet={wallet} setWallet={setWallet} role={"admin"} />
+                    <Suspense fallback={<div className="p-4">Loading transactions...</div>}>
+                        <LazyTransactionDetails className="max-h-[400px]" />
+                    </Suspense>
+                </div>
+                    {/* <div className="flex justify-between items-center w-full mt-3 p-4">
                         <div>
                             <p className="text-secondary font-bold text-xl"> Account Balance</p>
                             <p className="text-xs">last updated at</p>
                         </div>
 
                         <p className="text-primary font-semibold text-2xl">₹1600</p>
-                    </div>
-                </div>
+                    </div> */}
 
             </div>
         </div>

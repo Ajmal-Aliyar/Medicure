@@ -10,9 +10,8 @@ import { updateDoctorProfile } from "@/slices/doctorSlice";
 export const VerifyPage = () => {
     const [isModalOpen, setIsModalOpen] = useState<string>('');
 
-    let doctor = useSelector((state: RootState) => state.doctor)
+    const {doctor} = useSelector((state: RootState) => state.doctor)
     const dispatch = useDispatch()
-
 
     const handleModal = (val: string) => {
         setIsModalOpen(val);
@@ -21,7 +20,7 @@ export const VerifyPage = () => {
     useEffect(() => {
         const getDoctorAndSlotData = async () => {
             try {
-                const {doctor} = await doctorService.getProfileDetails()      
+                const { doctor } = await doctorService.getProfileDetails()
                 dispatch(updateDoctorProfile(doctor))
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -41,7 +40,7 @@ export const VerifyPage = () => {
 
             {isModalOpen === 'Profile Image' &&
                 <EditProfilePortal onClose={setIsModalOpen}>
-                    <ImageUploader setEditProfile={setIsModalOpen} profileImage={doctor?.profileImage} requestUpdateProfileImage={requestUpdateProfileImage}/>
+                    <ImageUploader setEditProfile={setIsModalOpen} profileImage={doctor?.profileImage} requestUpdateProfileImage={requestUpdateProfileImage} />
                 </EditProfilePortal>}
             {isModalOpen === 'Profile Details' &&
                 <EditProfilePortal onClose={setIsModalOpen}>
@@ -51,11 +50,11 @@ export const VerifyPage = () => {
             {isModalOpen === 'Professional Details' && (
                 <SwipeModal onClose={handleModal}>
                     <ProfessionalDetails handleModal={handleModal} />
-                 </SwipeModal>
+                </SwipeModal>
             )}
             {isModalOpen === 'Profile Verification' && (
                 <SwipeModal onClose={handleModal}>
-                    <ProofsDetails handleModal={handleModal}  />
+                    <ProofsDetails handleModal={handleModal} />
                 </SwipeModal>
             )}
         </div>

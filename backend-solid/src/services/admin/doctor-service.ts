@@ -8,7 +8,7 @@ import {
   PublicDoctorDetails,
 } from "@/dtos";
 import { BadRequestError } from "@/errors";
-import {  IPagination, IReviewStatus } from "@/interfaces";
+import { IPagination, IReviewStatus } from "@/interfaces";
 import { AdminDoctorMapper, AuthMapper, DoctorMapper } from "@/mappers";
 import { IDoctor } from "@/models";
 import { IDoctorRepository } from "@/repositories";
@@ -26,33 +26,26 @@ export class AdminDoctorService implements IAdminDoctorService {
     @inject(TYPES.DoctorRepository)
     private readonly doctorRepo: IDoctorRepository
   ) {}
-  
+
   async getFilteredDoctor(
-      doctorOptions: FilterDoctorQuery,
-      pagination: IPagination
-    ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
-      const options = mapFilterQueryToDoctorOptions(doctorOptions, true);
-      console.log(options, 'op');
-      
-      const { data, total } = await this.doctorRepo.filterDoctorForAdmin(
-        options,
-        pagination
-      );
-      const filteredDoctor = DoctorMapper.toDoctorCardDto(data, true);
-      return { total, doctors: filteredDoctor };
-    }
+    doctorOptions: FilterDoctorQuery,
+    pagination: IPagination
+  ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
+    const options = mapFilterQueryToDoctorOptions(doctorOptions, true);
+    const { data, total } = await this.doctorRepo.filterDoctorForAdmin(
+      options,
+      pagination
+    );
+    const filteredDoctor = DoctorMapper.toDoctorCardDto(data, true);
+    return { total, doctors: filteredDoctor };
+  }
 
-    async getDoctorProfile(
-      doctorId: string | null
-    ): Promise<DoctorMappedProfileDto> {
-      const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
-      return AdminDoctorMapper.toMapDoctorWithDefaults(doctor);
-    }
-
-
-
-
-
+  async getDoctorProfile(
+    doctorId: string | null
+  ): Promise<DoctorMappedProfileDto> {
+    const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    return AdminDoctorMapper.toMapDoctorWithDefaults(doctor);
+  }
 
   async getDoctorsByReviewStatus(
     reviewStatus: string,
@@ -87,9 +80,6 @@ export class AdminDoctorService implements IAdminDoctorService {
     return { total, doctors: dtos };
   }
 
-  
-
-  
   async getDoctorApprovalDetails(
     doctorId: string | null
   ): Promise<DoctorApprovalDetailsDto> {

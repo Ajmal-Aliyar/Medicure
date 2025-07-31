@@ -12,3 +12,4 @@ export * from './medical-record-repository';
 export * from './connection-request-repository';
 export * from './conversation-repository';
 export * from './message-repository';
+export * from './withdraw-request-repository';
