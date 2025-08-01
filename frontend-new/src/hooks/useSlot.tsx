@@ -12,7 +12,7 @@ interface Filters {
     patientId?: string;
     type?: string;
     isBooked: boolean | null;
-    isActive: boolean | null;
+    isActive?: boolean | null;
     status?: string;
     date?: string;
     page?: number;
@@ -37,7 +37,7 @@ const useSlot = (filters: Filters) => {
                 if (filters.patientId) queryParams.append("patientId", filters.patientId);
                 if (filters.type) queryParams.append("type", filters.type);
                 if (filters.isBooked !== null) queryParams.append("isBooked", filters.isBooked.toString());
-                if (filters.isActive !== null) queryParams.append("isActive", filters.isActive.toString());
+                if (filters.isActive && filters.isActive !== null) queryParams.append("isActive", filters.isActive.toString());
                 if (filters.status) queryParams.append("status", filters.status);
                 if (filters.date) queryParams.append("date", filters.date);
                 if (filters.page) queryParams.append("page", filters.page.toString());

@@ -2,6 +2,7 @@
 import type { RootState } from "@/app/store";
 import { showError } from "@/lib/toast";
 import { doctorService } from "@/services/api/doctor/doctor";
+import type { IAddress } from "@/slices/doctorSlice";
 import { setLoading } from "@/slices/globalSlice";
 import type { IDoctorData } from "@/types/doctor";
 import { validateDoctorData } from "@/validators";
@@ -10,8 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 export const AddProfile: React.FC<{ setEditProfile: Dispatch<SetStateAction<string>> }> = ({ setEditProfile }) => {
-    const {doctor} = useSelector((state: RootState) => state.doctor)
-    
+    const { doctor } = useSelector((state: RootState) => state.doctor)
+
     const dispatch = useDispatch()
 
     const [doctorData, setDoctorData] = useState<IDoctorData>({
@@ -72,6 +73,9 @@ export const AddProfile: React.FC<{ setEditProfile: Dispatch<SetStateAction<stri
         }
     };
 
+    const addressFields: (keyof IAddress)[] = ["street", "city", "state", "country", "pincode"];
+
+
     return (
         <div className="w-full h-full relative py-10">
             <div className="px-3 pt-2 pb-1 border-b-2 border-gray-100 flex justify-between h-12 absolute top-0 bg-white w-full rounded-t-md">
@@ -109,7 +113,7 @@ export const AddProfile: React.FC<{ setEditProfile: Dispatch<SetStateAction<stri
                     className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
 
                 <label htmlFor="gender" className="text-md font-medium text-gray-400">Gender*</label>
-                <input id="gender" type="text" value={doctorData.gender} onChange={handleChange}
+                <input id="gender" type="text" value={doctorData.gender || ''} onChange={handleChange}
                     className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent" />
                 <label htmlFor="specialization" className="text-md font-medium text-gray-400">specialization*</label>
                 <input id="specialization" type="text" value={doctorData.specialization} onChange={handleChange}
@@ -125,19 +129,20 @@ export const AddProfile: React.FC<{ setEditProfile: Dispatch<SetStateAction<stri
 
                 <div className="text-xl font-medium text-gray-500 mt-5">Address</div>
 
-                {[ "street", "city", "state", "country", "pincode"].map((field) => (
+                {addressFields.map((field) => (
                     <div key={field}>
-                        <label htmlFor={field} className="text-md font-medium text-gray-400">{field.replace(/([A-Z])/g, ' $1').trim()}*</label>
+                        <label htmlFor={field} className="text-md font-medium text-gray-400">
+                            {field.replace(/([A-Z])/g, ' $1').trim()}*
+                        </label>
                         <input
                             id={field}
                             type="text"
-                            value={doctorData[field as keyof typeof doctorData]}
+                            value={doctorData[field]}
                             onChange={handleChange}
                             className="w-full border border-gray-300 rounded-md px-2 py-1 hover:border-blue-400 bg-transparent"
                         />
                     </div>
                 ))}
-
                 <div className="mb-4"></div>
             </div>
 

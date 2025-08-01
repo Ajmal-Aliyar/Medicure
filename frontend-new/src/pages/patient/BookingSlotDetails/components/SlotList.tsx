@@ -9,11 +9,11 @@ interface CommonSlotListProps {
 }
 
 interface PatientSlotListProps extends CommonSlotListProps {
-  onClick: (slotId: string) => void;
+  onClick?: (slotId: string) => void;
 }
 
 interface DoctorSlotListProps extends CommonSlotListProps {
-  onClick: (slotId: string, isActive: boolean) => Promise<void>;
+  onClick?: (slotId: string, isActive: boolean) => Promise<void>;
 }
 
 type SlotListProps = PatientSlotListProps | DoctorSlotListProps;

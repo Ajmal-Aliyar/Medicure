@@ -6,8 +6,6 @@ import StatusSelect from "@/components/ui/SelectBox";
 import { SpecializationSelector } from "@/components/ui/SpecializationSelector";
 import { useRole } from "@/hooks";
 
-
-
 const profileStatusOptions = ["pending", "rejected", "approved", "applied"];
 const accountStatusOptions = ["blocked", "unblocked"];
 
@@ -43,7 +41,7 @@ export const DoctorFilter = ({
     const onRemove = () => {
         setLanguage([]);
         setProfileStatus("");
-        setSpecialization && setSpecialization(null);
+        if(setSpecialization) setSpecialization(null);
         setAccountStatus("");
         setExperienceRange({ min: "", max: "" });
         setRatingRange({ min: "", max: "" });

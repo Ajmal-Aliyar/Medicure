@@ -2,8 +2,8 @@ import { ICE_SERVERS } from "@/types/consult";
 import { useRef } from "react";
 
 interface Props {
-    localVideoRef: React.RefObject<HTMLVideoElement> | any,
-    remoteVideoRef: React.RefObject<HTMLVideoElement> | any,
+    localVideoRef: React.RefObject<HTMLVideoElement  | null>,
+    remoteVideoRef: React.RefObject<HTMLVideoElement | null> ,
     videoOn: boolean,
     audioOn: boolean
     onIceCandidate: (candidate: RTCIceCandidate, remoteSocketId: string) => void
@@ -26,7 +26,7 @@ export const usePeerConnection = ({ audioOn, videoOn, localVideoRef, onIceCandid
             };
             peerConnection.current.ontrack = (event) => {
                 const [stream] = event.streams;
-                if (remoteVideoRef.current) {
+                if (remoteVideoRef && remoteVideoRef.current) {
                     remoteVideoRef.current.srcObject = stream;
                     remoteVideoRef.current.onloadedmetadata = () => {
                         remoteVideoRef.current?.play().catch((err: unknown) => {
@@ -47,7 +47,7 @@ export const usePeerConnection = ({ audioOn, videoOn, localVideoRef, onIceCandid
                 alert("Unable to access camera/mic. Please allow permissions or check browser settings.");
                 return false;
             }
-            if (localVideoRef.current) {
+            if (localVideoRef && localVideoRef.current) {
                 localVideoRef.current.srcObject = localStream;
             }
             localStream.getTracks().forEach((track) => {
@@ -64,7 +64,7 @@ export const usePeerConnection = ({ audioOn, videoOn, localVideoRef, onIceCandid
 
 
     const clearRemoteStream = () => {
-        if (remoteVideoRef.current) {
+        if (remoteVideoRef && remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = null;
         }
     };

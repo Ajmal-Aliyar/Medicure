@@ -24,14 +24,12 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
     const { user } = useSelector((state: RootState) => state.auth)
     const showBothUsers = user?.role === "admin";
     const [appointmentDetails, setAppointmentDetails] = useState<AppointmentPageDetails | null>(null);
-    const [loading, setLoading] = useState(true);
     const dispatch = useDispatch()
     const navigate = useNavigate();
     useEffect(() => {
         if (!appointmentId) return;
         const fetchAppointment = async () => {
             try {
-                setLoading(true);
                 const services: Record<IRole, IAppointmentService> = {
                     patient: patientAppointmentService,
                     doctor: doctorAppointmentService,
@@ -44,9 +42,7 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                 setAppointmentDetails(appointmentDetails);
             } catch (err) {
                 console.log(err)
-            } finally {
-                setLoading(false);
-            }
+            } 
         };
         fetchAppointment();
     }, [appointmentId]);

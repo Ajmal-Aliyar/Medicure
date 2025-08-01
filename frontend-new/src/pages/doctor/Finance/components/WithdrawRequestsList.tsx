@@ -34,28 +34,30 @@ const WithdrawRequestsList = () => {
   }, [status, page])
 
   const ApproveRequestHandler = (id: string, status: string) => {
+    console.log(id, status);
+    
     // dispatch(setExtra(() => ApproveRequest(id, status)))
     // dispatch(setWarning(`Do you want to ${status} this request?`))
   }
 
-  const ApproveRequest = async (id: string, status: string) => {
-    try {
-      // dispatch(setLoading(true))
-      // dispatch(clearWarning())
-      // dispatch(setExtra(null))
+  // const ApproveRequest = async (id: string, status: string) => {
+  //   try {
+  //     dispatch(setLoading(true))
+  //     dispatch(clearWarning())
+  //     dispatch(setExtra(null))
 
-      // const response = status === 'approve' ? await approveWithdrawRequestApi(id) : await cancelWithdrawRequestApi(id)
-      // setStatus(status === 'cancel' ? 'rejected' : 'approved')
-      // dispatch(setSuccess(response.message))
+  //     const response = status === 'approve' ? await approveWithdrawRequestApi(id) : await cancelWithdrawRequestApi(id)
+  //     setStatus(status === 'cancel' ? 'rejected' : 'approved')
+  //     dispatch(setSuccess(response.message))
 
-    } catch (error: unknown) {
-      const err = error as any;
-      const errorMsg = err.response?.data?.message || `Error occured while ${status} withdraw`
-      // dispatch(setError(errorMsg))
-    } finally {
-      // dispatch(setLoading(false))
-    }
-  }
+  //   } catch (error: unknown) {
+  //     const err = error as any;
+  //     const errorMsg = err.response?.data?.message || `Error occured while ${status} withdraw`
+  //     toast.error(errorMsg)
+  //   } finally {
+  //     dispatch(setLoading(false))
+  //   }
+  // }
 
 
   return (<>

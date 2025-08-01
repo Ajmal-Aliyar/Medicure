@@ -9,7 +9,6 @@ import {
   Stethoscope,
   Video,
   VideoOff,
-  X,
 } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -47,7 +46,7 @@ export const VideoControls = ({
   };
 
   const handleLeave = async () => {
-    user?.role === 'doctor' && await doctorAppointmentService.markAppointmentAsCompleted(roomId)
+    if(user?.role === 'doctor') await doctorAppointmentService.markAppointmentAsCompleted(roomId)
     onClose();
     setConfirmLeaveModal(false);
   };

@@ -117,9 +117,9 @@ const ChatUserList = ({ id, role }: Props) => {
               <p className="text-secondary font-medium text-xs">
                 {chat.lastMessage.date && formatTo12HourTime(chat.lastMessage.date)}
               </p>
-              <div className="w-4 h-4 ml-auto mt-1 bg-primary rounded-full flex items-center justify-center text-[10px] text-white">
+              {/* <div className="w-4 h-4 ml-auto mt-1 bg-primary rounded-full flex items-center justify-center text-[10px] text-white">
                 1
-              </div>
+              </div> */}
             </div>
           </div>
         );

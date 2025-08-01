@@ -7,21 +7,24 @@ import { useState } from "react";
 
 interface Props {
     data: DoctorProfileForAdmin;
-    setDoctor: React.Dispatch<React.SetStateAction<DoctorProfileForAdmin | null>>
+    setDoctor?: React.Dispatch<React.SetStateAction<DoctorProfileForAdmin | null>>
 }
 
-const DoctorStatus = ({ data, setDoctor }: Props) => {
+const DoctorStatus = ({ data }: Props) => {
     const [newStatus, setNewStatus] = useState<"approve" | "reject" | null>(null)
     const [status, setStatus] = useState(data.status)
     const [comment, setComment] = useState<string>('')
     const onToggle = async (field: string, value: boolean) => {
-        if (value) {
-            const res = await adminDoctorService.blockDoctor(data.id);
-            if (res) setStatus((prev) => ({ ...prev, isBlocked: true }));
-        } else {
-            const res = await adminDoctorService.unBlockDoctor(data.id);
-            if (res) setStatus((prev) => ({ ...prev, isBlocked: false }));
+        if (field === 'isBlocked') {
+            if (value) {
+                const res = await adminDoctorService.blockDoctor(data.id);
+                if (res) setStatus((prev) => ({ ...prev, isBlocked: true }));
+            } else {
+                const res = await adminDoctorService.unBlockDoctor(data.id);
+                if (res) setStatus((prev) => ({ ...prev, isBlocked: false }));
+            }
         }
+
     };
 
 

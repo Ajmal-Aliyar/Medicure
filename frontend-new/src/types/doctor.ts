@@ -3,7 +3,7 @@ export interface IDoctorData {
     headline: string;
     about: string;
     dob: string;
-    gender: string;
+    gender: string | null;
     mobile: string;
     street: string;
     specialization: string;

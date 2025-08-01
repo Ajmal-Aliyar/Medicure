@@ -7,7 +7,7 @@ import type { IWithdrawRequestService } from "@/types/withdraw-request";
 import { BanknoteArrowDown, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 
 interface IBankAccountDetails {
     setWithdraw: React.Dispatch<React.SetStateAction<boolean>>;

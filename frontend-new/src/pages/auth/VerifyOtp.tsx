@@ -38,6 +38,7 @@ export const EnterOtp = () => {
         try {
             await authService.resendOTP(email)
         } catch (error: unknown) {
+            console.log(error);            
             setIsResendDisabled(false)
             showError("Something went wrong! Please try again later.")
         }

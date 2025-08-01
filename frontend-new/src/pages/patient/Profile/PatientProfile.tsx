@@ -20,7 +20,7 @@ function PatientProfile() {
             dispatch(setProfileData(patientDetails))
         };
         getPatientProfile();
-    }, []);
+    }, [dispatch]);
 
 
     const handleAboutChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -9,7 +9,7 @@ interface ButtonProps {
   fullWidth?: boolean;
   className?: string
   disabled?: boolean;
-  onClick?: (e?: any) => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const baseClasses = "rounded-md transition cursor-pointer active:scale-95";

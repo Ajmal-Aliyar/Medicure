@@ -9,6 +9,7 @@ const initialState: ModalState = {
   confirmText: 'Confirm',
   cancelText: 'Cancel',
   showCancel: true,
+  onConfirm: null
 };
 
 const modalSlice = createSlice({

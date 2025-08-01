@@ -3,11 +3,11 @@ import { type CredentialResponse, GoogleLogin } from "@react-oauth/google";
 // import { api } from "../../utils/axiosInstance";
 // import { useNavigate } from "react-router-dom";
 
-interface DecodedUser {
-  name: string;
-  email: string;
-  picture: string;
-}
+// interface DecodedUser {
+//   name: string;
+//   email: string;
+//   picture: string;
+// }
 
 export const GoogleAuth = () => {
 //   const navigate = useNavigate();
@@ -33,6 +33,8 @@ export const GoogleAuth = () => {
           //   onSuccess={(response) => handleSubmit(response)}
           onError={() => console.log("Login Failed")} 
           onSuccess={function (credentialResponse: CredentialResponse): void {
+            console.log(credentialResponse);
+            
               throw new Error("Function not implemented.");
           } } />
     </div>

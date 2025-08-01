@@ -2,7 +2,7 @@ import { ITransaction, Transaction } from "@/models";
 import { BaseRepository } from "../base";
 import { ITransactionRepository } from "../interfaces/i-transaction-repository";
 import { Types } from "mongoose";
-import { IPagination, IRole } from "@/interfaces";
+import { IPagination, IRole, TransactionChartData } from "@/interfaces";
 
 export class TransactionRepository
   extends BaseRepository<ITransaction>
@@ -30,11 +30,51 @@ export class TransactionRepository
       };
     }
 
-    const [ transactions, total] = await Promise.all([
+    const [transactions, total] = await Promise.all([
       this.model.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
       this.model.countDocuments(filter),
     ]);
 
-    return { transactions, total }
+    return { transactions, total };
+  }
+
+  async getTransactionStatsByDateRange(
+    start: string,
+    end: string
+  ): Promise<TransactionChartData[]> {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const result = await this.model.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+          totalTransactions: { $sum: 1 },
+          totalAmount: { $sum: "$amount" },
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    return result.map(({ _id, totalAmount, totalTransactions }) => ({
+      date: new Date(_id).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
+      totalAmount,
+      totalTransactions,
+    }));
   }
 }

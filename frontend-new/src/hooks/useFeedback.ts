@@ -27,6 +27,7 @@ export const useFeedback = (): UseFeedbackResult => {
         setFeedbacks(data);
         setTotalPages(meta.totalPages);
       } catch (err) {
+        console.log(err);
         setError("Failed to fetch feedbacks.");
       } finally {
         setLoading(false);

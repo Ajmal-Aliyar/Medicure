@@ -8,10 +8,9 @@ import type { MetaType } from "@/types/common";
 import type { IFeedback } from "@/types/feedback";
 
 const BASE_URL = "/api/admin/appointment";
+ 
 
-interface IAdminAppointmentService extends IAppointmentService {}
-
-export const adminAppointmentService: IAdminAppointmentService = {
+export const adminAppointmentService: IAppointmentService = {
   getAllAppointments: async (
     queryParams: URLSearchParams
   ): Promise<{ data: IAppointmentCard[]; meta: MetaType }> => {

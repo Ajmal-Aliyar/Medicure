@@ -5,7 +5,7 @@ interface IAddressSectionProps {
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const AddressSection:React.FC<IAddressSectionProps> = ({patientData, handleChange}) => {
-    let {address}  = patientData.contact;
+    const {address}  = patientData.contact;
 
     return (
         <div className="flex flex-wrap gap-3 ">

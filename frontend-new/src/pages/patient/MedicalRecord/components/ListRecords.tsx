@@ -32,6 +32,7 @@ const ListRecords = ({role , appointmentId}: Props) => {
                 setTotalPages(meta.totalPages || 1)
                 setTestReports(data);
             } catch (err) {
+                console.log(err);
                 setError("Failed to fetch test reports. Please try again.");
             } finally {
                 setLoading(false);

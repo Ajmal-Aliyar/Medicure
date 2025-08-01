@@ -38,7 +38,7 @@ export class PaymentService implements IPaymentService {
       payment_method_types: ["card"],
       mode: "payment",
       line_items: lineItems,
-      success_url: `${env.FRONTEND_BASE_URL}/drive/appointments?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${env.FRONTEND_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${env.FRONTEND_BASE_URL}/cancel-payment?session_id={CHECKOUT_SESSION_ID}`,
       metadata: {
         doctorId: slot.doctorId.toString(),

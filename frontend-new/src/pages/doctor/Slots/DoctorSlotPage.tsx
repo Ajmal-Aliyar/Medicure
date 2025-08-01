@@ -13,7 +13,7 @@ const DoctorSlotPage = () => {
     const [selectedDate, setSelectedDate] = useState<string>(formatDateToYMD(new Date()));
     const user = useSelector((state: RootState) => state.auth.user)
     const doctorId = user ? user.id : ''
-    let [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(1);
     const [status, setStatus] = useState<string>("")
     const [type, setType] = useState<string>("")
     const [isBooked, setIsBooked] = useState<boolean | null>(null)

@@ -47,7 +47,7 @@ export const ProfessionalDetails: React.FC<{
 
     const validateSlide1 = () => {
         let valid = true;
-        let newErrors: { [key: string]: string } = {};
+        const newErrors: { [key: string]: string } = {};
 
         if (!formData.registrationNumber) {
             newErrors.registrationNumber = 'Registration Number is required';

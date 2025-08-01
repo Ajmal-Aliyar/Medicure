@@ -11,7 +11,6 @@ import {
   Legend,
 } from 'recharts';
 import { subDays, format } from 'date-fns';
-import DatePicker from '@/components/ui/DatePicker';
 
 const AppointmentSlotChart = () => {
   const [data, setData] = useState<SlotChartData[]>([]);

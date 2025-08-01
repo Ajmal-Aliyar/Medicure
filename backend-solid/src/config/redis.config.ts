@@ -1,47 +1,31 @@
-import { createClient, RedisClientType } from "redis";
+import Redis from "ioredis";
 import { env } from "./env.config";
 
+let redisClient: Redis;
 
-let redisClient: RedisClientType;
-
-async function connectRedis(): Promise<RedisClientType> {
+function connectRedis(): Redis {
   if (!env.REDIS_URL) {
     throw new Error("REDIS_URL is not defined in the environment variables.");
   }
 
-  redisClient = createClient({
-    url: env.REDIS_URL,
-    socket: {
-      reconnectStrategy(retries) {
-        if (retries > 5) {
-          console.error("Max Redis reconnect attempts reached.");
-          return false; 
-        }
-        return Math.min(retries * 100, 2000);
-      },
-    },
+  redisClient = new Redis(env.REDIS_URL, {
+    tls: {} 
   });
 
   redisClient.on("connect", () => {
-    console.log("Redis connected successfully");
+    console.log("✅ Redis connected successfully");
   });
 
   redisClient.on("error", (err) => {
-    console.error("Redis connection error:", err);
+    console.error("❌ Redis connection error:", err);
   });
 
-  try {
-    await redisClient.connect();
-    return redisClient
-  } catch (err) {
-    console.error("Failed to connect to Redis:", err);
-    process.exit(1);
-  }
+  return redisClient;
 }
 
-function getRedisClient(): RedisClientType {
+function getRedisClient(): Redis {
   if (!redisClient) {
-    throw new Error("Redis client has not been initialized. Call connectRedis() first."); 
+    throw new Error("Redis client not initialized. Call connectRedis() first.");
   }
   return redisClient;
 }

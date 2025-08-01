@@ -1,11 +1,11 @@
 
 import { useLogout } from '@/hooks';
-import { Accessibility, Calendar, ClipboardPlus, Landmark, LayoutDashboard, LogOut, Menu, MessageSquare, Stethoscope } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Accessibility, Calendar, ClipboardPlus, Landmark, LayoutDashboard, LogOut, Menu, Stethoscope } from 'lucide-react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 type MenuItem = {
-    icon: any;
+    icon: ReactNode;
     label: string;
     path: string;
 };

@@ -3,9 +3,8 @@ import type { MetaType } from "@/types/common";
 import type { IMessage, IMessageService } from "@/types/message";
 
 const BASE_URL = "/api/doctor/message";
-interface IDoctorMessageService extends IMessageService {}
 
-export const doctorMessageService: IDoctorMessageService = {
+export const doctorMessageService: IMessageService = {
   getMessages: async (
     conversationId: string,
     page: number

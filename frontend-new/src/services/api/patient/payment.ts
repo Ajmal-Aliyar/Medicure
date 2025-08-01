@@ -15,7 +15,7 @@ export const patientPaymentService = {
     );
   },
 
-  fetchSessionDetails: async (sessionId: string): Promise<any> => {
-    return await api.get(`${BASE_URL}/session-details`, { params: {sessionId}});
+  fetchSessionDetails: async (sessionId: string): Promise<{data:{data:{metadata:{slotId: string}}}}> => {
+    return await api.get<{data:{metadata:{slotId: string}}}>(`${BASE_URL}/session-details`, { params: {sessionId}});
   }
 };

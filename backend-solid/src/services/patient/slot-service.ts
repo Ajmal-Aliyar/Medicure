@@ -10,13 +10,34 @@ import { ensureTodayOrFuture } from "@/utils";
 
 @injectable()
 export class PatientSlotService implements IPatientSlotService {
-    constructor(@inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository) {}
+  constructor(
+    @inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository
+  ) {}
 
-    async getDoctorSlotsForBooking(doctorId: string, date: string, pagination: IPagination): Promise<{ slots: PublicSlotDetails[], total: number; }> {
-       ensureTodayOrFuture(date);
-        const { data, total } = await this.slotRepo.findAll({filter: {doctorId : new Types.ObjectId(doctorId), isActive: true, date}, sort: { createdAt: 1 }, ...pagination})
-        const slots = SlotMapper.toPublicSlotDetails(data) 
-        return { slots, total }
-    } 
+  async getDoctorSlotsForBooking(
+    doctorId: string,
+    date: string,
+    pagination: IPagination
+  ): Promise<{ slots: PublicSlotDetails[]; total: number }> {
+    ensureTodayOrFuture(date);
+    const currentTime = new Date();
+    const currentHHMM = currentTime.toTimeString().slice(0, 5); 
 
+    const filter: Record<string, any> = {
+      doctorId: new Types.ObjectId(doctorId),
+      isActive: true,
+      date,
+      ...(date === currentTime.toISOString().slice(0, 10) && {
+        startTime: { $gt: currentHHMM },
+      }),
+    };
+
+    const { data, total } = await this.slotRepo.findAll({
+      filter,
+      sort: { createdAt: 1 },
+      ...pagination,
+    });
+    const slots = SlotMapper.toPublicSlotDetails(data);
+    return { slots, total };
+  }
 }

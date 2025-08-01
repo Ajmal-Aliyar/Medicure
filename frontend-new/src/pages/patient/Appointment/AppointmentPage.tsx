@@ -10,7 +10,7 @@ import AppointmentFilter from "@/components/domain/filters/AppointmentFilter";
 
 
 const AppointmentPage = () => {
-    let [page, setPage] = useState<number>(1);
+    const [page, setPage] = useState<number>(1);
 
     const [appointmentType, setAppointmentType] = useState<string>("")
     const [appointmentDate, setAppointmentDate] = useState<string>("")

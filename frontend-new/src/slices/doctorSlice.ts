@@ -14,7 +14,6 @@ export interface IExperience {
 }
 
 export interface IAddress {
-  addressLine: string;
   street: string;
   city: string;
   state: string;
@@ -103,7 +102,6 @@ const defaultProfile: ProfileState = {
   experiences: [],
   headline: '',
   address: {
-    addressLine: '',
     street: '',
     city: '',
     state: '',

@@ -21,7 +21,7 @@ export const DoctorLayout = () => {
                 dispatch(setLoading(true))
                 const { doctor, schedule } = await doctorService.getProfileDetails()
                 dispatch(updateDoctorProfile(doctor))
-                schedule && dispatch(updateDoctorSchedule(schedule))
+                if (schedule) dispatch(updateDoctorSchedule(schedule))
                 dispatch(setLoading(false))
             }
     

@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { Container } from "inversify";
-import { RedisClientType } from "redis";
+import Redis from "ioredis";
 import { TYPES } from "@/di/types";
 import { createTransporter, getRedisClient } from "@/config";
 import {
@@ -30,9 +30,7 @@ export const bindSharedModule = async (container: Container) => {
   container.bind<IPasswordHasher>(TYPES.PasswordHasher).to(PasswordHasher);
   container.bind<ITokenService>(TYPES.TokenService).to(JwtService);
   container.bind<ISlotCronJob>(TYPES.SlotCronJob).to(SlotCronJob);
-  container
-    .bind<RedisClientType>(TYPES.RedisClient)
-    .toConstantValue(getRedisClient());
+  container.bind<Redis>(TYPES.RedisClient).toConstantValue(new Redis(process.env.REDIS_URL!, { tls: {} }));
   container
     .bind<nodemailer.Transporter>(TYPES.EmailTransporter)
     .toConstantValue(createTransporter());

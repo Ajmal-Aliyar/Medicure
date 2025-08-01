@@ -1,3 +1,5 @@
+import { Document } from "mongoose";
+
 export interface IWithdraw extends Document {
   recieverId: string;
   accountNumber: string;
