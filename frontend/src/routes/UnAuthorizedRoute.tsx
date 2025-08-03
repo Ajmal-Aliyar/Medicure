@@ -1,14 +1,17 @@
-import { ReactNode } from "react";
+
+import type { RootState } from "@/app/store";
+import type { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { RootState } from "../store/store";
 
 const UnAuthorizedRoute = ({ children }: { children: ReactNode }) => {
-  const { isAuthenticated, role, isApproved } = useSelector(
+  const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
 
-  if (!isAuthenticated) return <>{children}</>;
+  if (!isAuthenticated || !user) return <>{children}</>;
+
+  const { role, isApproved} = user;
 
   if (role === "admin") {
     return <Navigate to="/admin/dashboard" replace />;

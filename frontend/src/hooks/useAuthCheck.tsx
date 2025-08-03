@@ -1,36 +1,46 @@
+
+import { authService } from "@/services/api/public/auth";
+import { loginSuccess, logout } from "@/slices/authSlice";
+import socket from "@/sockets";
+import { registerConsultationHandlers } from "@/sockets/handlers/consultation-handler";
+import { registerChatHandlers } from "@/sockets/handlers/message.handler";
 import { useEffect, useState } from "react";
-import { api } from "../utils/axiosInstance";
 import { useDispatch } from "react-redux";
-import { login, logOutUser, setData } from "../store/slices/commonSlices/AuthSlice";
-import { AppUser } from "../types/common/IAppUser";
 
 export const useAuthCheck = () => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await api.get<{
-          data: AppUser;
-          success: boolean;
-          message: string;
-        }>("/api/auth/me");
-        if (data.success) {
-        dispatch(setData(data.data));
-          dispatch(login(data.data));
-        } else {
-          logOutUser()
-        }
-      } catch {
-        logOutUser()
-      } finally {
-        setLoading(false);
-      }
-    };
+    useEffect(() => {
+        const fetchUser = async () => {
+            setLoading(true)
+            try {
+                const { data, success } = await authService.me()
+                if (success) {
+                    dispatch(loginSuccess({ user: data }));
+                    socket.on("connect", () => {
+                        console.log("Connected to socket:", socket.id);
+                    });
 
-    fetchUser();
-  }, [dispatch]);
+                    socket.on("connect_error", (err) => {
+                        console.error("Socket connection error:", err);
+                    });
 
-  return loading;
+                    socket.connect()
+                    registerConsultationHandlers()
+                    registerChatHandlers()
+                } else {
+                    dispatch(logout())
+                }
+            } catch {
+                dispatch(logout())
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUser();
+    }, [dispatch]);
+
+    return loading;
 };

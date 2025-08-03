@@ -1,45 +1,26 @@
-import { useState, useEffect } from 'react';
+
 import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-import HoneyComb from '../components/common/HoneyComb';
-import VerifyDetails from '../pages/doctor/VerifyDetails';
-import ProfileCompleted from '../components/doctor/verify-details/ProfileCompleted';
-import Banner from '../components/doctor/verify-details/Banner';
-import ProfileRejected from '../components/doctor/verify-details/ProfileRejected';
+import {  useSelector } from 'react-redux';
+import type { RootState } from '@/app/store';
+import { VerifyPage } from '@/pages/doctor/VerifyPage/VerifyPage';
+import { Banner, ProfileCompleted, ProfileRejected } from '@/pages/doctor/VerifyPage/components';
+
 
 const PrivateRoute = () => {
-  const { isAuthenticated, isApproved, role } = useSelector((state: RootState) => state.auth);
-  const [loading, setLoading] = useState(true);
-  const [showSpinner, setShowSpinner] = useState(false);
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
 
-  useEffect(() => {
-    const spinnerTimeout = setTimeout(() => {
-      if (loading) {
-        setShowSpinner(true);
-      }
-    }, 500);
-
-    setLoading(false);
-
-    return () => clearTimeout(spinnerTimeout);
-  }, [loading]);
-
-  if (loading && showSpinner) {
-    return (
-      <div className="w-screen h-screen flex justify-center items-center fixed bg-[#e9e9e9]">
-        <HoneyComb />
-      </div>
-    );
+  if (!user) {
+    return <Navigate to="/doctor/auth/login" replace />;
   }
 
-  if (!isAuthenticated || role !== 'doctor') {
-    return <Navigate to="/doctor/auth" replace />;
+
+  if (!isAuthenticated || user.role !== 'doctor') {
+    return <Navigate to="/doctor/auth/login" replace />;
   }
 
-  switch (isApproved) {
+  switch (user.isApproved) {
     case 'pending':
-        return <VerifyDetails />
+        return <VerifyPage />
     case 'applied':
         return <><Banner /><ProfileCompleted /></>
     case 'rejected':
