@@ -1,4 +1,4 @@
-import { IAuthResponseUser, IRegisteredUserWithPersonal } from "@/interfaces";
+import { IAuthResponseUser } from "@/interfaces";
 import { IDoctor, IPatient } from "@/models";
 import { IAdmin } from "@/models/interfaces/admin";
 

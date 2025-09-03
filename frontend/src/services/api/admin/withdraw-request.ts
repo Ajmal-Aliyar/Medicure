@@ -9,16 +9,40 @@ import type {
 
 const BASE_URL = "/api/admin/withdraw-request";
 
-export const adminWithdrawRequest: IWithdrawRequestService = {
-  requestWithdraw: async (request: IWithdrawRequestDTO): Promise<IWithdrawRequest> => {
+interface IAdminWithdrawRequestService extends IWithdrawRequestService {
+  approveWithdrawRequests(id: string): Promise<boolean>;
+}
+
+export const adminWithdrawRequest: IAdminWithdrawRequestService = {
+  requestWithdraw: async (
+    request: IWithdrawRequestDTO
+  ): Promise<IWithdrawRequest> => {
     const response = await api.post<{ data: IWithdrawRequest }>(`${BASE_URL}`, {
       request,
     });
     return response.data.data;
   },
-  getWithdrawRequests: async (page: number, status?: IWithdrawRequestStatus): Promise<{ data: IWithdrawRequest[], meta: MetaType }> => {
-      const response = await api.get<{ data: IWithdrawRequest[], meta: MetaType }>(`${BASE_URL}?page=${page}&status=${status}`);
-      return response.data;
-    },
-};
+  getWithdrawRequests: async (
+    page: number,
+    status?: IWithdrawRequestStatus
+  ): Promise<{ data: IWithdrawRequest[]; meta: MetaType }> => {
+    const response = await api.get<{
+      data: IWithdrawRequest[];
+      meta: MetaType;
+    }>(`${BASE_URL}?page=${page}&status=${status}`);
+    return response.data;
+  },
+  cancelWithdrawRequests: async (id: string): Promise<boolean> => {
+    const response = await api.patch<{ data: boolean }>(
+      `${BASE_URL}?requestId=${id}`
+    );
+    return response.data.data;
+  },
 
+  approveWithdrawRequests: async (id: string): Promise<boolean> => {
+    const response = await api.patch<{ data: boolean }>(
+      `${BASE_URL}/approve?requestId=${id}`
+    );
+    return response.data.data;
+  },
+};

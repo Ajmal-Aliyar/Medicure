@@ -17,7 +17,7 @@ export class PaymentService implements IPaymentService {
     @inject(TYPES.DoctorRepository)
     private readonly doctorRepo: IDoctorRepository,
     @inject(TYPES.PatientAppointmentService)
-    private readonly patientAppointmentService: IPatientAppointmentService
+    private readonly patientAppointmentService: IPatientAppointmentService,
   ) {}
 
 
@@ -93,14 +93,14 @@ export class PaymentService implements IPaymentService {
       case "checkout.session.expired": {
         const session = event.data.object as Stripe.Checkout.Session;
         const slotId = session.metadata?.slotId;
-        // if (slotId) await this.slotRepo.update(slotId, { status: "available" });
+        if (slotId) await this.slotService.updateSlotAvailable(slotId);
         break;
       }
 
       case "payment_intent.canceled": {
         const intent = event.data.object as Stripe.PaymentIntent;
         const slotId = intent.metadata?.slotId;
-        // if (slotId) await this.slotRepo.update(slotId, { status: "available" });
+        if (slotId) await this.slotService.updateSlotAvailable(slotId);
         break;
       }
 
@@ -141,4 +141,213 @@ export class PaymentService implements IPaymentService {
       },
     ];
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // async approveWithdrawal(transactionId: string) {
+  //   try {
+  //     const transaction = await this.transactionServices.getTransactionById(
+  //       transactionId
+  //     );
+  //     if (!transaction || transaction.status !== "pending") {
+  //       throw new Error("Invalid or already processed withdrawal request.");
+  //     }
+
+  //     const transfer: any = await this.stripe.transfers.create({
+  //       amount: transaction.amount * 100,
+  //       currency: "inr",
+  //       destination: transaction.recieverId,
+  //     });
+
+     
+
+  //     if (transfer.status === "succeeded") {
+  //       await this.transactionServices.updateTransactionStatus(
+  //         transactionId,
+  //         "Completed"
+  //       );
+  //       await this.walletRepository.decrement(
+  //         transaction.recieverId,
+  //         transaction.amount
+  //       );
+  //       return { message: "Withdrawal approved and processed successfully." };
+  //     }
+
+  //     throw new Error("Transfer failed.");
+  //   } catch (error) {
+  //     console.error("Approval error:", error);
+  //     throw new Error("Failed to approve withdrawal.");
+  //   }
+  // }
+
+  // async addUserBankAccount(
+  //   email: string,
+  //   customerId: string,
+  //   accountNumber: string,
+  //   ifscCode: string,
+  //   accountHolderName: string
+  // ) {
+  //   try {
+  //     const account = await stripe.accounts.create({
+  //       type: "custom",
+  //       country: "IN",
+  //       email,
+  //       business_type: "individual",
+  //       capabilities: {
+  //         transfers: { requested: true },
+  //       },
+  //     });
+
+  //     await stripe.accounts.createExternalAccount(account.id, {
+  //       external_account: {
+  //         object: "bank_account",
+  //         country: "IN",
+  //         currency: "INR",
+  //         account_holder_name: accountHolderName,
+  //         account_holder_type: "individual",
+  //         routing_number: ifscCode,
+  //         account_number: accountNumber,
+  //       },
+  //     });
+
+  //     await stripe.payouts.create(
+  //       {
+  //         amount: 100000,
+  //         currency: "INR",
+  //       },
+  //       {
+  //         stripeAccount: account.id,
+  //       }
+  //     );
+  //     return;
+  //   } catch (error) {
+  //     console.error("Failed to add bank account:", error);
+  //     throw error;
+  //   }
+  // }
+
+  // async createConnectedAccountAndPayout({
+  //   email,
+  //   accountHolderName,
+  //   accountNumber,
+  //   ifscCode,
+  //   amountInRupees = 10000,
+  // }) {
+  //   try {
+  //     const account = await stripe.accounts.create({
+  //       type: "custom",
+  //       country: "GB",
+  //       email,
+  //       business_type: "individual",
+  //       capabilities: {
+  //         transfers: { requested: true },
+  //       },
+  //     });
+
+  //     await stripe.accounts.createExternalAccount(account.id, {
+  //       external_account: {
+  //         object: "bank_account",
+  //         country: "GB",
+  //         currency: "GBP",
+  //         account_holder_name: "Rahul Sharma",
+  //         account_holder_type: "individual",
+  //         routing_number: "10-88-00",
+  //         account_number: "00012345",
+  //       },
+  //     });
+
+  //     await stripe.transfers.create({
+  //       amount: 10000,
+  //       currency: "GBP",
+  //       destination: account.id,
+  //     });
+
+  //     await stripe.payouts.create(
+  //       {
+  //         amount: 10000,
+  //         currency: "GBP",
+  //       },
+  //       {
+  //         stripeAccount: account.id,
+  //       }
+  //     );
+
+  //     return {
+  //       accountId: account.id,
+  //     };
+  //   } catch (error: unknown) {
+  //     throw "Failed to create checkout session. Please try again later.";
+  //   }
+  // }
+
+  // async sendPayoutToUser(amount: number, bankAccountId: string) {
+  //   const payout = await stripe.payouts.create({
+  //     amount: amount * 100,
+  //     currency: "GBP",
+  //     destination: bankAccountId,
+  //   });
+
+  //   return payout;
+  // }
+
+  // async processRefund(transactionId: string) {
+  //   try {
+  //     const transaction = await this.transactionServices.getTransactionById(
+  //       transactionId
+  //     );
+  //     if (!transaction) {
+  //       throw new Error("Transaction not found or not refundable.");
+  //     }
+
+  //     const refund = await this.stripe.refunds.create({
+  //       payment_intent: transactionId,
+  //     });
+
+  //     if (true) {
+  //       await this.transactionServices.updateTransactionStatus(
+  //         transactionId,
+  //         "refunded"
+  //       );
+  //       await this.walletRepository.decrement(
+  //         transaction.recieverId,
+  //         transaction.amount
+  //       );
+  //       await this.walletRepository.decrement("Company", transaction.amount);
+  //       await this.appointmentServices.cancelAppointmentByTransactionId(
+  //         transactionId
+  //       );
+  //     }
+
+  //     return refund;
+  //   } catch (error) {
+  //     console.error("Refund error:", error);
+  //     throw new Error("Refund process failed.");
+  //   }
+  // }
 }

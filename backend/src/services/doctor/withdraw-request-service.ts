@@ -8,6 +8,7 @@ import {
 } from "@/interfaces";
 import { Types } from "mongoose";
 import { WithdrawRequestMapper } from "@/mappers";
+import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from "@/errors";
 
 @injectable()
 export class DoctorWithdrawRequestService
@@ -32,5 +33,19 @@ export class DoctorWithdrawRequestService
     const mappedRequests =
       WithdrawRequestMapper.toWithdrawRequestResponse(data);
     return { requests: mappedRequests, total };
+  }
+
+  async cancelWidthdrawRequest( doctorId : string, withdrawRequestId: string ): Promise<void> {
+    const withdrawRequest = await this.withdrawRequestRepo.findById(withdrawRequestId)
+    if (!withdrawRequest) {
+      throw new NotFoundError("Withdraw request not found with this id.")
+    }
+    if (String(withdrawRequest.requesterId) !== doctorId) {
+      throw new ForbiddenError("Not allowed do this action.")
+    }
+    const updated = await this.withdrawRequestRepo.update( withdrawRequestId, {status: 'cancelled'})
+    if (!updated) {
+      throw new BadRequestError("Not able to cancel withdraw request.")
+    }
   }
 }

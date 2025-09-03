@@ -20,4 +20,5 @@ export interface ISlotService {
     parsedQuery: FilterSlotQuery,
     pagination: IPagination
   ): Promise<{ slots: ISlotDetails[]; total: number }>;
+  updateSlotAvailable(slotId: string): Promise<void>;
 }

@@ -3,7 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: ModalState = {
   isOpen: false,
-  type: 'confirm',
+  type: 'secondary',
   title: '',
   message: '',
   confirmText: 'Confirm',

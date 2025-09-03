@@ -14,8 +14,6 @@ export class DoctorWithdrawRequestController implements IDoctorWithdrawRequestCo
   ) {}
 
   getWithdrawRequests = async (req: Request, res: Response): Promise<void> => {
-    console.log('its docotr');
-    
     const { id } = req.user;
     const { status } = req.query;
     const pagination = getPaginationParams(req)
@@ -28,4 +26,16 @@ export class DoctorWithdrawRequestController implements IDoctorWithdrawRequestCo
       requests, meta
     );
   };
+
+  cancelWidthdrawRequest = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.user;
+    const requestId = req.query.requestId as string;
+    await this.WithdrawRequestService.cancelWidthdrawRequest( id, requestId  )
+     successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "WithdrawRequests cancelled successfully.",
+      true
+    );
+  }
 }

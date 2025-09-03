@@ -15,6 +15,10 @@ export class SlotService implements ISlotService {
     @inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository
   ) {}
 
+  async updateSlotAvailable(slotId: string): Promise<void> {
+    await this.slotRepo.update(slotId, { status: "available" })
+  }
+
   async createBulkSlots(slots: Partial<ISlot>[]): Promise<ISlot[]> {
     return this.slotRepo.bulkCreate(slots);
   }

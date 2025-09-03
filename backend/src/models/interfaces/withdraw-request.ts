@@ -9,7 +9,7 @@ export interface IWithdrawRequest extends Document {
   accountNumber: string;
   accountName: string;
   IFSC_Code: string;
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "approved" | "rejected" | "cancelled";
   comment?: string;
   requestedAt: Date;
   processedAt?: Date;

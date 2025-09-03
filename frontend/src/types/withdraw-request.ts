@@ -1,6 +1,6 @@
 import type { IRole } from "./auth";
 import type { MetaType } from "./common";
-export type IWithdrawRequestStatus = "pending" | "approved" | "rejected";
+export type IWithdrawRequestStatus = "pending" | "approved" | "rejected" | "cancelled";
 
 export interface IWithdrawRequest {
     id: string;
@@ -35,4 +35,5 @@ export interface IWithdrawRequestDTO {
 export interface IWithdrawRequestService {
   requestWithdraw: (request: IWithdrawRequestDTO) => Promise<IWithdrawRequest>;
   getWithdrawRequests(page: number, status?: IWithdrawRequestStatus): Promise<{ data: IWithdrawRequest[], meta: MetaType }>;
+  cancelWithdrawRequests( id: string, status: string): Promise<boolean>;
 }

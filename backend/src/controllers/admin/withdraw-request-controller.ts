@@ -27,4 +27,27 @@ export class AdminWithdrawRequestController implements IAdminWithdrawRequestCont
       requests, meta
     );
   };
+
+  rejectWidthdrawRequest = async (req: Request, res: Response): Promise<void> => {
+    const requestId = req.query.requestId as string;
+    await this.WithdrawRequestService.rejectWidthdrawRequest( requestId  )
+     successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "WithdrawRequests rejected successfully.",
+      true
+    );
+  }
+
+  approveWithdrawRequest = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.user;
+    const requestId = req.query.requestId as string;
+    await this.WithdrawRequestService.approveWithdrawRequest( id, requestId)
+     successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "WithdrawRequests approved successfully.",
+      true
+    );
+  }
 }

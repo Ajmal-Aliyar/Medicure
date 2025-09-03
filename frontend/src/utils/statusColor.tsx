@@ -8,6 +8,8 @@ export function statusColor(status: string): string {
             return "green";
         case "success":
             return "green";
+        case "approved":
+            return "green";
         case "failed":
             return "red";
         case "cancelled":

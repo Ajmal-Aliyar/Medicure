@@ -9,6 +9,8 @@ import { doctorWithdrawRequest } from "@/services/api/doctor/withdraw-request";
 import { Pagination } from "@/components/ui/Pagination";
 import { DEFAULT_IMAGE } from "@/app/constants";
 import { Button } from "@/components/ui/Button";
+import { useModal } from "@/hooks";
+import { statusColor } from "@/utils/statusColor";
 
 const WithdrawRequestsList = () => {
   const [requests, setRequests] = useState<IWithdrawRequest[]>([])
@@ -16,14 +18,40 @@ const WithdrawRequestsList = () => {
   const [totalPage, setTotalPage] = useState<number>(1);
   const [status, setStatus] = useState<'all' | IWithdrawRequestStatus>('all')
   const { user } = useSelector((state: RootState) => state.auth)
+  const showModal = useModal();
+  const handleCancelAction = (id: string) => {
+    const service = getService()
+    showModal({
+      type: 'primary',
+      title: `Confirm Cancel`,
+      message: `Are you sure you want to ${ user?.role == 'admin' ? 'reject' : 'cancel'} withdraw?`,
+      confirmText: `yes`,
+      cancelText: 'no',
+      showCancel: true,
+      onConfirm: async () => {
+        const response = await service[user?.role as 'admin' | 'doctor'].cancelWithdrawRequests(id, status)
+      },
+    });
+  }
+
+  const handleApproveAction = (id: string) => {
+    showModal({
+      type: 'primary',
+      title: `Confirm Approve`,
+      message: `Are you sure you want to approve withdraw?`,
+      confirmText: `yes`,
+      cancelText: 'no',
+      showCancel: true,
+      onConfirm: async () => {
+        const response = await adminWithdrawRequest.approveWithdrawRequests(id)
+      },
+    });
+  }
 
 
   useEffect(() => {
     const fetchWithdrawrequests = async () => {
-      const service: Record<'admin' | 'doctor', IWithdrawRequestService> = {
-        admin: adminWithdrawRequest,
-        doctor: doctorWithdrawRequest
-      }
+      const service = getService()
       const { data, meta } = await service[user?.role as 'admin' | 'doctor'].getWithdrawRequests(page, status as IWithdrawRequestStatus)
       setRequests(data)
       setTotalPage(meta.totalPages)
@@ -33,12 +61,14 @@ const WithdrawRequestsList = () => {
     fetchWithdrawrequests()
   }, [status, page])
 
-  const ApproveRequestHandler = (id: string, status: string) => {
-    console.log(id, status);
-    
-    // dispatch(setExtra(() => ApproveRequest(id, status)))
-    // dispatch(setWarning(`Do you want to ${status} this request?`))
+  const getService = () => {
+    const service: Record<'admin' | 'doctor', IWithdrawRequestService> = {
+      admin: adminWithdrawRequest,
+      doctor: doctorWithdrawRequest
+    }
+    return service
   }
+
 
   // const ApproveRequest = async (id: string, status: string) => {
   //   try {
@@ -73,9 +103,13 @@ const WithdrawRequestsList = () => {
 
         >Approved</div>
         <div
+          onClick={() => setStatus('cancelled')}
+          className={`px-2 py-1 cursor-pointer rounded shadow min-w-20 text-center ${status === 'cancelled' ? "bg-primary-light text-white" : ''}`}
+        >Cancelled</div>
+        <div
           onClick={() => setStatus('rejected')}
           className={`px-2 py-1 cursor-pointer rounded shadow min-w-20 text-center ${status === 'rejected' ? "bg-primary-light text-white" : ''}`}
-        >Cancelled</div>
+        >Rejected</div>
         <div
           onClick={() => setStatus('pending')}
           className={`px-2 py-1 cursor-pointer rounded shadow min-w-20 text-center ${status === 'pending' ? "bg-primary-light text-white" : ''}`}
@@ -94,6 +128,13 @@ const WithdrawRequestsList = () => {
               <p className="text-md text-[#2f3c62d8] font-medium ">{user?.role === 'doctor' ? user.fullName : rq.requester.fullName}</p>
               <p className="text-md font-medium text-primary">{user?.role === 'doctor' ? '' : rq.requester.specialization}</p>
             </div>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-medium text-${statusColor(
+                rq.status
+              )}-700 bg-${statusColor(rq.status)}-100`}
+            >
+              {rq.status}
+            </span>
           </div>
           <div className='flex flex-wrap justify-end w-[150px] gap-1'>
             <div
@@ -105,21 +146,18 @@ const WithdrawRequestsList = () => {
             </div>
 
             {rq.status === 'pending' &&
-              <Button variant="muted" className="px-3" onClick={() => ApproveRequestHandler(rq.id, 'cancel')}>
+              <Button variant="muted" className="px-3" onClick={() => handleCancelAction(rq.id)}>
                 <X size={19} />
               </Button>}
             {user?.role === 'admin' && rq.status === 'pending' &&
-               <Button className="px-3"
-                onClick={() => ApproveRequestHandler(rq.id, 'approve')}>
+              <Button className="px-3"
+                onClick={() => handleApproveAction(rq.id)}>
                 <Check size={20} />
-             </Button>}
+              </Button>}
           </div>
         </div>
       )) : <p className="w-full h-16 flex items-center text-gray-500 font-medium">empty !</p>}
     </div>
-
-
-
   </>
   )
 }

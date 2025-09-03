@@ -40,6 +40,8 @@ export class TransactionService implements ITransactionService {
 
   async getTransactionHistory(ownerId: string, ownerType: IRole, pagination: IPagination): Promise<{ transactions: TransactionDetails[], total: number }> {
     const {transactions, total} = await this.transactionRepo.getTransactionHistory( ownerId, ownerType, pagination)
+    console.log(transactions[0], 'transaction');
+    
     const mappedTransactions = TransactionMapper.toTransaction( ownerId, transactions)
     return { transactions: mappedTransactions, total}
   }

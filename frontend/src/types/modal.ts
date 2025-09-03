@@ -1,6 +1,6 @@
 export interface ModalState {
   isOpen: boolean;
-  type: 'confirm' | 'alert' | 'custom' | 'warning' | 'success';
+  type: "primary" | "secondary" | "muted" | "red" | "green" | "outline";
   title: string;
   message: string;
   confirmText: string;

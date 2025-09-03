@@ -8,7 +8,7 @@ interface ConfirmationModalProps {
   onCancel: () => void;
   onConfirm: () => void;
   confirmLabel: string;
-  confirmVariant?: "primary" | "red" | "outline";
+  confirmVariant?: "primary" | "secondary" | "muted" | "red" | "green" | "outline";
 }
 
 export const ConfirmationModal = ({

@@ -22,7 +22,7 @@ const WithdrawRequestSchema = new Schema<IWithdrawRequest>(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: ["pending", "approved", "rejected", "cancelled"],
       default: "pending",
     },
     comment: {

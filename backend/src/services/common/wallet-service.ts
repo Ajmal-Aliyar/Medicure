@@ -34,7 +34,8 @@ export class WalletService implements IWalletService {
     return await this.walletRepo.updateBalance(
             ownerId,
             ownerType,
-            amount
+            amount,
+            true
           );
   }
 

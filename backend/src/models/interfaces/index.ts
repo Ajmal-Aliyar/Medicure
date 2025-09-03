@@ -8,7 +8,6 @@ export * from './prescription';
 export * from './specialization';
 export * from './feedback';
 export * from './transaction';
-export * from './withdraw';
 export * from './wallet';
 export * from './medical-record';
 export * from './connection-request';

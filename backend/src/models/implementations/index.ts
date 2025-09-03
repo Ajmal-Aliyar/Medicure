@@ -8,7 +8,6 @@ export * from './prescription.model';
 export * from './feedback.model';
 export * from './specialization.model';
 export * from './transaction.model';
-export * from './withdraw.model';
 export * from './wallet.model';
 export * from './medical-record.model';
 export * from './connection-request.model';
