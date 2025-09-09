@@ -9,7 +9,7 @@ import {
   IRole,
 } from "@/interfaces";
 import { AppointmentMapper } from "@/mappers";
-import { IAppointmentRepository, IPrescriptionRepository, ITransactionRepository } from "@/repositories";
+import { IAppointmentRepository, IConversationRepository, IPrescriptionRepository, ITransactionRepository } from "@/repositories";
 import { Types } from "mongoose";
 import { FilterAppointmentQuery } from "@/validators";
 import { NotFoundError, UnauthorizedError } from "@/errors";
@@ -22,7 +22,8 @@ export class AppointmentService implements IAppointmentService {
     @inject(TYPES.TransactionRepository)
     private readonly _transactionRepo: ITransactionRepository,
     @inject(TYPES.PrescriptionRepository)
-    private readonly _prescriptionRepo: IPrescriptionRepository
+    private readonly _prescriptionRepo: IPrescriptionRepository,
+    @inject(TYPES.ConversationRepository) private readonly _conversationRepo: IConversationRepository
   ) {}
 
   async getAppointmentByRoomId(
@@ -86,7 +87,7 @@ export class AppointmentService implements IAppointmentService {
     default:
       throw new UnauthorizedError("Invalid role for accessing appointment");
   }
-
+  
   const appointment = await this._appointmentRepo.getAppointmentDetailsPopulated({ filter });
 
   if (!appointment) {
@@ -106,10 +107,12 @@ export class AppointmentService implements IAppointmentService {
       ? await this._prescriptionRepo.findOne({ appointmentId })
       : null;
 
+  const isConnected = await this._conversationRepo.isConnected(appointment.patientId._id, appointment.doctorId._id)
   return AppointmentMapper.toReturnAppointmentPageDetails(
     appointment,
     transaction,
-    prescription
+    prescription,
+    isConnected
   );
 }
 

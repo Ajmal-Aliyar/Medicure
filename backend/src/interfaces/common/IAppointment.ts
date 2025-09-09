@@ -159,4 +159,6 @@ export type AppointmentPageDetails = {
     followUpDate: Date | null;
     allergies: string[];
   };
+
+  isConnected: boolean;
 };

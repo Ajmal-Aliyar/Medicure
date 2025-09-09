@@ -42,7 +42,7 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                 setAppointmentDetails(appointmentDetails);
             } catch (err) {
                 console.log(err)
-            } 
+            }
         };
         fetchAppointment();
     }, [appointmentId]);
@@ -64,6 +64,10 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
 
     const sendConnectionRequest = async (doctorId: string) => {
         await patientConnectionRequestService.request(doctorId)
+    }
+    const sendMessage = () => {
+        dispatch(setAppointment(null))
+        navigate('/chat')
     }
     return (
         <div className="w-screen h-screen fixed top-0 right-0 bg-black/50 flex lg:p-4 z-40">
@@ -169,10 +173,14 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                             <DoctorCard doctor={appointmentDetails.doctor} onView={() => ''} isMe />
                             {user?.role === "patient" && <div className="flex flex-col w-full p-2 gap-1">
                                 <div className="flex gap-1">
-                                    <Button className="flex-1 py-2">Profile</Button>
-                                    <Button variant="outline" className="flex-1 py-2 flex items-center justify-center gap-1"
-                                    onClick={() => sendConnectionRequest(appointmentDetails.doctor.id)}><Link className="mt-1" /> Connect</Button>
-                                </div>
+                                    <Button
+                                        variant={appointmentDetails.isConnected ? "muted" : "outline"}
+                                        className="flex-1 py-2 flex items-center justify-center gap-1"
+                                        onClick={() => {appointmentDetails.isConnected ? sendMessage() : sendConnectionRequest(appointmentDetails.doctor.id)}}
+                                    >
+                                        {appointmentDetails.isConnected ? <MessageSquare className="mt-1" /> : <Link className="mt-1" />}
+                                        {appointmentDetails.isConnected ? "Message" : "Connect"}
+                                    </Button></div>
                                 <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
                                     {`Notify Doctor`} <BellRing /></Button>
                             </div>}
@@ -181,8 +189,8 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                             <PatientCard patient={appointmentDetails.patient} className="" isMe />
                             {user?.role === "doctor" && <div className="flex flex-col w-full  p-2 gap-1">
                                 <div className="flex gap-1">
-                                    <Button variant="muted" className="flex-1 py-2 flex items-center justify-center gap-1"><MessageSquare className="mt-1" fill="#fff" /> Message</Button>
-                                    <Button variant="outline" className="flex-1 py-2">Profile</Button>
+                                    {/* <Button variant="muted" className="flex-1 py-2 flex items-center justify-center gap-1"><MessageSquare className="mt-1" fill="#fff" /> Message</Button> */}
+                                    {/* <Button variant="outline" className="flex-1 py-2">Profile</Button> */}
                                 </div>
                                 <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
                                     {`Notify Patient`} <BellRing /></Button>
