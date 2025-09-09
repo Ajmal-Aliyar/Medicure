@@ -13,24 +13,22 @@ import {
 @injectable()
 export class PaymentService implements IPaymentService {
   constructor(
-    @inject(TYPES.SlotService) private readonly slotService: ISlotService,
+    @inject(TYPES.SlotService) private readonly _slotService: ISlotService,
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository,
+    private readonly _doctorRepo: IDoctorRepository,
     @inject(TYPES.PatientAppointmentService)
-    private readonly patientAppointmentService: IPatientAppointmentService
+    private readonly _patientAppointmentService: IPatientAppointmentService
   ) {}
-
-
 
   async checkoutSession(
     patientId: string,
     slotId: string
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
-    const slot = await this.slotService.validateSlotAvailability(
+    const slot = await this._slotService.validateSlotAvailability(
       slotId,
       patientId
     );
-    const doctorInfo = await this.doctorRepo.findBasicInfoById(
+    const doctorInfo = await this._doctorRepo.findBasicInfoById(
       String(slot.doctorId)
     );
     const lineItems = this.buildLineItems(slot, doctorInfo);
@@ -49,9 +47,6 @@ export class PaymentService implements IPaymentService {
     return session;
   }
 
-
-
-
   async getSessionDetails(
     sessionId: string
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
@@ -61,9 +56,6 @@ export class PaymentService implements IPaymentService {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     return session;
   }
-
-
-
 
   async webhookHandler(bodyData: string, sig: string): Promise<void> {
     let event: Stripe.Event;
@@ -81,7 +73,7 @@ export class PaymentService implements IPaymentService {
         const paymentIntentId = session.payment_intent as string;
         const amount = (session.amount_total || 0) / 100;
 
-        await this.patientAppointmentService.bookAppointment({
+        await this._patientAppointmentService.bookAppointment({
           doctorId,
           patientId,
           slotId,
@@ -93,14 +85,14 @@ export class PaymentService implements IPaymentService {
       case "checkout.session.expired": {
         const session = event.data.object as Stripe.Checkout.Session;
         const slotId = session.metadata?.slotId;
-        // if (slotId) await this.slotRepo.update(slotId, { status: "available" });
+        if (slotId) await this._slotService.updateSlotAvailable(slotId);
         break;
       }
 
       case "payment_intent.canceled": {
         const intent = event.data.object as Stripe.PaymentIntent;
         const slotId = intent.metadata?.slotId;
-        // if (slotId) await this.slotRepo.update(slotId, { status: "available" });
+        if (slotId) await this._slotService.updateSlotAvailable(slotId);
         break;
       }
 
@@ -109,19 +101,12 @@ export class PaymentService implements IPaymentService {
     }
   }
 
-
-
-
   async cancelCheckout(
     slotId: string | undefined,
     patientId: string
   ): Promise<boolean> {
-    return await this.slotService.releaseSlot(slotId, patientId);
+    return await this._slotService.releaseSlot(slotId, patientId);
   }
-
-
-
-
 
   private buildLineItems(
     slot: ISlot,
@@ -141,4 +126,198 @@ export class PaymentService implements IPaymentService {
       },
     ];
   }
+
+  async approveWithdrawal(
+    recieverId: string,
+    amount: number
+  ): Promise<boolean> {
+    try {
+      const transfer: any = await stripe.transfers.create({
+        amount: amount * 100,
+        currency: "inr",
+        destination: recieverId,
+      });
+      if (transfer.status !== "succeeded") throw new Error("Transfer failed.");
+      return true;
+    } catch (error) {
+      console.error("Approval error:", error);
+      throw new Error("Failed to approve withdrawal.");
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// async addUserBankAccount(
+//   email: string,
+//   customerId: string,
+//   accountNumber: string,
+//   ifscCode: string,
+//   accountHolderName: string
+// ) {
+//   try {
+//     const account = await stripe.accounts.create({
+//       type: "custom",
+//       country: "IN",
+//       email,
+//       business_type: "individual",
+//       capabilities: {
+//         transfers: { requested: true },
+//       },
+//     });
+
+//     await stripe.accounts.createExternalAccount(account.id, {
+//       external_account: {
+//         object: "bank_account",
+//         country: "IN",
+//         currency: "INR",
+//         account_holder_name: accountHolderName,
+//         account_holder_type: "individual",
+//         routing_number: ifscCode,
+//         account_number: accountNumber,
+//       },
+//     });
+
+//     await stripe.payouts.create(
+//       {
+//         amount: 100000,
+//         currency: "INR",
+//       },
+//       {
+//         stripeAccount: account.id,
+//       }
+//     );
+//     return;
+//   } catch (error) {
+//     console.error("Failed to add bank account:", error);
+//     throw error;
+//   }
+// }
+
+// async createConnectedAccountAndPayout({
+//   email,
+//   accountHolderName,
+//   accountNumber,
+//   ifscCode,
+//   amountInRupees = 10000,
+// }) {
+//   try {
+//     const account = await stripe.accounts.create({
+//       type: "custom",
+//       country: "GB",
+//       email,
+//       business_type: "individual",
+//       capabilities: {
+//         transfers: { requested: true },
+//       },
+//     });
+
+//     await stripe.accounts.createExternalAccount(account.id, {
+//       external_account: {
+//         object: "bank_account",
+//         country: "GB",
+//         currency: "GBP",
+//         account_holder_name: "Rahul Sharma",
+//         account_holder_type: "individual",
+//         routing_number: "10-88-00",
+//         account_number: "00012345",
+//       },
+//     });
+
+//     await stripe.transfers.create({
+//       amount: 10000,
+//       currency: "GBP",
+//       destination: account.id,
+//     });
+
+//     await stripe.payouts.create(
+//       {
+//         amount: 10000,
+//         currency: "GBP",
+//       },
+//       {
+//         stripeAccount: account.id,
+//       }
+//     );
+
+//     return {
+//       accountId: account.id,
+//     };
+//   } catch (error: unknown) {
+//     throw "Failed to create checkout session. Please try again later.";
+//   }
+// }
+
+// async sendPayoutToUser(amount: number, bankAccountId: string) {
+//   const payout = await stripe.payouts.create({
+//     amount: amount * 100,
+//     currency: "GBP",
+//     destination: bankAccountId,
+//   });
+
+//   return payout;
+// }
+
+// async processRefund(transactionId: string) {
+//   try {
+//     const transaction = await this.transactionServices.getTransactionById(
+//       transactionId
+//     );
+//     if (!transaction) {
+//       throw new Error("Transaction not found or not refundable.");
+//     }
+
+//     const refund = await this.stripe.refunds.create({
+//       payment_intent: transactionId,
+//     });
+
+//     if (true) {
+//       await this.transactionServices.updateTransactionStatus(
+//         transactionId,
+//         "refunded"
+//       );
+//       await this.walletRepository.decrement(
+//         transaction.recieverId,
+//         transaction.amount
+//       );
+//       await this.walletRepository.decrement("Company", transaction.amount);
+//       await this.appointmentServices.cancelAppointmentByTransactionId(
+//         transactionId
+//       );
+//     }
+
+//     return refund;
+//   } catch (error) {
+//     console.error("Refund error:", error);
+//     throw new Error("Refund process failed.");
+//   }
+// }

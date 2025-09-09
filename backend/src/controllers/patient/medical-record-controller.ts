@@ -12,13 +12,13 @@ export class PatientMedicalRecordController
 {
   constructor(
     @inject(TYPES.PatientMedicalRecordService)
-    private readonly medicalRecordService: IPatientMedicalRecordService
+    private readonly _medicalRecordService: IPatientMedicalRecordService
   ) {}
 
   uploadMedicalRecord = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.user;
     const { fileName, fileUrl } = req.body;
-    const medicalRecord = await this.medicalRecordService.uploadMedicalRecord(
+    const medicalRecord = await this._medicalRecordService.uploadMedicalRecord(
       id,
       fileUrl,
       fileName
@@ -38,7 +38,7 @@ export class PatientMedicalRecordController
     const { id } = req.user;
     const pagination = getPaginationParams(req);
     const { data, total } =
-      await this.medicalRecordService.getMedicalRecords(
+      await this._medicalRecordService.getMedicalRecords(
         id,
         pagination
       );

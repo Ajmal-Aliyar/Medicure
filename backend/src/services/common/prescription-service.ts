@@ -12,7 +12,7 @@ import { ViewPrescription } from "@/interfaces/common/Prescription";
 export class PrescriptionService implements IPrescriptionService {
   constructor(
     @inject(TYPES.PrescriptionRepository)
-    private readonly prescriptionRepo: IPrescriptionRepository
+    private readonly _prescriptionRepo: IPrescriptionRepository
   ) {}
 
   async getPrescription(
@@ -22,7 +22,7 @@ export class PrescriptionService implements IPrescriptionService {
   ): Promise<IPrescription> {
     const filter = this.generateFilterQuery(id, role, prescriptionId)
 
-    const prescription = await this.prescriptionRepo.findOne(filter);
+    const prescription = await this._prescriptionRepo.findOne(filter);
 
     if (!prescription) {
       throw new NotFoundError("Prescription not found with provided details.");
@@ -38,7 +38,7 @@ export class PrescriptionService implements IPrescriptionService {
   ): Promise<ViewPrescription> {
     const filter = this.generateFilterQuery(id, role, prescriptionId)
 
-    const prescription = await this.prescriptionRepo.getDetailsByIdForDownload(filter);
+    const prescription = await this._prescriptionRepo.getDetailsByIdForDownload(filter);
      if (!prescription) {
       throw new NotFoundError("Prescription not found with provided details.");
     }

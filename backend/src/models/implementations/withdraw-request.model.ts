@@ -4,7 +4,7 @@ import { IWithdrawRequest } from "../interfaces";
 const WithdrawRequestSchema = new Schema<IWithdrawRequest>(
   {
     requesterId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId ,
       required: true,
     },
     role: {
@@ -22,7 +22,7 @@ const WithdrawRequestSchema = new Schema<IWithdrawRequest>(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: ["pending", "approved", "rejected", "cancelled"],
       default: "pending",
     },
     comment: {

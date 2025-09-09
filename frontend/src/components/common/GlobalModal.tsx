@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { closeModal } from "@/slices/modalSlice";
 import type { RootState } from "@/app/store";
+import { Button } from "../ui/Button";
 
 const GlobalModal = () => {
   const modal = useSelector((state: RootState) => state.modal);
@@ -30,30 +31,14 @@ const GlobalModal = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-lg p-6 shadow-lg w-[90%] max-w-md">
-        <h2 className="text-xl font-semibold mb-2">{title}</h2>
+        <h2 className="text-xl font-semibold mb-2 text-secondary">{title}</h2>
         <p className="mb-6 text-sm text-gray-700">{message}</p>
 
         <div className="flex justify-end gap-4">
-          {showCancel && (
-            <button
-              onClick={handleCancel}
-              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer transition"
-            >
-              {cancelText}
-            </button>
-          )}
-          <button
-            onClick={handleConfirm}
-            className={`px-4 py-2 rounded text-white transition ${
-              type === "warning"
-                ? "bg-red-600/90 hover:bg-red-700/80 cursor-pointer"
-                : type === "success"
-                ? "bg-green-600 hover:bg-green-700"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {confirmText}
-          </button>
+          {showCancel && <Button variant={"muted"} onClick={handleCancel}
+              className="px-4 rounded cursor-pointer transition"
+            >{cancelText}</Button>}
+          <Button variant={type} onClick={handleConfirm} className={`px-4  rounded text-white transition`}>{confirmText}</Button>
         </div>
       </div>
     </div>

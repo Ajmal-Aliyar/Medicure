@@ -14,9 +14,9 @@ import { Types } from "mongoose";
 export class DoctorMedicalRecordService implements IDoctorMedicalRecordService {
   constructor(
     @inject(TYPES.MedicalRecordRepository)
-    private readonly medicalRecordRepo: IMedicalRecordRepository,
+    private readonly _medicalRecordRepo: IMedicalRecordRepository,
     @inject(TYPES.AppointmentRepository)
-    private readonly appointmentRepo: IAppointmentRepository
+    private readonly _appointmentRepo: IAppointmentRepository
   ) {}
 
   async getReportsByAppointmentId(
@@ -24,7 +24,7 @@ export class DoctorMedicalRecordService implements IDoctorMedicalRecordService {
     appointmentId: string,
     pagination: IPagination
   ): Promise<{ data: IMedicalRecord[]; total: number }> {
-    const appointment = await this.appointmentRepo.findById(appointmentId);
+    const appointment = await this._appointmentRepo.findById(appointmentId);
     if (!appointment) {
       throw new NotFoundError("Appointment not found.");
     }
@@ -38,7 +38,7 @@ export class DoctorMedicalRecordService implements IDoctorMedicalRecordService {
     }
     const filter = { patientId: appointment.patientId }
 
-    const { data, total } = await this.medicalRecordRepo.findAll({
+    const { data, total } = await this._medicalRecordRepo.findAll({
       filter,
       ...pagination,
       sort: { uploadedAt: -1 },

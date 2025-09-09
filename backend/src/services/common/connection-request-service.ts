@@ -15,13 +15,13 @@ import { ConnectionRequestMapper } from "@/mappers/connection-requests-mapper";
 export class ConnectionRequestService implements IConnectionRequestService {
   constructor(
     @inject(TYPES.ConnectionRequestRepository)
-    private readonly connectionRequestRepo: IConnectionRequestRepository,
+    private readonly _connectionRequestRepo: IConnectionRequestRepository,
 
     @inject(TYPES.ConversationService)
-    private readonly conversactionService: IConversationService,
+    private readonly _conversactionService: IConversationService,
 
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository
+    private readonly _doctorRepo: IDoctorRepository
   ) {}
 
   async createRequest(
@@ -30,14 +30,14 @@ export class ConnectionRequestService implements IConnectionRequestService {
     doctorId: string
   ): Promise<void> {
     if (role !== 'patient') throw new BadRequestError('Bad request')
-    const doctor = await this.doctorRepo.findById(doctorId);
+    const doctor = await this._doctorRepo.findById(doctorId);
     if (!doctor) {
       throw new NotFoundError("Doctor not found");
     }
     const patientObjectId = new Types.ObjectId(patientId);
     const doctorObjectId = new Types.ObjectId(doctorId);
 
-    const existing = await this.connectionRequestRepo.findOne({
+    const existing = await this._connectionRequestRepo.findOne({
       patientId: patientObjectId,
       doctorId: doctorObjectId,
     });
@@ -51,14 +51,14 @@ export class ConnectionRequestService implements IConnectionRequestService {
       doctorId: doctorObjectId,
     };
 
-    await this.connectionRequestRepo.create(connectionPayload);
+    await this._connectionRequestRepo.create(connectionPayload);
   }
 
   async approveRequest(doctorId: string, requestId: string): Promise<void> {
     const doctorObjectId = new Types.ObjectId(doctorId);
     const requestObjectId = new Types.ObjectId(requestId);
 
-    const connection = await this.connectionRequestRepo.findOne({
+    const connection = await this._connectionRequestRepo.findOne({
       _id: requestObjectId,
       doctorId: doctorObjectId,
     });
@@ -73,7 +73,7 @@ export class ConnectionRequestService implements IConnectionRequestService {
 
     connection.status = "accepted";
     await connection.save();
-    this.conversactionService.createConversation([{id: doctorId, role: 'doctor'}, {id: String(connection.patientId), role: 'patient'}], false)
+    this._conversactionService.createConversation([{id: doctorId, role: 'doctor'}, {id: String(connection.patientId), role: 'patient'}], false)
 
   }
 
@@ -87,7 +87,7 @@ export class ConnectionRequestService implements IConnectionRequestService {
       ...(role === "doctor" ? { doctorId: objectId } : { patientId: objectId }),
     };
 
-    const { requests, total } = await this.connectionRequestRepo.getAllRequests(
+    const { requests, total } = await this._connectionRequestRepo.getAllRequests(
       {
         filter,
         ...pagination,

@@ -20,5 +20,10 @@ export const doctorWithdrawRequest: IWithdrawRequestService = {
     const response = await api.get<{ data: IWithdrawRequest[], meta: MetaType }>(`${BASE_URL}?page=${page}&status=${status}`);
     return response.data;
   },
+  
+  cancelWithdrawRequests: async( id: string): Promise<boolean> => {
+    const response = await api.patch<{ data: boolean}>(`${BASE_URL}?requestId=${id}`)
+    return  response.data.data
+  }
 };
 

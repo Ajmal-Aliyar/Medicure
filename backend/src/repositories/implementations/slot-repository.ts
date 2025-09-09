@@ -30,17 +30,17 @@ export class SlotRepository
     if (status !== undefined) {
       query.status = status;
     }
-    return this.model.find(query);
+    return this._model.find(query);
   }
 
   async findAvailableSlotsByDoctor(doctorId: string): Promise<ISlot[]> {
-    return this.model.find({
+    return this._model.find({
       doctorId: new Types.ObjectId(doctorId),
     });
   }
 
   async bulkCreate(slots: ISlot[]): Promise<ISlot[]> {
-    return this.model.insertMany(slots, { ordered: false });
+    return this._model.insertMany(slots, { ordered: false });
   }
 
   async updateByDoctorAndSlotId(
@@ -48,7 +48,7 @@ export class SlotRepository
     slotId: string,
     isActive: boolean
   ): Promise<ISlot | null> {
-    return this.model.findOneAndUpdate(
+    return this._model.findOneAndUpdate(
       { _id: slotId, doctorId },
       { isActive },
       { new: true }
@@ -58,7 +58,7 @@ export class SlotRepository
   async getSlotStatsByDateRange(doctorId: string, start: string, end: string): Promise<SlotChartData[]> {
     const startDate = new Date(start);
   const endDate = new Date(end);
-  const result = await this.model.aggregate([
+  const result = await this._model.aggregate([
     {
       $match: {
         doctorId: new Types.ObjectId(doctorId),

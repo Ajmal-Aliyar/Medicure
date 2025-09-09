@@ -10,16 +10,14 @@ import { IWithdrawRequestStatus } from "@/interfaces";
 @injectable()
 export class DoctorWithdrawRequestController implements IDoctorWithdrawRequestController {
   constructor(
-    @inject(TYPES.DoctorWithdrawRequestService) private readonly WithdrawRequestService: IDoctorWithdrawRequestService
+    @inject(TYPES.DoctorWithdrawRequestService) private readonly _withdrawRequestService: IDoctorWithdrawRequestService
   ) {}
 
   getWithdrawRequests = async (req: Request, res: Response): Promise<void> => {
-    console.log('its docotr');
-    
     const { id } = req.user;
     const { status } = req.query;
     const pagination = getPaginationParams(req)
-    const { requests, total } = await this.WithdrawRequestService.getWithdrawRequests(id, status as IWithdrawRequestStatus, pagination);
+    const { requests, total } = await this._withdrawRequestService.getWithdrawRequests(id, status as IWithdrawRequestStatus, pagination);
     const meta = buildPaginationMeta(total, pagination.skip)
     successResponse(
       res,
@@ -28,4 +26,16 @@ export class DoctorWithdrawRequestController implements IDoctorWithdrawRequestCo
       requests, meta
     );
   };
+
+  cancelWidthdrawRequest = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.user;
+    const requestId = req.query.requestId as string;
+    await this._withdrawRequestService.cancelWidthdrawRequest( id, requestId  )
+     successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "WithdrawRequests cancelled successfully.",
+      true
+    );
+  }
 }

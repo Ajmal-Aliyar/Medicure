@@ -31,8 +31,8 @@ export class TransactionRepository
     }
 
     const [transactions, total] = await Promise.all([
-      this.model.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
-      this.model.countDocuments(filter),
+      this._model.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      this._model.countDocuments(filter),
     ]);
 
     return { transactions, total };
@@ -45,7 +45,7 @@ export class TransactionRepository
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    const result = await this.model.aggregate([
+    const result = await this._model.aggregate([
       {
         $match: {
           createdAt: {

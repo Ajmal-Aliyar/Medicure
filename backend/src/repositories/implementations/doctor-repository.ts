@@ -16,13 +16,13 @@ export class DoctorRepository
   }
 
   async findByEmail(email: string): Promise<IDoctor | null> {
-    return await this.model.findOne({ "personal.email": email });
+    return await this._model.findOne({ "personal.email": email });
   }
 
   async findBasicInfoById(
     doctorId: string
   ): Promise<{ name: string; specialization: string }> {
-    const doctor = await this.model
+    const doctor = await this._model
       .findById(doctorId, {
         "personal.fullName": 1,
         "professional.specialization": 1,
@@ -43,14 +43,14 @@ export class DoctorRepository
     const doctor = {
       personal: data,
     };
-    return await this.model.create(doctor);
+    return await this._model.create(doctor);
   }
 
   async updateImage(
     doctorId: string,
     imageUrl: string
   ): Promise<IDoctor | null> {
-    const updatedDoctor = await this.model.findByIdAndUpdate(
+    const updatedDoctor = await this._model.findByIdAndUpdate(
       doctorId,
       { "personal.profileImage": imageUrl },
       { new: true }
@@ -62,7 +62,7 @@ export class DoctorRepository
     doctorId: string,
     update: UpdateQuery<IDoctor["status"]>
   ): Promise<IDoctor | null> {
-    return this.model
+    return this._model
       .findByIdAndUpdate(doctorId, { $set: update }, { new: true })
       .exec();
   }
@@ -72,8 +72,8 @@ export class DoctorRepository
     { skip = 0, limit = 6 }: IPagination
   ): Promise<{ total: number; doctors: IDoctor[] }> {
     const filter = { "status.profile.reviewStatus": status };
-    const total = await this.model.countDocuments(filter);
-    const doctors = await this.model
+    const total = await this._model.countDocuments(filter);
+    const doctors = await this._model
       .find(filter, {
         "personal.fullName": 1,
         "personal.profileImage": 1,

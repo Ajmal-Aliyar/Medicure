@@ -15,7 +15,7 @@ import { filterPatientQuerySchema } from "@/validators";
 export class AdminPatientController implements IAdminPatientController {
   constructor(
     @inject(TYPES.AdminPatientService)
-    private readonly adminPatientService: IAdminPatientService
+    private readonly _adminPatientService: IAdminPatientService
   ) {}
 
 
@@ -26,7 +26,7 @@ export class AdminPatientController implements IAdminPatientController {
     const pagination = getPaginationParams(req);
     const parsedQuery = filterPatientQuerySchema.parse(req.query);
     const { total, Patients } =
-      await this.adminPatientService.getFilteredPatient( parsedQuery, pagination);
+      await this._adminPatientService.getFilteredPatient( parsedQuery, pagination);
     const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(
       res,
@@ -42,7 +42,7 @@ export class AdminPatientController implements IAdminPatientController {
     res: Response
   ): Promise<void> => {
     const PatientId = req.params.PatientId as string;
-    const Patient = await this.adminPatientService.getPatientProfile(
+    const Patient = await this._adminPatientService.getPatientProfile(
       PatientId
     );
     successResponse(
@@ -57,13 +57,13 @@ export class AdminPatientController implements IAdminPatientController {
   blockPatient = async(req: Request, res: Response): Promise<void> => {
     const { PatientId } = req.params;
     const { reason } = req.body;
-    await this.adminPatientService.blockPatient(PatientId, reason);
+    await this._adminPatientService.blockPatient(PatientId, reason);
     successResponse(res, HTTP_STATUS.OK, "Patient blocked successfully.", true);
   }
 
   unblockPatient = async(req: Request, res: Response): Promise<void> => {
     const { PatientId } = req.params;
-    await this.adminPatientService.unblockPatient(PatientId);
+    await this._adminPatientService.unblockPatient(PatientId);
     successResponse(res, HTTP_STATUS.OK, "Patient unblocked successfully.", true);
   }
 }

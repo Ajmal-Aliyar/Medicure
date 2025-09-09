@@ -10,15 +10,13 @@ import { IWithdrawRequestStatus } from "@/interfaces";
 @injectable()
 export class AdminWithdrawRequestController implements IAdminWithdrawRequestController {
   constructor(
-    @inject(TYPES.AdminWithdrawRequestService) private readonly WithdrawRequestService: IAdminWithdrawRequestService
+    @inject(TYPES.AdminWithdrawRequestService) private readonly _withdrawRequestService: IAdminWithdrawRequestService
   ) {}
 
   getWithdrawRequests = async (req: Request, res: Response): Promise<void> => {
-    console.log('its admin');
-    
     const { status } = req.query;
     const pagination = getPaginationParams(req)
-    const { requests, total } = await this.WithdrawRequestService.getWithdrawRequests( status as IWithdrawRequestStatus, pagination);
+    const { requests, total } = await this._withdrawRequestService.getWithdrawRequests( status as IWithdrawRequestStatus, pagination);
     const meta = buildPaginationMeta(total, pagination.skip)
     successResponse(
       res,
@@ -27,4 +25,27 @@ export class AdminWithdrawRequestController implements IAdminWithdrawRequestCont
       requests, meta
     );
   };
+
+  rejectWidthdrawRequest = async (req: Request, res: Response): Promise<void> => {
+    const requestId = req.query.requestId as string;
+    await this._withdrawRequestService.rejectWidthdrawRequest( requestId  )
+     successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "WithdrawRequests rejected successfully.",
+      true
+    );
+  }
+
+  approveWithdrawRequest = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.user;
+    const requestId = req.query.requestId as string;
+    const transaction = await this._withdrawRequestService.approveWithdrawRequest( id, requestId)
+     successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "WithdrawRequests approved successfully.",
+      transaction
+    );
+  }
 }

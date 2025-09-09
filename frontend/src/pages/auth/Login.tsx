@@ -11,8 +11,8 @@ export const Login = () => {
     const handleSubmit = async (data: Record<string, string>) => {
         const { email, password } = data
 
-            const user = await authService.login({ email, password, role })
-            dispatch(loginSuccess({ user }))
+        const user = await authService.login({ email, password, role })
+        dispatch(loginSuccess({ user }))
 
     };
 

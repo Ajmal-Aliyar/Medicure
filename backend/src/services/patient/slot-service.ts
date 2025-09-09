@@ -11,7 +11,7 @@ import { ensureTodayOrFuture } from "@/utils";
 @injectable()
 export class PatientSlotService implements IPatientSlotService {
   constructor(
-    @inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository
+    @inject(TYPES.SlotRepository) private readonly _slotRepo: ISlotRepository
   ) {}
 
   async getDoctorSlotsForBooking(
@@ -32,7 +32,7 @@ export class PatientSlotService implements IPatientSlotService {
       }),
     };
 
-    const { data, total } = await this.slotRepo.findAll({
+    const { data, total } = await this._slotRepo.findAll({
       filter,
       sort: { createdAt: 1 },
       ...pagination,

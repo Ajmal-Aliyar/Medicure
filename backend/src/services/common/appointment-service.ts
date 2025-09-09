@@ -18,11 +18,11 @@ import { NotFoundError, UnauthorizedError } from "@/errors";
 export class AppointmentService implements IAppointmentService {
   constructor(
     @inject(TYPES.AppointmentRepository)
-    private readonly appointmentRepo: IAppointmentRepository,
+    private readonly _appointmentRepo: IAppointmentRepository,
     @inject(TYPES.TransactionRepository)
-    private readonly transactionRepo: ITransactionRepository,
+    private readonly _transactionRepo: ITransactionRepository,
     @inject(TYPES.PrescriptionRepository)
-    private readonly prescriptionRepo: IPrescriptionRepository
+    private readonly _prescriptionRepo: IPrescriptionRepository
   ) {}
 
   async getAppointmentByRoomId(
@@ -37,7 +37,7 @@ export class AppointmentService implements IAppointmentService {
         : { doctorId: new Types.ObjectId(id) }),
     };
     const appointment =
-      await this.appointmentRepo.getAppointmentDetailsPopulated({
+      await this._appointmentRepo.getAppointmentDetailsPopulated({
         filter,
       });
     if (!appointment) {
@@ -54,7 +54,7 @@ export class AppointmentService implements IAppointmentService {
   ): Promise<{ appointments: AppointmentCard[]; total: number }> {
     const filter = this.buildFilterByRole(id, role, parsedQuery);
     const { appointments, total } =
-      await this.appointmentRepo.getAppointmentsForUser({
+      await this._appointmentRepo.getAppointmentsForUser({
         filter,
         skip,
         limit,
@@ -87,13 +87,13 @@ export class AppointmentService implements IAppointmentService {
       throw new UnauthorizedError("Invalid role for accessing appointment");
   }
 
-  const appointment = await this.appointmentRepo.getAppointmentDetailsPopulated({ filter });
+  const appointment = await this._appointmentRepo.getAppointmentDetailsPopulated({ filter });
 
   if (!appointment) {
     throw new NotFoundError("Appointment not found");
   }
 
-  const transaction = await this.transactionRepo.findOne({
+  const transaction = await this._transactionRepo.findOne({
     transactionId: appointment.transactionId,
   });
 
@@ -103,7 +103,7 @@ export class AppointmentService implements IAppointmentService {
 
   const prescription =
     appointment.status === "completed"
-      ? await this.prescriptionRepo.findOne({ appointmentId })
+      ? await this._prescriptionRepo.findOne({ appointmentId })
       : null;
 
   return AppointmentMapper.toReturnAppointmentPageDetails(

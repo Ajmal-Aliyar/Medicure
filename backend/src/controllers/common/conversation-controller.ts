@@ -9,13 +9,13 @@ import { IConversationController } from "../interfaces";
 @injectable()
 export class ConversationController implements IConversationController {
     constructor(
-        @inject(TYPES.ConversationService) private readonly conversationService: IConversationService
+        @inject(TYPES.ConversationService) private readonly _conversationService: IConversationService
     ) {}
 
     getConversactions = async(req: Request, res: Response): Promise<void> => {
         const { id } = req.user;
         const pagination = getPaginationParams(req)
-        const { data, total} = await this.conversationService.getConversactions( id, pagination )
+        const { data, total} = await this._conversationService.getConversactions( id, pagination )
         const meta = buildPaginationMeta( total, pagination.skip)
         successResponse( res, HTTP_STATUS.CREATED, "Requests fetched successfully.", data, meta)
     }

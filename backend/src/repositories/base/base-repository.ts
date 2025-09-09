@@ -2,22 +2,22 @@ import { Model, Document, FilterQuery } from "mongoose";
 import { FindAllOptions, IBaseRepository } from "../interfaces";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
-  constructor(protected model: Model<T>) {}
+  constructor(protected _model: Model<T>) {}
 
   async findById(id: string): Promise<T | null> {
-    return this.model.findById(id).exec();
+    return this._model.findById(id).exec();
   }
 
   async create(item: Partial<T>): Promise<T> {
-    return this.model.create(item as any);
+    return this._model.create(item as any);
   }
 
   async update(id: string, item: Partial<T>): Promise<T | null> {
-    return this.model.findByIdAndUpdate(id, item, { new: true }).exec();
+    return this._model.findByIdAndUpdate(id, item, { new: true }).exec();
   }
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
-    return this.model.findOne(filter).exec();
+    return this._model.findOne(filter).exec();
   }
 
   async findAll({
@@ -27,13 +27,13 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     sort = { createdAt: 1 },
   }: FindAllOptions<T> = {}): Promise<{ data: T[]; total: number }> {
     const [data, total] = await Promise.all([
-      this.model.find(filter).skip(skip).limit(limit).sort(sort),
-      this.model.countDocuments(filter),
+      this._model.find(filter).skip(skip).limit(limit).sort(sort),
+      this._model.countDocuments(filter),
     ]);
     return { data, total };
   }
 
   // async delete(id: string): Promise<T | null> {
-  //   return this.model.findByIdAndDelete(id).exec();
+  //   return this._model.findByIdAndDelete(id).exec();
   // }
 }

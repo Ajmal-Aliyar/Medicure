@@ -10,6 +10,4 @@ export class MedicalRecordRepository
   constructor() {
     super(MedicalRecord);
   }
-
-  
 }

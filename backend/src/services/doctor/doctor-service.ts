@@ -19,27 +19,27 @@ import { IDoctorScheduleService, IDoctorService } from "../interfaces";
 export class DoctorService implements IDoctorService {
   constructor(
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository,
+    private readonly _doctorRepo: IDoctorRepository,
     @inject(TYPES.MediaService)
-    private readonly mediaService: IMediaService,
+    private readonly _mediaService: IMediaService,
     @inject(TYPES.DoctorScheduleService)
-    private readonly scheduleService: IDoctorScheduleService
+    private readonly _scheduleService: IDoctorScheduleService
   ) {}
 
 
   async updateProfileImg(doctorId: string, imageUrl: string): Promise<void> {
-    const doctor: IDoctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     await this.deleteExistingProfileImage(doctor);
-    const updated = await this.doctorRepo.updateImage(doctorId, imageUrl);
+    const updated = await this._doctorRepo.updateImage(doctorId, imageUrl);
     if (!updated) {
       throw new InternalServerError(CLIENT_MESSAGES.ERROR.IMAGE_UPDATE_FAILED);
     }
   }
 
   async getProfile(doctorId: string): Promise<{ doctor: DoctorProfileDTO, schedule: IDoctorSchedule | null}> {
-    const doctor: IDoctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     const data = DoctorProfileMapper.toDoctor(doctor);
-    const schedule = await this.scheduleService.getSchedule(doctor.id)
+    const schedule = await this._scheduleService.getSchedule(doctor.id)
     return { doctor: data, schedule }
   }
 
@@ -48,7 +48,7 @@ export class DoctorService implements IDoctorService {
     updateData: DoctorProfileUpdateDTO
   ): Promise<void> {
     const updateFields = DoctorProfileMapper.toDoctorUpdate(updateData);
-    const updated = await this.doctorRepo.update(doctorId, updateFields);
+    const updated = await this._doctorRepo.update(doctorId, updateFields);
     if (!updated) {
       throw new InternalServerError(
         CLIENT_MESSAGES.ERROR.PROFILE_UPDATE_FAILED
@@ -59,7 +59,7 @@ export class DoctorService implements IDoctorService {
   async getProfessionalDetails(
     doctorId: string
   ): Promise<ProfessionalVerificationDTO> {
-    const doctor: IDoctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     return DoctorProfileMapper.toProfessionalDetails(doctor);
   }
 
@@ -68,7 +68,7 @@ export class DoctorService implements IDoctorService {
     data: ProfessionalVerificationDTO
   ): Promise<void> {
     const updateData = DoctorProfileMapper.toUpdateProfessionalDetails(data);
-    const updated = await this.doctorRepo.update(doctorId, updateData);
+    const updated = await this._doctorRepo.update(doctorId, updateData);
     if (!updated) {
       throw new InternalServerError(
         CLIENT_MESSAGES.ERROR.VERIFICATION_UPDATE_FAILED
@@ -79,7 +79,7 @@ export class DoctorService implements IDoctorService {
   async getVerificationProofs(
     doctorId: string
   ): Promise<VerificationProofsDto> {
-    const doctor: IDoctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     return DoctorProfileMapper.toVerificationProofs(doctor);
   }
 
@@ -87,11 +87,11 @@ export class DoctorService implements IDoctorService {
     doctorId: string,
     proofs: VerificationProofsDto
   ): Promise<void> {
-    const doctor: IDoctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     const filteredProofs = await this.cleanupOldDocuments(doctor, proofs);
     const updateData = DoctorProfileMapper.toUpdateVerificationProofs(filteredProofs);
     console.log(updateData, "updateData")
-    const updated = await this.doctorRepo.update(doctorId, updateData);
+    const updated = await this._doctorRepo.update(doctorId, updateData);
     if (!updated) {
       throw new InternalServerError(
         CLIENT_MESSAGES.ERROR.VERIFICATION_UPDATE_FAILED
@@ -100,7 +100,7 @@ export class DoctorService implements IDoctorService {
   }
 
   async submitForReview(doctorId: string): Promise<void> {
-    const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     const isProfileComplete = this.isProfileComplete(doctor);
 
     if (!isProfileComplete) {
@@ -108,7 +108,7 @@ export class DoctorService implements IDoctorService {
         CLIENT_MESSAGES.VALIDATION.PROFILE_NOT_COMPLETED
       );
     }
-    await this.doctorRepo.updateStatus(doctorId, {
+    await this._doctorRepo.updateStatus(doctorId, {
       "status.profile.reviewStatus": "applied",
     });
   }
@@ -153,9 +153,9 @@ export class DoctorService implements IDoctorService {
     const existingUrl = doctor.personal?.profileImage;
     if (!existingUrl) return;
 
-    const publicId = this.mediaService.extractPublicId(existingUrl);
+    const publicId = this._mediaService.extractPublicId(existingUrl);
     if (publicId) {
-      await this.mediaService.delete([publicId]);
+      await this._mediaService.delete([publicId]);
     }
   }
 
@@ -176,7 +176,7 @@ export class DoctorService implements IDoctorService {
     const existingValue = doctor.professional?.documents?.[key];
 
     if (newValue && existingValue) {
-      const publicId = this.mediaService.extractPublicId(existingValue);
+      const publicId = this._mediaService.extractPublicId(existingValue);
       if (publicId) publicIdsToDelete.push(publicId);
     }
     if (!newValue && existingValue) {
@@ -185,7 +185,7 @@ export class DoctorService implements IDoctorService {
   }
 
   if (publicIdsToDelete.length > 0) {
-    await this.mediaService.delete(publicIdsToDelete);
+    await this._mediaService.delete(publicIdsToDelete);
   }
 
   return newProofs;

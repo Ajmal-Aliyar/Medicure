@@ -12,16 +12,16 @@ import { FeedbackMapper } from "@/mappers/feedbackMapper";
 export class PatientFeedbackService implements IPatientFeedbackService {
   constructor(
     @inject(TYPES.AppointmentRepository)
-    private readonly appointmentRepo: IAppointmentRepository,
+    private readonly _appointmentRepo: IAppointmentRepository,
     @inject(TYPES.FeedbackRepository)
-    private readonly feedbackRepo: IFeedbackRepository
+    private readonly _feedbackRepo: IFeedbackRepository
   ) {}
   async submitFeedback(
     appointmentId: string,
     patientId: string,
     data: SubmitFeedbackDTO
   ): Promise<void> {
-    const appointment = await this.appointmentRepo.findOne({
+    const appointment = await this._appointmentRepo.findOne({
       _id: appointmentId,
     });
 
@@ -33,7 +33,7 @@ export class PatientFeedbackService implements IPatientFeedbackService {
     if (appointment.feedbackId)
       throw new BadRequestError("Feedback already submitted");
 
-    const feedback = await this.feedbackRepo.create({
+    const feedback = await this._feedbackRepo.create({
       appointmentId: new Types.ObjectId(appointmentId),
       patientId: new Types.ObjectId(patientId),
       doctorId: appointment.doctorId,
@@ -52,7 +52,7 @@ export class PatientFeedbackService implements IPatientFeedbackService {
       ): Promise<{ feedbacks: FeedbackDetails[]; total: number }> {
         const filter = {patientId};
         const { feedbacks, total } =
-          await this.feedbackRepo.getFeedbackDetailsPopulated({
+          await this._feedbackRepo.getFeedbackDetailsPopulated({
             filter,
             skip,
             limit,

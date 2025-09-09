@@ -17,15 +17,15 @@ import { AUTH_MESSAGES } from "@/constants";
 export class ConversationService implements IConversationService {
   constructor(
     @inject(TYPES.ConversationRepository)
-    private readonly conversationRepo: IConversationRepository,
+    private readonly _conversationRepo: IConversationRepository,
 
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository,
+    private readonly _doctorRepo: IDoctorRepository,
 
     @inject(TYPES.PatientRepository)
-    private readonly patientRepo: IPatientRepository,
+    private readonly _patientRepo: IPatientRepository,
     @inject(TYPES.AdminRepository)
-    private readonly adminRepo: IAdminRepository
+    private readonly _adminRepo: IAdminRepository
   ) {}
 
   async getConversactions(id: string, pagination: IPagination): Promise<{ data: IConversation[], total: number }> {
@@ -34,7 +34,7 @@ export class ConversationService implements IConversationService {
     const filter = {
       "members.id": objectId,
     };
-    return await this.conversationRepo.findAll({ filter, ...pagination });
+    return await this._conversationRepo.findAll({ filter, ...pagination });
   }
 
   async createConversation(
@@ -59,7 +59,7 @@ export class ConversationService implements IConversationService {
     if (!isGroup && mappedParticipants.length === 2) {
       const memberIds = mappedParticipants.map((p) => p.id.toString());
 
-      const { data: possibleMatches } = await this.conversationRepo.findAll({
+      const { data: possibleMatches } = await this._conversationRepo.findAll({
         filter: {
           isGroup: false,
           "members.id": { $all: memberIds },
@@ -84,15 +84,15 @@ export class ConversationService implements IConversationService {
       }),
     };
 
-    return await this.conversationRepo.create(conversationPayload);
+    return await this._conversationRepo.create(conversationPayload);
   }
 
   async updateLastMessage( id: string, message: string, date: Date): Promise<void> {
-      await this.conversationRepo.update(id, { lastMessage: {message, date}})
+      await this._conversationRepo.update(id, { lastMessage: {message, date}})
   }
 
   async isMember(candidateId: string, conversationId: string): Promise<boolean> {
-    const chat = await this.conversationRepo.findById(conversationId);
+    const chat = await this._conversationRepo.findById(conversationId);
     if (!chat) {
       throw new NotFoundError("Conversation not found.")
     }
@@ -102,9 +102,9 @@ export class ConversationService implements IConversationService {
   private getRepo(
     role: IRole
   ): IPatientRepository | IDoctorRepository | IAdminRepository {
-    if (role === "patient") return this.patientRepo;
-    if (role === "doctor") return this.doctorRepo;
-    if (role === "admin") return this.adminRepo;
+    if (role === "patient") return this._patientRepo;
+    if (role === "doctor") return this._doctorRepo;
+    if (role === "admin") return this._adminRepo;
     throw new BadRequestError(AUTH_MESSAGES.ERROR.INVALID_USER);
   }
 }

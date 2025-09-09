@@ -11,5 +11,4 @@ export class MessageRepository
   constructor() {
     super(Message);
   }
-
 }

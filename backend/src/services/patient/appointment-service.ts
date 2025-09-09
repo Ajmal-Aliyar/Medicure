@@ -14,14 +14,14 @@ import { env } from "@/config";
 export class PatientAppointmentService implements IPatientAppointmentService {
   constructor(
     @inject(TYPES.AppointmentRepository)
-    private readonly appointmentRepo: IAppointmentRepository,
-    @inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository,
+    private readonly _appointmentRepo: IAppointmentRepository,
+    @inject(TYPES.SlotRepository) private readonly _slotRepo: ISlotRepository,
     @inject(TYPES.TransactionService)
-    private readonly transactionService: ITransactionService,
+    private readonly _transactionService: ITransactionService,
     @inject(TYPES.WalletService)
-    private readonly walletService: IWalletService,
+    private readonly _walletService: IWalletService,
     @inject(TYPES.SlotService)
-    private readonly slotService: ISlotService,
+    private readonly _slotService: ISlotService,
   ) {}
 
   async bookAppointment({
@@ -44,16 +44,16 @@ export class PatientAppointmentService implements IPatientAppointmentService {
       status: "scheduled",
       transactionId: paymentIntentId,
     });
-    await this.slotService.bookSlot(slotId, patientId);
-    await this.transactionService.bookAppointment({
+    await this._slotService.bookSlot(slotId, patientId);
+    await this._transactionService.bookAppointment({
       doctorId,
       patientId,
       appointmentId: String(appointment._id),
       amount,
       transactionId: paymentIntentId,
     });
-    await this.walletService.updateWalletBalance(doctorId, "doctor", amount);
-    await this.walletService.updateWalletBalance(env.ADMIN_ID, "admin", amount);
+    await this._walletService.updateWalletBalance(doctorId, "doctor", amount);
+    await this._walletService.updateWalletBalance(env.ADMIN_ID, "admin", amount);
     return appointment;
   }
 
@@ -64,12 +64,12 @@ export class PatientAppointmentService implements IPatientAppointmentService {
     status,
     transactionId,
   }: IAppointmentCreateInput): Promise<IAppointment> {
-    const slotDetails = await this.slotRepo.findById(slotId);
+    const slotDetails = await this._slotRepo.findById(slotId);
     if (!slotDetails) {
       throw new NotFoundError("Slot does not exist.");
     }
 
-    const existingAppointment = await this.appointmentRepo.findOne({
+    const existingAppointment = await this._appointmentRepo.findOne({
       slotId: new Types.ObjectId(slotId),
       status: { $ne: "Cancelled" },
     });
@@ -79,7 +79,7 @@ export class PatientAppointmentService implements IPatientAppointmentService {
     }
 
     const datePart = format(slotDetails.date, "yyyy-MM-dd");
-    const appointment = await this.appointmentRepo.create({
+    const appointment = await this._appointmentRepo.create({
       patientId: new Types.ObjectId(patientId),
       doctorId: new Types.ObjectId(doctorId),
       slotId: new Types.ObjectId(slotId),

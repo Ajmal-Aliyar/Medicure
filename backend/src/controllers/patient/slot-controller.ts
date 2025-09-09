@@ -10,13 +10,13 @@ import { IPatientSlotService } from "@/services";
 export class PatientSlotController implements IPatientSlotController{
   constructor(
     @inject(TYPES.PatientSlotService)
-    private readonly slotService: IPatientSlotService
+    private readonly _slotService: IPatientSlotService
   ) {}
 
    getDoctorSlotsForBooking = async (req: Request, res: Response): Promise<void> => {
     const { doctorId, date } = req.query;
      const pagination = getPaginationParams(req);
-    const { slots, total} = await this.slotService.getDoctorSlotsForBooking(
+    const { slots, total} = await this._slotService.getDoctorSlotsForBooking(
       String(doctorId),
       String(date),
       pagination

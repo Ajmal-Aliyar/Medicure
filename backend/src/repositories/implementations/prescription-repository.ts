@@ -11,7 +11,7 @@ export class PrescriptionRepository extends BaseRepository<IPrescription> implem
   }
 
   async getDetailsByIdForDownload(filter: FilterQuery<IPrescription>): Promise<PrescriptionFullDetails | null> {
-  const result = await this.model
+  const result = await this._model
     .findOne(filter)
     .populate({
       path: "doctorId",

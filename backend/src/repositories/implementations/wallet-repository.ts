@@ -12,11 +12,19 @@ export class WalletRepository
     super(Wallet);
   }
 
-  async updateBalance(ownerId: string, ownerType: IRole, amount: number): Promise<IWallet | null> {
-    return await this.model.findOneAndUpdate(
-      { ownerId: new Types.ObjectId(ownerId), ownerType },
-      { $inc: { balance: amount } },
-      { new: true }
-    );
-  }
+  async updateBalance(
+  ownerId: string,
+  ownerType: IRole,
+  amount: number,
+  inc: boolean
+): Promise<IWallet | null> {
+  const change = inc ? amount : -amount;
+
+  return this._model.findOneAndUpdate(
+    { ownerId: new Types.ObjectId(ownerId), ownerType },
+    { $inc: { balance: change } },
+    { new: true }
+  );
+}
+
 }

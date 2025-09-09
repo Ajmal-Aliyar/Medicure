@@ -14,7 +14,7 @@ export class DoctorAppointmentController
 {
   constructor(
     @inject(TYPES.DoctorAppointmentService)
-    private readonly doctorAppointmentService: IDoctorAppointmentService
+    private readonly _doctorAppointmentService: IDoctorAppointmentService
   ) {}
 
   markAppointmentCompleted = async (
@@ -25,7 +25,7 @@ export class DoctorAppointmentController
     
     const { id } = req.user;
     const roomId = req.params.roomId
-      await this.doctorAppointmentService.markAppointmentCompleted( roomId, id);
+      await this._doctorAppointmentService.markAppointmentCompleted( roomId, id);
     successResponse(
       res,
       HTTP_STATUS.OK,

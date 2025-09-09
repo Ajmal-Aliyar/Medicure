@@ -24,7 +24,7 @@ import { inject, injectable } from "inversify";
 export class AdminDoctorService implements IAdminDoctorService {
   constructor(
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository
+    private readonly _doctorRepo: IDoctorRepository
   ) {}
 
   async getFilteredDoctor(
@@ -32,7 +32,7 @@ export class AdminDoctorService implements IAdminDoctorService {
     pagination: IPagination
   ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
     const options = mapFilterQueryToDoctorOptions(doctorOptions, true);
-    const { data, total } = await this.doctorRepo.filterDoctorForAdmin(
+    const { data, total } = await this._doctorRepo.filterDoctorForAdmin(
       options,
       pagination
     );
@@ -43,7 +43,7 @@ export class AdminDoctorService implements IAdminDoctorService {
   async getDoctorProfile(
     doctorId: string | null
   ): Promise<DoctorMappedProfileDto> {
-    const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     return AdminDoctorMapper.toMapDoctorWithDefaults(doctor);
   }
 
@@ -60,7 +60,7 @@ export class AdminDoctorService implements IAdminDoctorService {
   }> {
     reviewStatus = getValidDoctorReviewStatus(reviewStatus) as IReviewStatus;
     const { total, doctors } =
-      await this.doctorRepo.getDoctorsSummaryByReviewStatus(
+      await this._doctorRepo.getDoctorsSummaryByReviewStatus(
         reviewStatus,
         pagination
       );
@@ -83,7 +83,7 @@ export class AdminDoctorService implements IAdminDoctorService {
   async getDoctorApprovalDetails(
     doctorId: string | null
   ): Promise<DoctorApprovalDetailsDto> {
-    const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     return AdminDoctorMapper.toDoctorApprovalDetailsDto(doctor);
   }
 
@@ -98,7 +98,7 @@ export class AdminDoctorService implements IAdminDoctorService {
         ADMIN_MESSAGES.VALIDATION.INVALID_REVIEW_STATUS
       );
     }
-    const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     if (doctor.status.profile.reviewStatus !== "applied") {
       throw new BadRequestError(
         ADMIN_MESSAGES.VALIDATION.ONLY_APPLIED_CAN_BE_UPDATED
@@ -112,7 +112,7 @@ export class AdminDoctorService implements IAdminDoctorService {
       doctor.status.profile.reviewComment = null;
       doctor.status.profile.isApproved = true;
     }
-    await this.doctorRepo.update(doctorId, doctor);
+    await this._doctorRepo.update(doctorId, doctor);
   }
 
   async blockDoctor(doctorId: string, reason?: string): Promise<void> {
@@ -128,7 +128,7 @@ export class AdminDoctorService implements IAdminDoctorService {
     block: boolean,
     reason?: string
   ): Promise<void> {
-    const doctor = await ensureDoctorExists(doctorId, this.doctorRepo);
+    const doctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     if (doctor.status.accountStatus.isBlocked === block) {
       const msg = block
         ? ADMIN_MESSAGES.ERROR.DOCTOR_ALREADY_BLOCKED
@@ -137,6 +137,6 @@ export class AdminDoctorService implements IAdminDoctorService {
     }
     doctor.status.accountStatus.isBlocked = block;
     doctor.status.accountStatus.reason = block ? reason ?? null : null;
-    await this.doctorRepo.update(doctorId, doctor);
+    await this._doctorRepo.update(doctorId, doctor);
   }
 }

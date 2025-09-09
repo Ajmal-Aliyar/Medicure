@@ -9,14 +9,14 @@ import { IMessageController } from "../interfaces";
 @injectable()
 export class MessageController implements IMessageController {
     constructor(
-        @inject(TYPES.MessageService) private readonly messageService: IMessageService
+        @inject(TYPES.MessageService) private readonly _messageService: IMessageService
     ) {}
 
     getMessages = async(req: Request, res: Response): Promise<void> => {
         const { id } = req.user;
         const { conversationId } = req.params
         const pagination = getPaginationParams(req)
-        const { data, total} = await this.messageService.getMessages( id, conversationId, pagination )
+        const { data, total} = await this._messageService.getMessages( id, conversationId, pagination )
         const meta = buildPaginationMeta( total, pagination.skip)
         successResponse( res, HTTP_STATUS.CREATED, "Messages fetched successfully.", data, meta)
     }

@@ -6,3 +6,4 @@ export interface IPaymentService {
     cancelCheckout(slotId: string  | undefined, patientId: string): Promise<boolean>
     getSessionDetails(sessionId: string | undefined): Promise<Stripe.Response<Stripe.Checkout.Session>>
 }
+

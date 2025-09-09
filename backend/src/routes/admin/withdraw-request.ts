@@ -20,7 +20,12 @@ export const createWithdrawRequestRoute = (): Router => {
 
   router
     .route("/")
-    .get(asyncHandler(adminWithdrawRequest.getWithdrawRequests)).post(asyncHandler(withdrawRequest.createWithdrawRequest));
+    .get(asyncHandler(adminWithdrawRequest.getWithdrawRequests))
+    .post(asyncHandler(withdrawRequest.createWithdrawRequest))
+    .patch(asyncHandler(adminWithdrawRequest.rejectWidthdrawRequest));
+  router
+    .route("/approve")
+    .patch(asyncHandler(adminWithdrawRequest.approveWithdrawRequest));
 
   return router;
 };

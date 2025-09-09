@@ -1,16 +1,19 @@
+import type { RootState } from "@/app/store";
 import { adminWalletService } from "@/services/api/admin/wallet";
 import { doctorWalletService } from "@/services/api/doctor/wallet";
+import { setWallet } from "@/slices/financeSlice";
 import type { IWallet, IWalletService } from "@/types/wallet";
 import { Wallet } from "lucide-react"
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   className?: string;
   role: 'admin' | 'doctor';
-  wallet: IWallet | null;
-  setWallet: React.Dispatch<React.SetStateAction<IWallet | null>>;
 }
-const WalletCard = ({ wallet, setWallet, role, className=''}: Props) => {
+const WalletCard = ({ role, className=''}: Props) => {
+  const {wallet} = useSelector((state: RootState) => state.finance)
+  const dispatch = useDispatch()
     useEffect(() => {
         const fetchWallet = async() => {
           const service: Record< 'admin' | 'doctor', IWalletService> = {
@@ -18,7 +21,7 @@ const WalletCard = ({ wallet, setWallet, role, className=''}: Props) => {
             doctor: doctorWalletService
           }
            const wallet =  await service[role].getWallet()
-           setWallet(wallet)
+           dispatch(setWallet(wallet))
         }
         fetchWallet()
     }, [])

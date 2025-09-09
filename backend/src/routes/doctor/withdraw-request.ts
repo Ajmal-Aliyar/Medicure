@@ -21,7 +21,9 @@ export const createWithdrawRequestRoute = (): Router => {
   router
     .route("/")
     .get(asyncHandler(doctorWithdrawRequest.getWithdrawRequests))
-    .post(asyncHandler(withdrawRequest.createWithdrawRequest));
+    .post(asyncHandler(withdrawRequest.createWithdrawRequest))
+    .patch(asyncHandler(doctorWithdrawRequest.cancelWidthdrawRequest));
+
 
   return router;
 };

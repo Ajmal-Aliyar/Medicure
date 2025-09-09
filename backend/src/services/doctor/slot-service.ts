@@ -12,11 +12,11 @@ import { SlotChartData } from "@/interfaces";
 export class DoctorSlotService implements IDoctorSlotService {
   constructor(
     @inject(TYPES.SlotRepository)
-    private slotRepo: ISlotRepository
+    private _slotRepo: ISlotRepository
   ) {}
 
   async createSlots(slots: Partial<ISlot>[]): Promise<ISlot[]> {
-    return this.slotRepo.bulkCreate(slots as ISlot[]);
+    return this._slotRepo.bulkCreate(slots as ISlot[]);
   }
 
   async getSlots(
@@ -25,7 +25,7 @@ export class DoctorSlotService implements IDoctorSlotService {
     status?: string,
     isActive?: boolean
   ): Promise<CategorizedSlots> {
-    const data = await this.slotRepo.findByDoctorAndDate(
+    const data = await this._slotRepo.findByDoctorAndDate(
       doctorId,
       date,
       isActive,
@@ -39,7 +39,7 @@ export class DoctorSlotService implements IDoctorSlotService {
     slotId: string,
     isActive: boolean
   ): Promise<ISlot> {
-    const updatedSlot = await this.slotRepo.updateByDoctorAndSlotId(
+    const updatedSlot = await this._slotRepo.updateByDoctorAndSlotId(
       doctorId,
       slotId,
       isActive
@@ -53,6 +53,6 @@ export class DoctorSlotService implements IDoctorSlotService {
   }
 
   async getSlotsForDashboard(doctorId: string, startDate: string, endDate: string): Promise<SlotChartData[]> {
-    return await this.slotRepo.getSlotStatsByDateRange(doctorId, startDate, endDate)
+    return await this._slotRepo.getSlotStatsByDateRange(doctorId, startDate, endDate)
   }
 }

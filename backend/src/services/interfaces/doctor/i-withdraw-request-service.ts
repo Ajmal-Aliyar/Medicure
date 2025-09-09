@@ -6,4 +6,5 @@ export interface IDoctorWithdrawRequestService {
     status: string,
     pagination: IPagination
   ): Promise<{ requests: IWithdrawRequestResponse[]; total: number }>;
+  cancelWidthdrawRequest( doctorId: string, withdrawRequestId: string ): Promise<void>;
 }

@@ -10,12 +10,12 @@ import { IDoctorController } from "../interfaces";
 @injectable()
 export class DoctorController implements IDoctorController {
   constructor(
-    @inject(TYPES.DoctorService) private readonly doctorService: IDoctorService
+    @inject(TYPES.DoctorService) private readonly _doctorService: IDoctorService
   ) {}
 
   getProfileDetails = async (req: Request, res: Response): Promise<void> => {
     const doctorId = req.user?.id as string;
-    const doctorProfile = await this.doctorService.getProfile(doctorId);
+    const doctorProfile = await this._doctorService.getProfile(doctorId);
     if (!doctorProfile) {
       errorResponse(
         res,
@@ -42,13 +42,13 @@ export class DoctorController implements IDoctorController {
       );
       return;
     }
-    await this.doctorService.updateProfileImg(doctorId, profileImage);
+    await this._doctorService.updateProfileImg(doctorId, profileImage);
     successResponse(res, HTTP_STATUS.OK, CLIENT_MESSAGES.SUCCESS.IMAGE_UPDATED);
   };
 
   updateProfile = async (req: Request, res: Response): Promise<void> => {
     const doctorId = req.user?.id as string;
-    await this.doctorService.updateProfile(doctorId, req.body);
+    await this._doctorService.updateProfile(doctorId, req.body);
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -64,7 +64,7 @@ export class DoctorController implements IDoctorController {
     const payload: ProfessionalVerificationDTO = req.body;
     console.log(payload, 'payload');
     
-    await this.doctorService.updateProfessionalDetails(doctorId, payload);
+    await this._doctorService.updateProfessionalDetails(doctorId, payload);
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -77,7 +77,7 @@ export class DoctorController implements IDoctorController {
     res: Response
   ): Promise<void> => {
     const doctorId = req.user?.id as string;
-    const professionalDetails = await this.doctorService.getProfessionalDetails(
+    const professionalDetails = await this._doctorService.getProfessionalDetails(
       doctorId
     );
     successResponse(
@@ -93,7 +93,7 @@ export class DoctorController implements IDoctorController {
     res: Response
   ): Promise<void> => {
     const doctorId = req.user?.id as string;
-    const verificationProofs = await this.doctorService.getVerificationProofs(
+    const verificationProofs = await this._doctorService.getVerificationProofs(
       doctorId
     );
     successResponse(
@@ -109,7 +109,7 @@ export class DoctorController implements IDoctorController {
     res: Response
   ): Promise<void> => {
     const doctorId = req.user?.id as string;
-    await this.doctorService.updateVerificationProofs(doctorId, req.body);
+    await this._doctorService.updateVerificationProofs(doctorId, req.body);
 
     successResponse(
       res,
@@ -120,7 +120,7 @@ export class DoctorController implements IDoctorController {
 
   submitForReview = async (req: Request, res: Response): Promise<void> => {
    const doctorId = req.user?.id as string;
-    await this.doctorService.submitForReview(doctorId);
+    await this._doctorService.submitForReview(doctorId);
 
     successResponse(
       res,

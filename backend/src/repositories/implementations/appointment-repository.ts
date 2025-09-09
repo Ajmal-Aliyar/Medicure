@@ -23,7 +23,7 @@ export class AppointmentRepository
     total: number;
   }> {
     const [appointments, total] = await Promise.all([
-      this.model
+      this._model
         .find(filter)
         .skip(skip)
         .limit(limit)
@@ -31,7 +31,7 @@ export class AppointmentRepository
         .populate("doctorId", "personal.fullName personal.profileImage professional.specialization")
         .populate("patientId", "personal.fullName personal.profileImage personal.dob")
         .lean<PopulatedAppointment[]>(),  
-      this.model.countDocuments(filter),
+      this._model.countDocuments(filter),
     ]);
     return {
       appointments,
@@ -43,7 +43,7 @@ export class AppointmentRepository
     filter
   }: FindAllOptions<IAppointment>): Promise<PopulatedAppointmentForRoom | null> {
     return await 
-      this.model
+      this._model
         .findOne(filter)
         .populate(
           "doctorId", 

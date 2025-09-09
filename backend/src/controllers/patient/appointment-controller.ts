@@ -17,7 +17,7 @@ export class PatientAppointmentController
 {
   constructor(
     @inject(TYPES.AppointmentService)
-    private readonly appointmentService: IAppointmentService
+    private readonly _appointmentService: IAppointmentService
   ) {}
 
   getAppointmentsByPatientId = async (
@@ -28,7 +28,7 @@ export class PatientAppointmentController
     const pagination = getPaginationParams(req);
     const parsedQuery = filterAppointmentQuerySchema.parse(req.query)
     const { appointments, total } =
-      await this.appointmentService.getAppointmentsCardDetails(
+      await this._appointmentService.getAppointmentsCardDetails(
         id,
         role,
         parsedQuery,

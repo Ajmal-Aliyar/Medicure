@@ -9,7 +9,7 @@ import { DoctorCard } from "@/components/domain/Cards";
 import { Pagination } from "@/components/ui/Pagination";
 import { useNavigate } from "react-router-dom";
 
-const FilterDoctor = () => {
+const FilterDoctor = ({ specialization }: { specialization?: string }) => {
     const [page, setPage] = useState(1);
     const [doctorId, setDoctorId] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState("");
@@ -19,13 +19,13 @@ const FilterDoctor = () => {
     const [experienceRange, setExperienceRange] = useState({ min: "", max: "" });
     const [ratingRange, setRatingRange] = useState({ min: "", max: "" });
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
-
     const navigate = useNavigate()
 
 
     const debouncedSearchQuery = useDebounce(searchQuery, 500);
     const filters = useMemo(() => ({
         searchQuery: debouncedSearchQuery,
+        specialization,
         language,
         profileStatus,
         accountStatus,

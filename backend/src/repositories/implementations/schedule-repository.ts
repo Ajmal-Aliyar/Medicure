@@ -15,14 +15,14 @@ export class ScheduleRepository
   }
 
 async findByDoctorId(doctorId: string): Promise<IDoctorSchedule | null> {
-  return await this.model.findOne({ doctorId: new Types.ObjectId(doctorId) });
+  return await this._model.findOne({ doctorId: new Types.ObjectId(doctorId) });
 }
 
   async update(
     doctorId: string,
     data: Partial<IDoctorSchedule>
   ): Promise<IDoctorSchedule | null> {
-    const updated = await this.model.findOneAndUpdate(
+    const updated = await this._model.findOneAndUpdate(
       { doctorId: new Types.ObjectId(doctorId)  },
       { $set: data },
       { new: true, runValidators: true }

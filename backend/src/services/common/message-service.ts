@@ -10,13 +10,13 @@ import { ForbiddenError } from "@/errors";
 @injectable()
 export class MessageService implements IMessageService {
   constructor(
-    @inject(TYPES.MessageRepository) private readonly messageRepo: IMessageRepository,
-    @inject(TYPES.ConversationService) private readonly conversationService: IConversationService,
+    @inject(TYPES.MessageRepository) private readonly _messageRepo: IMessageRepository,
+    @inject(TYPES.ConversationService) private readonly _conversationService: IConversationService,
   ) {}
 
   async createMessage( data: IMessage): Promise<void> {
-    await this.messageRepo.create(data)
-    await this.conversationService.updateLastMessage( data.conversationId?.toString(), data.content, data.createdAt)
+    await this._messageRepo.create(data)
+    await this._conversationService.updateLastMessage( data.conversationId?.toString(), data.content, data.createdAt)
   }
 
   async getMessages(
@@ -24,7 +24,7 @@ export class MessageService implements IMessageService {
   conversationId: string,
   pagination: IPagination
 ): Promise<{ data: IMessage[], total: number}> {
-  const isMember = await this.conversationService.isMember(candidateId, conversationId);
+  const isMember = await this._conversationService.isMember(candidateId, conversationId);
   
   if (!isMember) {
     throw new ForbiddenError("You are not a member of this conversation.");
@@ -32,7 +32,7 @@ export class MessageService implements IMessageService {
 
   const filter = { conversationId: new Types.ObjectId(conversationId) };
 
-  return this.messageRepo.findAll({
+  return this._messageRepo.findAll({
     filter,
     ...pagination,
     sort: { createdAt: -1 },

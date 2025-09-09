@@ -10,14 +10,13 @@ import { CLIENT_MESSAGES, HTTP_STATUS } from "@/constants";
 export class PatientController implements IPatientController {
   constructor(
     @inject(TYPES.PatientService)
-    private readonly patientService: IPatientService
+    private readonly _patientService: IPatientService
   ) {}
 
   getProfileDetails = async (req: Request, res: Response): Promise<void> => {
-    console.log(req.user, "sdffds");
 
     const patientId = req.user?.id as string;
-    const patientProfile = await this.patientService.getProfile(patientId);
+    const patientProfile = await this._patientService.getProfile(patientId);
     if (!patientProfile) {
       errorResponse(
         res,
@@ -35,7 +34,7 @@ export class PatientController implements IPatientController {
 
   updateProfile = async (req: Request, res: Response): Promise<void> => {
     const patient = req.user?.id as string;
-    await this.patientService.updateProfile(patient, req.body);
+    await this._patientService.updateProfile(patient, req.body);
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -54,7 +53,7 @@ export class PatientController implements IPatientController {
       );
       return;
     }
-    await this.patientService.updateProfileImg(doctorId, profileImage);
+    await this._patientService.updateProfileImg(doctorId, profileImage);
     successResponse(res, HTTP_STATUS.OK, CLIENT_MESSAGES.SUCCESS.IMAGE_UPDATED);
   };
 }

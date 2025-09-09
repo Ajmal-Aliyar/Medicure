@@ -6,6 +6,7 @@ import doctorReducer from '@/slices/doctorSlice';
 import patientReducer from '@/slices/patientSlice';
 import consultationReducer from '@/slices/consultationSlice';
 import chatSliceReducer from '@/slices/chatSlice';
+import financeSliceReducer from '@/slices/financeSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     patient: patientReducer,
     consultation: consultationReducer,
     chat: chatSliceReducer,
+    finance: financeSliceReducer
   },
 });
 

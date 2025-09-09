@@ -22,7 +22,7 @@ const TransactionSchema = new Schema<ITransaction>(
     },
     type: {
       type: String,
-      enum: ["appointment", "withdrawal", "refund"],
+      enum: ["appointment", "withdraw", "refund"],
       required: true,
     },
     status: {

@@ -12,14 +12,14 @@ export class PrescriptionController
 {
   constructor(
     @inject(TYPES.PrescriptionService)
-    private readonly prescriptionService: IPrescriptionService
+    private readonly _prescriptionService: IPrescriptionService
   ) {}
 
   getPrescription = async (req: Request, res: Response): Promise<void> => {
     const { id, role } = req.user;
     const { prescriptionId } = req.params
     const prescription =
-      await this.prescriptionService.getPrescription( id, role, prescriptionId);
+      await this._prescriptionService.getPrescription( id, role, prescriptionId);
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -32,7 +32,7 @@ export class PrescriptionController
     const { id, role } = req.user;
     const { prescriptionId } = req.params
     const prescription =
-      await this.prescriptionService.viewPrescriptionForDownload( id, role, prescriptionId);
+      await this._prescriptionService.viewPrescriptionForDownload( id, role, prescriptionId);
     successResponse(
       res,
       HTTP_STATUS.OK,

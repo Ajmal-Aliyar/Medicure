@@ -7,7 +7,7 @@ import { NotFoundError, UnauthorizedError } from "@/errors";
 export class DoctorAppointmentService implements IDoctorAppointmentService {
   constructor(
     @inject(TYPES.AppointmentRepository)
-    private readonly appointmentRepo: IAppointmentRepository
+    private readonly _appointmentRepo: IAppointmentRepository
   ) {}
 
   async markAppointmentInProgress(
@@ -31,7 +31,7 @@ export class DoctorAppointmentService implements IDoctorAppointmentService {
     doctorId: string,
     status: "in progress" | "completed"
   ): Promise<void> {
-    const appointment = await this.appointmentRepo.findOne({ roomId });
+    const appointment = await this._appointmentRepo.findOne({ roomId });
     if (!appointment) throw new NotFoundError("Appointment not found");
     console.log(appointment.doctorId.toString() === doctorId, appointment.doctorId, appointment.doctorId.toString());
     

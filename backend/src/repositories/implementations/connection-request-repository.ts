@@ -22,7 +22,7 @@ export class ConnectionRequestRepository
       total: number;
     }> {
       const [requests, total] = await Promise.all([
-        this.model
+        this._model
           .find(filter)
           .skip(skip)
           .limit(limit)
@@ -30,7 +30,7 @@ export class ConnectionRequestRepository
           .populate("doctorId", "personal.fullName personal.profileImage")
           .populate("patientId", "personal.fullName personal.profileImage")
           .lean< PopulatedConnectionRequest[]>(),  
-        this.model.countDocuments(filter),
+        this._model.countDocuments(filter),
       ]);
       return {
         requests,
