@@ -8,9 +8,9 @@ import {
 } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IAdminWithdrawRequestService } from "../interfaces";
-import { IPagination, IRole, IWithdrawRequestResponse } from "@/interfaces";
+import { IPagination, IWithdrawRequestResponse } from "@/interfaces";
 import { WithdrawRequestMapper } from "@/mappers";
-import { IAdmin, IDoctor, ITransaction, IWithdrawRequest } from "@/models";
+import { IAdmin, IDoctor, ITransaction } from "@/models";
 import { BadRequestError, NotFoundError } from "@/errors";
 import { Types } from "mongoose";
 import { generateTransactionId } from "@/utils";
@@ -21,15 +21,15 @@ export class AdminWithdrawRequestService
 {
   constructor(
     @inject(TYPES.WithdrawRequestRepository)
-    private readonly withdrawRequestRepo: IWithdrawRequestRepository,
+    private readonly _withdrawRequestRepo: IWithdrawRequestRepository,
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository,
+    private readonly _doctorRepo: IDoctorRepository,
     @inject(TYPES.AdminRepository)
-    private readonly adminRepo: IAdminRepository,
+    private readonly _adminRepo: IAdminRepository,
     @inject(TYPES.WalletRepository)
-    private readonly walletRepo: IWalletRepository,
+    private readonly _walletRepo: IWalletRepository,
     @inject(TYPES.TransactionRepository)
-    private readonly transactionRepo: ITransactionRepository
+    private readonly _transactionRepo: ITransactionRepository
   ) {}
 
   async getWithdrawRequests(
@@ -37,7 +37,7 @@ export class AdminWithdrawRequestService
     pagination: IPagination
   ): Promise<{ requests: IWithdrawRequestResponse[]; total: number }> {
     const filter = { ...(status !== "all" && { status }) };
-    const { data, total } = await this.withdrawRequestRepo.findAll({
+    const { data, total } = await this._withdrawRequestRepo.findAll({
       filter,
       ...pagination,
       sort: { requestedAt: -1 },
@@ -48,11 +48,11 @@ export class AdminWithdrawRequestService
         let requesterDetails: IDoctor | IAdmin | null = null;
 
         if (request.role === "doctor") {
-          requesterDetails = await this.doctorRepo.findById(
+          requesterDetails = await this._doctorRepo.findById(
             String(request.requesterId)
           );
         } else if (request.role === "admin") {
-          requesterDetails = await this.adminRepo.findById(
+          requesterDetails = await this._adminRepo.findById(
             String(request.requesterId)
           );
         }
@@ -72,7 +72,7 @@ export class AdminWithdrawRequestService
   }
 
   async rejectWidthdrawRequest(withdrawRequestId: string): Promise<void> {
-    const updated = await this.withdrawRequestRepo.update(withdrawRequestId, {
+    const updated = await this._withdrawRequestRepo.update(withdrawRequestId, {
       status: "rejected",
     });
     if (!updated) {
@@ -85,17 +85,17 @@ export class AdminWithdrawRequestService
     requestId: string
   ): Promise<ITransaction> {
     try {
-      const companyWallet = await this.walletRepo.findOne({ ownerId: adminId });
+      const companyWallet = await this._walletRepo.findOne({ ownerId: adminId });
       if (!companyWallet) throw new NotFoundError("Company wallet not found");
 
-      const request = await this.withdrawRequestRepo.findById(requestId);
+      const request = await this._withdrawRequestRepo.findById(requestId);
 
       if (!request)
         throw new NotFoundError(
           "Withdraw request not found or already processed"
         );
 
-      const clientWallet = await this.walletRepo.findOne({
+      const clientWallet = await this._walletRepo.findOne({
         ownerId: request.requesterId,
       });
       if (!clientWallet) throw new NotFoundError("Client wallet not found");
@@ -113,7 +113,7 @@ export class AdminWithdrawRequestService
       await request.save();
 
 
-      const transaction = await this.transactionRepo.create({
+      const transaction = await this._transactionRepo.create({
         transactionId: generateTransactionId(),
         from: new Types.ObjectId(adminId),
         to: request.requesterId,
@@ -123,13 +123,13 @@ export class AdminWithdrawRequestService
         status: "success",
       });
 
-      await this.walletRepo.updateBalance(
+      await this._walletRepo.updateBalance(
         String(request.requesterId),
         "doctor",
         request.amount,
         false
       );
-      await this.walletRepo.updateBalance(adminId, "admin", amount, false);
+      await this._walletRepo.updateBalance(adminId, "admin", amount, false);
 
       return transaction;
     } catch (error) {

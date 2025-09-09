@@ -13,22 +13,22 @@ import {
 @injectable()
 export class PaymentService implements IPaymentService {
   constructor(
-    @inject(TYPES.SlotService) private readonly slotService: ISlotService,
+    @inject(TYPES.SlotService) private readonly _slotService: ISlotService,
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository,
+    private readonly _doctorRepo: IDoctorRepository,
     @inject(TYPES.PatientAppointmentService)
-    private readonly patientAppointmentService: IPatientAppointmentService
+    private readonly _patientAppointmentService: IPatientAppointmentService
   ) {}
 
   async checkoutSession(
     patientId: string,
     slotId: string
   ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
-    const slot = await this.slotService.validateSlotAvailability(
+    const slot = await this._slotService.validateSlotAvailability(
       slotId,
       patientId
     );
-    const doctorInfo = await this.doctorRepo.findBasicInfoById(
+    const doctorInfo = await this._doctorRepo.findBasicInfoById(
       String(slot.doctorId)
     );
     const lineItems = this.buildLineItems(slot, doctorInfo);
@@ -73,7 +73,7 @@ export class PaymentService implements IPaymentService {
         const paymentIntentId = session.payment_intent as string;
         const amount = (session.amount_total || 0) / 100;
 
-        await this.patientAppointmentService.bookAppointment({
+        await this._patientAppointmentService.bookAppointment({
           doctorId,
           patientId,
           slotId,
@@ -85,14 +85,14 @@ export class PaymentService implements IPaymentService {
       case "checkout.session.expired": {
         const session = event.data.object as Stripe.Checkout.Session;
         const slotId = session.metadata?.slotId;
-        if (slotId) await this.slotService.updateSlotAvailable(slotId);
+        if (slotId) await this._slotService.updateSlotAvailable(slotId);
         break;
       }
 
       case "payment_intent.canceled": {
         const intent = event.data.object as Stripe.PaymentIntent;
         const slotId = intent.metadata?.slotId;
-        if (slotId) await this.slotService.updateSlotAvailable(slotId);
+        if (slotId) await this._slotService.updateSlotAvailable(slotId);
         break;
       }
 
@@ -105,7 +105,7 @@ export class PaymentService implements IPaymentService {
     slotId: string | undefined,
     patientId: string
   ): Promise<boolean> {
-    return await this.slotService.releaseSlot(slotId, patientId);
+    return await this._slotService.releaseSlot(slotId, patientId);
   }
 
   private buildLineItems(

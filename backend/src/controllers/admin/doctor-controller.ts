@@ -15,7 +15,7 @@ import { filterDoctorQuerySchema } from "@/validators";
 export class AdminDoctorController implements IAdminDoctorController {
   constructor(
     @inject(TYPES.AdminDoctorService)
-    private readonly adminDoctorService: IAdminDoctorService
+    private readonly _adminDoctorService: IAdminDoctorService
   ) {}
 
   getDoctorsByReviewStatus = async (
@@ -26,7 +26,7 @@ export class AdminDoctorController implements IAdminDoctorController {
     const pagination = getPaginationParams(req);
 
     const { total, doctors } =
-      await this.adminDoctorService.getDoctorsByReviewStatus( status, pagination);
+      await this._adminDoctorService.getDoctorsByReviewStatus( status, pagination);
     const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(
       res,
@@ -44,7 +44,7 @@ export class AdminDoctorController implements IAdminDoctorController {
     const pagination = getPaginationParams(req);
     const parsedQuery = filterDoctorQuerySchema.parse(req.query);
     const { total, doctors } =
-      await this.adminDoctorService.getFilteredDoctor( parsedQuery, pagination);
+      await this._adminDoctorService.getFilteredDoctor( parsedQuery, pagination);
     const meta = buildPaginationMeta(total, pagination.skip);
     successResponse(
       res,
@@ -60,7 +60,7 @@ export class AdminDoctorController implements IAdminDoctorController {
     res: Response
   ): Promise<void> => {
     const doctorId = req.params.doctorId as string;
-    const doctor = await this.adminDoctorService.getDoctorProfile(
+    const doctor = await this._adminDoctorService.getDoctorProfile(
       doctorId
     );
     successResponse(
@@ -76,7 +76,7 @@ export class AdminDoctorController implements IAdminDoctorController {
     res: Response
   ): Promise<void> => {
     const doctorId = req.params.doctorId as string;
-    const doctor = await this.adminDoctorService.getDoctorApprovalDetails(
+    const doctor = await this._adminDoctorService.getDoctorApprovalDetails(
       doctorId
     );
     successResponse(
@@ -90,20 +90,20 @@ export class AdminDoctorController implements IAdminDoctorController {
    updateDoctorStatus = async(req: Request, res: Response): Promise<void> => {
     const { doctorId } = req.params;
     const { reviewStatus, reviewComment } = req.body;
-    await this.adminDoctorService.updateDoctorStatus(doctorId, reviewStatus, reviewComment);
+    await this._adminDoctorService.updateDoctorStatus(doctorId, reviewStatus, reviewComment);
     successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.STATUS_UPDATED, true);
   }
 
   blockDoctor = async(req: Request, res: Response): Promise<void> => {
     const { doctorId } = req.params;
     const { reason } = req.body;
-    await this.adminDoctorService.blockDoctor(doctorId, reason);
+    await this._adminDoctorService.blockDoctor(doctorId, reason);
     successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.BlOCKED_DOCTOR, true);
   }
 
   unblockDoctor = async(req: Request, res: Response): Promise<void> => {
     const { doctorId } = req.params;
-    await this.adminDoctorService.unblockDoctor(doctorId);
+    await this._adminDoctorService.unblockDoctor(doctorId);
     successResponse(res, HTTP_STATUS.OK, ADMIN_MESSAGES.SUCCESS.UNBlOCKED_DOCTOR, true);
   }
 }

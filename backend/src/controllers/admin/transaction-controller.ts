@@ -10,7 +10,7 @@ import { IAdminTransactionService } from "@/services";
 export class AdminTransactionController implements IAdminTransactionController {
   constructor(
      @inject(TYPES.AdminTransactionService)
-    private readonly AdminTransactionService: IAdminTransactionService
+    private readonly _adminTransactionService: IAdminTransactionService
   ) {}
 
   getTransactionDashboard = async (
@@ -18,7 +18,7 @@ export class AdminTransactionController implements IAdminTransactionController {
     res: Response
   ): Promise<void> => {
     const { startDate, endDate } = req.query
-    const data = await this.AdminTransactionService.getTransactionsForDashboard(String(startDate), String(endDate));
+    const data = await this._adminTransactionService.getTransactionsForDashboard(String(startDate), String(endDate));
     successResponse(res, HTTP_STATUS.OK, "Transaction details fetched successfully.", data);
   }
 }

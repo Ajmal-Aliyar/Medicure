@@ -21,7 +21,7 @@ export class FeedbackRepository
     total: number;
   }> {
     const [feedbacks, total] = await Promise.all([
-      this.model
+      this._model
         .find(filter)
         .skip(skip)
         .limit(limit)
@@ -35,7 +35,7 @@ export class FeedbackRepository
           "personal.fullName personal.profileImage personal.dob personal.bloodGroup personal.gender personal.mobile"
         )
         .lean<PopulatedFeedbackDetails[]>(),
-      this.model.countDocuments(filter),
+      this._model.countDocuments(filter),
     ]);
 
     return { feedbacks, total };

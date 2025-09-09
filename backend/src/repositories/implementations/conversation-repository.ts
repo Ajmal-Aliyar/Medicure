@@ -91,7 +91,7 @@ export class ConversationRepository
       },
     ];
 
-    const [result] = await this.model.aggregate(aggregatePipeline).exec();
+    const [result] = await this._model.aggregate(aggregatePipeline).exec();
     return {
       data: result?.data || [],
       total: result?.total || 0,

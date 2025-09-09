@@ -14,7 +14,7 @@ import { BadRequestError } from "@/errors";
 export class AdminPatientService implements IAdminPatientService {
   constructor(
     @inject(TYPES.PatientRepository)
-    private readonly PatientRepo: IPatientRepository
+    private readonly _patientRepo: IPatientRepository
   ) {}
 
   async getFilteredPatient(
@@ -23,7 +23,7 @@ export class AdminPatientService implements IAdminPatientService {
   ): Promise<{ total: number; Patients: PatientCardDetails[] }> {
     const options = mapFilterQueryToPatientOptions(PatientOptions);
     const filter = transformPatientOptionsToMongoFilter(options)
-    const { data, total } = await this.PatientRepo.findAll({ filter, ...pagination, sort: {createdAt: -1}});
+    const { data, total } = await this._patientRepo.findAll({ filter, ...pagination, sort: {createdAt: -1}});
     const filteredPatient = PatientMapper.toPatientCardDto(data);
     return { total, Patients: filteredPatient };
   }
@@ -31,7 +31,7 @@ export class AdminPatientService implements IAdminPatientService {
   async getPatientProfile(
     PatientId: string | null
   ): Promise<PatientProfileDto> {
-    const Patient = await ensurePatientExists(PatientId, this.PatientRepo);
+    const Patient = await ensurePatientExists(PatientId, this._patientRepo);
     return PatientMapper.toPatientProfile(Patient);
   }
 
@@ -48,7 +48,7 @@ export class AdminPatientService implements IAdminPatientService {
     block: boolean,
     reason?: string
   ): Promise<void> {
-    const Patient = await ensurePatientExists(PatientId, this.PatientRepo);
+    const Patient = await ensurePatientExists(PatientId, this._patientRepo);
     if (Patient.status.isBlocked === block) {
       const msg = block
         ? "Patient already blocked."
@@ -56,6 +56,6 @@ export class AdminPatientService implements IAdminPatientService {
       throw new BadRequestError(msg);
     }
     Patient.status.isBlocked = block;
-    await this.PatientRepo.update(PatientId, Patient);
+    await this._patientRepo.update(PatientId, Patient);
   }
 }

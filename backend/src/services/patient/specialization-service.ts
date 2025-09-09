@@ -5,10 +5,10 @@ import { ISpecializationRepository, SpecializationPublicDetails } from "@/reposi
 
 @injectable()
 export class PatientSpecializationService implements IPatientSpecializationService {
-    constructor(@inject(TYPES.SpecializationRepository) private readonly specializationRepo: ISpecializationRepository) {}
+    constructor(@inject(TYPES.SpecializationRepository) private readonly _specializationRepo: ISpecializationRepository) {}
 
     async getPublicSpecializationDetails(): Promise<SpecializationPublicDetails[]>  {
-        return await this.specializationRepo.getPublicDetails()
+        return await this._specializationRepo.getPublicDetails()
     }
 
 }

@@ -10,11 +10,11 @@ import { IPatientSpecializationService } from "@/services";
 export class PatientSpecializationController implements IPatientSpecializationController {
   constructor(
     @inject(TYPES.PatientSpecializationService)
-    private readonly specializationService: IPatientSpecializationService
+    private readonly _specializationService: IPatientSpecializationService
   ) {}
 
   getPublicDetails = async (_req: Request, res: Response): Promise<void> => {
-    const data = await this.specializationService.getPublicSpecializationDetails();
+    const data = await this._specializationService.getPublicSpecializationDetails();
     successResponse(
       res,
       HTTP_STATUS.OK,

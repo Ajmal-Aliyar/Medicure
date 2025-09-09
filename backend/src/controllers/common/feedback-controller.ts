@@ -13,7 +13,7 @@ import { inject, injectable } from "inversify";
 export class FeedbackController {
   constructor(
     @inject(TYPES.FeedbackService)
-    private readonly feedbackService: IFeedbackService
+    private readonly _feedbackService: IFeedbackService
   ) {}
 
   getFeedbackByAppointmentId = async (
@@ -21,7 +21,7 @@ export class FeedbackController {
     res: Response
   ): Promise<void> => {
     const { appointmentId } = req.params;
-    const appointment = await this.feedbackService.getFeedbackByAppointmentId(
+    const appointment = await this._feedbackService.getFeedbackByAppointmentId(
       appointmentId
     );
     successResponse(
@@ -40,7 +40,7 @@ export class FeedbackController {
     console.log(doctorId);
     
     const pagination = getPaginationParams(req);
-    const { data, total } = await this.feedbackService.getFeedbacksByDoctorId(
+    const { data, total } = await this._feedbackService.getFeedbacksByDoctorId(
       doctorId,
       pagination
     );

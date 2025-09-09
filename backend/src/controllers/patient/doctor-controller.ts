@@ -11,7 +11,7 @@ import { filterDoctorQuerySchema } from "@/validators";
 export class PatientDoctorController implements IPatientDoctorController {
   constructor(
     @inject(TYPES.PatientDoctorService)
-    private readonly doctorService: IPatientDoctorService
+    private readonly _doctorService: IPatientDoctorService
   ) {}
 
   getPublicDetails = async (
@@ -21,7 +21,7 @@ export class PatientDoctorController implements IPatientDoctorController {
       const pagination = getPaginationParams(req);
       const parsedQuery = filterDoctorQuerySchema.parse(req.query);
       const { total, doctors } =
-        await this.doctorService.getPublicDoctorDetails( parsedQuery, pagination);
+        await this._doctorService.getPublicDoctorDetails( parsedQuery, pagination);
       const meta = buildPaginationMeta(total, pagination.skip);
       successResponse(
         res,

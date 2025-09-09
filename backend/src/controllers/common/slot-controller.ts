@@ -11,7 +11,7 @@ import { TYPES } from "@/di/types";
 export class SlotController implements ISlotController {
   constructor(
     @inject(TYPES.SlotService)
-    private readonly slotService: ISlotService
+    private readonly _slotService: ISlotService
   ) {}
 
   getSlots = async (
@@ -22,7 +22,7 @@ export class SlotController implements ISlotController {
       const pagination = getPaginationParams(req);
       const { id, role } = req.user;
 
-    const { slots, total } = await this.slotService.getSlots( id, role, parsedQuery, pagination);
+    const { slots, total } = await this._slotService.getSlots( id, role, parsedQuery, pagination);
        const meta = buildPaginationMeta(total, pagination.skip);
       successResponse(res, HTTP_STATUS.OK, SLOT_MESSAGES.SLOT_FETCHED, slots, meta);
     };  

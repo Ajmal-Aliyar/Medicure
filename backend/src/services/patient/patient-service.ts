@@ -14,14 +14,14 @@ import { IMediaService } from "@/interfaces";
 export class PatientService implements IPatientService {
   constructor(
     @inject(TYPES.PatientRepository)
-    private readonly patientRepo: IPatientRepository,
+    private readonly _patientRepo: IPatientRepository,
     @inject(TYPES.MediaService) private readonly mediaService: IMediaService
   ) {}
 
   async getProfile(patientId: string): Promise<PatientProfileDto> {
     const patient: IPatient = await ensurePatientExists(
       patientId,
-      this.patientRepo
+      this._patientRepo
     );
     return PatientProfileMapper.toPatientDto(patient);
   }
@@ -32,7 +32,7 @@ export class PatientService implements IPatientService {
   ): Promise<void> {
     const updateFields = PatientProfileMapper.toPatientUpdate(updateData);
 
-    const updated = await this.patientRepo.update(patientId, updateFields);
+    const updated = await this._patientRepo.update(patientId, updateFields);
     if (!updated) {
       throw new InternalServerError(
         CLIENT_MESSAGES.ERROR.PROFILE_UPDATE_FAILED
@@ -41,9 +41,9 @@ export class PatientService implements IPatientService {
   }
 
   async updateProfileImg(patientId: string, imageUrl: string): Promise<void> {
-      const patient: IPatient = await ensurePatientExists(patientId, this.patientRepo);
+      const patient: IPatient = await ensurePatientExists(patientId, this._patientRepo);
       await this.deleteExistingProfileImage(patient);
-      const updated = await this.patientRepo.updateImage(patientId, imageUrl);
+      const updated = await this._patientRepo.updateImage(patientId, imageUrl);
       if (!updated) {
         throw new InternalServerError(CLIENT_MESSAGES.ERROR.IMAGE_UPDATE_FAILED);
       }

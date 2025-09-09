@@ -10,18 +10,18 @@ import { SCHEDULE_MESSAGES, HTTP_STATUS } from "@/constants";
 export class DoctorScheduleController implements IDoctorScheduleController {
   constructor(
     @inject(TYPES.DoctorScheduleService)
-    private scheduleService: IDoctorScheduleService
+    private _scheduleService: IDoctorScheduleService
   ) {}
 
   getSchedule = async (req: Request, res: Response): Promise<void> => {
     const doctorId = req.user?.id as string; 
-    const schedule = await this.scheduleService.getSchedule(doctorId);
+    const schedule = await this._scheduleService.getSchedule(doctorId);
     successResponse(res, HTTP_STATUS.OK, SCHEDULE_MESSAGES.SCHEDULE_FETCHED, schedule);
   };
 
   updateSchedule = async (req: Request, res: Response): Promise<void> => {
     const doctorId = req.user?.id as string;
-    const { schedule, message } = await this.scheduleService.upsertSchedule(doctorId, req.body);
+    const { schedule, message } = await this._scheduleService.upsertSchedule(doctorId, req.body);
     successResponse(res, HTTP_STATUS.OK, message, schedule);
   };
 }

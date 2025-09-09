@@ -11,11 +11,11 @@ import { NotFoundError } from "@/errors";
 export class WalletService implements IWalletService {
   constructor(
     @inject(TYPES.WalletRepository)
-    private readonly walletRepo: IWalletRepository
+    private readonly _walletRepo: IWalletRepository
   ) {}
 
   async createWallet(ownerId: string, ownerType: IRole): Promise<IWallet> {
-    const existing = await this.walletRepo.findOne({ ownerId, ownerType });
+    const existing = await this._walletRepo.findOne({ ownerId, ownerType });
 
     if (existing) {
       return existing;
@@ -27,11 +27,11 @@ export class WalletService implements IWalletService {
       balance: 0,
     };
 
-    return await this.walletRepo.create(newWallet);
+    return await this._walletRepo.create(newWallet);
   }
 
   async updateWalletBalance(ownerId: string, ownerType: IRole, amount: number): Promise<IWallet | null> {
-    return await this.walletRepo.updateBalance(
+    return await this._walletRepo.updateBalance(
             ownerId,
             ownerType,
             amount,
@@ -40,7 +40,7 @@ export class WalletService implements IWalletService {
   }
 
   async getWalletByOwnerId(ownerId: string): Promise<IWallet> {
-    const wallet = await this.walletRepo.findOne({ownerId: new Types.ObjectId(ownerId)})
+    const wallet = await this._walletRepo.findOne({ownerId: new Types.ObjectId(ownerId)})
     if (!wallet) {
       throw new NotFoundError("Wallet not found.")
     }

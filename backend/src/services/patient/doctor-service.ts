@@ -11,7 +11,7 @@ import { mapFilterQueryToDoctorOptions } from "@/utils";
 export class PatientDoctorService implements IPatientDoctorService {
   constructor(
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository
+    private readonly _doctorRepo: IDoctorRepository
   ) {}
 
   async getPublicDoctorDetails(
@@ -19,7 +19,7 @@ export class PatientDoctorService implements IPatientDoctorService {
     pagination: IPagination
   ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
     const options = mapFilterQueryToDoctorOptions(doctorOptions, false);
-    const { data, total } = await this.doctorRepo.PublicDoctorCardDetails(
+    const { data, total } = await this._doctorRepo.PublicDoctorCardDetails(
       options,
       pagination
     );

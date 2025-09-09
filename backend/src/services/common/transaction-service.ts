@@ -13,7 +13,7 @@ import { TransactionDetails } from "@/interfaces";
 export class TransactionService implements ITransactionService {
   constructor(
     @inject(TYPES.TransactionRepository)
-    private readonly transactionRepo: ITransactionRepository
+    private readonly _transactionRepo: ITransactionRepository
   ) {}
 
   async bookAppointment(params: {
@@ -35,11 +35,11 @@ export class TransactionService implements ITransactionService {
       status: "success",
       createdAt: new Date(),
     };
-    return this.transactionRepo.create(transaction as ITransaction);
+    return this._transactionRepo.create(transaction as ITransaction);
   }
 
   async getTransactionHistory(ownerId: string, ownerType: IRole, pagination: IPagination): Promise<{ transactions: TransactionDetails[], total: number }> {
-    const {transactions, total} = await this.transactionRepo.getTransactionHistory( ownerId, ownerType, pagination)
+    const {transactions, total} = await this._transactionRepo.getTransactionHistory( ownerId, ownerType, pagination)
     console.log(transactions[0], 'transaction');
     
     const mappedTransactions = TransactionMapper.toTransaction( ownerId, transactions)

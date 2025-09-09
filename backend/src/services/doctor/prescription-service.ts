@@ -15,9 +15,9 @@ import { ForbiddenError, NotFoundError } from "@/errors";
 export class DoctorPrescriptionService implements IDoctorPrescriptionService {
   constructor(
     @inject(TYPES.PrescriptionRepository)
-    private readonly prescriptionRepo: IPrescriptionRepository,
+    private readonly _prescriptionRepo: IPrescriptionRepository,
     @inject(TYPES.AppointmentRepository)
-    private readonly appointmentRepo: IAppointmentRepository
+    private readonly _appointmentRepo: IAppointmentRepository
   ) {}
   async createOrUpdatePrescription(
     doctorId: string,
@@ -32,7 +32,7 @@ export class DoctorPrescriptionService implements IDoctorPrescriptionService {
     const doctorObjectId = new Types.ObjectId(doctorId);
     const appointmentObjectId = new Types.ObjectId(prescription.appointmentId);
 
-    const appointment = await this.appointmentRepo.findOne({
+    const appointment = await this._appointmentRepo.findOne({
       _id: appointmentObjectId,
       doctorId: doctorObjectId,
     });
@@ -47,17 +47,17 @@ export class DoctorPrescriptionService implements IDoctorPrescriptionService {
       PrescriptionMapper.mapToPrescriptionData(prescription);
 
     if (appointment.prescriptionId) {
-      return (await this.prescriptionRepo.update(
+      return (await this._prescriptionRepo.update(
         appointment.prescriptionId.toString(),
         mappedPrescription
       )) as IPrescription;
     }
 
-    const newPrescription = await this.prescriptionRepo.create(
+    const newPrescription = await this._prescriptionRepo.create(
       mappedPrescription
     );
 
-    await this.appointmentRepo.update(appointment._id.toString(), {
+    await this._appointmentRepo.update(appointment._id.toString(), {
       prescriptionId: newPrescription._id,
     });
 

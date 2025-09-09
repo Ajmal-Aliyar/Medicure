@@ -10,13 +10,13 @@ import { IPaymentController } from "../interfaces";
 export class PaymentController implements IPaymentController {
   constructor(
     @inject(TYPES.PaymentService)
-    private readonly paymentService: IPaymentService
+    private readonly _paymentService: IPaymentService
   ) {}
 
   checkoutSession = async (req: Request, res: Response): Promise<void> => {
     const patientId = req.user?.id;
     const slotId = req.body?.slotId;
-    const session = await this.paymentService.checkoutSession(
+    const session = await this._paymentService.checkoutSession(
       patientId,
       slotId
     );
@@ -27,7 +27,7 @@ export class PaymentController implements IPaymentController {
 
   webhookHandler = async (req: Request, res: Response): Promise<void> => {
     const sig = req.headers["stripe-signature"] as string;
-    await this.paymentService.webhookHandler(req.body, sig);
+    await this._paymentService.webhookHandler(req.body, sig);
     successResponse(res, HTTP_STATUS.OK, "Webhook received successfully.", {
       received: true,
     });
@@ -36,13 +36,13 @@ export class PaymentController implements IPaymentController {
   cancelCheckout = async (req: Request, res: Response): Promise<void> => {
     const patientId = req.user?.id;
     const slotId = req.body?.slotId;
-    await this.paymentService.cancelCheckout(slotId, patientId);
+    await this._paymentService.cancelCheckout(slotId, patientId);
     successResponse(res, HTTP_STATUS.OK, "Cancel checkout successfully.");
   };
 
   getSessionDetails = async (req: Request, res: Response): Promise<void> => {
     const sessionId = String(req.query?.sessionId);
-    const sessionDetails = await this.paymentService.getSessionDetails(
+    const sessionDetails = await this._paymentService.getSessionDetails(
       sessionId
     );
     successResponse(

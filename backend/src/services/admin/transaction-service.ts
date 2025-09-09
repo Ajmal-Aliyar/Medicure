@@ -8,10 +8,10 @@ import { TransactionChartData } from "@/interfaces";
 export class AdminTransactionService implements IAdminTransactionService {
   constructor(
     @inject(TYPES.TransactionRepository)
-    private transactionRepo: ITransactionRepository
+    private _transactionRepo: ITransactionRepository
   ) {}
 
   async getTransactionsForDashboard(startDate: string, endDate: string): Promise<TransactionChartData[]> {
-    return await this.transactionRepo.getTransactionStatsByDateRange(startDate, endDate)
+    return await this._transactionRepo.getTransactionStatsByDateRange(startDate, endDate)
   }
 }

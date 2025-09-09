@@ -8,10 +8,10 @@ import { FeedbackMapper } from "@/mappers/feedbackMapper";
 
 @injectable()
 export class FeedbackService implements IFeedbackService {
-    constructor(@inject(TYPES.FeedbackRepository) private readonly feedbackRepo: IFeedbackRepository) {}
+    constructor(@inject(TYPES.FeedbackRepository) private readonly _feedbackRepo: IFeedbackRepository) {}
 
   async getFeedbackByAppointmentId( appointmentId: string): Promise<IFeedback | null> {
-    const feedbackList = await this.feedbackRepo.findOne({appointmentId});
+    const feedbackList = await this._feedbackRepo.findOne({appointmentId});
     return feedbackList;
   }
 
@@ -19,7 +19,7 @@ export class FeedbackService implements IFeedbackService {
      doctorId: string,
       pagination: IPagination
     ): Promise<{ data: FeedbackDetails[]; total: number }> {
-      const { feedbacks, total } = await this.feedbackRepo.getFeedbackDetailsPopulated({
+      const { feedbacks, total } = await this._feedbackRepo.getFeedbackDetailsPopulated({
             filter:  { doctorId },
             sort:  {createdAt: -1},
             ...pagination

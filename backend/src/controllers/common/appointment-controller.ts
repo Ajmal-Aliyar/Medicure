@@ -17,7 +17,7 @@ export class AppointmentController
 {
   constructor(
     @inject(TYPES.AppointmentService)
-    private readonly appointmentService: IAppointmentService
+    private readonly _appointmentService: IAppointmentService
   ) {}
 
   getAppointmentsCardDetails = async (
@@ -28,7 +28,7 @@ export class AppointmentController
     const pagination = getPaginationParams(req);
     const parsedQuery = filterAppointmentQuerySchema.parse(req.query)
     const { appointments, total } =
-      await this.appointmentService.getAppointmentsCardDetails(
+      await this._appointmentService.getAppointmentsCardDetails(
         id,
         role,
         parsedQuery,
@@ -47,7 +47,7 @@ export class AppointmentController
   getAppointmentByRoomId = async(req: Request, res: Response): Promise<void> => {
     const { id, role } = req.user;
     const roomId = req.params.roomId as string;
-    const appointment = await this.appointmentService.getAppointmentByRoomId(
+    const appointment = await this._appointmentService.getAppointmentByRoomId(
         id,
         role,
         roomId
@@ -65,7 +65,7 @@ export class AppointmentController
     const {appointmentId} = req.params
     console.log('appointmentId:', appointmentId);
     
-    const appointmentDetails = await this.appointmentService.getAppointmentById(id, role, appointmentId)
+    const appointmentDetails = await this._appointmentService.getAppointmentById(id, role, appointmentId)
     successResponse(
       res,
       HTTP_STATUS.OK,

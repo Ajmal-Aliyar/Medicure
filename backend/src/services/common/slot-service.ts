@@ -12,15 +12,15 @@ import { FilterSlotQuery } from "@/validators/slot-validator";
 @injectable()
 export class SlotService implements ISlotService {
   constructor(
-    @inject(TYPES.SlotRepository) private readonly slotRepo: ISlotRepository
+    @inject(TYPES.SlotRepository) private readonly _slotRepo: ISlotRepository
   ) {}
 
   async updateSlotAvailable(slotId: string): Promise<void> {
-    await this.slotRepo.update(slotId, { status: "available" })
+    await this._slotRepo.update(slotId, { status: "available" })
   }
 
   async createBulkSlots(slots: Partial<ISlot>[]): Promise<ISlot[]> {
-    return this.slotRepo.bulkCreate(slots);
+    return this._slotRepo.bulkCreate(slots);
   }
   async getSlots(
     id: string,
@@ -31,7 +31,7 @@ export class SlotService implements ISlotService {
     const filter = this.buildFilterByRole(role, parsedQuery);
 console.log(skip, limit, '0');
 
-    const { data, total } = await this.slotRepo.findAll({
+    const { data, total } = await this._slotRepo.findAll({
       filter,
       skip,
       limit,
@@ -52,7 +52,7 @@ console.log(skip, limit, '0');
     doctorId: string,
     date: Date
   ): Promise<ISlot[]> {
-    const { data } = await this.slotRepo.findAll({
+    const { data } = await this._slotRepo.findAll({
       filter: {
         doctorId: new Types.ObjectId(doctorId),
         date,
@@ -85,7 +85,7 @@ console.log(skip, limit, '0');
   }
 
   async releaseSlot(slotId: string, patientId: string): Promise<boolean> {
-    const slot = await this.slotRepo.findById(slotId);
+    const slot = await this._slotRepo.findById(slotId);
 
     if (!slot) return false;
 
@@ -93,7 +93,7 @@ console.log(skip, limit, '0');
     if (slot.status !== "reserved" || reservedPatientId !== patientId) {
       return false;
     }
-    await this.slotRepo.update(slotId, {
+    await this._slotRepo.update(slotId, {
       status: "available",
       bookingDetails: {
         isBooked: false,
@@ -109,14 +109,14 @@ console.log(skip, limit, '0');
     slotId: string,
     patientId: string
   ): Promise<ISlot> {
-    const slot = await this.slotRepo.findById(slotId);
+    const slot = await this._slotRepo.findById(slotId);
     if (!slot) {
       throw new BadRequestError("Slot not found.");
     }
     if (slot.status !== "available") {
       throw new BadRequestError("Slot is not available.");
     }
-    const updated = await this.slotRepo.update(slotId, {
+    const updated = await this._slotRepo.update(slotId, {
       status: "reserved",
       bookingDetails: {
         isBooked: false,
@@ -135,7 +135,7 @@ console.log(skip, limit, '0');
       patientId: new Types.ObjectId(patientId),
       bookedAt: new Date(),
     };
-    await this.slotRepo.update(slotId, {
+    await this._slotRepo.update(slotId, {
       status: "booked",
       bookingDetails,
     });

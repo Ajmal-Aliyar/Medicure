@@ -31,18 +31,18 @@ import { AuthMapper } from "@/mappers";
 export class AuthService implements IAuthService {
   constructor(
     @inject(TYPES.PatientRepository)
-    private readonly patientRepo: IPatientRepository,
+    private readonly _patientRepo: IPatientRepository,
     @inject(TYPES.DoctorRepository)
-    private readonly doctorRepo: IDoctorRepository,
+    private readonly _doctorRepo: IDoctorRepository,
     @inject(TYPES.AdminRepository)
-    private readonly adminRepo: IAdminRepository,
-    @inject(TYPES.TokenService) private readonly tokenService: ITokenService,
-    @inject(TYPES.EmailService) private readonly emailService: IEmailService,
+    private readonly _adminRepo: IAdminRepository,
+    @inject(TYPES.TokenService) private readonly _tokenService: ITokenService,
+    @inject(TYPES.EmailService) private readonly _emailService: IEmailService,
     @inject(TYPES.PasswordHasher)
-    private readonly passwordHasher: IPasswordHasher,
-    @inject(TYPES.OtpService) private readonly otpService: IOtpService,
-    @inject(TYPES.CacheService) private readonly cacheService: ICacheService,
-    @inject(TYPES.WalletService) private readonly walletService: IWalletService
+    private readonly _passwordHasher: IPasswordHasher,
+    @inject(TYPES.OtpService) private readonly _otpService: IOtpService,
+    @inject(TYPES.CacheService) private readonly _cacheService: ICacheService,
+    @inject(TYPES.WalletService) private readonly _walletService: IWalletService
   ) {}
 
   async register(data: RegisterDto): Promise<void> {
@@ -53,11 +53,11 @@ export class AuthService implements IAuthService {
     if (existing) {
       throw new ConflictError(AUTH_MESSAGES.ERROR.EMAIL_ALREADY_EXISTS);
     }
-    const hashedPassword = await this.passwordHasher.hash(data.password);
-    const otp = this.otpService.generateOtp();
+    const hashedPassword = await this._passwordHasher.hash(data.password);
+    const otp = this._otpService.generateOtp();
     console.log("RM-LOG", "OTP", otp);
-    await this.otpService.storeOtp(email, otp);
-    await this.cacheService.set(
+    await this._otpService.storeOtp(email, otp);
+    await this._cacheService.set(
       data.email,
       JSON.stringify({
         ...data,
@@ -67,7 +67,7 @@ export class AuthService implements IAuthService {
       900
     );
 
-    await this.emailService.sendOtpEmail(data.email, otp);
+    await this._emailService.sendOtpEmail(data.email, otp);
   }
 
   async login(data: LoginDto): Promise<AuthResponse> {
@@ -87,7 +87,7 @@ export class AuthService implements IAuthService {
       throw new ForbiddenError("Patient is blocked by admin.")
     }
 
-    const isPasswordValid = await this.passwordHasher.compare(
+    const isPasswordValid = await this._passwordHasher.compare(
       data.password,
       user.personal.password
     );
@@ -101,7 +101,7 @@ export class AuthService implements IAuthService {
   async resendOtp(email: string): Promise<void> {
     email = email.trim().toLowerCase();
 
-    const cachedDataString = await this.cacheService.get(email);
+    const cachedDataString = await this._cacheService.get(email);
     if (!cachedDataString) {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.NO_REGISTRATION_DATA);
     }
@@ -113,10 +113,10 @@ export class AuthService implements IAuthService {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.CORRUPTED_CACHE_DATA);
     }
 
-    const otp = this.otpService.generateOtp();
+    const otp = this._otpService.generateOtp();
     console.log("RM-LOG", "Resend OTP", otp);
-    await this.otpService.storeOtp(email, otp);
-    await this.cacheService.set(
+    await this._otpService.storeOtp(email, otp);
+    await this._cacheService.set(
       email,
       JSON.stringify({
         ...cachedData,
@@ -124,14 +124,14 @@ export class AuthService implements IAuthService {
       }),
       900
     );
-    await this.emailService.sendOtpEmail(email, otp);
+    await this._emailService.sendOtpEmail(email, otp);
   }
 
   async refreshToken(token: string): Promise<AuthResponse> {
     if (!token) {
       throw new UnauthorizedError(GLOBAL_MESSAGES.ERROR.INVALID_REFRESH_TOKEN);
     }
-    const payload = this.tokenService.verifyRefreshToken(token);
+    const payload = this._tokenService.verifyRefreshToken(token);
 
     if (typeof payload === "string" || !payload.id) {
       throw new UnauthorizedError(GLOBAL_MESSAGES.ERROR.INVALID_REFRESH_TOKEN);
@@ -139,7 +139,7 @@ export class AuthService implements IAuthService {
 
     const { id: userId, role } = payload;
 
-    const validToken = await this.cacheService.get(userId);
+    const validToken = await this._cacheService.get(userId);
     if (!validToken || token !== validToken) {
       throw new UnauthorizedError(GLOBAL_MESSAGES.ERROR.INVALID_REFRESH_TOKEN);
     }
@@ -159,12 +159,12 @@ export class AuthService implements IAuthService {
     otp: string
   ): Promise<AuthResponse> {
     email = email.trim().toLowerCase();
-    const isValidOtp = await this.otpService.verifyOtp(email, otp);
+    const isValidOtp = await this._otpService.verifyOtp(email, otp);
     if (!isValidOtp) {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.OTP_INVALID_OR_EXPIRED);
     }
 
-    const cachedDataString = await this.cacheService.get(email);
+    const cachedDataString = await this._cacheService.get(email);
     if (!cachedDataString) {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.NO_REGISTRATION_DATA);
     }
@@ -190,15 +190,15 @@ export class AuthService implements IAuthService {
       mobile: cachedData.mobile,
     });
 
-    await this.otpService.deleteOtp(email);
-    await this.cacheService.del(email);
-    await this.walletService.createWallet(String(createdUser.id), role);
+    await this._otpService.deleteOtp(email);
+    await this._cacheService.del(email);
+    await this._walletService.createWallet(String(createdUser.id), role);
 
     return this.buildAuthResponse(createdUser, role);
   }
 
   async logout(userId: string): Promise<void> {
-    await this.cacheService.del(userId);
+    await this._cacheService.del(userId);
   }
 
   async me(userId: string, role: IRole): Promise<IAuthResponseUser> {
@@ -213,15 +213,15 @@ export class AuthService implements IAuthService {
   private getRepo(
     role: IRole
   ): IPatientRepository | IDoctorRepository | IAdminRepository {
-    if (role === "patient") return this.patientRepo;
-    if (role === "doctor") return this.doctorRepo;
-    if (role === "admin") return this.adminRepo;
+    if (role === "patient") return this._patientRepo;
+    if (role === "doctor") return this._doctorRepo;
+    if (role === "admin") return this._adminRepo;
     throw new BadRequestError(AUTH_MESSAGES.ERROR.INVALID_USER);
   }
 
   private getUserRepo(role: IRole): IPatientRepository | IDoctorRepository {
-    if (role === "patient") return this.patientRepo;
-    if (role === "doctor") return this.doctorRepo;
+    if (role === "patient") return this._patientRepo;
+    if (role === "doctor") return this._doctorRepo;
     throw new BadRequestError(AUTH_MESSAGES.ERROR.INVALID_USER);
   }
 
@@ -230,15 +230,15 @@ export class AuthService implements IAuthService {
     role: IRole
   ): Promise<AuthResponse> {
     if (!user._id) throw new BadRequestError();
-    const accessToken = this.tokenService.generateAccessToken({
+    const accessToken = this._tokenService.generateAccessToken({
       id: user._id,
       role,
     });
-    const refreshToken = this.tokenService.generateRefreshToken({
+    const refreshToken = this._tokenService.generateRefreshToken({
       id: user._id,
       role,
     });
-    await this.cacheService.set(user._id.toString(), refreshToken);
+    await this._cacheService.set(user._id.toString(), refreshToken);
 
     return {
       user: AuthMapper.toUserDto(user, role),

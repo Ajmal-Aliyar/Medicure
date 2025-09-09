@@ -15,7 +15,7 @@ import {
 @injectable()
 export class AuthController implements IAuthController {
   constructor(
-    @inject(TYPES.AuthService) private readonly authService: IAuthService
+    @inject(TYPES.AuthService) private readonly _authService: IAuthService
   ) {}
 
 
@@ -26,7 +26,7 @@ export class AuthController implements IAuthController {
         AUTH_MESSAGES.ERROR.EMAIL_AND_PASSWORD_REQUIRED
       );
     }
-    const { user, accessToken, refreshToken } = await this.authService.login({
+    const { user, accessToken, refreshToken } = await this._authService.login({
       email,
       password,
       role,
@@ -43,7 +43,7 @@ export class AuthController implements IAuthController {
 
 
   register = async (req: Request, res: Response): Promise<void> => {
-    await this.authService.register(req.body)
+    await this._authService.register(req.body)
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -56,7 +56,7 @@ export class AuthController implements IAuthController {
   verifyOtpAndRegister = async (req: Request, res: Response): Promise<void> => {
     const { email, otp } = req.body;
     const { accessToken, refreshToken, user } =
-    await this.authService.verifyOtpAndRegister(email, otp);
+    await this._authService.verifyOtpAndRegister(email, otp);
     this.setAuthCookies(res, accessToken, refreshToken);
     successResponse(
       res,
@@ -71,7 +71,7 @@ export class AuthController implements IAuthController {
    resendOtp = async(req: Request, res: Response): Promise<void> => {
     const { email } = req.body;
     console.log(email,'email form resend otp')
-    await this.authService.resendOtp(email);
+    await this._authService.resendOtp(email);
     successResponse(
       res,
       HTTP_STATUS.OK,
@@ -85,7 +85,7 @@ export class AuthController implements IAuthController {
   refreshToken = async (req: Request, res: Response): Promise<void> => {
     const token = req.cookies.refreshToken;
     const { user, accessToken, refreshToken } =
-    await this.authService.refreshToken(token);
+    await this._authService.refreshToken(token);
     this.setAuthCookies(res, accessToken, refreshToken);
     successResponse(
       res,
@@ -103,7 +103,7 @@ export class AuthController implements IAuthController {
     if (!userId) {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.USER_ID_MISSING);
     }
-    await this.authService.logout(userId);
+    await this._authService.logout(userId);
     res.clearCookie("accessToken", COOKIE_OPTIONS);
     res.clearCookie("refreshToken", COOKIE_OPTIONS);
     successResponse(
@@ -122,7 +122,7 @@ export class AuthController implements IAuthController {
       throw new BadRequestError(AUTH_MESSAGES.ERROR.USER_ID_MISSING);
     }
     const { id: userId, role } = req.user;
-    const user = await this.authService.me(userId, role);
+    const user = await this._authService.me(userId, role);
     successResponse(
       res,
       HTTP_STATUS.OK,

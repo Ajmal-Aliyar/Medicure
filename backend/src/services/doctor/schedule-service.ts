@@ -11,11 +11,11 @@ import { Types } from "mongoose";
 @injectable()
 export class DoctorScheduleService implements IDoctorScheduleService {
   constructor(
-    @inject(TYPES.ScheduleRepository) private scheduleRepo: IScheduleRepository
+    @inject(TYPES.ScheduleRepository) private _scheduleRepo: IScheduleRepository
   ) {}
 
   async getSchedule(doctorId: string): Promise<IDoctorSchedule | null> {
-  const sch = await this.scheduleRepo.findByDoctorId(doctorId);
+  const sch = await this._scheduleRepo.findByDoctorId(doctorId);
   console.log(sch, 'Schedule fetched');
   return sch;
 }
@@ -24,7 +24,7 @@ export class DoctorScheduleService implements IDoctorScheduleService {
     doctorId: string,
     data: Partial<IDoctorSchedule>
   ): Promise<{ schedule: IDoctorSchedule; message: string }> {
-    const existing = await this.scheduleRepo.findByDoctorId(doctorId);
+    const existing = await this._scheduleRepo.findByDoctorId(doctorId);
     if (!existing) {
       return await this.createScheduleIfNotExist(doctorId, data);
     }
@@ -36,7 +36,7 @@ export class DoctorScheduleService implements IDoctorScheduleService {
     data: Partial<IDoctorSchedule>
   ): Promise<{ schedule: IDoctorSchedule; message: string }> {
     const mapped = DoctorScheduleMapper.toDoctorScheduleCreate(doctorId, data);
-    const schedule = await this.scheduleRepo.create(mapped);
+    const schedule = await this._scheduleRepo.create(mapped);
     return { schedule, message: SCHEDULE_MESSAGES.SCHEDULE_CREATED };
   }
 
@@ -46,7 +46,7 @@ export class DoctorScheduleService implements IDoctorScheduleService {
     existing: IDoctorSchedule
   ): Promise<{ schedule: IDoctorSchedule; message: string }> {
     const mapped = DoctorScheduleMapper.toDoctorScheduleUpdate(data, existing);
-    const result = await this.scheduleRepo.update(doctorId, mapped);
+    const result = await this._scheduleRepo.update(doctorId, mapped);
     if (!result) throw new NotFoundError(SCHEDULE_MESSAGES.SCHEDULE_NOT_FOUND);
     return { schedule: result, message: SCHEDULE_MESSAGES.SCHEDULE_UPDATED };
   }

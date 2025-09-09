@@ -9,13 +9,13 @@ import { IWithdrawRequestController } from "../interfaces";
 @injectable()
 export class WithdrawRequestController implements IWithdrawRequestController {
   constructor(
-    @inject(TYPES.WithdrawRequestService) private readonly WithdrawRequestService: IWithdrawRequestService
+    @inject(TYPES.WithdrawRequestService) private readonly _withdrawRequestService: IWithdrawRequestService
   ) {}
 
   createWithdrawRequest = async (req: Request, res: Response): Promise<void> => {
     const { id , role } = req.user;
     const {request} = req.body;
-    const WithdrawRequest = await this.WithdrawRequestService.createWithdrawRequest( id, role, request);
+    const WithdrawRequest = await this._withdrawRequestService.createWithdrawRequest( id, role, request);
     successResponse(
       res,
       HTTP_STATUS.OK,

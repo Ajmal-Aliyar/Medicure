@@ -10,7 +10,7 @@ import { IDoctorSlotService } from "@/services";
 export class DoctorSlotController implements IDoctorSlotController {
   constructor(
      @inject(TYPES.DoctorSlotService)
-    private readonly doctorSlotService: IDoctorSlotService
+    private readonly _doctorSlotService: IDoctorSlotService
   ) {}
 
   updateSlotStatus = async (
@@ -21,7 +21,7 @@ export class DoctorSlotController implements IDoctorSlotController {
     const { slotId } = req.params;
     const { isActive } = req.body;
  
-    const updatedSlot = await this.doctorSlotService.updateSlotStatus(id, slotId, isActive);
+    const updatedSlot = await this._doctorSlotService.updateSlotStatus(id, slotId, isActive);
     successResponse(res, HTTP_STATUS.OK, SLOT_MESSAGES.SLOT_FETCHED, {
       id: updatedSlot._id,
       ...updatedSlot.toObject?.(), 
@@ -35,7 +35,7 @@ export class DoctorSlotController implements IDoctorSlotController {
     const {id} = req.user; 
     const { startDate, endDate } = req.query
  
-    const data = await this.doctorSlotService.getSlotsForDashboard(id, String(startDate), String(endDate));
+    const data = await this._doctorSlotService.getSlotsForDashboard(id, String(startDate), String(endDate));
     successResponse(res, HTTP_STATUS.OK, SLOT_MESSAGES.SLOT_FETCHED, data);
   }
 }

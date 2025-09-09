@@ -9,7 +9,7 @@ import { HTTP_STATUS } from "@/constants";
 @injectable()
 export class TransactionController implements ITransactionController {
     constructor(
-        @inject(TYPES.TransactionService) private readonly transactionService: ITransactionService
+        @inject(TYPES.TransactionService) private readonly _transactionService: ITransactionService
     ) {}
 
     getTransactions = async (
@@ -19,7 +19,7 @@ export class TransactionController implements ITransactionController {
       const pagination = getPaginationParams(req);
       const { id, role } = req.user;
 
-    const { transactions, total } = await this.transactionService.getTransactionHistory( id, role, pagination);
+    const { transactions, total } = await this._transactionService.getTransactionHistory( id, role, pagination);
        const meta = buildPaginationMeta(total, pagination.skip);
       successResponse(res, HTTP_STATUS.OK, "Transactions fetched successfully.", transactions, meta);
     };  

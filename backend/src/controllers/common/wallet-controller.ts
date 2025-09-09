@@ -9,12 +9,12 @@ import { IWalletController } from "../interfaces";
 @injectable()
 export class WalletController implements IWalletController {
   constructor(
-    @inject(TYPES.WalletService) private readonly WalletService: IWalletService
+    @inject(TYPES.WalletService) private readonly _walletService: IWalletService
   ) {}
 
   getWallet = async (req: Request, res: Response): Promise<void> => {
     const id = req.user.id;
-    const wallet = await this.WalletService.getWalletByOwnerId(id);
+    const wallet = await this._walletService.getWalletByOwnerId(id);
     successResponse(
       res,
       HTTP_STATUS.OK,

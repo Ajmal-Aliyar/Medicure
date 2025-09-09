@@ -7,6 +7,6 @@ export class AdminRepository extends BaseRepository<IAdmin> implements IAdminRep
         super(AdminModel)
     }
     async findByEmail(email: string): Promise<IAdmin | null>  {
-        return await this.model.findOne({ 'personal.email': email })
+        return await this._model.findOne({ 'personal.email': email })
     }
 }

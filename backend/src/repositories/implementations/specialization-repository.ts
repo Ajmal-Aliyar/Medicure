@@ -14,7 +14,7 @@ export class SpecializationRepository
   }
 
   async getPublicDetails(): Promise<SpecializationPublicDetails[]> {
-    const results = await this.model
+    const results = await this._model
       .find({}, { name: 1, imageUrl: 1 })
       .sort({ name: 1 })
       .lean()

@@ -20,7 +20,7 @@ export class WalletRepository
 ): Promise<IWallet | null> {
   const change = inc ? amount : -amount;
 
-  return this.model.findOneAndUpdate(
+  return this._model.findOneAndUpdate(
     { ownerId: new Types.ObjectId(ownerId), ownerType },
     { $inc: { balance: change } },
     { new: true }
