@@ -39,6 +39,7 @@ import MedicalRecord from "@/pages/patient/MedicalRecord/MedicalRecord";
 import ChatPage from "@/pages/chat/ChatPage";
 import AdminPatientsPage from "@/pages/admin/patients/AdminPatientsPage";
 import PaymentSuccess from "@/pages/patient/PaymentStatus/PaymentSuccess";
+import FindWithSpecializationPage from "@/pages/public/Find/FindWithSpecializationPage.tsx";
 
 
 const router = createBrowserRouter([
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       {path: '',  element:  <HomePage />},
       {path: 'view/prescription/:prescriptionId', element:<AuthorizedRoute allowedRole={["patient", "doctor"]}> <ViewPrescription /></AuthorizedRoute> },
       {path: 'find', element: <FindPage /> },
+      {path: 'find/:specialization', element: <FindWithSpecializationPage /> },
       {path: 'book-slots/:doctorId', element: <AuthorizedRoute allowedRole={["patient"]}><BookingSlotDetails /></AuthorizedRoute>  },
       {path: 'cancel-payment', element: <AuthorizedRoute allowedRole={["patient"]}><PaymentFailed /></AuthorizedRoute> },
       {path: 'success', element: <AuthorizedRoute allowedRole={["patient"]}><PaymentSuccess /></AuthorizedRoute> },

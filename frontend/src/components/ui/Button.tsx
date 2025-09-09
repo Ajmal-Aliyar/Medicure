@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import clsx from "clsx";
 
-type Variant = "primary" | "secondary" | "muted" | "red" | "green" | "outline"
+type Variant = "primary" | "secondary" | "muted" | "red" | "green" | "outline" | 'white'
 
 interface ButtonProps {
   children: ReactNode;
@@ -19,7 +19,8 @@ const variants: Record<Variant, string> = {
   outline: "border border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300  ",
   muted: "bg-muted text-white hover:bg-muted-dark",
   red: "bg-red-600/80 text-white hover:bg-red-700/80",
-  green: "bg-green-600/80 text-white hover:bg-green-700/80"
+  green: "bg-green-600/80 text-white hover:bg-green-700/80",
+  white: "bg-secondary py-2 text-white hover:bg-secondary-dark font-semibold "
 };
 
 export const Button = ({

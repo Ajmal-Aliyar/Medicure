@@ -104,9 +104,9 @@ export const TYPES = {
   AuthService: Symbol.for("AuthService"),
   ScheduleService: Symbol.for("ScheduleService"),
   SlotService: Symbol.for("SlotService"),
-  PatientSpecializationService: Symbol.for("PatientSpecializationService"),
-  PatientSpecializationController: Symbol.for(
-    "PatientSpecializationController"
+  SpecializationService: Symbol.for("SpecializationService"),
+  SpecializationController: Symbol.for(
+    "SpecializationController"
   ),
   PaymentService: Symbol.for("PaymentService"),
   PaymentController: Symbol.for("PaymentController"),
