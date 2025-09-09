@@ -17,7 +17,7 @@ export class AdminAppointmentController
 {
   constructor(
     @inject(TYPES.AppointmentService)
-    private readonly appointmentService: IAppointmentService
+    private readonly _appointmentService: IAppointmentService
   ) {}
 
   

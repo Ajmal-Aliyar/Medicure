@@ -42,12 +42,12 @@ export class AdminWithdrawRequestController implements IAdminWithdrawRequestCont
   approveWithdrawRequest = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.user;
     const requestId = req.query.requestId as string;
-    await this.WithdrawRequestService.approveWithdrawRequest( id, requestId)
+    const transaction = await this.WithdrawRequestService.approveWithdrawRequest( id, requestId)
      successResponse(
       res,
       HTTP_STATUS.OK,
       "WithdrawRequests approved successfully.",
-      true
+      transaction
     );
   }
 }

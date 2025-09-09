@@ -1,4 +1,5 @@
 import { IPagination, IRole, IWithdrawRequestResponse } from "@/interfaces";
+import { ITransaction } from "@/models";
 
 export interface IAdminWithdrawRequestService {
   getWithdrawRequests(
@@ -9,5 +10,5 @@ export interface IAdminWithdrawRequestService {
   approveWithdrawRequest(
       adminId: string,
       clientId: string,
-    ): Promise<string>;
+    ): Promise<ITransaction>;
 }

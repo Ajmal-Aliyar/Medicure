@@ -1,6 +1,6 @@
 import type { IRole } from "./auth";
 import type { MetaType } from "./common";
-export type IWithdrawRequestStatus = "pending" | "approved" | "rejected" | "cancelled";
+export type IWithdrawRequestStatus = "pending" | "approved" | "rejected" | "cancelled" | 'all';
 
 export interface IWithdrawRequest {
     id: string;

@@ -3,18 +3,19 @@ import { ConfirmationModal } from "@/components/domain/Modals/ConfirmationModal"
 import Loader from "@/components/ui/Loader";
 import { adminWithdrawRequest } from "@/services/api/admin/withdraw-request";
 import { doctorWithdrawRequest } from "@/services/api/doctor/withdraw-request";
+import { addWithdrawRequest } from "@/slices/financeSlice";
 import type { IWithdrawRequestService } from "@/types/withdraw-request";
 import { BanknoteArrowDown, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import {  useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 
 interface IBankAccountDetails {
     setWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
-    wallet: number
 }
 
-const BankAccountDetails = ({ setWithdraw, wallet }: IBankAccountDetails) => {
+const BankAccountDetails = ({ setWithdraw }: IBankAccountDetails) => {
+    const {wallet} = useSelector((state: RootState) => state.finance)
     const [openModal, setOpenModal] = useState<string | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
     const { user } = useSelector((state: RootState) => state.auth);
@@ -24,11 +25,13 @@ const BankAccountDetails = ({ setWithdraw, wallet }: IBankAccountDetails) => {
         IFSC_Code: "",
         amount: 0
     });
+    const dispatch = useDispatch()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
+    if (!wallet) return null;
     const handleSubmit = async () => {
         setLoading(true)
         // const request = await fetchWithdrawRequestsByUserApi( 'pending', 0, Infinity)
@@ -44,8 +47,8 @@ const BankAccountDetails = ({ setWithdraw, wallet }: IBankAccountDetails) => {
             toast.error('Minimum 20rs should be withdrawn')
             setLoading(false)
             return
-        } else if (formData.amount > wallet) {
-            toast.error(`Wallet only contains ${wallet}rs balance`)
+        } else if (formData.amount > wallet?.balance) {
+            toast.error(`Wallet only contains ${wallet?.balance}rs balance`)
             setLoading(false)
             return
         }
@@ -63,6 +66,9 @@ const BankAccountDetails = ({ setWithdraw, wallet }: IBankAccountDetails) => {
             accountNumber,
             IFSC_Code, } = formData
         const response = await service[user?.role as 'admin' | 'doctor'].requestWithdraw({ accountName, accountNumber, IFSC_Code, amount: Number(formData.amount) , requestedAt: new Date(), status: 'pending' })
+        console.log(response, 'new ');
+        dispatch(addWithdrawRequest(response))
+        
         if (response) {
             toast.success('Withdraw request submitted successfully.')
             setOpenModal(null)
@@ -118,7 +124,7 @@ const BankAccountDetails = ({ setWithdraw, wallet }: IBankAccountDetails) => {
                     </div>
                 </div>
 
-                <button className={`w-full mt-6 p-2 ${user?.role === 'admin' ? '' : 'bg-[#72b4e7] hover:bg-[#649dc8]'} text-white rounded-md`} onClick={handleSubmit}>Submit</button>
+                <button className={`w-full mt-6 p-2 bg-[#72b4e7] hover:bg-[#649dc8] text-white rounded-md`} onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     );

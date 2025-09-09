@@ -6,6 +6,8 @@ import { patientTransactionService } from "@/services/api/patient/transaction";
 import type { IRole } from "@/types/auth";
 import { doctorTransactionService } from "@/services/api/doctor/transaction";
 import { adminTransactionService } from "@/services/api/admin/transaction";
+import { useDispatch } from "react-redux";
+import { setTransactions } from "@/slices/financeSlice";
 
 interface TransactionService {
     getTransactionDetails: (page: number) => Promise<{
@@ -22,9 +24,13 @@ export const useTransaction = (page: number) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isFetchingNextPage, setIsFetchingNextPage] = useState(false);
     const role = useRole();
+    const dispatch = useDispatch()
     
     useEffect(() => {
-        const fetchData = async () => {
+        fetchData();
+    }, [page]);
+
+    const fetchData = async () => {
             if (page === 1) setIsLoading(true);
             setIsFetchingNextPage(true);
 
@@ -39,7 +45,12 @@ export const useTransaction = (page: number) => {
             }
 
             const result = await services[role].getTransactionDetails(page);
-
+            dispatch(setTransactions({
+                data: page === 1
+                    ? result.data
+                    : [...data.transactions, ...result.data],
+                meta: result.meta,
+            }))
             setData(prev => ({
                 transactions: page === 1
                     ? result.data
@@ -51,12 +62,15 @@ export const useTransaction = (page: number) => {
             setIsFetchingNextPage(false);
         };
 
-        fetchData();
-    }, [page]);
+
+    const refetch = () => {
+        fetchData()
+    }
 
     return {
         data,
         isLoading,
         isFetchingNextPage,
+        refetch
     };
 };

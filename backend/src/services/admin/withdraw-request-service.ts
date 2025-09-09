@@ -10,7 +10,7 @@ import { inject, injectable } from "inversify";
 import { IAdminWithdrawRequestService } from "../interfaces";
 import { IPagination, IRole, IWithdrawRequestResponse } from "@/interfaces";
 import { WithdrawRequestMapper } from "@/mappers";
-import { IAdmin, IDoctor, IWithdrawRequest } from "@/models";
+import { IAdmin, IDoctor, ITransaction, IWithdrawRequest } from "@/models";
 import { BadRequestError, NotFoundError } from "@/errors";
 import { Types } from "mongoose";
 import { generateTransactionId } from "@/utils";
@@ -83,7 +83,7 @@ export class AdminWithdrawRequestService
   async approveWithdrawRequest(
     adminId: string,
     requestId: string
-  ): Promise<string> {
+  ): Promise<ITransaction> {
     try {
       const companyWallet = await this.walletRepo.findOne({ ownerId: adminId });
       if (!companyWallet) throw new NotFoundError("Company wallet not found");
@@ -101,19 +101,19 @@ export class AdminWithdrawRequestService
       if (!clientWallet) throw new NotFoundError("Client wallet not found");
 
       if (clientWallet.balance < request.amount) {
-        throw new Error("Insufficient balance in client account");
+        throw new BadRequestError("Insufficient balance in client account");
       }
 
       const amount = request.amount - 20;
       if (companyWallet.balance < amount) {
-        throw new Error("Insufficient balance in company account");
+        throw new BadRequestError("Insufficient balance in company account");
       }
 
       request.status = "approved";
       await request.save();
 
 
-      await this.transactionRepo.create({
+      const transaction = await this.transactionRepo.create({
         transactionId: generateTransactionId(),
         from: new Types.ObjectId(adminId),
         to: request.requesterId,
@@ -126,12 +126,12 @@ export class AdminWithdrawRequestService
       await this.walletRepo.updateBalance(
         String(request.requesterId),
         "doctor",
-        amount,
+        request.amount,
         false
       );
       await this.walletRepo.updateBalance(adminId, "admin", amount, false);
 
-      return "Withdraw request approved successfully";
+      return transaction;
     } catch (error) {
       console.error("Error approving withdraw request:", error);
       throw error;

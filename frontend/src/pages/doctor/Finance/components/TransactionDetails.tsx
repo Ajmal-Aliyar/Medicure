@@ -1,15 +1,17 @@
+import type { RootState } from "@/app/store";
 import { useTransaction } from "@/hooks/useTransaction";
 import { formatDate, formatTimeTo12Hour } from "@/utils/formatDate"
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 interface Props {
   className?: string;
 }
 const TransactionDetails = ({ className }: Props) => {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isFetchingNextPage } = useTransaction(page);
-  const transactions = data?.transactions || [];
-  const totalPages = data?.meta?.totalPages || 1;
+  const { isLoading, isFetchingNextPage } = useTransaction(page);
+  const { data: transactions, meta } = useSelector((state: RootState) => state.finance.transaction)
+  const totalPages = meta?.totalPages || 1;
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 

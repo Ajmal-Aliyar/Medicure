@@ -4,7 +4,7 @@ import { IWithdrawRequest } from "../interfaces";
 const WithdrawRequestSchema = new Schema<IWithdrawRequest>(
   {
     requesterId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId ,
       required: true,
     },
     role: {
