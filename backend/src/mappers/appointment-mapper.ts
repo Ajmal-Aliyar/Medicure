@@ -2,6 +2,7 @@ import {
   AppointmentCard,
   AppointmentDetailsPopulated,
   AppointmentPageDetails,
+  IConnectionStatus,
   PopulatedAppointment,
   PopulatedAppointmentForRoom,
 } from "@/interfaces";
@@ -78,7 +79,7 @@ export class AppointmentMapper {
     rawAppointment: PopulatedAppointmentForRoom,
     transaction: ITransaction,
     prescription: IPrescription | null,
-    isConnected: boolean
+    connectionStatus: IConnectionStatus
   ): AppointmentPageDetails {
     return {
       id: rawAppointment._id.toString(),
@@ -89,7 +90,7 @@ export class AppointmentMapper {
       appointmentType: rawAppointment.appointmentType,
       roomId: rawAppointment.roomId,
       createdAt: rawAppointment.createdAt,
-      isConnected,
+      connectionStatus,
 
       doctor: {
         id: rawAppointment.doctorId._id.toString(),

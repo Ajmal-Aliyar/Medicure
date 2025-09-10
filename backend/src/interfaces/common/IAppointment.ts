@@ -124,7 +124,7 @@ export interface AppointmentDetailsPopulated {
   feedbackId: string | null;
 }
 
-
+export type IConnectionStatus = "not_connected" | "request_sent" | "connected";
 
 export type AppointmentPageDetails = {
   id: string;
@@ -135,6 +135,8 @@ export type AppointmentPageDetails = {
   appointmentType: IAppointmentType; 
   roomId: string;
   createdAt: Date;
+
+  connectionStatus: IConnectionStatus;
 
   doctor: DoctorCardDetails;
   patient: PatientCardDetails;
@@ -159,6 +161,4 @@ export type AppointmentPageDetails = {
     followUpDate: Date | null;
     allergies: string[];
   };
-
-  isConnected: boolean;
 };

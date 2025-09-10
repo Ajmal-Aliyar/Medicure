@@ -5,11 +5,12 @@ import {
   AppointmentCard,
   AppointmentDetailsPopulated,
   AppointmentPageDetails,
+  IConnectionStatus,
   IPagination,
   IRole,
 } from "@/interfaces";
 import { AppointmentMapper } from "@/mappers";
-import { IAppointmentRepository, IConversationRepository, IPrescriptionRepository, ITransactionRepository } from "@/repositories";
+import { IAppointmentRepository, IConnectionRequestRepository, IConversationRepository, IPrescriptionRepository, ITransactionRepository } from "@/repositories";
 import { Types } from "mongoose";
 import { FilterAppointmentQuery } from "@/validators";
 import { NotFoundError, UnauthorizedError } from "@/errors";
@@ -23,7 +24,8 @@ export class AppointmentService implements IAppointmentService {
     private readonly _transactionRepo: ITransactionRepository,
     @inject(TYPES.PrescriptionRepository)
     private readonly _prescriptionRepo: IPrescriptionRepository,
-    @inject(TYPES.ConversationRepository) private readonly _conversationRepo: IConversationRepository
+    @inject(TYPES.ConversationRepository) private readonly _conversationRepo: IConversationRepository,
+    @inject(TYPES.ConnectionRequestRepository) private readonly _connectionRequestRepo: IConnectionRequestRepository,
   ) {}
 
   async getAppointmentByRoomId(
@@ -107,12 +109,19 @@ export class AppointmentService implements IAppointmentService {
       ? await this._prescriptionRepo.findOne({ appointmentId })
       : null;
 
+  let connectionStatus: IConnectionStatus = 'not_connected';
   const isConnected = await this._conversationRepo.isConnected(appointment.patientId._id, appointment.doctorId._id)
+  if (isConnected) {
+    connectionStatus = 'connected';
+  } else {
+    const rqst = await this._connectionRequestRepo.findOne({ patientId: appointment.patientId._id, doctorId: appointment.doctorId._id})
+    if (rqst) connectionStatus = 'request_sent'
+  }
   return AppointmentMapper.toReturnAppointmentPageDetails(
     appointment,
     transaction,
     prescription,
-    isConnected
+    connectionStatus
   );
 }
 

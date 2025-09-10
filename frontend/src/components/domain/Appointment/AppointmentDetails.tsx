@@ -16,6 +16,7 @@ import type { RootState } from "@/app/store";
 import { setConsultationData } from "@/slices/consultationSlice";
 import { useNavigate } from "react-router-dom";
 import { patientConnectionRequestService } from "@/services/api/patient/connection-request";
+import { ConnectionButton } from "@/components/ui/ConnectionButton";
 
 interface Props {
     appointmentId: string;
@@ -63,6 +64,7 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
     };
 
     const sendConnectionRequest = async (doctorId: string) => {
+        if (appointmentDetails) setAppointmentDetails({ ...appointmentDetails, connectionStatus: 'request_sent' })
         await patientConnectionRequestService.request(doctorId)
     }
     const sendMessage = () => {
@@ -173,14 +175,12 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                             <DoctorCard doctor={appointmentDetails.doctor} onView={() => ''} isMe />
                             {user?.role === "patient" && <div className="flex flex-col w-full p-2 gap-1">
                                 <div className="flex gap-1">
-                                    <Button
-                                        variant={appointmentDetails.isConnected ? "muted" : "outline"}
-                                        className="flex-1 py-2 flex items-center justify-center gap-1"
-                                        onClick={() => {appointmentDetails.isConnected ? sendMessage() : sendConnectionRequest(appointmentDetails.doctor.id)}}
-                                    >
-                                        {appointmentDetails.isConnected ? <MessageSquare className="mt-1" /> : <Link className="mt-1" />}
-                                        {appointmentDetails.isConnected ? "Message" : "Connect"}
-                                    </Button></div>
+                                    <ConnectionButton
+                                        status={appointmentDetails.connectionStatus}
+                                        onSendMessage={() => sendMessage()}
+                                        onSendRequest={() => sendConnectionRequest(appointmentDetails.doctor.id)}
+                                    />
+                                </div>
                                 <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
                                     {`Notify Doctor`} <BellRing /></Button>
                             </div>}

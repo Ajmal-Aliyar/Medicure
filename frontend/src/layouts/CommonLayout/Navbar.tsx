@@ -25,7 +25,7 @@ export const Navbar = () => {
   const showModal = useModal();
   const handleLogoutClick = () => {
     showModal({
-      type: 'warning',
+      type: 'red',
       title: 'Confirm Logout',
       message: 'Are you sure you want to logout?',
       confirmText: 'Logout',
