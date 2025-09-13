@@ -6,22 +6,22 @@ import Redis from "ioredis";
 @injectable()
 export class RedisService implements ICacheService {
   constructor(
-    @inject(TYPES.RedisClient) private readonly redisClient: Redis
+    @inject(TYPES.RedisClient) private readonly _redisClient: Redis
   ) {}
 
   async set(key: string, value: string, ttl?: number): Promise<void> {
     if (ttl) {
-      await this.redisClient.set(key, value, "EX", ttl); 
+      await this._redisClient.set(key, value, "EX", ttl); 
     } else {
-      await this.redisClient.set(key, value);
+      await this._redisClient.set(key, value);
     }
   }
 
   async get(key: string): Promise<string | null> {
-    return await this.redisClient.get(key);
+    return await this._redisClient.get(key);
   }
 
   async del(key: string): Promise<void> {
-    await this.redisClient.del(key);
+    await this._redisClient.del(key);
   }
 }

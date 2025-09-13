@@ -1,14 +1,25 @@
 import { TYPES } from "@/di/types";
-import { IAppointmentRepository, IPrescriptionRepository, ISlotRepository } from "@/repositories";
+import {
+  IAppointmentRepository,
+  IPrescriptionRepository,
+  ISlotRepository,
+  ITransactionRepository,
+} from "@/repositories";
 import { inject, injectable } from "inversify";
-import { IPatientAppointmentService, ISlotService, ITransactionService, IWalletService } from "../interfaces";
+import {
+  IPatientAppointmentService,
+  IPaymentService,
+  ISlotService,
+  ITransactionService,
+  IWalletService,
+} from "../interfaces";
 import { IAppointmentCreateInput } from "@/interfaces";
 import { Types } from "mongoose";
 import { generateRoomId } from "@/utils";
 import { BadRequestError, NotFoundError } from "@/errors";
 import { format } from "date-fns";
 import { IAppointment } from "@/models";
-import { env } from "@/config";
+import { env, stripe } from "@/config";
 
 @injectable()
 export class PatientAppointmentService implements IPatientAppointmentService {
@@ -22,6 +33,8 @@ export class PatientAppointmentService implements IPatientAppointmentService {
     private readonly _walletService: IWalletService,
     @inject(TYPES.SlotService)
     private readonly _slotService: ISlotService,
+    @inject(TYPES.TransactionRepository)
+    private readonly _transactionRepo: ITransactionRepository
   ) {}
 
   async bookAppointment({
@@ -52,8 +65,12 @@ export class PatientAppointmentService implements IPatientAppointmentService {
       amount,
       transactionId: paymentIntentId,
     });
-    await this._walletService.updateWalletBalance(doctorId, "doctor", amount);
-    await this._walletService.updateWalletBalance(env.ADMIN_ID, "admin", amount);
+    await this._walletService.updateWalletBalance(doctorId, "doctor", amount, true);
+    await this._walletService.updateWalletBalance(
+      env.ADMIN_ID,
+      "admin",
+      amount, true
+    );
     return appointment;
   }
 
@@ -97,5 +114,61 @@ export class PatientAppointmentService implements IPatientAppointmentService {
     }
 
     return appointment;
+  }
+
+  async cancelAppointment(patientId: string, appointmentId: string) {
+    const now = new Date();
+    const appointment = await this._appointmentRepo.findOne({
+      _id: appointmentId,
+      patientId,
+    });
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found");
+    }
+    const appointmentDate = new Date(appointment?.appointmentDate);
+    const diffInHours =
+      (appointmentDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+    if (diffInHours >= 24) {
+      const transaction = await this._transactionRepo.findOne({
+        transactionId: appointment.transactionId,
+      });
+      if (!transaction) {
+        throw new Error("Transaction not found or not refundable.");
+      }
+      
+      await stripe.refunds.create({
+        payment_intent: appointment.transactionId,
+        amount: transaction.amount / 2,
+      });
+
+      if (true) {
+        await this._transactionRepo.create({
+          from: transaction.to,
+          to: transaction.from,
+          doctorId: transaction.doctorId,
+          amount: transaction.amount,
+          type: "refund",
+          status: 'success',
+          transactionId: appointment.transactionId,
+          appointmentId: transaction.appointmentId,
+        });
+        await this._walletService.updateWalletBalance(
+          String(transaction.to),
+          "admin",
+          transaction.amount / 2,
+          false
+        );
+        await this._walletService.updateWalletBalance(
+          String(transaction.from),
+          "doctor",
+          transaction.amount / 2,
+          false
+        );
+        await this._appointmentRepo.update(String(transaction.appointmentId), {status: 'cancelled'})
+      }
+    } else {
+      throw new BadRequestError("Sorry, cancellations are not allowed within 24 hours of the appointment.")
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Model, Document, FilterQuery } from "mongoose";
+import { Model, Document, FilterQuery, UpdateResult } from "mongoose";
 import { FindAllOptions, IBaseRepository } from "../interfaces";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -15,6 +15,13 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
   async update(id: string, item: Partial<T>): Promise<T | null> {
     return this._model.findByIdAndUpdate(id, item, { new: true }).exec();
   }
+
+  async updateAll(
+  filter: FilterQuery<T>, 
+  item: Partial<T>
+): Promise<UpdateResult> {
+  return this._model.updateMany(filter, item).exec();
+}
 
   async findOne(filter: FilterQuery<T>): Promise<T | null> {
     return this._model.findOne(filter).exec();

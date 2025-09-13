@@ -10,7 +10,13 @@ import {
   IRole,
 } from "@/interfaces";
 import { AppointmentMapper } from "@/mappers";
-import { IAppointmentRepository, IConnectionRequestRepository, IConversationRepository, IPrescriptionRepository, ITransactionRepository } from "@/repositories";
+import {
+  IAppointmentRepository,
+  IConnectionRequestRepository,
+  IConversationRepository,
+  IPrescriptionRepository,
+  ITransactionRepository,
+} from "@/repositories";
 import { Types } from "mongoose";
 import { FilterAppointmentQuery } from "@/validators";
 import { NotFoundError, UnauthorizedError } from "@/errors";
@@ -24,8 +30,10 @@ export class AppointmentService implements IAppointmentService {
     private readonly _transactionRepo: ITransactionRepository,
     @inject(TYPES.PrescriptionRepository)
     private readonly _prescriptionRepo: IPrescriptionRepository,
-    @inject(TYPES.ConversationRepository) private readonly _conversationRepo: IConversationRepository,
-    @inject(TYPES.ConnectionRequestRepository) private readonly _connectionRequestRepo: IConnectionRequestRepository,
+    @inject(TYPES.ConversationRepository)
+    private readonly _conversationRepo: IConversationRepository,
+    @inject(TYPES.ConnectionRequestRepository)
+    private readonly _connectionRequestRepo: IConnectionRequestRepository
   ) {}
 
   async getAppointmentByRoomId(
@@ -69,61 +77,81 @@ export class AppointmentService implements IAppointmentService {
   }
 
   async getAppointmentById(
-  id: string,
-  role: IRole,
-  appointmentId: string
-): Promise<AppointmentPageDetails> {
-  let filter: Record<string, any> = {
-    _id: new Types.ObjectId(appointmentId),
-  };
+    id: string,
+    role: IRole,
+    appointmentId: string
+  ): Promise<AppointmentPageDetails> {
+    let filter: Record<string, any> = {
+      _id: new Types.ObjectId(appointmentId),
+    };
 
-  switch (role) {
-    case "patient":
-      filter.patientId = new Types.ObjectId(id);
-      break;
-    case "doctor":
-      filter.doctorId = new Types.ObjectId(id);
-      break;
-    case "admin":
-      break;
-    default:
-      throw new UnauthorizedError("Invalid role for accessing appointment");
+    switch (role) {
+      case "patient":
+        filter.patientId = new Types.ObjectId(id);
+        break;
+      case "doctor":
+        filter.doctorId = new Types.ObjectId(id);
+        break;
+      case "admin":
+        break;
+      default:
+        throw new UnauthorizedError("Invalid role for accessing appointment");
+    }
+
+    const appointment =
+      await this._appointmentRepo.getAppointmentDetailsPopulated({ filter });
+
+    if (!appointment) {
+      throw new NotFoundError("Appointment not found");
+    }
+    let transaction;
+    if (appointment.status === "cancelled") {
+      transaction = await this._transactionRepo.findOne({
+        transactionId: appointment.transactionId,
+        type: "refund",
+      });
+
+      if (!transaction) {
+        transaction = await this._transactionRepo.findOne({
+          transactionId: appointment.transactionId,
+        });
+      }
+    } else {
+      transaction = await this._transactionRepo.findOne({
+        transactionId: appointment.transactionId,
+      });
+    }
+
+    if (!transaction) {
+      throw new NotFoundError("Transaction not found for this appointment");
+    }
+
+    const prescription =
+      appointment.status === "completed"
+        ? await this._prescriptionRepo.findOne({ appointmentId })
+        : null;
+
+    let connectionStatus: IConnectionStatus = "not_connected";
+    const isConnected = await this._conversationRepo.isConnected(
+      appointment.patientId._id,
+      appointment.doctorId._id
+    );
+    if (isConnected) {
+      connectionStatus = "connected";
+    } else {
+      const rqst = await this._connectionRequestRepo.findOne({
+        patientId: appointment.patientId._id,
+        doctorId: appointment.doctorId._id,
+      });
+      if (rqst) connectionStatus = "request_sent";
+    }
+    return AppointmentMapper.toReturnAppointmentPageDetails(
+      appointment,
+      transaction,
+      prescription,
+      connectionStatus
+    );
   }
-  
-  const appointment = await this._appointmentRepo.getAppointmentDetailsPopulated({ filter });
-
-  if (!appointment) {
-    throw new NotFoundError("Appointment not found");
-  }
-
-  const transaction = await this._transactionRepo.findOne({
-    transactionId: appointment.transactionId,
-  });
-
-  if (!transaction) {
-    throw new NotFoundError("Transaction not found for this appointment");
-  }
-
-  const prescription =
-    appointment.status === "completed"
-      ? await this._prescriptionRepo.findOne({ appointmentId })
-      : null;
-
-  let connectionStatus: IConnectionStatus = 'not_connected';
-  const isConnected = await this._conversationRepo.isConnected(appointment.patientId._id, appointment.doctorId._id)
-  if (isConnected) {
-    connectionStatus = 'connected';
-  } else {
-    const rqst = await this._connectionRequestRepo.findOne({ patientId: appointment.patientId._id, doctorId: appointment.doctorId._id})
-    if (rqst) connectionStatus = 'request_sent'
-  }
-  return AppointmentMapper.toReturnAppointmentPageDetails(
-    appointment,
-    transaction,
-    prescription,
-    connectionStatus
-  );
-}
 
   private buildFilterByRole(
     id: string,
@@ -151,5 +179,16 @@ export class AppointmentService implements IAppointmentService {
       }
     }
     return filter;
+  }
+
+  async updateNoShow(): Promise<void> {
+    const now = new Date();
+    const data = await this._appointmentRepo.updateAll(
+      {
+        status: "scheduled",
+        appointmentDate: { $lt: now },
+      },
+      { status: "no show" }
+    );
   }
 }

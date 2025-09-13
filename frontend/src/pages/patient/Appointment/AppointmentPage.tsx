@@ -14,7 +14,7 @@ const AppointmentPage = () => {
 
     const [appointmentType, setAppointmentType] = useState<string>("")
     const [appointmentDate, setAppointmentDate] = useState<string>("")
-    const [status, setStatus] = useState<string>("")
+    const [status, setStatus] = useState<string>("scheduled")
     const dispatch = useDispatch()
 
     const filters = useMemo(() => ({

@@ -10,4 +10,5 @@ export interface IAppointmentService {
   ): Promise<{ appointments: AppointmentCard[]; total: number }>;
   getAppointmentByRoomId(id: string, role: IRole, roomId: string): Promise<AppointmentDetailsPopulated>;
   getAppointmentById( id: string, role: string, appointmentId: string): Promise<AppointmentPageDetails>;
+  updateNoShow(): Promise<void>;
 }

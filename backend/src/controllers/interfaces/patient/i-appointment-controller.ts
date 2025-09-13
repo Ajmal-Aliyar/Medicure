@@ -4,5 +4,6 @@ export interface IPatientAppointmentController {
     getAppointmentsByPatientId(
     req: Request,
     res: Response
-  ): Promise<void>
+  ): Promise<void>;
+  cancelAppointment(req: Request, res: Response): Promise<void>;
 }

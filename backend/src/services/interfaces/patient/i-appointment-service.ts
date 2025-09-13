@@ -13,5 +13,6 @@ export interface IPatientAppointmentService {
     slotId: string;
     amount: number;
     paymentIntentId: string;
-  }): Promise<IAppointment>
+  }): Promise<IAppointment>;
+  cancelAppointment(patientId: string, appointmentId: string): Promise<void>
 }

@@ -11,6 +11,9 @@ import type { IFeedback } from "@/types/feedback";
 const BASE_URL = "/api/patient/appointment";
 interface IPatientAppointmentService extends IAppointmentService {
   getAppointmentByRoomId(roomId: string): Promise<AppointmentDetailsPopulated>;
+  cancelAppointment(
+    appointmentId: string
+  ): Promise<boolean>;
 }
 
 export const patientAppointmentService: IPatientAppointmentService = {
@@ -47,6 +50,13 @@ export const patientAppointmentService: IPatientAppointmentService = {
     appointmentId: string
   ): Promise<IFeedback> => {
     const response = await api.get<{ data: IFeedback }>(`${BASE_URL}/${appointmentId}/feedback`)
+    return response.data.data
+  },
+
+  cancelAppointment: async(
+    appointmentId: string
+  ): Promise<boolean> => {
+    const response = await api.patch<{data: boolean}>(`${BASE_URL}/${appointmentId}/cancel`)
     return response.data.data
   }
 };
