@@ -10,7 +10,7 @@ import { adminDoctorService } from "@/services/api/admin/doctor";
 interface Filters {
   searchQuery?: string;
   language?: string[];
-  specialization?: string;
+  specialization?: string | null;
   profileStatus?: string;
   accountStatus?: string;
   experienceRange?: { min: string; max: string };

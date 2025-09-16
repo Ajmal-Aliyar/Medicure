@@ -2,7 +2,7 @@ import type { RootState } from "@/app/store";
 import { adminWalletService } from "@/services/api/admin/wallet";
 import { doctorWalletService } from "@/services/api/doctor/wallet";
 import { setWallet } from "@/slices/financeSlice";
-import type { IWallet, IWalletService } from "@/types/wallet";
+import type { IWalletService } from "@/types/wallet";
 import { Wallet } from "lucide-react"
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

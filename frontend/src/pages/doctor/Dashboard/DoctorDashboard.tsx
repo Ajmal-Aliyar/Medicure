@@ -10,13 +10,11 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/app/store";
 import { useNavigate } from "react-router-dom";
 import WalletCard from "@/components/domain/Cards/WalletCard";
-import type { IWallet } from "@/types/wallet";
 const LazyTransactionDetails = lazy(() => import("../Finance/components/TransactionDetails"));
 
 const DoctorDashboard = () => {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date())
     const { doctor } = useSelector((state: RootState) => state.doctor)
-    const [ wallet, setWallet] = useState<IWallet | null>(null)
     const navigate = useNavigate()
 
     const filters = useMemo(() => ({
@@ -48,7 +46,7 @@ const DoctorDashboard = () => {
                     <p className="text-secondary-dark font-medium text-md p-3 border-b border-border">
                         Finance
                     </p>
-                    <WalletCard wallet={wallet} setWallet={setWallet} role={"doctor"} className="border-b border-border" />
+                    <WalletCard role={"doctor"} className="border-b border-border" />
                     <Suspense fallback={<div className="p-4">Loading transactions...</div>}>
                         <LazyTransactionDetails className="max-h-[400px]" />
                     </Suspense>
