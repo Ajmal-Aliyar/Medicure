@@ -38,7 +38,7 @@ const GlobalModal = () => {
           {showCancel && <Button variant={"muted"} onClick={handleCancel}
               className="px-4 rounded cursor-pointer transition"
             >{cancelText}</Button>}
-          <Button variant={type} onClick={handleConfirm} className={`px-4  rounded text-white transition`}>{confirmText}</Button>
+          <Button variant={type} onClick={handleConfirm} className={`px-4 py-1  rounded text-white transition`}>{confirmText}</Button>
         </div>
       </div>
     </div>

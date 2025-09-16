@@ -1,7 +1,11 @@
 import { env, stripe } from "@/config";
 import { TYPES } from "@/di/types";
 import { ISlot } from "@/models";
-import { IDoctorRepository } from "@/repositories";
+import {
+  IDoctorRepository,
+  ITransactionRepository,
+  IWalletRepository,
+} from "@/repositories";
 import { inject, injectable } from "inversify";
 import Stripe from "stripe";
 import {
@@ -17,7 +21,11 @@ export class PaymentService implements IPaymentService {
     @inject(TYPES.DoctorRepository)
     private readonly _doctorRepo: IDoctorRepository,
     @inject(TYPES.PatientAppointmentService)
-    private readonly _patientAppointmentService: IPatientAppointmentService
+    private readonly _patientAppointmentService: IPatientAppointmentService,
+    @inject(TYPES.TransactionRepository)
+    private readonly _transactionRepo: ITransactionRepository,
+    @inject(TYPES.WalletRepository)
+    private readonly _walletRepo: IWalletRepository
   ) {}
 
   async checkoutSession(
@@ -80,6 +88,7 @@ export class PaymentService implements IPaymentService {
           amount,
           paymentIntentId,
         });
+        
       }
 
       case "checkout.session.expired": {
@@ -144,26 +153,56 @@ export class PaymentService implements IPaymentService {
       throw new Error("Failed to approve withdrawal.");
     }
   }
+
+  async processRefund(
+    transactionId: string
+  ): Promise<Stripe.Response<Stripe.Refund>> {
+    try {
+      const transaction = await this._transactionRepo.findOne({
+        transactionId,
+      });
+      if (!transaction) {
+        throw new Error("Transaction not found or not refundable.");
+      }
+
+      const refund = await stripe.refunds.create({
+        payment_intent: transactionId,
+        amount: transaction.amount / 2,
+      });
+
+      if (true) {
+        await this._transactionRepo.create({
+          from: transaction.to,
+          to: transaction.from,
+          doctorId: transaction.doctorId,
+          amount: transaction.amount,
+          type: "refund",
+          transactionId: transactionId,
+          appointmentId: transaction.appointmentId,
+        });
+
+        await this._walletRepo.updateBalance(
+          String(transaction.to),
+          "admin",
+          transaction.amount / 2,
+          false
+        );
+
+        await this._walletRepo.updateBalance(
+          String(transaction.doctorId),
+          "doctor",
+          transaction.amount / 2,
+          false
+        );
+      }
+
+      return refund;
+    } catch (error) {
+      console.error("Refund error:", error);
+      throw new Error("Refund process failed.");
+    }
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -285,39 +324,4 @@ export class PaymentService implements IPaymentService {
 //   });
 
 //   return payout;
-// }
-
-// async processRefund(transactionId: string) {
-//   try {
-//     const transaction = await this.transactionServices.getTransactionById(
-//       transactionId
-//     );
-//     if (!transaction) {
-//       throw new Error("Transaction not found or not refundable.");
-//     }
-
-//     const refund = await this.stripe.refunds.create({
-//       payment_intent: transactionId,
-//     });
-
-//     if (true) {
-//       await this.transactionServices.updateTransactionStatus(
-//         transactionId,
-//         "refunded"
-//       );
-//       await this.walletRepository.decrement(
-//         transaction.recieverId,
-//         transaction.amount
-//       );
-//       await this.walletRepository.decrement("Company", transaction.amount);
-//       await this.appointmentServices.cancelAppointmentByTransactionId(
-//         transactionId
-//       );
-//     }
-
-//     return refund;
-//   } catch (error) {
-//     console.error("Refund error:", error);
-//     throw new Error("Refund process failed.");
-//   }
 // }

@@ -24,16 +24,12 @@ const AppointmentCard = ({
     isDashboard = false
 }: AppointmentCardProps) => {
     const showBothUsers = role === "admin";
-    console.log(appointment.id , 'app cd');
-    
 
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
     const handleJoinMeeting = () => {
         if (appointment.status === "scheduled") {
-            console.log(appointment, 'app crad');
-            
             dispatch(setConsultationData({
                 doctorId: appointment.doctor.id,
                 patientId: appointment.patient.id,

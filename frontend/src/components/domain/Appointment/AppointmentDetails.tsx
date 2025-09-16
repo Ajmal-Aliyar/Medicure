@@ -6,7 +6,7 @@ import type { AppointmentPageDetails, IAppointmentService } from "@/types/appoin
 import type { IRole } from "@/types/auth";
 import { formatTimeTo12Hour, parseToMD } from "@/utils/formatDate";
 import { statusColor } from "@/utils/statusColor";
-import { BellRing, ClipboardPlus, Clock8, CreditCard, FileChartColumn, IndianRupee, Link, Mail, MessageSquare, SquareActivity, Stethoscope, X } from "lucide-react";
+import { BellRing, ClipboardPlus, Clock8, CreditCard, FileChartColumn, IndianRupee, Mail, SquareActivity, Stethoscope, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DoctorCard } from "../Cards";
@@ -16,6 +16,9 @@ import type { RootState } from "@/app/store";
 import { setConsultationData } from "@/slices/consultationSlice";
 import { useNavigate } from "react-router-dom";
 import { patientConnectionRequestService } from "@/services/api/patient/connection-request";
+import { ConnectionButton } from "@/components/ui/ConnectionButton";
+import { openModal } from "@/slices/modalSlice";
+import toast from "react-hot-toast";
 
 interface Props {
     appointmentId: string;
@@ -42,7 +45,7 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                 setAppointmentDetails(appointmentDetails);
             } catch (err) {
                 console.log(err)
-            } 
+            }
         };
         fetchAppointment();
     }, [appointmentId]);
@@ -63,8 +66,54 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
     };
 
     const sendConnectionRequest = async (doctorId: string) => {
+        if (appointmentDetails) setAppointmentDetails({ ...appointmentDetails, connectionStatus: 'request_sent' })
         await patientConnectionRequestService.request(doctorId)
     }
+    const sendMessage = () => {
+        dispatch(setAppointment(null))
+        navigate('/chat')
+    }
+
+    const onCancel = ( appointmentId: string, appointmentDate: Date) => {
+        const now = new Date();
+        const appointment = new Date(appointmentDate);
+        const diffInHours = (appointment.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+        if (diffInHours >= 24) {
+            dispatch(
+                openModal({
+                    cancelText: 'close',
+                    confirmText: 'Cancel Appointment',
+                    message:
+                        "Are you sure you want to cancel appointment?",
+                    onConfirm: async() => {
+                        const success = await patientAppointmentService.cancelAppointment(appointmentId)
+                        if(success) {
+                            toast.success('Appointment cancelled. Refund within 24h.');
+                            if (appointmentDetails) setAppointmentDetails({ ...appointmentDetails, status: 'cancelled' })
+                        }
+                    },
+                    showCancel: true,
+                    title: 'Cancel Appointment',
+                    type: 'red'
+                })
+            );
+        } else {
+            dispatch(
+                openModal({
+                    cancelText: 'Close',
+                    confirmText: 'close',
+                    message:
+                        "Sorry, cancellations are not allowed within 24 hours of the appointment.",
+                    onConfirm: () => undefined,
+                    showCancel: false,
+                    title: 'Cannot Cancel',
+                    type: 'muted',
+                })
+            );
+        }
+    };
+
     return (
         <div className="w-screen h-screen fixed top-0 right-0 bg-black/50 flex lg:p-4 z-40">
             <div className="max-w-2xl ml-auto bg-surface shadow rounded-md flex flex-col lg:min-w-6xl relative">
@@ -73,7 +122,10 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                 </div>
                 {appointmentDetails && <div className="grid grid-cols-3 w-full h-full">
                     <div className="col-span-2 border-r border-border h-full">
-                        <h2 className="text-xl font-normal text-secondary p-5 border-b border-border">Appointment Details</h2>
+                        <div className="flex items-center w-full p-5 border-b border-border justify-between">
+                            <h2 className="text-xl font-normal text-secondary">Appointment Details</h2>
+                            {appointmentDetails.status === 'scheduled' && <Button variant="outline" className="px-2" onClick={() => onCancel( appointmentDetails.id, appointmentDetails.appointmentDate)}>Cancel</Button>}
+                        </div>
                         <div className="grid grid-cols-2 border-border overflow-y-auto">
                             <div className="p-7 border-b border-border flex gap-3 border-r">
                                 <FileChartColumn className="text-secondary" />
@@ -101,7 +153,7 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                                         {parseToMD(appointmentDetails.appointmentDate)}, {formatTimeTo12Hour(appointmentDetails.startTime)} - {formatTimeTo12Hour(appointmentDetails.endTime)}
                                     </p>
                                 </div>
-                                {!showBothUsers && <Button className="px-3 mt-1" onClick={() => handleJoinMeeting(appointmentDetails)}>Join</Button>}
+                                {!showBothUsers && appointmentDetails.status === 'scheduled' && <Button className="px-3 mt-1" onClick={() => handleJoinMeeting(appointmentDetails)}>Join</Button>}
                             </div>
                             <div className="col-span-1 p-7 border-b border-r border-border flex gap-3">
                                 <Stethoscope className="text-secondary" />
@@ -169,23 +221,25 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                             <DoctorCard doctor={appointmentDetails.doctor} onView={() => ''} isMe />
                             {user?.role === "patient" && <div className="flex flex-col w-full p-2 gap-1">
                                 <div className="flex gap-1">
-                                    <Button className="flex-1 py-2">Profile</Button>
-                                    <Button variant="outline" className="flex-1 py-2 flex items-center justify-center gap-1"
-                                    onClick={() => sendConnectionRequest(appointmentDetails.doctor.id)}><Link className="mt-1" /> Connect</Button>
+                                    <ConnectionButton
+                                        status={appointmentDetails.connectionStatus}
+                                        onSendMessage={() => sendMessage()}
+                                        onSendRequest={() => sendConnectionRequest(appointmentDetails.doctor.id)}
+                                    />
                                 </div>
-                                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
-                                    {`Notify Doctor`} <BellRing /></Button>
+                                {appointmentDetails.status === 'scheduled' && <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
+                                    {`Notify Doctor`} <BellRing /></Button>}
                             </div>}
                         </div>
                         <div className="border-b border-border">
                             <PatientCard patient={appointmentDetails.patient} className="" isMe />
                             {user?.role === "doctor" && <div className="flex flex-col w-full  p-2 gap-1">
                                 <div className="flex gap-1">
-                                    <Button variant="muted" className="flex-1 py-2 flex items-center justify-center gap-1"><MessageSquare className="mt-1" fill="#fff" /> Message</Button>
-                                    <Button variant="outline" className="flex-1 py-2">Profile</Button>
+                                    {/* <Button variant="muted" className="flex-1 py-2 flex items-center justify-center gap-1"><MessageSquare className="mt-1" fill="#fff" /> Message</Button> */}
+                                    {/* <Button variant="outline" className="flex-1 py-2">Profile</Button> */}
                                 </div>
-                                <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
-                                    {`Notify Patient`} <BellRing /></Button>
+                                {appointmentDetails.status === 'scheduled' && <Button className="w-full bg-yellow-500 hover:bg-yellow-600 py-2 text-xl flex  items-center justify-center gap-3">
+                                    {`Notify Patient`} <BellRing /></Button>}
                             </div>}
                         </div>
 
@@ -210,7 +264,6 @@ const AppointmentDetails = ({ appointmentId }: Props) => {
                             </p>
 
                         </div>
-
 
                     </div>
                 </div>}

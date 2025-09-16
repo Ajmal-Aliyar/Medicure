@@ -1,8 +1,8 @@
-import { IConversation} from "@/models";
+import { IConversation } from "@/models";
 import { BaseRepository } from "../base";
 import { Conversation } from "@/models";
 import { FindAllOptions, IConversationRepository } from "../interfaces";
-
+import { Types } from "mongoose";
 
 export class ConversationRepository
   extends BaseRepository<IConversation>
@@ -53,7 +53,11 @@ export class ConversationRepository
             {
               $addFields: {
                 allMembers: {
-                  $concatArrays: ["$doctorMembers", "$patientMembers", "$adminMembers"],
+                  $concatArrays: [
+                    "$doctorMembers",
+                    "$patientMembers",
+                    "$adminMembers",
+                  ],
                 },
               },
             },
@@ -78,9 +82,7 @@ export class ConversationRepository
             },
           ],
 
-          total: [
-            { $count: "count" },
-          ],
+          total: [{ $count: "count" }],
         },
       },
 
@@ -98,5 +100,24 @@ export class ConversationRepository
     };
   }
 
-  
+  async isConnected(
+    user1: Types.ObjectId,
+    user2: Types.ObjectId
+  ): Promise<boolean> {
+    const conversation = await this._model
+      .findOne(
+        {
+          isGroup: false,
+          members: {
+            $all: [
+              { $elemMatch: { id: user1 } },
+              { $elemMatch: { id: user2 } },
+            ],
+          },
+        },
+        { _id: 1 }
+      )
+      .lean();
+    return Boolean(conversation);
+  }
 }

@@ -7,7 +7,7 @@ import { ICacheService, IOtpService } from "@/interfaces";
 export class OtpService implements IOtpService {
   constructor(
     @inject(TYPES.CacheService)
-    private readonly cacheService: ICacheService
+    private readonly _cacheService: ICacheService
   ) {}
 
   generateOtp(): string {
@@ -23,18 +23,18 @@ export class OtpService implements IOtpService {
 
   async storeOtp(email: string, otp: string, ttl = 300): Promise<void> {
     const redisKey = this.getOtpRedisKey(email);
-    await this.cacheService.set(redisKey, otp, ttl);
+    await this._cacheService.set(redisKey, otp, ttl);
   }
 
   async verifyOtp(email: string, inputOtp: string): Promise<boolean> {
     const redisKey = this.getOtpRedisKey(email);
-    const storedOtp = await this.cacheService.get(redisKey);
+    const storedOtp = await this._cacheService.get(redisKey);
     return storedOtp === inputOtp;
   }
 
   async deleteOtp(email: string): Promise<void> {
   const redisKey = this.getOtpRedisKey(email);
-  await this.cacheService.del(redisKey);
+  await this._cacheService.del(redisKey);
 }
 
 

@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { IPatientAppointmentController } from "../interfaces";
 import { TYPES } from "@/di/types";
-import { IAppointmentService } from "@/services";
+import { IAppointmentService, IPatientAppointmentService } from "@/services";
 import { Request, Response } from "express";
 import {
   buildPaginationMeta,
@@ -17,7 +17,9 @@ export class PatientAppointmentController
 {
   constructor(
     @inject(TYPES.AppointmentService)
-    private readonly _appointmentService: IAppointmentService
+    private readonly _appointmentService: IAppointmentService,
+    @inject(TYPES.PatientAppointmentService)
+    private readonly _patientAppointmentService: IPatientAppointmentService,
   ) {}
 
   getAppointmentsByPatientId = async (
@@ -43,4 +45,16 @@ export class PatientAppointmentController
       meta
     );
   };
+
+  cancelAppointment = async(req: Request, res: Response): Promise<void> => {
+    const {id} = req.user;
+    const {appointmentId} = req.params
+    await this._patientAppointmentService.cancelAppointment(id, appointmentId);
+    successResponse(
+      res,
+      HTTP_STATUS.OK,
+      "Appointments details fetched successfully.",
+      true
+    );
+  }
 }

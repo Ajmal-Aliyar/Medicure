@@ -30,12 +30,12 @@ export class WalletService implements IWalletService {
     return await this._walletRepo.create(newWallet);
   }
 
-  async updateWalletBalance(ownerId: string, ownerType: IRole, amount: number): Promise<IWallet | null> {
+  async updateWalletBalance(ownerId: string, ownerType: IRole, amount: number, inc = true): Promise<IWallet | null> {
     return await this._walletRepo.updateBalance(
             ownerId,
             ownerType,
             amount,
-            true
+            inc
           );
   }
 

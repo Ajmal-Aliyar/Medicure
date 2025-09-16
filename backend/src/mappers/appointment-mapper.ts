@@ -1,9 +1,14 @@
-import { AppointmentCard, AppointmentDetailsPopulated, AppointmentPageDetails, PopulatedAppointment, PopulatedAppointmentForRoom } from "@/interfaces";
+import {
+  AppointmentCard,
+  AppointmentDetailsPopulated,
+  AppointmentPageDetails,
+  IConnectionStatus,
+  PopulatedAppointment,
+  PopulatedAppointmentForRoom,
+} from "@/interfaces";
 import { IMedication, IPrescription, ITransaction } from "@/models";
 
-
 export class AppointmentMapper {
-  
   static toAppointmentsCard(rawAppointments: PopulatedAppointment[]) {
     const appointments: AppointmentCard[] = rawAppointments.map((a) => ({
       id: a._id.toString(),
@@ -26,14 +31,16 @@ export class AppointmentMapper {
       },
       feedbackId: a.feedbackId || null,
       prescriptionId: a.prescriptionId || null,
-      roomId: a.roomId
+      roomId: a.roomId,
     }));
 
     return appointments;
   }
 
-static toAppointmentPopulated(rawAppointments: PopulatedAppointmentForRoom): AppointmentDetailsPopulated {
-  const appointments = {
+  static toAppointmentPopulated(
+    rawAppointments: PopulatedAppointmentForRoom
+  ): AppointmentDetailsPopulated {
+    const appointments = {
       id: rawAppointments._id.toString(),
       appointmentDate: rawAppointments.appointmentDate,
       startTime: rawAppointments.startTime,
@@ -45,10 +52,10 @@ static toAppointmentPopulated(rawAppointments: PopulatedAppointmentForRoom): App
         fullName: rawAppointments.doctorId.personal.fullName,
         profileImage: rawAppointments.doctorId.personal.profileImage,
         specialization: rawAppointments.doctorId.professional.specialization,
-        languageSpoken: rawAppointments.doctorId.personal.languageSpoken, 
+        languageSpoken: rawAppointments.doctorId.personal.languageSpoken,
         experience: rawAppointments.doctorId.professional.yearsOfExperience,
-        rating: rawAppointments.doctorId.rating, 
-        gender: rawAppointments.doctorId.personal.gender
+        rating: rawAppointments.doctorId.rating,
+        gender: rawAppointments.doctorId.personal.gender,
       },
       patient: {
         id: rawAppointments.patientId._id.toString(),
@@ -56,42 +63,44 @@ static toAppointmentPopulated(rawAppointments: PopulatedAppointmentForRoom): App
         profileImage: rawAppointments.patientId.personal.profileImage,
         gender: rawAppointments.patientId.personal.gender || null,
         dob: rawAppointments.patientId.personal.dob || null,
-        mobile: rawAppointments.patientId.personal.mobile, 
+        mobile: rawAppointments.patientId.personal.mobile,
         bloodGroup: rawAppointments.patientId.personal.bloodGroup || null,
       },
       roomId: rawAppointments.roomId,
       createdAt: rawAppointments.createdAt,
       transactionId: rawAppointments.transactionId,
-      feedbackId: rawAppointments.feedbackId || null
+      feedbackId: rawAppointments.feedbackId || null,
     };
 
     return appointments;
   }
 
   static toReturnAppointmentPageDetails(
-  rawAppointment: PopulatedAppointmentForRoom,
-  transaction: ITransaction,
-  prescription: IPrescription | null
-): AppointmentPageDetails {
-  return {
-    id: rawAppointment._id.toString(),
-    appointmentDate: rawAppointment.appointmentDate,
-    startTime: rawAppointment.startTime,
-    endTime: rawAppointment.endTime,
-    status: rawAppointment.status,
-    appointmentType: rawAppointment.appointmentType,
-    roomId: rawAppointment.roomId,
-    createdAt: rawAppointment.createdAt,
+    rawAppointment: PopulatedAppointmentForRoom,
+    transaction: ITransaction,
+    prescription: IPrescription | null,
+    connectionStatus: IConnectionStatus
+  ): AppointmentPageDetails {
+    return {
+      id: rawAppointment._id.toString(),
+      appointmentDate: rawAppointment.appointmentDate,
+      startTime: rawAppointment.startTime,
+      endTime: rawAppointment.endTime,
+      status: rawAppointment.status,
+      appointmentType: rawAppointment.appointmentType,
+      roomId: rawAppointment.roomId,
+      createdAt: rawAppointment.createdAt,
+      connectionStatus,
 
-    doctor: {
+      doctor: {
         id: rawAppointment.doctorId._id.toString(),
         fullName: rawAppointment.doctorId.personal.fullName,
         profileImage: rawAppointment.doctorId.personal.profileImage,
         specialization: rawAppointment.doctorId.professional.specialization,
-        languageSpoken: rawAppointment.doctorId.personal.languageSpoken, 
+        languageSpoken: rawAppointment.doctorId.personal.languageSpoken,
         experience: rawAppointment.doctorId.professional.yearsOfExperience,
-        rating: rawAppointment.doctorId.rating, 
-        gender: rawAppointment.doctorId.personal.gender
+        rating: rawAppointment.doctorId.rating,
+        gender: rawAppointment.doctorId.personal.gender,
       },
       patient: {
         id: rawAppointment.patientId._id.toString(),
@@ -99,42 +108,40 @@ static toAppointmentPopulated(rawAppointments: PopulatedAppointmentForRoom): App
         profileImage: rawAppointment.patientId.personal.profileImage,
         gender: rawAppointment.patientId.personal.gender || null,
         dob: rawAppointment.patientId.personal.dob || null,
-        mobile: rawAppointment.patientId.personal.mobile, 
+        mobile: rawAppointment.patientId.personal.mobile,
         bloodGroup: rawAppointment.patientId.personal.bloodGroup || null,
       },
 
-    transaction: {
-      transactionId: transaction.transactionId,
-      amount: transaction.amount,
-      status: transaction.status,
-      type: transaction.type,
-      createdAt: transaction.createdAt,
-    },
+      transaction: {
+        transactionId: transaction.transactionId,
+        amount: transaction.amount,
+        status: transaction.status,
+        type: transaction.type,
+        createdAt: transaction.createdAt,
+      },
 
-    prescription: prescription
-      ? {
-          id: '',
-          diagnosis: prescription.diagnosis,
-          symptoms: prescription.symptoms,
-          medications: prescription.medications.map((med: IMedication) => ({
-            medicineName: med.medicineName,
-            dosage: med.dosage,
-            frequency: med.frequency,
-            duration: med.duration,
-            instructions: med.instructions,
-            quantity: med.quantity,
-            refills: med.refills,
-          })),
-          notes: prescription.notes,
-          issuedDate: prescription.issuedDate,
-          validUntil: prescription.validUntil,
-          followUpRequired: prescription.followUpRequired,
-          followUpDate: prescription.followUpDate ?? null,
-          allergies: prescription.allergies || [],
-        }
-      : undefined,
-  };
+      prescription: prescription
+        ? {
+            id: "",
+            diagnosis: prescription.diagnosis,
+            symptoms: prescription.symptoms,
+            medications: prescription.medications.map((med: IMedication) => ({
+              medicineName: med.medicineName,
+              dosage: med.dosage,
+              frequency: med.frequency,
+              duration: med.duration,
+              instructions: med.instructions,
+              quantity: med.quantity,
+              refills: med.refills,
+            })),
+            notes: prescription.notes,
+            issuedDate: prescription.issuedDate,
+            validUntil: prescription.validUntil,
+            followUpRequired: prescription.followUpRequired,
+            followUpDate: prescription.followUpDate ?? null,
+            allergies: prescription.allergies || [],
+          }
+        : undefined,
+    };
+  }
 }
-
-}
-

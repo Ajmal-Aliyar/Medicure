@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
-import { IScheduleService, ISlotService } from "@/services";
+import { IAppointmentService, IScheduleService, ISlotService } from "@/services";
 import { IDoctorSchedule, ISlot } from "@/models";
 import { generateSlotsForAdvanceDays } from "@/utils";
 import { ISlotCronJob } from "@/interfaces";
@@ -10,19 +10,22 @@ import { ISlotCronJob } from "@/interfaces";
 export class SlotCronJob implements ISlotCronJob {
   constructor(
     @inject(TYPES.ScheduleService)
-    private readonly scheduleService: IScheduleService,
+    private readonly _scheduleService: IScheduleService,
 
     @inject(TYPES.SlotService)
-    private readonly slotService: ISlotService
+    private readonly _slotService: ISlotService,
+
+     @inject(TYPES.AppointmentService)
+    private readonly _appointmentService: IAppointmentService,
   ) {}
 
   public scheduleSlotCreationJob(): void {
     // cron.schedule("33 23 * * *", async () => {
-    cron.schedule("20 10 * * *", async () => {
+    cron.schedule("39 19 * * *", async () => {
       console.log("🕐 [Cron] Starting slot generation...");
 
       const schedules: IDoctorSchedule[] =
-        await this.scheduleService.findActiveDoctorSchedules();
+        await this._scheduleService.findActiveDoctorSchedules();
 
       if (!schedules.length) {
         return;
@@ -45,18 +48,20 @@ export class SlotCronJob implements ISlotCronJob {
         }
 
         for (const [dateStr, slotsForDay] of slotsByDate.entries()) {
-            const newSlots = await this.slotService.getNewSlotsForDate( String(schedule.doctorId), dateStr, slotsForDay)
+            const newSlots = await this._slotService.getNewSlotsForDate( String(schedule.doctorId), dateStr, slotsForDay)
           if (!newSlots.length) continue;
 
           const BATCH_SIZE = 5;
           for (let i = 0; i < newSlots.length; i += BATCH_SIZE) {
             const batch = newSlots.slice(i, i + BATCH_SIZE);
-            await this.slotService.createBulkSlots(batch);
+            await this._slotService.createBulkSlots(batch);
           }
         }
       }
 
       console.log("✅ [Cron] Slot generation completed.");
+      this._appointmentService.updateNoShow()
+      console.log("✅ [Cron] Update no show completed.");
     });
   }
 }

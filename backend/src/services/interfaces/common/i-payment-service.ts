@@ -5,5 +5,6 @@ export interface IPaymentService {
     webhookHandler(bodyData: string, sig: string): Promise<void>
     cancelCheckout(slotId: string  | undefined, patientId: string): Promise<boolean>
     getSessionDetails(sessionId: string | undefined): Promise<Stripe.Response<Stripe.Checkout.Session>>
+    processRefund(transactionId: string): Promise<Stripe.Response<Stripe.Refund>>
 }
 
