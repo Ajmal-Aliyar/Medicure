@@ -2,6 +2,7 @@ import { env, stripe } from "@/config";
 import { TYPES } from "@/di/types";
 import { ISlot } from "@/models";
 import {
+  IAppointmentRepository,
   IDoctorRepository,
   ITransactionRepository,
   IWalletRepository,
@@ -13,6 +14,7 @@ import {
   IPaymentService,
   ISlotService,
 } from "../interfaces";
+import { Types } from "mongoose";
 
 @injectable()
 export class PaymentService implements IPaymentService {
@@ -25,7 +27,9 @@ export class PaymentService implements IPaymentService {
     @inject(TYPES.TransactionRepository)
     private readonly _transactionRepo: ITransactionRepository,
     @inject(TYPES.WalletRepository)
-    private readonly _walletRepo: IWalletRepository
+    private readonly _walletRepo: IWalletRepository,
+    @inject(TYPES.AppointmentRepository)
+    private readonly _appointmentRepo: IAppointmentRepository
   ) {}
 
   async checkoutSession(
@@ -88,13 +92,17 @@ export class PaymentService implements IPaymentService {
           amount,
           paymentIntentId,
         });
-        
       }
 
       case "checkout.session.expired": {
         const session = event.data.object as Stripe.Checkout.Session;
         const slotId = session.metadata?.slotId;
-        if (slotId) await this._slotService.updateSlotAvailable(slotId);
+        if (slotId) {
+          const appointment = await this._appointmentRepo.findOne({
+            slotId: new Types.ObjectId(slotId),
+          });          
+          if (!appointment) await this._slotService.updateSlotAvailable(slotId);
+        }
         break;
       }
 
@@ -203,18 +211,6 @@ export class PaymentService implements IPaymentService {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 // async addUserBankAccount(
 //   email: string,

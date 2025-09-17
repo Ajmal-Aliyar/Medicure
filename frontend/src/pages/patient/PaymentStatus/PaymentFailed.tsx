@@ -42,7 +42,7 @@ const PaymentFailed = () => {
 
   return (
     <div className="w-full h-[90vh] flex justify-center items-center">
-      <div className="flex flex-col items-center bg-red-400/20 px-3 py-6 rounded-md">
+      <div className="flex flex-col items-center bg-white shadow-lg px-3 py-6 rounded-xl">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
