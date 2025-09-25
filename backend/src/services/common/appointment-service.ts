@@ -2,9 +2,6 @@ import { TYPES } from "@/di/types";
 import { inject, injectable } from "inversify";
 import { IAppointmentService } from "../interfaces";
 import {
-  AppointmentCard,
-  AppointmentDetailsPopulated,
-  AppointmentPageDetails,
   IConnectionStatus,
   IPagination,
   IRole,
@@ -20,6 +17,7 @@ import {
 import { Types } from "mongoose";
 import { FilterAppointmentQuery } from "@/validators";
 import { NotFoundError, UnauthorizedError } from "@/errors";
+import { AppointmentCardDTO, AppointmentDetailsPopulatedDTO, AppointmentPageDetailsDTO } from "@/dtos/appointment-dto";
 
 @injectable()
 export class AppointmentService implements IAppointmentService {
@@ -40,7 +38,7 @@ export class AppointmentService implements IAppointmentService {
     id: string,
     role: IRole,
     roomId: string
-  ): Promise<AppointmentDetailsPopulated> {
+  ): Promise<AppointmentDetailsPopulatedDTO> {
     const filter = {
       roomId,
       ...(role === "patient"
@@ -62,7 +60,7 @@ export class AppointmentService implements IAppointmentService {
     role: IRole,
     parsedQuery: FilterAppointmentQuery,
     { skip = 0, limit = 6 }: IPagination
-  ): Promise<{ appointments: AppointmentCard[]; total: number }> {
+  ): Promise<{ appointments: AppointmentCardDTO[]; total: number }> {
     const filter = this.buildFilterByRole(id, role, parsedQuery);
     const { appointments, total } =
       await this._appointmentRepo.getAppointmentsForUser({
@@ -80,7 +78,7 @@ export class AppointmentService implements IAppointmentService {
     id: string,
     role: IRole,
     appointmentId: string
-  ): Promise<AppointmentPageDetails> {
+  ): Promise<AppointmentPageDetailsDTO> {
     let filter: Record<string, any> = {
       _id: new Types.ObjectId(appointmentId),
     };

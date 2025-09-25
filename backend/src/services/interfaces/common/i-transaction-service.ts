@@ -1,6 +1,6 @@
+import { TransactionDetailsDTO, TransactionDTO } from "@/dtos";
 import { IPagination, IRole } from "@/interfaces";
-import { TransactionDetails } from "@/interfaces/common/ITransaction";
-import { ITransaction } from "@/models";
+
 
 export interface ITransactionService {
 bookAppointment(params: {
@@ -9,6 +9,6 @@ bookAppointment(params: {
     appointmentId: string;
     transactionId: string;
     amount: number;
-  }): Promise<ITransaction>
-  getTransactionHistory(ownerId: string, ownerType: IRole, pagination: IPagination): Promise<{ transactions: TransactionDetails[], total: number }>
+  }): Promise<TransactionDTO>
+  getTransactionHistory(ownerId: string, ownerType: IRole, pagination: IPagination): Promise<{ transactions: TransactionDetailsDTO[], total: number }>
 }

@@ -1,9 +1,7 @@
 import { Types } from "mongoose";
-import { DoctorCardDetails, PatientCardDetails } from "./card-details";
 import { IGender } from "./IGender";
 import { BloodGroup } from "./IBloodGroup";
 import { IAppointmentStatus, IAppointmentType } from "@/types";
-import { IMedication, TransactionStatus, TransactionType } from "@/models";
 
 
 export interface IAppointmentCreateInput {
@@ -14,25 +12,7 @@ export interface IAppointmentCreateInput {
   transactionId: string;
 }
 
-export interface AppointmentCard {
-  id: string;
-  appointmentDate: string;
-  startTime: string;
-  endTime: string;
-  status: IAppointmentStatus;
-  appointmentType: IAppointmentType;
-  doctor: AppointmentUserInfo;
-  patient: AppointmentUserInfo;
-  roomId: string;
-}
 
-interface AppointmentUserInfo {
-  id: string;
-  name: string;
-  profileImage: string;
-  specialization?: string;
-  age?: number;
-}
 
 
 export interface PopulatedAppointment {
@@ -110,55 +90,6 @@ export interface PopulatedAppointmentForRoom {
 }
 
 
-export interface AppointmentDetailsPopulated {
-  id: string;
-  appointmentDate: Date;
-  startTime: string;
-  endTime: string;
-  status: IAppointmentStatus;
-  appointmentType: IAppointmentType;
-  doctor: DoctorCardDetails;
-  patient: PatientCardDetails;
-  roomId: string;
-  transactionId: string;
-  feedbackId: string | null;
-}
 
 export type IConnectionStatus = "not_connected" | "request_sent" | "connected";
 
-export type AppointmentPageDetails = {
-  id: string;
-  appointmentDate: Date;
-  startTime: string;
-  endTime: string;
-  status: IAppointmentStatus; 
-  appointmentType: IAppointmentType; 
-  roomId: string;
-  createdAt: Date;
-
-  connectionStatus: IConnectionStatus;
-
-  doctor: DoctorCardDetails;
-  patient: PatientCardDetails;
-
-  transaction: {
-    transactionId: string;
-    amount: number;
-    status: TransactionStatus;
-    type: TransactionType;
-    createdAt: Date;
-  };
-
-  prescription?: {
-    id: string;
-    diagnosis: string[];
-    symptoms: string[];
-    medications: IMedication[];
-    notes?: string;
-    issuedDate: Date;
-    validUntil: Date;
-    followUpRequired: boolean;
-    followUpDate: Date | null;
-    allergies: string[];
-  };
-};

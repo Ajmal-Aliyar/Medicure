@@ -1,5 +1,5 @@
-import { CategorizedSlots, PublicSlotDetails } from "@/dtos";
-import { IRole, ISlotDetails } from "@/interfaces";
+import { CategorizedSlots, ISlotDetailsDTO, PublicSlotDetailsDTO } from "@/dtos";
+import { IRole } from "@/interfaces";
 import { ISlot } from "@/models";
 import { FilterSlotQuery } from "@/validators/slot-validator";
 import { Types } from "mongoose";
@@ -36,9 +36,9 @@ export class SlotMapper {
     return categorized;
   }
 
-  static toPublicSlotDetails(slots: ISlot[]): PublicSlotDetails[] {
+  static toPublicSlotDetails(slots: ISlot[]): PublicSlotDetailsDTO[] {
     return slots.map(
-      (slot): PublicSlotDetails => ({
+      (slot): PublicSlotDetailsDTO => ({
         id: String(slot._id),
         doctorId: slot.doctorId,
         startTime: slot.startTime,
@@ -73,9 +73,9 @@ if (filters.isBooked !== undefined) {
 };
 
 
-  static toSlotDetails(slots: ISlot[], id:string,  role: string): ISlotDetails[] {
+  static toSlotDetails(slots: ISlot[], id:string,  role: string): ISlotDetailsDTO[] {
     return slots.map(
-      (slot): ISlotDetails => ({
+      (slot): ISlotDetailsDTO => ({
         id: String(slot._id),
         doctorId:  String(slot.doctorId),
         startTime: slot.startTime,

@@ -2,7 +2,7 @@ import {
   DoctorProfileDTO,
   DoctorProfileUpdateDTO,
   ProfessionalVerificationDTO,
-  VerificationProofsDto,
+  VerificationProofsDTO,
 } from "@/dtos";
 import { IDocument, IEducation } from "@/interfaces";
 import { IDoctor } from "@/models";
@@ -132,7 +132,7 @@ export class DoctorProfileMapper {
     return update;
   };
 
-  static toVerificationProofs = (doctor: IDoctor): VerificationProofsDto => {
+  static toVerificationProofs = (doctor: IDoctor): VerificationProofsDTO => {
     return {
       identityProof: doctor.professional.documents.identityProof,
       medicalRegistration: doctor.professional.documents.medicalRegistration,
@@ -141,11 +141,11 @@ export class DoctorProfileMapper {
   };
 
   static toUpdateVerificationProofs = (
-  proofs: VerificationProofsDto
+  proofs: VerificationProofsDTO
 ): Partial<Pick<IDoctor, "professional">> & { [key: string]: IDocument } => {
   const filteredProofs = Object.fromEntries(
     Object.entries(proofs).filter(([_, value]) => value != null)
-  ) as VerificationProofsDto;
+  ) as VerificationProofsDTO;
   const update: { [key: string]: IDocument } = {};
   update["professional.documents"] = filteredProofs;
   return update;

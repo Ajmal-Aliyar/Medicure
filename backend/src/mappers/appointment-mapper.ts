@@ -1,7 +1,5 @@
+import { AppointmentCardDTO, AppointmentDetailsPopulatedDTO, AppointmentPageDetailsDTO } from "@/dtos/appointment-dto";
 import {
-  AppointmentCard,
-  AppointmentDetailsPopulated,
-  AppointmentPageDetails,
   IConnectionStatus,
   PopulatedAppointment,
   PopulatedAppointmentForRoom,
@@ -10,7 +8,7 @@ import { IMedication, IPrescription, ITransaction } from "@/models";
 
 export class AppointmentMapper {
   static toAppointmentsCard(rawAppointments: PopulatedAppointment[]) {
-    const appointments: AppointmentCard[] = rawAppointments.map((a) => ({
+    const appointments: AppointmentCardDTO[] = rawAppointments.map((a) => ({
       id: a._id.toString(),
       appointmentDate: a.appointmentDate,
       startTime: a.startTime,
@@ -39,7 +37,7 @@ export class AppointmentMapper {
 
   static toAppointmentPopulated(
     rawAppointments: PopulatedAppointmentForRoom
-  ): AppointmentDetailsPopulated {
+  ): AppointmentDetailsPopulatedDTO {
     const appointments = {
       id: rawAppointments._id.toString(),
       appointmentDate: rawAppointments.appointmentDate,
@@ -80,7 +78,7 @@ export class AppointmentMapper {
     transaction: ITransaction,
     prescription: IPrescription | null,
     connectionStatus: IConnectionStatus
-  ): AppointmentPageDetails {
+  ): AppointmentPageDetailsDTO {
     return {
       id: rawAppointment._id.toString(),
       appointmentDate: rawAppointment.appointmentDate,

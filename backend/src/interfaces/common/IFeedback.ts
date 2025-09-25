@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 import { IGender } from "./IGender";
 import { BloodGroup } from "./IBloodGroup";
-import { DoctorCardDetails, PatientCardDetails } from "./card-details";
 
 
 export interface PopulatedFeedbackDetails {
@@ -44,13 +43,3 @@ export interface PopulatedFeedbackDetails {
 }
 
 
-export interface FeedbackDetails {
-  id: string;
- rating: number;
-  comment: string;
-  appointmentId: string;
-  createdAt: Date;
- 
-  doctor?: DoctorCardDetails;
-  patient?: PatientCardDetails;
-}

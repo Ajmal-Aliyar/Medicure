@@ -4,11 +4,11 @@ import { inject, injectable } from "inversify";
 import { IDoctorWithdrawRequestService } from "../interfaces";
 import {
   IPagination,
-  IWithdrawRequestResponse,
 } from "@/interfaces";
 import { Types } from "mongoose";
 import { WithdrawRequestMapper } from "@/mappers";
-import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from "@/errors";
+import { BadRequestError, ForbiddenError, NotFoundError } from "@/errors";
+import { IWithdrawRequestResponseDTO } from "@/dtos";
 
 @injectable()
 export class DoctorWithdrawRequestService
@@ -23,7 +23,7 @@ export class DoctorWithdrawRequestService
     id: string,
     status: string,
     pagination: IPagination
-  ): Promise<{ requests: IWithdrawRequestResponse[]; total: number }> {
+  ): Promise<{ requests: IWithdrawRequestResponseDTO[]; total: number }> {
     const filter = { requesterId: new Types.ObjectId(id), ...( status !== 'all' && {status}) };
     const { data, total } = await this._withdrawRequestRepo.findAll({
       filter,

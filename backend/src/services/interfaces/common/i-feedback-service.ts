@@ -1,10 +1,10 @@
-import { FeedbackDetails, IPagination } from "@/interfaces";
-import { IFeedback } from "@/models";
+import { FeedbackDetailsDTO, FeedbackDTO } from "@/dtos";
+import { IPagination } from "@/interfaces";
 
 export interface IFeedbackService {
-    getFeedbackByAppointmentId( appointmentId: string): Promise<IFeedback | null>;
+    getFeedbackByAppointmentId( appointmentId: string): Promise<FeedbackDTO | null>;
     getFeedbacksByDoctorId(
          doctorId: string,
           pagination: IPagination
-        ): Promise<{ data: FeedbackDetails[]; total: number }>
+        ): Promise<{ data: FeedbackDetailsDTO[]; total: number }>
 }

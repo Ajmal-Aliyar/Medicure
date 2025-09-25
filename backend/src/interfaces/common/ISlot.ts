@@ -18,24 +18,5 @@ export interface ISlotCreateInput {
   };
 }
 
-export interface ISlotDetails {
-  id: string
-  doctorId: string;
-  date: Date;
-  type:  ISlotType
-  status: ISlotStatus;
-  
-  startTime: string;
-  endTime: string;
-  duration: number;
-  fees: number;
-
-  isActive?: boolean;
-  bookingDetails?: {
-    isBooked: boolean;
-    patientId?: Types.ObjectId;
-    bookedAt?: Date;
-  };
-}
 
 export interface SlotChartData {date: string, totalSlots: number, bookedSlots: number}

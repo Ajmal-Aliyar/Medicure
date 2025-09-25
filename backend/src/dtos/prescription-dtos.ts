@@ -1,7 +1,98 @@
 import { IMedication } from "@/models";
 import { Types } from "mongoose";
 
-export interface FrontendPrescriptionPayload {
+export interface ViewPrescriptionDTO {
+  id: string;
+  doctor: {
+    personal: {
+      fullName: string;
+      email: string;
+      mobile?: string;
+      gender?: string;
+      profileImage?: string | null;
+    };
+    professional: {
+      registrationNumber?: string;
+      specialization?: string;
+      yearsOfExperience?: number;
+    };
+    location?: {
+      street?: string;
+      city?: string;
+      state?: string;
+      country?: string;
+      pincode?: string;
+    };
+  };
+  patient: {
+    personal: {
+      fullName: string;
+      gender?: string;
+      dob?: string;
+      email?: string;
+      mobile?: string;
+      profileImage?: string | null;
+      languageSpoken?: string[];
+    };
+    contact?: {
+      address?: {
+        street?: string;
+        city?: string;
+        state?: string;
+        country?: string;
+        pincode?: string;
+      };
+    };
+  };
+  appointment?: {
+    appointmentDate: Date;
+    appointmentTime: string;
+    mode?: string;
+    status?: string;
+  };
+
+  medications: {
+    medicineName: string;
+    dosage: string;
+    frequency: string;
+    duration: string;
+    instructions: string;
+    quantity: number;
+    refills?: number;
+  }[];
+
+  diagnosis: string[];
+  symptoms: string[];
+  notes: string;
+  allergies: string[];
+  issuedDate: Date;
+  validUntil: Date;
+  followUpRequired: boolean;
+  followUpDate: Date | null;
+}
+
+
+export interface PrescriptionDTO {
+  _id: Types.ObjectId;
+  doctorId: Types.ObjectId;
+  patientId: Types.ObjectId;
+  appointmentId: Types.ObjectId; 
+
+  medications: IMedication[];
+  diagnosis: string[];
+  symptoms: string[];
+  notes?: string;
+  
+  issuedDate: Date;
+  validUntil: Date;
+  
+  followUpRequired: boolean;
+  followUpDate?: Date;
+  allergies?: string[]; 
+}
+
+
+export interface FrontendPrescriptionPayloadDTO {
   doctorId: string;
   patientId: string;
   appointmentId: string;
@@ -16,7 +107,7 @@ export interface FrontendPrescriptionPayload {
   allergies?: string[];
 }
 
-export interface PrescriptionFullDetails {
+export interface PrescriptionFullDetailsDTO {
   _id: Types.ObjectId | string;
   doctorId: {
     personal: {
@@ -90,74 +181,4 @@ export interface PrescriptionFullDetails {
   validUntil: Date;
   followUpRequired: boolean;
   followUpDate?: Date;
-}
-
-export interface ViewPrescription {
-  id: string;
-  doctor: {
-    personal: {
-      fullName: string;
-      email: string;
-      mobile?: string;
-      gender?: string;
-      profileImage?: string | null;
-    };
-    professional: {
-      registrationNumber?: string;
-      specialization?: string;
-      yearsOfExperience?: number;
-    };
-    location?: {
-      street?: string;
-      city?: string;
-      state?: string;
-      country?: string;
-      pincode?: string;
-    };
-  };
-  patient: {
-    personal: {
-      fullName: string;
-      gender?: string;
-      dob?: string;
-      email?: string;
-      mobile?: string;
-      profileImage?: string | null;
-      languageSpoken?: string[];
-    };
-    contact?: {
-      address?: {
-        street?: string;
-        city?: string;
-        state?: string;
-        country?: string;
-        pincode?: string;
-      };
-    };
-  };
-  appointment?: {
-    appointmentDate: Date;
-    appointmentTime: string;
-    mode?: string;
-    status?: string;
-  };
-
-  medications: {
-    medicineName: string;
-    dosage: string;
-    frequency: string;
-    duration: string;
-    instructions: string;
-    quantity: number;
-    refills?: number;
-  }[];
-
-  diagnosis: string[];
-  symptoms: string[];
-  notes: string;
-  allergies: string[];
-  issuedDate: Date;
-  validUntil: Date;
-  followUpRequired: boolean;
-  followUpDate: Date | null;
 }

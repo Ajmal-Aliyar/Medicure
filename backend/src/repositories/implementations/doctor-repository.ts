@@ -1,7 +1,7 @@
 import { DoctorModel, IDoctor } from "@/models";
 import { injectable } from "inversify";
 import { BaseRepository, IDoctorRepository } from "@/repositories";
-import { CreateUserDto, FilterDoctorRepoResponse } from "@/dtos";
+import { CreateUserDto, FilterDoctorRepoResponseDTO } from "@/dtos";
 import { FilterQuery, UpdateQuery } from "mongoose";
 import { GetDoctorOptions, IPagination } from "@/interfaces";
 import { BadRequestError } from "@/errors";
@@ -91,7 +91,7 @@ export class DoctorRepository
   async filterDoctorForAdmin(
     options: GetDoctorOptions,
     { skip = 0, limit = 6 }: IPagination
-  ): Promise<{ data: Partial<FilterDoctorRepoResponse>[]; total: number }> {
+  ): Promise<{ data: Partial<FilterDoctorRepoResponseDTO>[]; total: number }> {
     const { sortField, sortOrder } = options;
 
     const query = this.convertToQuery(options);
@@ -126,7 +126,7 @@ export class DoctorRepository
   async PublicDoctorCardDetails(
     options: GetDoctorOptions,
     { skip = 0, limit = 6 }: IPagination
-  ): Promise<{ data: Partial<FilterDoctorRepoResponse>[]; total: number }> {
+  ): Promise<{ data: Partial<FilterDoctorRepoResponseDTO>[]; total: number }> {
     const { sortField, sortOrder } = options;
 
     const query = this.convertToQuery({

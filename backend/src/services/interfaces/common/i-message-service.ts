@@ -1,11 +1,11 @@
+import { MessageDTO } from "@/dtos/message-dtos";
 import { IPagination } from "@/interfaces";
-import { IMessage } from "@/models";
 
 export interface IMessageService {
-    createMessage( data: Partial<IMessage>): Promise<void>;
+    createMessage( data: Partial<MessageDTO>): Promise<void>;
     getMessages(
       candidateId: string,
       conversationId: string,
       pagination: IPagination
-    ): Promise<{ data: IMessage[], total: number}>
+    ): Promise<{ data: MessageDTO[], total: number}>
 }

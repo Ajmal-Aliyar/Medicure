@@ -1,9 +1,7 @@
-import { FrontendPrescriptionPayload } from "@/interfaces/common/Prescription";
-import { IPrescription } from "@/models";
-
+import { FrontendPrescriptionPayloadDTO, PrescriptionDTO } from "@/dtos";
 export interface IDoctorPrescriptionService {
   createOrUpdatePrescription(
   doctorId: string,
-  prescription: FrontendPrescriptionPayload
-): Promise<IPrescription>;
+  prescription: FrontendPrescriptionPayloadDTO
+): Promise<PrescriptionDTO>;
 }

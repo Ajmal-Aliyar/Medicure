@@ -1,4 +1,4 @@
-import { PublicSlotDetails } from "@/dtos";
+import { PublicSlotDetailsDTO } from "@/dtos";
 import { IPagination } from "@/interfaces";
 
 export interface IPatientSlotService {
@@ -6,5 +6,5 @@ export interface IPatientSlotService {
     doctorId: string,
     date: string,
     pagination: IPagination
-  ): Promise<{ slots: PublicSlotDetails[]; total: number }>;
+  ): Promise<{ slots: PublicSlotDetailsDTO[]; total: number }>;
 }

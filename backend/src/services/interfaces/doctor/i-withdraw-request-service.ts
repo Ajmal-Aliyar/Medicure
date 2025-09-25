@@ -1,10 +1,10 @@
-import { IPagination, IWithdrawRequestResponse } from "@/interfaces";
+import { IPagination, IWithdrawRequestResponseDTO } from "@/interfaces";
 
 export interface IDoctorWithdrawRequestService {
   getWithdrawRequests(
     id: string,
     status: string,
     pagination: IPagination
-  ): Promise<{ requests: IWithdrawRequestResponse[]; total: number }>;
+  ): Promise<{ requests: IWithdrawRequestResponseDTO[]; total: number }>;
   cancelWidthdrawRequest( doctorId: string, withdrawRequestId: string ): Promise<void>;
 }

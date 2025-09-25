@@ -3,14 +3,15 @@ import { IFeedbackService } from "../interfaces"
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
 import { IFeedbackRepository } from "@/repositories";
-import { FeedbackDetails, IPagination, IRole, } from "@/interfaces";
 import { FeedbackMapper } from "@/mappers/feedbackMapper";
+import { FeedbackDetailsDTO, FeedbackDTO } from "@/dtos";
+import { IPagination } from "@/interfaces";
 
 @injectable()
 export class FeedbackService implements IFeedbackService {
     constructor(@inject(TYPES.FeedbackRepository) private readonly _feedbackRepo: IFeedbackRepository) {}
 
-  async getFeedbackByAppointmentId( appointmentId: string): Promise<IFeedback | null> {
+  async getFeedbackByAppointmentId( appointmentId: string): Promise<FeedbackDTO | null> {
     const feedbackList = await this._feedbackRepo.findOne({appointmentId});
     return feedbackList;
   }
@@ -18,7 +19,7 @@ export class FeedbackService implements IFeedbackService {
   async getFeedbacksByDoctorId(
      doctorId: string,
       pagination: IPagination
-    ): Promise<{ data: FeedbackDetails[]; total: number }> {
+    ): Promise<{ data: FeedbackDetailsDTO[]; total: number }> {
       const { feedbacks, total } = await this._feedbackRepo.getFeedbackDetailsPopulated({
             filter:  { doctorId },
             sort:  {createdAt: -1},

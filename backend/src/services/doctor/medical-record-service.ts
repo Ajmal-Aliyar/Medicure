@@ -5,10 +5,9 @@ import {
 } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IPagination } from "@/interfaces";
-import { IMedicalRecord } from "@/models";
 import { IDoctorMedicalRecordService } from "../interfaces";
 import { ForbiddenError, NotFoundError } from "@/errors";
-import { Types } from "mongoose";
+import { MedicalRecordDTO } from "@/dtos";
 
 @injectable()
 export class DoctorMedicalRecordService implements IDoctorMedicalRecordService {
@@ -23,7 +22,7 @@ export class DoctorMedicalRecordService implements IDoctorMedicalRecordService {
     doctorId: string,
     appointmentId: string,
     pagination: IPagination
-  ): Promise<{ data: IMedicalRecord[]; total: number }> {
+  ): Promise<{ data: MedicalRecordDTO[]; total: number }> {
     const appointment = await this._appointmentRepo.findById(appointmentId);
     if (!appointment) {
       throw new NotFoundError("Appointment not found.");

@@ -9,7 +9,8 @@ export class ScheduleService implements IScheduleService {
     constructor(
         @inject(TYPES.ScheduleRepository) private readonly _scheduleRepo: IScheduleRepository,
     ) {}
-
+    
+  //This method is for backend use!!
   async findActiveDoctorSchedules(): Promise<IDoctorSchedule[]> {
     const {data}  =  await this._scheduleRepo.findAll({ filter:{isActive: true }, skip: 0, limit: Infinity })
     return data

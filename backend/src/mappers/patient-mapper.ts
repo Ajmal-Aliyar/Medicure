@@ -1,4 +1,4 @@
-import { PatientProfileDto } from "@/dtos";
+import { PatientProfileDTO } from "@/dtos";
 import { PatientCardDetails } from "@/interfaces/common/card-details";
 import { IPatient } from "@/models";
 
@@ -16,7 +16,7 @@ export class PatientMapper {
     }));
   }
 
-  static toPatientProfile(data: IPatient): PatientProfileDto {
+  static toPatientProfile(data: IPatient): PatientProfileDTO {
     return {
       id: String(data._id),
 

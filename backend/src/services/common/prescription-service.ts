@@ -5,8 +5,8 @@ import { IPrescriptionRepository } from "@/repositories";
 import { Types } from "mongoose";
 import { ForbiddenError, NotFoundError } from "@/errors";
 import { IPrescriptionService } from "../interfaces";
-import { PrescriptionMapper } from "@/mappers/prescription-mapper";
-import { ViewPrescription } from "@/interfaces/common/Prescription";
+import { ViewPrescriptionDTO } from "@/dtos";
+import { PrescriptionMapper } from "@/mappers";
 
 @injectable()
 export class PrescriptionService implements IPrescriptionService {
@@ -35,7 +35,7 @@ export class PrescriptionService implements IPrescriptionService {
     id: string,
     role: string,
     prescriptionId: string
-  ): Promise<ViewPrescription> {
+  ): Promise<ViewPrescriptionDTO> {
     const filter = this.generateFilterQuery(id, role, prescriptionId)
 
     const prescription = await this._prescriptionRepo.getDetailsByIdForDownload(filter);
@@ -47,7 +47,7 @@ export class PrescriptionService implements IPrescriptionService {
     return mappedPrescription
   }
 
-  generateFilterQuery(id: string, role: string, prescriptionId: string): {
+  private generateFilterQuery(id: string, role: string, prescriptionId: string): {
       _id: Types.ObjectId;
       doctorId?: Types.ObjectId;
       patientId?: Types.ObjectId;

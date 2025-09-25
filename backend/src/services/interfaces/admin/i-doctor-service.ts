@@ -1,9 +1,9 @@
 import {
-  ApprovedDoctorsDto,
-  DoctorApprovalDetailsDto,
-  DoctorApprovalRequestDto,
+  ApprovedDoctorsDTO,
+  DoctorApprovalDetailsDTO,
+  DoctorApprovalRequestDTO,
   DoctorMappedProfileDto,
-  PublicDoctorDetails,
+  PublicDoctorDetailsDTO,
 } from "@/dtos";
 import { IPagination } from "@/interfaces";
 import { IDoctor } from "@/models";
@@ -19,17 +19,17 @@ export interface IAdminDoctorService {
   ): Promise<{
     total: number;
     doctors: (
-      | DoctorApprovalRequestDto
-      | ApprovedDoctorsDto
+      | DoctorApprovalRequestDTO
+      | ApprovedDoctorsDTO
       | Partial<IDoctor>
     )[];
   }>;
   getFilteredDoctor(
     doctorOptions: FilterDoctorQuery, pagination: IPagination
-  ): Promise<{ total: number; doctors: PublicDoctorDetails[] }>;
+  ): Promise<{ total: number; doctors: PublicDoctorDetailsDTO[] }>;
   getDoctorApprovalDetails(
     doctorId: string | null
-  ): Promise<DoctorApprovalDetailsDto>;
+  ): Promise<DoctorApprovalDetailsDTO>;
   updateDoctorStatus(
     doctorId: string,
     reviewStatus: "approved" | "rejected",

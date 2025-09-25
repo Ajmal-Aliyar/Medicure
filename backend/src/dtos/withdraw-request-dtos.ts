@@ -1,5 +1,7 @@
-import { IRole } from "./IRole";
-export type IWithdrawRequestStatus = "pending" | "approved" | "rejected";
+import { IRole } from "@/interfaces";
+
+export type IWithdrawRequestStatus = "pending" | "approved" | "rejected" | "cancelled";
+
 
 export interface IWithdrawRequestDTO {
   accountNumber: string;
@@ -11,7 +13,7 @@ export interface IWithdrawRequestDTO {
   requestedAt: Date;
 }
 
-export interface IWithdrawRequestResponse {
+export interface IWithdrawRequestResponseDTO {
   id: string;
   requester?: {
     profileImage: string | null;

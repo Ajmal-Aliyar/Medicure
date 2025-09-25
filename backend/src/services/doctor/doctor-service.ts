@@ -5,15 +5,10 @@ import { IMediaService } from "@/interfaces";
 import { DoctorProfileMapper } from "@/mappers";
 import { BadRequestError, InternalServerError } from "@/errors";
 import { CLIENT_MESSAGES } from "@/constants";
-import {
-  DoctorProfileDTO,
-  DoctorProfileUpdateDTO,
-  ProfessionalVerificationDTO,
-  VerificationProofsDto,
-} from "@/dtos";
-import { IDoctor, IDoctorSchedule } from "@/models";
+import { IDoctor } from "@/models";
 import { ensureDoctorExists } from "@/utils";
 import { IDoctorScheduleService, IDoctorService } from "../interfaces";
+import { DoctorProfileDTO, DoctorProfileUpdateDTO, DoctorScheduleDTO, ProfessionalVerificationDTO, VerificationProofsDTO } from "@/dtos";
 
 @injectable()
 export class DoctorService implements IDoctorService {
@@ -36,10 +31,10 @@ export class DoctorService implements IDoctorService {
     }
   }
 
-  async getProfile(doctorId: string): Promise<{ doctor: DoctorProfileDTO, schedule: IDoctorSchedule | null}> {
+  async getProfile(doctorId: string): Promise<{ doctor: DoctorProfileDTO, schedule: DoctorScheduleDTO | null}> {
     const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     const data = DoctorProfileMapper.toDoctor(doctor);
-    const schedule = await this._scheduleService.getSchedule(doctor.id)
+    const schedule = await this._scheduleService.getSchedule(doctor.id) as DoctorScheduleDTO
     return { doctor: data, schedule }
   }
 
@@ -78,14 +73,14 @@ export class DoctorService implements IDoctorService {
 
   async getVerificationProofs(
     doctorId: string
-  ): Promise<VerificationProofsDto> {
+  ): Promise<VerificationProofsDTO> {
     const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     return DoctorProfileMapper.toVerificationProofs(doctor);
   }
 
   async updateVerificationProofs(
     doctorId: string,
-    proofs: VerificationProofsDto
+    proofs: VerificationProofsDTO
   ): Promise<void> {
     const doctor: IDoctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     const filteredProofs = await this.cleanupOldDocuments(doctor, proofs);
@@ -161,9 +156,9 @@ export class DoctorService implements IDoctorService {
 
   private async cleanupOldDocuments(
   doctor: IDoctor,
-  newProofs: VerificationProofsDto
-): Promise<VerificationProofsDto> {
-  const proofKeys: (keyof VerificationProofsDto)[] = [
+  newProofs: VerificationProofsDTO
+): Promise<VerificationProofsDTO> {
+  const proofKeys: (keyof VerificationProofsDTO)[] = [
     "identityProof",
     "medicalRegistration",
     "establishmentProof",

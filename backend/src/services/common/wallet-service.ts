@@ -6,6 +6,7 @@ import { IWallet } from "@/models";
 import { IRole } from "@/interfaces";
 import { Types } from "mongoose";
 import { NotFoundError } from "@/errors";
+import { WalletDTO } from "@/dtos";
 
 @injectable()
 export class WalletService implements IWalletService {
@@ -14,7 +15,7 @@ export class WalletService implements IWalletService {
     private readonly _walletRepo: IWalletRepository
   ) {}
 
-  async createWallet(ownerId: string, ownerType: IRole): Promise<IWallet> {
+  async createWallet(ownerId: string, ownerType: IRole): Promise<WalletDTO> {
     const existing = await this._walletRepo.findOne({ ownerId, ownerType });
 
     if (existing) {
@@ -30,7 +31,7 @@ export class WalletService implements IWalletService {
     return await this._walletRepo.create(newWallet);
   }
 
-  async updateWalletBalance(ownerId: string, ownerType: IRole, amount: number, inc = true): Promise<IWallet | null> {
+  async updateWalletBalance(ownerId: string, ownerType: IRole, amount: number, inc = true): Promise<WalletDTO | null> {
     return await this._walletRepo.updateBalance(
             ownerId,
             ownerType,
@@ -39,7 +40,7 @@ export class WalletService implements IWalletService {
           );
   }
 
-  async getWalletByOwnerId(ownerId: string): Promise<IWallet> {
+  async getWalletByOwnerId(ownerId: string): Promise<WalletDTO> {
     const wallet = await this._walletRepo.findOne({ownerId: new Types.ObjectId(ownerId)})
     if (!wallet) {
       throw new NotFoundError("Wallet not found.")

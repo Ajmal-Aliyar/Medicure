@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import { RegisterDto, LoginDto, AuthResponse } from "@/dtos";
+import { RegisterDto, LoginDto, AuthResponseDTO, AuthResponseUserDTO } from "@/dtos";
 import {
   BadRequestError,
   ConflictError,
@@ -16,7 +16,6 @@ import {
 import { TYPES } from "@/di/types";
 import { AUTH_MESSAGES, GLOBAL_MESSAGES } from "@/constants";
 import {
-  IAuthResponseUser,
   ICacheService,
   IEmailService,
   IOtpService,
@@ -70,7 +69,7 @@ export class AuthService implements IAuthService {
     await this._emailService.sendOtpEmail(data.email, otp);
   }
 
-  async login(data: LoginDto): Promise<AuthResponse> {
+  async login(data: LoginDto): Promise<AuthResponseDTO> {
     const role: IRole = data.role;
     const email = data.email.trim().toLowerCase();
     const userRepo = this.getRepo(role);
@@ -127,7 +126,7 @@ export class AuthService implements IAuthService {
     await this._emailService.sendOtpEmail(email, otp);
   }
 
-  async refreshToken(token: string): Promise<AuthResponse> {
+  async refreshToken(token: string): Promise<AuthResponseDTO> {
     if (!token) {
       throw new UnauthorizedError(GLOBAL_MESSAGES.ERROR.INVALID_REFRESH_TOKEN);
     }
@@ -157,7 +156,7 @@ export class AuthService implements IAuthService {
   async verifyOtpAndRegister(
     email: string,
     otp: string
-  ): Promise<AuthResponse> {
+  ): Promise<AuthResponseDTO> {
     email = email.trim().toLowerCase();
     const isValidOtp = await this._otpService.verifyOtp(email, otp);
     if (!isValidOtp) {
@@ -201,7 +200,7 @@ export class AuthService implements IAuthService {
     await this._cacheService.del(userId);
   }
 
-  async me(userId: string, role: IRole): Promise<IAuthResponseUser> {
+  async me(userId: string, role: IRole): Promise<AuthResponseUserDTO> {
     const userRepo = this.getRepo(role);
     const user = await userRepo.findById(userId);
     if (!user) {
@@ -228,7 +227,7 @@ export class AuthService implements IAuthService {
   private async buildAuthResponse(
     user: Partial<IDoctor> | Partial<IPatient> | Partial<IAdmin>,
     role: IRole
-  ): Promise<AuthResponse> {
+  ): Promise<AuthResponseDTO> {
     if (!user._id) throw new BadRequestError();
     const accessToken = this._tokenService.generateAccessToken({
       id: user._id,

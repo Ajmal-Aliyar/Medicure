@@ -1,6 +1,5 @@
+import { ConversationDTO } from "@/dtos";
 import { IPagination, IRole } from "@/interfaces";
-import { IConversation } from "@/models";
-import { Types } from "mongoose";
 
 export interface IConversationService {
     createConversation(
@@ -8,8 +7,8 @@ export interface IConversationService {
     isGroup: boolean,
     groupName?: string,
     groupImageUrl?: string
-  ): Promise<IConversation>;
-  getConversactions(id: string, pagination: IPagination): Promise<{ data: IConversation[], total: number }>;
+  ): Promise<ConversationDTO>;
+  getConversactions(id: string, pagination: IPagination): Promise<{ data: ConversationDTO[], total: number }>;
   updateLastMessage( id: string, message: string, date: Date ): Promise<void>;
   isMember( candidateId: string, conversationId: string): Promise<boolean>;
 }

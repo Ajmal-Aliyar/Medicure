@@ -8,8 +8,9 @@ import {
 import { inject, injectable } from "inversify";
 import { Types } from "mongoose";
 import { IConnectionRequestService, IConversationService } from "../interfaces";
-import { ConnectionRequestListDetails, IPagination, IRole } from "@/interfaces";
-import { ConnectionRequestMapper } from "@/mappers/connection-requests-mapper";
+import {  IPagination, IRole } from "@/interfaces";
+import { ConnectionRequestListDetailsDTO } from "@/dtos";
+import { ConnectionRequestMapper } from "@/mappers";
 
 @injectable()
 export class ConnectionRequestService implements IConnectionRequestService {
@@ -81,7 +82,7 @@ export class ConnectionRequestService implements IConnectionRequestService {
     id: string,
     role: IRole,
     pagination: IPagination
-  ): Promise<{ data: ConnectionRequestListDetails[]; total: number }> {
+  ): Promise<{ data: ConnectionRequestListDetailsDTO[]; total: number }> {
     const objectId = new Types.ObjectId(id);
     const filter = {
       ...(role === "doctor" ? { doctorId: objectId } : { patientId: objectId }),

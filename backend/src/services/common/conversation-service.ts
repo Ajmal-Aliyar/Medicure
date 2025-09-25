@@ -12,6 +12,7 @@ import { BadRequestError, NotFoundError } from "@/errors";
 import { IConversation } from "@/models";
 import { IPagination, IRole } from "@/interfaces";
 import { AUTH_MESSAGES } from "@/constants";
+import { ConversationDTO } from "@/dtos";
 
 @injectable()
 export class ConversationService implements IConversationService {
@@ -28,7 +29,7 @@ export class ConversationService implements IConversationService {
     private readonly _adminRepo: IAdminRepository
   ) {}
 
-  async getConversactions(id: string, pagination: IPagination): Promise<{ data: IConversation[], total: number }> {
+  async getConversactions(id: string, pagination: IPagination): Promise<{ data: ConversationDTO[], total: number }> {
     const objectId = new Types.ObjectId(id);
 
     const filter = {
@@ -42,7 +43,7 @@ export class ConversationService implements IConversationService {
     isGroup: boolean = false,
     groupName?: string,
     groupImageUrl?: string
-  ): Promise<IConversation> {
+  ): Promise<ConversationDTO> {
     const mappedParticipants = await Promise.all(
       participants.map(async (participant) => {
         const repo = this.getRepo(participant.role);

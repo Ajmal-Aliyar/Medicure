@@ -15,6 +15,7 @@ import {
   ISlotService,
 } from "../interfaces";
 import { Types } from "mongoose";
+import { SlotDTO } from "@/dtos";
 
 @injectable()
 export class PaymentService implements IPaymentService {
@@ -126,7 +127,7 @@ export class PaymentService implements IPaymentService {
   }
 
   private buildLineItems(
-    slot: ISlot,
+    slot: SlotDTO,
     doctorInfo: { name: string; specialization: string }
   ) {
     return [
@@ -211,6 +212,57 @@ export class PaymentService implements IPaymentService {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // async addUserBankAccount(
 //   email: string,

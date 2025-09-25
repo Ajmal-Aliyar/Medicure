@@ -1,11 +1,13 @@
 export * from './auth-dtos';
-export * from './doctor-profile-dtos';
-export * from './admin-doctor-dtos';
-export * from './patient-profile-dtos';
-export * from './doctor-schedule-dtos';
-export * from './doctor-slot-dtos';
-
-
-export *  from './patient';
-
+export * from './doctor-dtos';
 export * from './feedback-dtos';
+export * from './patient-dtos';
+export * from './slot-dtos';
+export * from './schedules-dtos';
+export * from './transaction-dtos';
+export * from './connection-request-dtos';
+export * from './withdraw-request-dtos';
+export * from './conversation-dtos';
+export * from './prescription-dtos';
+export * from './wallet-dtos';
+export * from './medicalRecord-dtos'

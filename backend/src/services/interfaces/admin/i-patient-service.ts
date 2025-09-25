@@ -1,14 +1,13 @@
-import { PatientProfileDto } from "@/dtos";
+import { PatientCardDetailsDTO, PatientProfileDTO } from "@/dtos";
 import { IPagination } from "@/interfaces";
-import { PatientCardDetails } from "@/interfaces/common/card-details";
 import { FilterPatientQuery } from "@/validators";
 
 export interface IAdminPatientService {
   getFilteredPatient(
     PatientOptions: FilterPatientQuery,
     pagination: IPagination
-  ): Promise<{ total: number; Patients: PatientCardDetails[] }>;
-  getPatientProfile(PatientId: string | null): Promise<PatientProfileDto>;
+  ): Promise<{ total: number; Patients: PatientCardDetailsDTO[] }>;
+  getPatientProfile(PatientId: string | null): Promise<PatientProfileDTO>;
   blockPatient(PatientId: string, reason?: string): Promise<void>;
   unblockPatient(PatientId: string, reason?: string): Promise<void>;
 }

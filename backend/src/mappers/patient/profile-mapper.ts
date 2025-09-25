@@ -1,8 +1,8 @@
-import { PatientProfileDto } from "@/dtos";
+import { PatientProfileDTO } from "@/dtos";
 import { IPatient } from "@/models";
 
 export class PatientProfileMapper {
-  static toPatientDto(patient: IPatient): PatientProfileDto {
+  static toPatientDto(patient: IPatient): PatientProfileDTO {
     const { _id, contact } = patient;
     const { password, ...safePersonal } = patient.personal;
 
@@ -16,7 +16,7 @@ export class PatientProfileMapper {
     };
   }
 
-  static toPatientUpdate(dto: PatientProfileDto): Partial<IPatient> {
+  static toPatientUpdate(dto: PatientProfileDTO): Partial<IPatient> {
     const { address } = dto.contact;
     const updates: Record<string, string | string[]> = {};
 

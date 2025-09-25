@@ -4,7 +4,7 @@ import { TYPES } from "@/di/types";
 import { IDoctorRepository } from "@/repositories";
 import { FilterDoctorQuery } from "@/validators";
 import { IPagination } from "@/interfaces";
-import { PublicDoctorDetails } from "@/dtos";
+import { PublicDoctorDetailsDTO } from "@/dtos";
 import { DoctorMapper } from "@/mappers";
 import { mapFilterQueryToDoctorOptions } from "@/utils";
 
@@ -17,7 +17,7 @@ export class PatientDoctorService implements IPatientDoctorService {
   async getPublicDoctorDetails(
     doctorOptions: FilterDoctorQuery,
     pagination: IPagination
-  ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
+  ): Promise<{ total: number; doctors: PublicDoctorDetailsDTO[] }> {
     const options = mapFilterQueryToDoctorOptions(doctorOptions, false);
     const { data, total } = await this._doctorRepo.PublicDoctorCardDetails(
       options,

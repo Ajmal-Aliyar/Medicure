@@ -8,12 +8,13 @@ import {
 } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IAdminWithdrawRequestService } from "../interfaces";
-import { IPagination, IWithdrawRequestResponse } from "@/interfaces";
+import { IPagination } from "@/interfaces";
 import { WithdrawRequestMapper } from "@/mappers";
-import { IAdmin, IDoctor, ITransaction } from "@/models";
+import { IAdmin, IDoctor } from "@/models";
 import { BadRequestError, NotFoundError } from "@/errors";
 import { Types } from "mongoose";
 import { generateTransactionId } from "@/utils";
+import { IWithdrawRequestResponseDTO, TransactionDTO } from "@/dtos";
 
 @injectable()
 export class AdminWithdrawRequestService
@@ -35,7 +36,7 @@ export class AdminWithdrawRequestService
   async getWithdrawRequests(
     status: string,
     pagination: IPagination
-  ): Promise<{ requests: IWithdrawRequestResponse[]; total: number }> {
+  ): Promise<{ requests: IWithdrawRequestResponseDTO[]; total: number }> {
     const filter = { ...(status !== "all" && { status }) };
     const { data, total } = await this._withdrawRequestRepo.findAll({
       filter,
@@ -83,7 +84,7 @@ export class AdminWithdrawRequestService
   async approveWithdrawRequest(
     adminId: string,
     requestId: string
-  ): Promise<ITransaction> {
+  ): Promise<TransactionDTO> {
     try {
       const companyWallet = await this._walletRepo.findOne({ ownerId: adminId });
       if (!companyWallet) throw new NotFoundError("Company wallet not found");

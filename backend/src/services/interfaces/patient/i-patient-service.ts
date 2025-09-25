@@ -1,10 +1,10 @@
-import { PatientProfileDto } from "@/dtos";
+import { PatientProfileDTO } from "@/dtos";
 
 export interface IPatientService {
-  getProfile(patientId: string): Promise<PatientProfileDto>;
+  getProfile(patientId: string): Promise<PatientProfileDTO>;
   updateProfile(
     patientId: string,
-    updateData: PatientProfileDto
+    updateData: PatientProfileDTO
   ): Promise<void>;
   updateProfileImg(patientId: string, imageUrl: string): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { FilterDoctorRepoResponse, PublicDoctorDetails } from "@/dtos";
+import { FilterDoctorRepoResponseDTO, PublicDoctorDetailsDTO } from "@/dtos";
 import { IDoctor } from "@/models";
 
 export class DoctorMapper {
@@ -14,9 +14,9 @@ export class DoctorMapper {
   }
 
   static toDoctorCardDto(
-  doctors: Partial<FilterDoctorRepoResponse>[],
+  doctors: Partial<FilterDoctorRepoResponseDTO>[],
   isAdmin: boolean
-): PublicDoctorDetails[] {
+): PublicDoctorDetailsDTO[] {
   return doctors.map((doctor) => ({
     id: doctor._id?.toString() || "",
 

@@ -2,7 +2,7 @@ import { TYPES } from "@/di/types";
 import { ITransactionRepository } from "@/repositories";
 import { inject, injectable } from "inversify";
 import { IAdminTransactionService } from "../interfaces";
-import { TransactionChartData } from "@/interfaces";
+import { TransactionChartDataDTO } from "@/dtos";
 
 @injectable()
 export class AdminTransactionService implements IAdminTransactionService {
@@ -11,7 +11,7 @@ export class AdminTransactionService implements IAdminTransactionService {
     private _transactionRepo: ITransactionRepository
   ) {}
 
-  async getTransactionsForDashboard(startDate: string, endDate: string): Promise<TransactionChartData[]> {
+  async getTransactionsForDashboard(startDate: string, endDate: string): Promise<TransactionChartDataDTO[]> {
     return await this._transactionRepo.getTransactionStatsByDateRange(startDate, endDate)
   }
 }

@@ -1,6 +1,6 @@
-import { IRole, IWithdrawRequestDTO } from "@/interfaces";
-import { IWithdrawRequest } from "@/models";
+import { IWithdrawRequestDTO } from "@/dtos/withdraw-request-dtos";
+import { IRole } from "@/interfaces";
 
 export interface IWithdrawRequestService {
-    createWithdrawRequest(requesterId: string, role: IRole, withdraw: IWithdrawRequestDTO ): Promise<IWithdrawRequest>
+    createWithdrawRequest(requesterId: string, role: IRole, withdraw: IWithdrawRequestDTO ): Promise<void>
 }

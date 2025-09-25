@@ -7,7 +7,7 @@ import { Types } from "mongoose";
 import { env } from "@/config";
 import { IPagination, IRole } from "@/interfaces";
 import { TransactionMapper } from "@/mappers";
-import { TransactionDetails } from "@/interfaces";
+import { TransactionDetailsDTO, TransactionDTO } from "@/dtos";
 
 @injectable()
 export class TransactionService implements ITransactionService {
@@ -22,7 +22,7 @@ export class TransactionService implements ITransactionService {
     appointmentId: string;
     amount: number;
     transactionId: string;
-  }): Promise<ITransaction> {
+  }): Promise<TransactionDTO> {
     const { patientId, doctorId, appointmentId, amount, transactionId } = params;
     const transaction: Partial<ITransaction> = {
       from: new Types.ObjectId(patientId),
@@ -35,12 +35,11 @@ export class TransactionService implements ITransactionService {
       status: "success",
       createdAt: new Date(),
     };
-    return this._transactionRepo.create(transaction as ITransaction);
+    return this._transactionRepo.create(transaction as TransactionDTO);
   }
 
-  async getTransactionHistory(ownerId: string, ownerType: IRole, pagination: IPagination): Promise<{ transactions: TransactionDetails[], total: number }> {
+  async getTransactionHistory(ownerId: string, ownerType: IRole, pagination: IPagination): Promise<{ transactions: TransactionDetailsDTO[], total: number }> {
     const {transactions, total} = await this._transactionRepo.getTransactionHistory( ownerId, ownerType, pagination)
-    console.log(transactions[0], 'transaction');
     
     const mappedTransactions = TransactionMapper.toTransaction( ownerId, transactions)
     return { transactions: mappedTransactions, total}

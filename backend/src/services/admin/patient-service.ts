@@ -1,14 +1,13 @@
 import { TYPES } from "@/di/types";
 import { IPagination } from "@/interfaces";
-import { PatientCardDetails } from "@/interfaces/common/card-details";
 import { PatientMapper } from "@/mappers/patient-mapper";
 import { IPatientRepository } from "@/repositories";
 import { FilterPatientQuery } from "@/validators";
 import { inject, injectable } from "inversify";
 import { IAdminPatientService } from "../interfaces";
 import { ensurePatientExists, mapFilterQueryToPatientOptions, transformPatientOptionsToMongoFilter } from "@/utils/patient-utils";
-import { PatientProfileDto } from "@/dtos";
 import { BadRequestError } from "@/errors";
+import { PatientCardDetailsDTO, PatientProfileDTO } from "@/dtos";
 
 @injectable()
 export class AdminPatientService implements IAdminPatientService {
@@ -20,7 +19,7 @@ export class AdminPatientService implements IAdminPatientService {
   async getFilteredPatient(
     PatientOptions: FilterPatientQuery,
     pagination: IPagination
-  ): Promise<{ total: number; Patients: PatientCardDetails[] }> {
+  ): Promise<{ total: number; Patients: PatientCardDetailsDTO[] }> {
     const options = mapFilterQueryToPatientOptions(PatientOptions);
     const filter = transformPatientOptionsToMongoFilter(options)
     const { data, total } = await this._patientRepo.findAll({ filter, ...pagination, sort: {createdAt: -1}});
@@ -30,7 +29,7 @@ export class AdminPatientService implements IAdminPatientService {
 
   async getPatientProfile(
     PatientId: string | null
-  ): Promise<PatientProfileDto> {
+  ): Promise<PatientProfileDTO> {
     const Patient = await ensurePatientExists(PatientId, this._patientRepo);
     return PatientMapper.toPatientProfile(Patient);
   }

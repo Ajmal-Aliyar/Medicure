@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { IPatientService } from "../interfaces";
 import { TYPES } from "@/di/types";
 import { IPatientRepository } from "@/repositories";
-import { PatientProfileDto } from "@/dtos";
+import { PatientProfileDTO } from "@/dtos";
 import { PatientProfileMapper } from "@/mappers/patient";
 import { IPatient } from "@/models";
 import { ensurePatientExists } from "@/utils/patient-utils";
@@ -18,7 +18,7 @@ export class PatientService implements IPatientService {
     @inject(TYPES.MediaService) private readonly mediaService: IMediaService
   ) {}
 
-  async getProfile(patientId: string): Promise<PatientProfileDto> {
+  async getProfile(patientId: string): Promise<PatientProfileDTO> {
     const patient: IPatient = await ensurePatientExists(
       patientId,
       this._patientRepo
@@ -28,7 +28,7 @@ export class PatientService implements IPatientService {
 
   async updateProfile(
     patientId: string,
-    updateData: PatientProfileDto
+    updateData: PatientProfileDTO
   ): Promise<void> {
     const updateFields = PatientProfileMapper.toPatientUpdate(updateData);
 

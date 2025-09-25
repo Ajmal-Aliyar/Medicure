@@ -1,10 +1,10 @@
-import { IWithdrawRequestResponse } from "@/interfaces";
+import { IWithdrawRequestResponseDTO } from "@/interfaces";
 import { IAdmin, IDoctor, IWithdrawRequest } from "@/models";
 
 export class WithdrawRequestMapper {
   static toWithdrawRequestResponse(
     requests: IWithdrawRequest[]
-  ): IWithdrawRequestResponse[] {
+  ): IWithdrawRequestResponseDTO[] {
     return requests.map((rqst: IWithdrawRequest) => ({
       id: String(rqst._id),
       requesterId: String(rqst.requesterId),
@@ -21,7 +21,7 @@ export class WithdrawRequestMapper {
 
   static toWithdrawRequestAdminResponse(
     rqst: IWithdrawRequest, requesterDetails: IDoctor | IAdmin
-  ): IWithdrawRequestResponse {
+  ): IWithdrawRequestResponseDTO {
     const isDoctor = rqst.role === 'doctor' && 'professional' in requesterDetails;
     return {
       id: String(rqst._id),

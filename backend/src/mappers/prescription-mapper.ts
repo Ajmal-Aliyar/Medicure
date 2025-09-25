@@ -1,10 +1,10 @@
-import { FrontendPrescriptionPayload, PrescriptionFullDetails, ViewPrescription } from "@/interfaces/common/Prescription";
+import { FrontendPrescriptionPayloadDTO, PrescriptionFullDetailsDTO, ViewPrescriptionDTO } from "@/dtos";
 import { IPrescription } from "@/models";
 import { Types } from "mongoose";
 
 export class PrescriptionMapper {
   static mapToPrescriptionData(
-    payload: FrontendPrescriptionPayload
+    payload: FrontendPrescriptionPayloadDTO
   ): Partial<IPrescription> {
     return {
       doctorId: new Types.ObjectId(payload.doctorId),
@@ -25,7 +25,7 @@ export class PrescriptionMapper {
     };
   }
 
-  static mapToViewPrescription(data: PrescriptionFullDetails): ViewPrescription {
+  static mapToViewPrescription(data: PrescriptionFullDetailsDTO): ViewPrescriptionDTO {
     const { _id, doctorId, patientId, appointmentId, ...prescription } = data
     return {
         ...prescription,

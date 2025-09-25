@@ -1,12 +1,6 @@
 import { ADMIN_MESSAGES } from "@/constants";
 import { TYPES } from "@/di/types";
-import {
-  ApprovedDoctorsDto,
-  DoctorApprovalDetailsDto,
-  DoctorApprovalRequestDto,
-  DoctorMappedProfileDto,
-  PublicDoctorDetails,
-} from "@/dtos";
+import { ApprovedDoctorsDTO, DoctorApprovalDetailsDTO, DoctorApprovalRequestDTO, DoctorMappedProfileDto, PublicDoctorDetailsDTO } from "@/dtos";
 import { BadRequestError } from "@/errors";
 import { IPagination, IReviewStatus } from "@/interfaces";
 import { AdminDoctorMapper, AuthMapper, DoctorMapper } from "@/mappers";
@@ -30,7 +24,7 @@ export class AdminDoctorService implements IAdminDoctorService {
   async getFilteredDoctor(
     doctorOptions: FilterDoctorQuery,
     pagination: IPagination
-  ): Promise<{ total: number; doctors: PublicDoctorDetails[] }> {
+  ): Promise<{ total: number; doctors: PublicDoctorDetailsDTO[] }> {
     const options = mapFilterQueryToDoctorOptions(doctorOptions, true);
     const { data, total } = await this._doctorRepo.filterDoctorForAdmin(
       options,
@@ -53,8 +47,8 @@ export class AdminDoctorService implements IAdminDoctorService {
   ): Promise<{
     total: number;
     doctors: (
-      | DoctorApprovalRequestDto
-      | ApprovedDoctorsDto
+      | DoctorApprovalRequestDTO
+      | ApprovedDoctorsDTO
       | Partial<IDoctor>
     )[];
   }> {
@@ -82,7 +76,7 @@ export class AdminDoctorService implements IAdminDoctorService {
 
   async getDoctorApprovalDetails(
     doctorId: string | null
-  ): Promise<DoctorApprovalDetailsDto> {
+  ): Promise<DoctorApprovalDetailsDTO> {
     const doctor = await ensureDoctorExists(doctorId, this._doctorRepo);
     return AdminDoctorMapper.toDoctorApprovalDetailsDto(doctor);
   }

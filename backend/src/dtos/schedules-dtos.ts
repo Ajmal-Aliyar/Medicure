@@ -1,7 +1,7 @@
 import { IWeeklySchedule } from "@/models";
 import { Types } from "mongoose";
 
-export type DoctorScheduleCreateInput = {
+export type DoctorScheduleDTO = {
   doctorId: Types.ObjectId;
   weeklySchedule: IWeeklySchedule;
   autoApprove: boolean;

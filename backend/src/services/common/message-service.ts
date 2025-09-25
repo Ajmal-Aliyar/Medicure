@@ -2,10 +2,10 @@ import { inject, injectable } from "inversify";
 import { IConversationService, IMessageService } from "../interfaces";
 import { TYPES } from "@/di/types";
 import { IMessageRepository } from "@/repositories";
-import { IMessage } from "@/models";
 import { Types } from "mongoose";
 import { IPagination } from "@/interfaces";
 import { ForbiddenError } from "@/errors";
+import { MessageDTO } from "@/dtos/message-dtos";
 
 @injectable()
 export class MessageService implements IMessageService {
@@ -14,7 +14,7 @@ export class MessageService implements IMessageService {
     @inject(TYPES.ConversationService) private readonly _conversationService: IConversationService,
   ) {}
 
-  async createMessage( data: IMessage): Promise<void> {
+  async createMessage( data: MessageDTO): Promise<void> {
     await this._messageRepo.create(data)
     await this._conversationService.updateLastMessage( data.conversationId?.toString(), data.content, data.createdAt)
   }
@@ -23,7 +23,7 @@ export class MessageService implements IMessageService {
   candidateId: string,
   conversationId: string,
   pagination: IPagination
-): Promise<{ data: IMessage[], total: number}> {
+): Promise<{ data: MessageDTO[], total: number}> {
   const isMember = await this._conversationService.isMember(candidateId, conversationId);
   
   if (!isMember) {

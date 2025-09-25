@@ -1,7 +1,6 @@
 import { IPrescription } from "@/models";
 import { IDoctorPrescriptionService } from "../interfaces";
 import { PrescriptionMapper } from "@/mappers/prescription-mapper";
-import { FrontendPrescriptionPayload } from "@/interfaces/common/Prescription";
 import { inject, injectable } from "inversify";
 import { TYPES } from "@/di/types";
 import {
@@ -10,6 +9,7 @@ import {
 } from "@/repositories";
 import { Types } from "mongoose";
 import { ForbiddenError, NotFoundError } from "@/errors";
+import { FrontendPrescriptionPayloadDTO, PrescriptionDTO } from "@/dtos";
 
 @injectable()
 export class DoctorPrescriptionService implements IDoctorPrescriptionService {
@@ -21,8 +21,8 @@ export class DoctorPrescriptionService implements IDoctorPrescriptionService {
   ) {}
   async createOrUpdatePrescription(
     doctorId: string,
-    prescription: FrontendPrescriptionPayload
-  ): Promise<IPrescription> {
+    prescription: FrontendPrescriptionPayloadDTO
+  ): Promise<PrescriptionDTO> {
     if (doctorId !== prescription.doctorId) {
       throw new ForbiddenError(
         "You are not authorized to perform this action."

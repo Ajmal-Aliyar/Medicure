@@ -1,4 +1,4 @@
-import { CreateUserDto, FilterDoctorRepoResponse } from "@/dtos";
+import { CreateUserDto, FilterDoctorRepoResponseDTO } from "@/dtos";
 import { IDoctor } from "@/models";
 import { Types, UpdateQuery } from "mongoose";
 import { IBaseRepository } from "./i-base-repository";
@@ -19,11 +19,11 @@ export interface IDoctorRepository extends IBaseRepository<IDoctor> {
   filterDoctorForAdmin(
     options: GetDoctorOptions,
     pagination: IPagination
-  ): Promise<{ data: Partial<FilterDoctorRepoResponse>[]; total: number }>;
+  ): Promise<{ data: Partial<FilterDoctorRepoResponseDTO>[]; total: number }>;
   PublicDoctorCardDetails(
     options: GetDoctorOptions,
     pagination: IPagination
-  ): Promise<{ data: Partial<FilterDoctorRepoResponse>[]; total: number }>;
+  ): Promise<{ data: Partial<FilterDoctorRepoResponseDTO>[]; total: number }>;
   findBasicInfoById(doctorId: string): Promise<{ name: string, specialization: string}>;
 }
 

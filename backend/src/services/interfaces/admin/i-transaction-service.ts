@@ -1,5 +1,6 @@
-import { TransactionChartData } from "@/interfaces";
+import { TransactionChartDataDTO } from "@/dtos";
+
 
 export interface IAdminTransactionService {
-    getTransactionsForDashboard(startDate: string, endDate: string): Promise<TransactionChartData[]>
+    getTransactionsForDashboard(startDate: string, endDate: string): Promise<TransactionChartDataDTO[]>
 }

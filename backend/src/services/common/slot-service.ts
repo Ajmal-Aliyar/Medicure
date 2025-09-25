@@ -6,8 +6,9 @@ import { ISlotService } from "../interfaces";
 import { Types } from "mongoose";
 import { BadRequestError } from "@/errors";
 import { SlotMapper } from "@/mappers";
-import { IPagination, IRole, ISlotDetails } from "@/interfaces";
+import { IPagination, IRole } from "@/interfaces";
 import { FilterSlotQuery } from "@/validators/slot-validator";
+import { ISlotDetailsDTO, SlotDTO } from "@/dtos";
 
 @injectable()
 export class SlotService implements ISlotService {
@@ -19,17 +20,17 @@ export class SlotService implements ISlotService {
     await this._slotRepo.update(slotId, { status: "available" })
   }
 
-  async createBulkSlots(slots: Partial<ISlot>[]): Promise<ISlot[]> {
+  async createBulkSlots(slots: Partial<ISlot>[]): Promise<SlotDTO[]> {
     return this._slotRepo.bulkCreate(slots);
   }
+
   async getSlots(
     id: string,
     role: IRole,
     parsedQuery: FilterSlotQuery,
     { skip = 0, limit = 6 }: IPagination
-  ): Promise<{ slots: ISlotDetails[]; total: number }> {
+  ): Promise<{ slots: ISlotDetailsDTO[]; total: number }> {
     const filter = this.buildFilterByRole(role, parsedQuery);
-console.log(skip, limit, '0');
 
     const { data, total } = await this._slotRepo.findAll({
       filter,
@@ -108,7 +109,7 @@ console.log(skip, limit, '0');
   async validateSlotAvailability(
     slotId: string,
     patientId: string
-  ): Promise<ISlot> {
+  ): Promise<SlotDTO> {
     const slot = await this._slotRepo.findById(slotId);
     if (!slot) {
       throw new BadRequestError("Slot not found.");

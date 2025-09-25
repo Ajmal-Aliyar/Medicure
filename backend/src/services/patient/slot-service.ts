@@ -3,7 +3,7 @@ import { IPatientSlotService } from "../interfaces";
 import { TYPES } from "@/di/types";
 import { ISlotRepository } from "@/repositories";
 import { SlotMapper } from "@/mappers";
-import { PublicSlotDetails } from "@/dtos";
+import { PublicSlotDetailsDTO } from "@/dtos";
 import { IPagination } from "@/interfaces";
 import { Types } from "mongoose";
 import { ensureTodayOrFuture } from "@/utils";
@@ -18,7 +18,7 @@ export class PatientSlotService implements IPatientSlotService {
     doctorId: string,
     date: string,
     pagination: IPagination
-  ): Promise<{ slots: PublicSlotDetails[]; total: number }> {
+  ): Promise<{ slots: PublicSlotDetailsDTO[]; total: number }> {
     ensureTodayOrFuture(date);
     const currentTime = new Date();
     const currentHHMM = currentTime.toTimeString().slice(0, 5); 

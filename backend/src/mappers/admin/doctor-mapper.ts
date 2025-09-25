@@ -1,14 +1,14 @@
 import {
-  ApprovedDoctorsDto,
-  DoctorApprovalDetailsDto,
-  DoctorApprovalRequestDto,
+  ApprovedDoctorsDTO,
+  DoctorApprovalDetailsDTO,
+  DoctorApprovalRequestDTO,
   DoctorMappedProfileDto,
-  FilterDoctorRepoResponse,
+  FilterDoctorRepoResponseDTO,
 } from "@/dtos";
 import { IDoctor } from "@/models";
 
 export class AdminDoctorMapper {
-  static toDoctorApprovalSummaryDto(doctor: IDoctor): DoctorApprovalRequestDto {
+  static toDoctorApprovalSummaryDto(doctor: IDoctor): DoctorApprovalRequestDTO {
     return {
       id: doctor._id.toString(),
       fullName: doctor.personal.fullName,
@@ -17,7 +17,7 @@ export class AdminDoctorMapper {
     };
   }
 
-  static toDoctorApprovedSummaryDto(doctor: IDoctor): ApprovedDoctorsDto {
+  static toDoctorApprovedSummaryDto(doctor: IDoctor): ApprovedDoctorsDTO {
     return {
       id: doctor._id.toString(),
       fullName: doctor.personal.fullName,
@@ -28,7 +28,7 @@ export class AdminDoctorMapper {
     };
   }
 
-  static toDoctorApprovalDetailsDto(doctor: IDoctor): DoctorApprovalDetailsDto {
+  static toDoctorApprovalDetailsDto(doctor: IDoctor): DoctorApprovalDetailsDTO {
     const { _id, personal, professional, location, status } = doctor;
     const { password, ...personalSafe } = personal;
 
